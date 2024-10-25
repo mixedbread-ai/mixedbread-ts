@@ -14,6 +14,11 @@ type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
+   * API key to access Mixedbreads API
+   */
+  apiKey?: string | undefined;
+
+  /**
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
@@ -83,11 +88,14 @@ export interface ClientOptions {
  * API Client for interfacing with the Mixedbread API.
  */
 export class Mixedbread extends Core.APIClient {
+  apiKey: string;
+
   private _options: ClientOptions;
 
   /**
    * API Client for interfacing with the Mixedbread API.
    *
+   * @param {string | undefined} [opts.apiKey=process.env['API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -97,8 +105,19 @@ export class Mixedbread extends Core.APIClient {
    * @param {Core.Headers} opts.defaultHeaders - Default headers to include with every request to the API.
    * @param {Core.DefaultQuery} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
-  constructor({ baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'), ...opts }: ClientOptions = {}) {
+  constructor({
+    baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
+    apiKey = Core.readEnv('API_KEY'),
+    ...opts
+  }: ClientOptions = {}) {
+    if (apiKey === undefined) {
+      throw new Errors.MixedbreadError(
+        "The API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+      );
+    }
+
     const options: ClientOptions = {
+      apiKey,
       ...opts,
       baseURL,
       environment: opts.environment ?? 'production',
@@ -119,6 +138,8 @@ export class Mixedbread extends Core.APIClient {
     });
 
     this._options = options;
+
+    this.apiKey = apiKey;
   }
 
   serviceStatus: API.ServiceStatus = new API.ServiceStatus(this);
@@ -126,7 +147,6 @@ export class Mixedbread extends Core.APIClient {
   files: API.Files = new API.Files(this);
   jobs: API.Jobs = new API.Jobs(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
-  reranking: API.Reranking = new API.Reranking(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -137,6 +157,10 @@ export class Mixedbread extends Core.APIClient {
       ...super.defaultHeaders(opts),
       ...this._options.defaultHeaders,
     };
+  }
+
+  protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
+    return { Authorization: this.apiKey };
   }
 
   static Mixedbread = this;
@@ -184,6 +208,8 @@ export namespace Mixedbread {
 
   export import ServiceStatus = API.ServiceStatus;
   export import InfoResponse = API.InfoResponse;
+  export import ServiceStatusRerankResponse = API.ServiceStatusRerankResponse;
+  export import ServiceStatusRerankParams = API.ServiceStatusRerankParams;
 
   export import Di = API.Di;
 
@@ -201,8 +227,6 @@ export namespace Mixedbread {
   export import Embeddings = API.Embeddings;
   export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
   export import EmbeddingCreateParams = API.EmbeddingCreateParams;
-
-  export import Reranking = API.Reranking;
 }
 
 export default Mixedbread;

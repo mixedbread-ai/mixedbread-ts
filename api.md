@@ -3,10 +3,12 @@
 Types:
 
 - <code><a href="./src/resources/service-status.ts">InfoResponse</a></code>
+- <code><a href="./src/resources/service-status.ts">ServiceStatusRerankResponse</a></code>
 
 Methods:
 
 - <code title="get /">client.serviceStatus.<a href="./src/resources/service-status.ts">retrieve</a>() -> InfoResponse</code>
+- <code title="post /v1/v1/reranking">client.serviceStatus.<a href="./src/resources/service-status.ts">rerank</a>({ ...params }) -> ServiceStatusRerankResponse</code>
 
 # Di
 
@@ -58,5 +60,3 @@ Types:
 Methods:
 
 - <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
-
-# Reranking
