@@ -179,7 +179,7 @@ export namespace ParseResponse {
 
       export namespace Chunk {
         /**
-         * A single element extracted from a page.
+         * Represents an extracted element from a document with its content and metadata.
          */
         export interface Element {
           /**
