@@ -121,10 +121,12 @@ export class Mixedbread extends Core.APIClient {
     this._options = options;
   }
 
-  baseStatus: API.BaseStatus = new API.BaseStatus(this);
-  documentIntelligence: API.DocumentIntelligence = new API.DocumentIntelligence(this);
+  serviceStatus: API.ServiceStatus = new API.ServiceStatus(this);
+  di: API.Di = new API.Di(this);
   files: API.Files = new API.Files(this);
   jobs: API.Jobs = new API.Jobs(this);
+  embeddings: API.Embeddings = new API.Embeddings(this);
+  reranking: API.Reranking = new API.Reranking(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -180,21 +182,27 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mixedbread {
   export import RequestOptions = Core.RequestOptions;
 
-  export import BaseStatus = API.BaseStatus;
+  export import ServiceStatus = API.ServiceStatus;
   export import InfoResponse = API.InfoResponse;
 
-  export import DocumentIntelligence = API.DocumentIntelligence;
+  export import Di = API.Di;
 
   export import Files = API.Files;
+  export import FileObject = API.FileObject;
   export import FileListResponse = API.FileListResponse;
-  export import FileResponse = API.FileResponse;
-  export import FileUpdateResponse = API.FileUpdateResponse;
   export import FileCreateParams = API.FileCreateParams;
   export import FileUpdateParams = API.FileUpdateParams;
+  export import FileListParams = API.FileListParams;
 
   export import Jobs = API.Jobs;
   export import JobDeleteResponse = API.JobDeleteResponse;
   export import JobStatusResponse = API.JobStatusResponse;
+
+  export import Embeddings = API.Embeddings;
+  export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
+  export import EmbeddingCreateParams = API.EmbeddingCreateParams;
+
+  export import Reranking = API.Reranking;
 }
 
 export default Mixedbread;
