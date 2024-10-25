@@ -1,0 +1,24 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+import { APIResource } from '../../resource';
+import * as Core from '../../core';
+import * as ContentAPI from './content';
+
+export class Content extends APIResource {
+  /**
+   * Download a specific file by its ID.
+   *
+   * Args: file_id: The ID of the file to download. state: The application state.
+   *
+   * Returns: FastAPIFileResponse: The response containing the file to be downloaded.
+   */
+  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<unknown> {
+    return this._client.get(`/v1/files/${fileId}/content`, options);
+  }
+}
+
+export type ContentRetrieveResponse = unknown;
+
+export namespace Content {
+  export import ContentRetrieveResponse = ContentAPI.ContentRetrieveResponse;
+}
