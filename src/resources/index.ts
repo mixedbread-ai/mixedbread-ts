@@ -10,10 +10,6 @@ export {
   FileListParams,
   Files,
 } from './files';
-export {
-  InfoResponse,
-  ServiceStatusRerankResponse,
-  ServiceStatusRerankParams,
-  ServiceStatus,
-} from './service-status';
+export { InfoResponse, ServiceStatus } from './service-status';
 export { JobDeleteResponse, JobStatusResponse, Jobs } from './jobs';
+export { Reranking } from './reranking';

@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.mixedbread.com](https://docs.mixedbread.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [mixedbread.com](https://mixedbread.com/docs). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 

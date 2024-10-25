@@ -147,6 +147,7 @@ export class Mixedbread extends Core.APIClient {
   files: API.Files = new API.Files(this);
   jobs: API.Jobs = new API.Jobs(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
+  reranking: API.Reranking = new API.Reranking(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -208,8 +209,6 @@ export namespace Mixedbread {
 
   export import ServiceStatus = API.ServiceStatus;
   export import InfoResponse = API.InfoResponse;
-  export import ServiceStatusRerankResponse = API.ServiceStatusRerankResponse;
-  export import ServiceStatusRerankParams = API.ServiceStatusRerankParams;
 
   export import Di = API.Di;
 
@@ -227,6 +226,8 @@ export namespace Mixedbread {
   export import Embeddings = API.Embeddings;
   export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
   export import EmbeddingCreateParams = API.EmbeddingCreateParams;
+
+  export import Reranking = API.Reranking;
 }
 
 export default Mixedbread;
