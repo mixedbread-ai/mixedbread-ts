@@ -30,11 +30,9 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const parseResponse = await client.documentIntelligence.parse.create({
-    file: fs.createReadStream('path/to/file'),
-  });
+  const fileObject = await client.files.create({ file: fs.createReadStream('path/to/file') });
 
-  console.log(parseResponse.data);
+  console.log(fileObject.user_id);
 }
 
 main();
@@ -53,11 +51,8 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const params: Mixedbread.DocumentIntelligence.ParseCreateParams = {
-    file: fs.createReadStream('path/to/file'),
-  };
-  const parseResponse: Mixedbread.DocumentIntelligence.ParseResponse =
-    await client.documentIntelligence.parse.create(params);
+  const params: Mixedbread.FileCreateParams = { file: fs.createReadStream('path/to/file') };
+  const fileObject: Mixedbread.FileObject = await client.files.create(params);
 }
 
 main();
@@ -74,7 +69,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const parseResponse = await client.documentIntelligence.parse
+  const fileObject = await client.files
     .create({ file: fs.createReadStream('path/to/file') })
     .catch(async (err) => {
       if (err instanceof Mixedbread.APIError) {
@@ -119,7 +114,7 @@ const client = new Mixedbread({
 });
 
 // Or, configure per-request:
-await client.documentIntelligence.parse.create({ file: fs.createReadStream('path/to/file') }, {
+await client.files.create({ file: fs.createReadStream('path/to/file') }, {
   maxRetries: 5,
 });
 ```
@@ -136,7 +131,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.documentIntelligence.parse.create({ file: fs.createReadStream('path/to/file') }, {
+await client.files.create({ file: fs.createReadStream('path/to/file') }, {
   timeout: 5 * 1000,
 });
 ```
@@ -157,17 +152,15 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mixedbread();
 
-const response = await client.documentIntelligence.parse
-  .create({ file: fs.createReadStream('path/to/file') })
-  .asResponse();
+const response = await client.files.create({ file: fs.createReadStream('path/to/file') }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: parseResponse, response: raw } = await client.documentIntelligence.parse
+const { data: fileObject, response: raw } = await client.files
   .create({ file: fs.createReadStream('path/to/file') })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(parseResponse.data);
+console.log(fileObject.user_id);
 ```
 
 ### Making custom/undocumented requests
@@ -271,7 +264,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.documentIntelligence.parse.create(
+await client.files.create(
   { file: fs.createReadStream('path/to/file') },
   {
     httpAgent: new http.Agent({ keepAlive: false }),

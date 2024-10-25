@@ -1,13 +1,15 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { DocumentIntelligence } from './document-intelligence/document-intelligence';
+export { Di } from './di/di';
+export { EmbeddingCreateResponse, EmbeddingCreateParams, Embeddings } from './embeddings';
 export {
+  FileObject,
   FileListResponse,
-  FileResponse,
-  FileUpdateResponse,
   FileCreateParams,
   FileUpdateParams,
+  FileListParams,
   Files,
-} from './files/files';
-export { InfoResponse, BaseStatus } from './base-status';
-export { JobDeleteResponse, JobStatusResponse, Jobs } from './jobs/jobs';
+} from './files';
+export { InfoResponse, ServiceStatus } from './service-status';
+export { JobDeleteResponse, JobStatusResponse, Jobs } from './jobs';
+export { Reranking } from './reranking';
