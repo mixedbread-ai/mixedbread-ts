@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Di } from './di/di';
+export { BaseStatusCheckResponse } from './top-level';
+export { DocAI } from './doc-ai/doc-ai';
 export { EmbeddingCreateResponse, EmbeddingCreateParams, Embeddings } from './embeddings';
 export {
   FileObject,
@@ -9,7 +10,6 @@ export {
   FileUpdateParams,
   FileListParams,
   Files,
-} from './files';
-export { InfoResponse, ServiceStatus } from './service-status';
-export { JobDeleteResponse, JobStatusResponse, Jobs } from './jobs';
+} from './files/files';
+export { JobStatusResponse, JobDeleteResponse, Jobs } from './jobs';
 export { RerankingCreateResponse, RerankingCreateParams, Reranking } from './reranking';

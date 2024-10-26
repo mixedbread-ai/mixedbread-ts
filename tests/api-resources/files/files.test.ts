@@ -3,12 +3,15 @@
 import Mixedbread, { toFile } from 'mixedbread';
 import { Response } from 'node-fetch';
 
-const client = new Mixedbread({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
+const client = new Mixedbread({
+  apiKey: 'My API Key',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
 
 describe('resource files', () => {
   test('create: only required params', async () => {
     const responsePromise = client.files.create({
-      files: [await toFile(Buffer.from('# my file contents'), 'README.md')],
+      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -21,7 +24,7 @@ describe('resource files', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.files.create({
-      files: [await toFile(Buffer.from('# my file contents'), 'README.md')],
+      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
     });
   });
 
@@ -78,6 +81,13 @@ describe('resource files', () => {
     await expect(client.files.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Mixedbread.NotFoundError,
     );
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.files.list({ after: 'after', limit: 0 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete', async () => {

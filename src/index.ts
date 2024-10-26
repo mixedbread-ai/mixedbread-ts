@@ -5,6 +5,7 @@ import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as API from './resources/index';
+import * as TopLevelAPI from './resources/top-level';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
@@ -95,7 +96,7 @@ export class Mixedbread extends Core.APIClient {
   /**
    * API Client for interfacing with the Mixedbread API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['BEARER_API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -107,12 +108,12 @@ export class Mixedbread extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
-    apiKey = Core.readEnv('API_KEY'),
+    apiKey = Core.readEnv('BEARER_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.MixedbreadError(
-        "The API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+        "The BEARER_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
       );
     }
 
@@ -142,12 +143,23 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  serviceStatus: API.ServiceStatus = new API.ServiceStatus(this);
-  di: API.Di = new API.Di(this);
-  files: API.Files = new API.Files(this);
-  jobs: API.Jobs = new API.Jobs(this);
+  docAI: API.DocAI = new API.DocAI(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   reranking: API.Reranking = new API.Reranking(this);
+  files: API.Files = new API.Files(this);
+  jobs: API.Jobs = new API.Jobs(this);
+
+  /**
+   * Perform a base search to check the service status and configuration.
+   *
+   * Args: state: The application state.
+   *
+   * Returns: dict: A dictionary containing the service status and public
+   * configuration details.
+   */
+  baseStatusCheck(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.BaseStatusCheckResponse> {
+    return this.get('/', options);
+  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -207,10 +219,17 @@ export import fileFromPath = Uploads.fileFromPath;
 export namespace Mixedbread {
   export import RequestOptions = Core.RequestOptions;
 
-  export import ServiceStatus = API.ServiceStatus;
-  export import InfoResponse = API.InfoResponse;
+  export import BaseStatusCheckResponse = API.BaseStatusCheckResponse;
 
-  export import Di = API.Di;
+  export import DocAI = API.DocAI;
+
+  export import Embeddings = API.Embeddings;
+  export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
+  export import EmbeddingCreateParams = API.EmbeddingCreateParams;
+
+  export import Reranking = API.Reranking;
+  export import RerankingCreateResponse = API.RerankingCreateResponse;
+  export import RerankingCreateParams = API.RerankingCreateParams;
 
   export import Files = API.Files;
   export import FileObject = API.FileObject;
@@ -220,16 +239,8 @@ export namespace Mixedbread {
   export import FileListParams = API.FileListParams;
 
   export import Jobs = API.Jobs;
-  export import JobDeleteResponse = API.JobDeleteResponse;
   export import JobStatusResponse = API.JobStatusResponse;
-
-  export import Embeddings = API.Embeddings;
-  export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
-  export import EmbeddingCreateParams = API.EmbeddingCreateParams;
-
-  export import Reranking = API.Reranking;
-  export import RerankingCreateResponse = API.RerankingCreateResponse;
-  export import RerankingCreateParams = API.RerankingCreateParams;
+  export import JobDeleteResponse = API.JobDeleteResponse;
 }
 
 export default Mixedbread;
