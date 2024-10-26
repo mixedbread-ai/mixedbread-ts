@@ -72,7 +72,7 @@ export class Files extends APIResource {
    *
    * Args: file_id: The ID of the file to download. state: The application state.
    *
-   * Returns: FastAPIFileResponse: The response containing the file to be downloaded.
+   * Returns: FileResponse: The response containing the file to be downloaded.
    */
   content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.get(`/v1/files/${fileId}/content`, {

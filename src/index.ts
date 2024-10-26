@@ -228,6 +228,8 @@ export namespace Mixedbread {
   export import EmbeddingCreateParams = API.EmbeddingCreateParams;
 
   export import Reranking = API.Reranking;
+  export import RerankingCreateResponse = API.RerankingCreateResponse;
+  export import RerankingCreateParams = API.RerankingCreateParams;
 }
 
 export default Mixedbread;

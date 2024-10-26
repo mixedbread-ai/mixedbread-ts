@@ -12,4 +12,4 @@ export {
 } from './files';
 export { InfoResponse, ServiceStatus } from './service-status';
 export { JobDeleteResponse, JobStatusResponse, Jobs } from './jobs';
-export { Reranking } from './reranking';
+export { RerankingCreateResponse, RerankingCreateParams, Reranking } from './reranking';
