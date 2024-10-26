@@ -17,11 +17,7 @@ export class Files extends APIResource {
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
   create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.post('/v1/files', {
-      body,
-      ...options,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...options?.headers },
-    });
+    return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
