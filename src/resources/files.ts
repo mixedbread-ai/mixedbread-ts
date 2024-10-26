@@ -4,6 +4,7 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as FilesAPI from './files';
+import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
   /**
@@ -72,13 +73,10 @@ export class Files extends APIResource {
    *
    * Args: file_id: The ID of the file to download. state: The application state.
    *
-   * Returns: FileResponse: The response containing the file to be downloaded.
+   * Returns: FileStreamResponse: The response containing the file to be downloaded.
    */
-  content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<void> {
-    return this._client.get(`/v1/files/${fileId}/content`, {
-      ...options,
-      headers: { Accept: '*/*', ...options?.headers },
-    });
+  content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<Response> {
+    return this._client.get(`/v1/files/${fileId}/content`, { ...options, __binaryResponse: true });
   }
 
   /**
