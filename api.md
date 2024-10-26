@@ -60,3 +60,11 @@ Methods:
 - <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
 
 # Reranking
+
+Types:
+
+- <code><a href="./src/resources/reranking.ts">RerankingCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/reranking">client.reranking.<a href="./src/resources/reranking.ts">create</a>({ ...params }) -> RerankingCreateResponse</code>
