@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [mixedbread.com](https://mixedbread.com/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.mixedbread.com](https://docs.mixedbread.com). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
@@ -30,9 +30,12 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const fileObject = await client.files.create({ file: fs.createReadStream('path/to/file') });
+  const embedding = await client.embeddings.create({
+    input: 'x',
+    model: 'mixedbread-ai/mxbai-embed-large-v1',
+  });
 
-  console.log(fileObject.user_id);
+  console.log(embedding.data);
 }
 
 main();
@@ -51,8 +54,11 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const params: Mixedbread.FileCreateParams = { file: fs.createReadStream('path/to/file') };
-  const fileObject: Mixedbread.FileObject = await client.files.create(params);
+  const params: Mixedbread.EmbeddingCreateParams = {
+    input: 'x',
+    model: 'mixedbread-ai/mxbai-embed-large-v1',
+  };
+  const embedding: Mixedbread.EmbeddingCreateResponse = await client.embeddings.create(params);
 }
 
 main();
@@ -69,8 +75,8 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const fileObject = await client.files
-    .create({ file: fs.createReadStream('path/to/file') })
+  const embedding = await client.embeddings
+    .create({ input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' })
     .catch(async (err) => {
       if (err instanceof Mixedbread.APIError) {
         console.log(err.status); // 400
@@ -114,7 +120,7 @@ const client = new Mixedbread({
 });
 
 // Or, configure per-request:
-await client.files.create({ file: fs.createReadStream('path/to/file') }, {
+await client.embeddings.create({ input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' }, {
   maxRetries: 5,
 });
 ```
@@ -131,7 +137,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.files.create({ file: fs.createReadStream('path/to/file') }, {
+await client.embeddings.create({ input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -152,15 +158,17 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mixedbread();
 
-const response = await client.files.create({ file: fs.createReadStream('path/to/file') }).asResponse();
+const response = await client.embeddings
+  .create({ input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' })
+  .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: fileObject, response: raw } = await client.files
-  .create({ file: fs.createReadStream('path/to/file') })
+const { data: embedding, response: raw } = await client.embeddings
+  .create({ input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(fileObject.user_id);
+console.log(embedding.data);
 ```
 
 ### Making custom/undocumented requests
@@ -264,8 +272,8 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.files.create(
-  { file: fs.createReadStream('path/to/file') },
+await client.embeddings.create(
+  { input: 'x', model: 'mixedbread-ai/mxbai-embed-large-v1' },
   {
     httpAgent: new http.Agent({ keepAlive: false }),
   },

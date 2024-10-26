@@ -30,10 +30,6 @@ export class Jobs extends APIResource {
   }
 }
 
-export interface JobDeleteResponse {
-  data: boolean;
-}
-
 export interface JobStatusResponse {
   data: JobStatusResponse.Data;
 }
@@ -46,7 +42,11 @@ export namespace JobStatusResponse {
   }
 }
 
+export interface JobDeleteResponse {
+  data: boolean;
+}
+
 export namespace Jobs {
-  export import JobDeleteResponse = JobsAPI.JobDeleteResponse;
   export import JobStatusResponse = JobsAPI.JobStatusResponse;
+  export import JobDeleteResponse = JobsAPI.JobDeleteResponse;
 }

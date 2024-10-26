@@ -1,11 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { ContentRetrieveResponse, Content } from './content';
+export { Content } from './content';
 export {
+  FileObject,
   FileListResponse,
-  FileResponse,
-  FileUpdateResponse,
   FileCreateParams,
   FileUpdateParams,
+  FileListParams,
   Files,
 } from './files';
