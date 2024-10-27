@@ -90,15 +90,8 @@ describe('resource files', () => {
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
-  test('content: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.files.content('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Mixedbread.NotFoundError,
-    );
-  });
-
-  test('del', async () => {
-    const responsePromise = client.files.del('file_id');
+  test('delete', async () => {
+    const responsePromise = client.files.delete('file_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -108,9 +101,16 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('del: request options instead of params are passed correctly', async () => {
+  test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.files.del('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.files.delete('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Mixedbread.NotFoundError,
+    );
+  });
+
+  test('content: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.files.content('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       Mixedbread.NotFoundError,
     );
   });
