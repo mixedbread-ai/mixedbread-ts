@@ -15,11 +15,7 @@ export class Files extends APIResource {
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
   create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.post('/v1/files', {
-      body,
-      ...options,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...options?.headers },
-    });
+    return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
@@ -69,6 +65,17 @@ export class Files extends APIResource {
   }
 
   /**
+   * Delete a specific file by its ID.
+   *
+   * Args: file_id: The ID of the file to delete. state: The application state.
+   *
+   * Returns: FileDeleted: The response containing the details of the deleted file.
+   */
+  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+    return this._client.delete(`/v1/files/${fileId}`, options);
+  }
+
+  /**
    * Download a specific file by its ID.
    *
    * Args: file_id: The ID of the file to download. state: The application state.
@@ -78,35 +85,40 @@ export class Files extends APIResource {
   content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<Response> {
     return this._client.get(`/v1/files/${fileId}/content`, { ...options, __binaryResponse: true });
   }
-
-  /**
-   * Delete a specific file by its ID.
-   *
-   * Args: file_id: The ID of the file to delete. state: The application state.
-   *
-   * Returns: FileDeleted: The response containing the details of the deleted file.
-   */
-  del(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.delete(`/v1/files/${fileId}`, options);
-  }
 }
 
 /**
  * Model for storing file metadata associated with users.
  */
 export interface FileObject {
+  /**
+   * MIME type of the file
+   */
   mime_type: string;
 
+  /**
+   * Name of the file
+   */
   name: string;
 
+  /**
+   * Size of the file in bytes
+   */
   size: number;
 
-  user_id: string;
-
+  /**
+   * Unique identifier for the record
+   */
   id?: string;
 
+  /**
+   * Timestamp of record creation
+   */
   created_at?: string;
 
+  /**
+   * Timestamp of last record update
+   */
   updated_at?: string;
 }
 
