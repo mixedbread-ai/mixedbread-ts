@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread, { toFile } from 'mixedbread';
+import Mixedbread from 'mixedbread';
 import { Response } from 'node-fetch';
 
 const client = new Mixedbread({
@@ -10,9 +10,7 @@ const client = new Mixedbread({
 
 describe('resource parse', () => {
   test('createJob: only required params', async () => {
-    const responsePromise = client.docAI.parse.createJob({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
-    });
+    const responsePromise = client.docAI.parse.createJob({ file_id: 'file_id' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -24,7 +22,10 @@ describe('resource parse', () => {
 
   test('createJob: required and optional params', async () => {
     const response = await client.docAI.parse.createJob({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file_id: 'file_id',
+      chunking_strategy: 'page',
+      element_types: ['string', 'string', 'string'],
+      return_format: 'html',
     });
   });
 

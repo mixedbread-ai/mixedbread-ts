@@ -33,7 +33,7 @@ export class Files extends APIResource {
    * Update the details of a specific file.
    *
    * Args: file_id: The ID of the file to update. file_update: The new details for
-   * the file. state: The application state.
+   * the file.
    *
    * Returns: FileObject: The updated file details.
    */
@@ -78,7 +78,7 @@ export class Files extends APIResource {
   /**
    * Download a specific file by its ID.
    *
-   * Args: file_id: The ID of the file to download. state: The application state.
+   * Args: file_id: The ID of the file to download.
    *
    * Returns: FileStreamResponse: The response containing the file to be downloaded.
    */
@@ -91,6 +91,16 @@ export class Files extends APIResource {
  * Model for storing file metadata associated with users.
  */
 export interface FileObject {
+  /**
+   * Unique identifier for the record
+   */
+  id: string;
+
+  /**
+   * Timestamp of record creation
+   */
+  created_at: string;
+
   /**
    * MIME type of the file
    */
@@ -107,19 +117,9 @@ export interface FileObject {
   size: number;
 
   /**
-   * Unique identifier for the record
-   */
-  id?: string;
-
-  /**
-   * Timestamp of record creation
-   */
-  created_at?: string;
-
-  /**
    * Timestamp of last record update
    */
-  updated_at?: string;
+  updated_at: string;
 }
 
 export interface FileListResponse {

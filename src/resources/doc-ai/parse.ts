@@ -8,15 +8,12 @@ export class Parse extends APIResource {
   /**
    * Start a parse job for the provided file.
    *
-   * Args: file: The file to parse information from. state: The application state.
+   * Args: params: ParseJobCreateParams The parameters for creating a parse job.
    *
    * Returns: ParseResponse: The response containing the created job information.
    */
   createJob(body: ParseCreateJobParams, options?: Core.RequestOptions): Core.APIPromise<ParseResponse> {
-    return this._client.post(
-      '/v1/document-intelligence/parse',
-      Core.multipartFormRequestOptions({ body, ...options }),
-    );
+    return this._client.post('/v1/document-intelligence/parse', { body, ...options });
   }
 
   /**
@@ -230,9 +227,24 @@ export namespace ParseResponse {
 
 export interface ParseCreateJobParams {
   /**
-   * The file to parse information from
+   * The ID of the file to parse
    */
-  file: Core.Uploadable;
+  file_id: string;
+
+  /**
+   * The strategy to use for chunking the content
+   */
+  chunking_strategy?: 'page';
+
+  /**
+   * The elements to extract from the document
+   */
+  element_types?: Array<string> | null;
+
+  /**
+   * The format of the returned content
+   */
+  return_format?: 'html' | 'markdown' | 'plain';
 }
 
 export namespace Parse {
