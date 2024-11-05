@@ -2,12 +2,15 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as EmbeddingsAPI from './embeddings';
 
 export class Embeddings extends APIResource {
   /**
    * Create embeddings for text or images using the specified model, encoding format,
    * and normalization.
+   *
+   * Args: params: The parameters for creating embeddings.
+   *
+   * Returns: EmbeddingCreateResponse: The response containing the embeddings.
    */
   create(
     body: EmbeddingCreateParams,
@@ -143,7 +146,7 @@ export interface EmbeddingCreateParams {
   /**
    * The input to create embeddings for.
    */
-  input: string | EmbeddingCreateParams.TextInput | unknown;
+  input: string | EmbeddingCreateParams.ImageURLInput | EmbeddingCreateParams.TextInput;
 
   /**
    * The model to use for creating embeddings.
@@ -177,26 +180,58 @@ export interface EmbeddingCreateParams {
    * The prompt to use for the embedding creation.
    */
   prompt?: string | null;
-
-  /**
-   * The truncation strategy to use for the input.
-   */
-  truncation_strategy?: 'none' | 'start' | 'end';
 }
 
 export namespace EmbeddingCreateParams {
   /**
-   * The text input document to create embeddings for.
+   * Model for image input validation.
+   */
+  export interface ImageURLInput {
+    /**
+     * The image input specification.
+     */
+    image: ImageURLInput.Image;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+  }
+
+  export namespace ImageURLInput {
+    /**
+     * The image input specification.
+     */
+    export interface Image {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  /**
+   * Model for text input validation.
+   *
+   * Attributes: type: Input type identifier, always "text" text: The actual text
+   * content, with length and whitespace constraints
    */
   export interface TextInput {
     /**
-     * The text to be processed
+     * Text content to process
      */
     text: string;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
   }
 }
 
-export namespace Embeddings {
-  export import EmbeddingCreateResponse = EmbeddingsAPI.EmbeddingCreateResponse;
-  export import EmbeddingCreateParams = EmbeddingsAPI.EmbeddingCreateParams;
+export declare namespace Embeddings {
+  export {
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 }

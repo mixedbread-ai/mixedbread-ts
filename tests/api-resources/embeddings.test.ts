@@ -11,7 +11,7 @@ const client = new Mixedbread({
 describe('resource embeddings', () => {
   test('create: only required params', async () => {
     const responsePromise = client.embeddings.create({
-      input: 'x',
+      input: 'This is a sample text input.',
       model: 'mixedbread-ai/mxbai-embed-large-v1',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -25,13 +25,12 @@ describe('resource embeddings', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.embeddings.create({
-      input: 'x',
+      input: 'This is a sample text input.',
       model: 'mixedbread-ai/mxbai-embed-large-v1',
       dimensions: 768,
       encoding_format: 'float',
       normalized: true,
       prompt: 'Provide a detailed summary of the following text.',
-      truncation_strategy: 'none',
     });
   });
 });

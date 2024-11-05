@@ -2,25 +2,26 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as JobsAPI from './jobs';
 
 export class Jobs extends APIResource {
   /**
    * Retrieve the status of a specific job by its ID.
    *
-   * Args: job_id: The ID of the job to retrieve the status for. state: The
-   * application state.
+   * Args: job_id: The ID of the job to retrieve the status for.
    *
    * Returns: JobStatusResponse: The response containing the job status.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobStatusResponse> {
-    return this._client.get(`/v1/jobs/${jobId}`, options);
+  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobRetrieveResponse> {
+    return this._client.get(`/v1/jobs/${jobId}`, {
+      ...options,
+      headers: { Accept: 'application/json', ...options?.headers },
+    });
   }
 
   /**
    * Delete a specific job by its ID.
    *
-   * Args: job_id: The ID of the job to delete. state: The application state.
+   * Args: job_id: The ID of the job to delete.
    *
    * Returns: JobDeleteResponse: The response containing the result of the job
    * deletion.
@@ -30,23 +31,17 @@ export class Jobs extends APIResource {
   }
 }
 
-export interface JobStatusResponse {
-  data: JobStatusResponse.Data;
-}
+export type JobRetrieveResponse =
+  | 'none'
+  | 'running'
+  | 'canceled'
+  | 'successful'
+  | 'failed'
+  | 'resumable'
+  | 'pending';
 
-export namespace JobStatusResponse {
-  export interface Data {
-    job_id: string;
+export type JobDeleteResponse = boolean;
 
-    status: string;
-  }
-}
-
-export interface JobDeleteResponse {
-  data: boolean;
-}
-
-export namespace Jobs {
-  export import JobStatusResponse = JobsAPI.JobStatusResponse;
-  export import JobDeleteResponse = JobsAPI.JobDeleteResponse;
+export declare namespace Jobs {
+  export { type JobRetrieveResponse as JobRetrieveResponse, type JobDeleteResponse as JobDeleteResponse };
 }
