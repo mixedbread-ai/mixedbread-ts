@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread, { toFile } from 'mixedbread';
+import Mixedbread from 'mixedbread';
 import { Response } from 'node-fetch';
 
 const client = new Mixedbread({
@@ -8,11 +8,9 @@ const client = new Mixedbread({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource files', () => {
-  test('create: only required params', async () => {
-    const responsePromise = client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
-    });
+describe('resource vectorStores', () => {
+  test('create', async () => {
+    const responsePromise = client.vectorStores.create({});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,14 +20,8 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('create: required and optional params', async () => {
-    const response = await client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
-    });
-  });
-
   test('retrieve', async () => {
-    const responsePromise = client.files.retrieve('file_id');
+    const responsePromise = client.vectorStores.retrieve('vector_store_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,15 +33,13 @@ describe('resource files', () => {
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.files.retrieve('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Mixedbread.NotFoundError,
-    );
+    await expect(
+      client.vectorStores.retrieve('vector_store_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.files.update('file_id', {
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
-    });
+  test('update', async () => {
+    const responsePromise = client.vectorStores.update('vector_store_id', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,14 +49,8 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await client.files.update('file_id', {
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
-    });
-  });
-
   test('list', async () => {
-    const responsePromise = client.files.list();
+    const responsePromise = client.vectorStores.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -78,7 +62,7 @@ describe('resource files', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.files.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.vectorStores.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Mixedbread.NotFoundError,
     );
   });
@@ -86,12 +70,12 @@ describe('resource files', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.files.list({ after: 'after', limit: 0 }, { path: '/_stainless_unknown_path' }),
+      client.vectorStores.list({ after: 0, limit: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.files.delete('file_id');
+    const responsePromise = client.vectorStores.delete('vector_store_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -103,8 +87,37 @@ describe('resource files', () => {
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.files.delete('file_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Mixedbread.NotFoundError,
-    );
+    await expect(
+      client.vectorStores.delete('vector_store_id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
+  });
+
+  test('search: only required params', async () => {
+    const responsePromise = client.vectorStores.search({
+      query: 'query',
+      vector_store_ids: ['string', 'string', 'string'],
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('search: required and optional params', async () => {
+    const response = await client.vectorStores.search({
+      query: 'query',
+      vector_store_ids: ['string', 'string', 'string'],
+      after: 0,
+      filter: {
+        and_: { and_: {}, not_: {}, or_: {} },
+        not_: { and_: {}, not_: {}, or_: {} },
+        or_: { and_: {}, not_: {}, or_: {} },
+      },
+      limit: 0,
+      options: { min_score: 0, return_chunks: true, return_metadata: true },
+    });
   });
 });

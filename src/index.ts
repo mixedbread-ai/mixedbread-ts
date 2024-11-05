@@ -1,11 +1,39 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import * as Errors from './error';
-import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Errors from './error';
+import * as Uploads from './uploads';
 import * as API from './resources/index';
-import * as TopLevelAPI from './resources/top-level';
+import { Base, BaseStatusResponse } from './resources/base';
+import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
+import {
+  FileCreateParams,
+  FileCreateResponse,
+  FileDeleteResponse,
+  FileListParams,
+  FileListResponse,
+  FileRetrieveResponse,
+  FileUpdateParams,
+  FileUpdateResponse,
+  Files,
+} from './resources/files';
+import { JobDeleteResponse, JobRetrieveResponse, Jobs } from './resources/jobs';
+import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
+import { DocumentAI } from './resources/document-ai/document-ai';
+import {
+  VectorStoreCreateParams,
+  VectorStoreCreateResponse,
+  VectorStoreDeleteResponse,
+  VectorStoreListParams,
+  VectorStoreListResponse,
+  VectorStoreRetrieveResponse,
+  VectorStoreSearchParams,
+  VectorStoreSearchResponse,
+  VectorStoreUpdateParams,
+  VectorStoreUpdateResponse,
+  VectorStores,
+} from './resources/vector-stores/vector-stores';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
@@ -15,7 +43,7 @@ type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * API key to access Mixedbreads API
+   * API key used to access the Mixedbreads API
    */
   apiKey?: string | undefined;
 
@@ -96,7 +124,7 @@ export class Mixedbread extends Core.APIClient {
   /**
    * API Client for interfacing with the Mixedbread API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['BEARER_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['MXBAI_API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -108,12 +136,12 @@ export class Mixedbread extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
-    apiKey = Core.readEnv('BEARER_API_KEY'),
+    apiKey = Core.readEnv('MXBAI_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.MixedbreadError(
-        "The BEARER_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+        "The MXBAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
       );
     }
 
@@ -143,23 +171,13 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  docAI: API.DocAI = new API.DocAI(this);
+  base: API.Base = new API.Base(this);
+  vectorStores: API.VectorStores = new API.VectorStores(this);
+  documentAI: API.DocumentAI = new API.DocumentAI(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   reranking: API.Reranking = new API.Reranking(this);
   files: API.Files = new API.Files(this);
   jobs: API.Jobs = new API.Jobs(this);
-
-  /**
-   * Perform a base search to check the service status and configuration.
-   *
-   * Args: state: The application state.
-   *
-   * Returns: dict: A dictionary containing the service status and public
-   * configuration details.
-   */
-  baseStatusCheck(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.BaseStatusCheckResponse> {
-    return this.get('/', options);
-  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -197,7 +215,7 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export const {
+export {
   MixedbreadError,
   APIError,
   APIConnectionError,
@@ -211,36 +229,69 @@ export const {
   InternalServerError,
   PermissionDeniedError,
   UnprocessableEntityError,
-} = Errors;
+} from './error';
 
 export import toFile = Uploads.toFile;
 export import fileFromPath = Uploads.fileFromPath;
 
-export namespace Mixedbread {
-  export import RequestOptions = Core.RequestOptions;
+Mixedbread.Base = Base;
+Mixedbread.VectorStores = VectorStores;
+Mixedbread.DocumentAI = DocumentAI;
+Mixedbread.Embeddings = Embeddings;
+Mixedbread.Reranking = Reranking;
+Mixedbread.Files = Files;
+Mixedbread.Jobs = Jobs;
 
-  export import BaseStatusCheckResponse = API.BaseStatusCheckResponse;
+export declare namespace Mixedbread {
+  export type RequestOptions = Core.RequestOptions;
 
-  export import DocAI = API.DocAI;
+  export { Base as Base, type BaseStatusResponse as BaseStatusResponse };
 
-  export import Embeddings = API.Embeddings;
-  export import EmbeddingCreateResponse = API.EmbeddingCreateResponse;
-  export import EmbeddingCreateParams = API.EmbeddingCreateParams;
+  export {
+    VectorStores as VectorStores,
+    type VectorStoreCreateResponse as VectorStoreCreateResponse,
+    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
+    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
+    type VectorStoreListResponse as VectorStoreListResponse,
+    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
+    type VectorStoreCreateParams as VectorStoreCreateParams,
+    type VectorStoreUpdateParams as VectorStoreUpdateParams,
+    type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreSearchParams as VectorStoreSearchParams,
+  };
 
-  export import Reranking = API.Reranking;
-  export import RerankingCreateResponse = API.RerankingCreateResponse;
-  export import RerankingCreateParams = API.RerankingCreateParams;
+  export { DocumentAI as DocumentAI };
 
-  export import Files = API.Files;
-  export import FileObject = API.FileObject;
-  export import FileListResponse = API.FileListResponse;
-  export import FileCreateParams = API.FileCreateParams;
-  export import FileUpdateParams = API.FileUpdateParams;
-  export import FileListParams = API.FileListParams;
+  export {
+    Embeddings as Embeddings,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 
-  export import Jobs = API.Jobs;
-  export import JobStatusResponse = API.JobStatusResponse;
-  export import JobDeleteResponse = API.JobDeleteResponse;
+  export {
+    Reranking as Reranking,
+    type RerankingCreateResponse as RerankingCreateResponse,
+    type RerankingCreateParams as RerankingCreateParams,
+  };
+
+  export {
+    Files as Files,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
+    type FileUpdateResponse as FileUpdateResponse,
+    type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
+    type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
+    type FileListParams as FileListParams,
+  };
+
+  export {
+    Jobs as Jobs,
+    type JobRetrieveResponse as JobRetrieveResponse,
+    type JobDeleteResponse as JobDeleteResponse,
+  };
 }
 
 export default Mixedbread;

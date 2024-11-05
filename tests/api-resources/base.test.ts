@@ -3,11 +3,14 @@
 import Mixedbread from 'mixedbread';
 import { Response } from 'node-fetch';
 
-const client = new Mixedbread({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
+const client = new Mixedbread({
+  apiKey: 'My API Key',
+  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
+});
 
-describe('resource status', () => {
-  test('retrieve', async () => {
-    const responsePromise = client.jobs.status.retrieve('job_id');
+describe('resource base', () => {
+  test('status', async () => {
+    const responsePromise = client.base.status();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -17,9 +20,9 @@ describe('resource status', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
+  test('status: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.jobs.status.retrieve('job_id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.base.status({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       Mixedbread.NotFoundError,
     );
   });

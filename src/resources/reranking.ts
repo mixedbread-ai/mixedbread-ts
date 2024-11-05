@@ -2,11 +2,14 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as RerankingAPI from './reranking';
 
 export class Reranking extends APIResource {
   /**
-   * Rerank different kind of documents for a given query
+   * Rerank different kind of documents for a given query.
+   *
+   * Args: params: RerankingCreateParams: The parameters for reranking.
+   *
+   * Returns: RerankingCreateResponse: The reranked documents for the input query.
    */
   create(
     body: RerankingCreateParams,
@@ -93,15 +96,12 @@ export namespace RerankingCreateResponse {
 }
 
 export interface RerankingCreateParams {
-  /**
-   * The text input documents to rerank.
-   */
-  input: Array<string> | Array<unknown>;
+  input: unknown;
 
   /**
    * The query to rerank the documents.
    */
-  query: RerankingCreateParams.TextInput | string;
+  query: string;
 
   /**
    * The model to use for reranking documents.
@@ -124,16 +124,9 @@ export interface RerankingCreateParams {
   top_k?: number;
 }
 
-export namespace RerankingCreateParams {
-  export interface TextInput {
-    /**
-     * The text to be processed
-     */
-    text: string;
-  }
-}
-
-export namespace Reranking {
-  export import RerankingCreateResponse = RerankingAPI.RerankingCreateResponse;
-  export import RerankingCreateParams = RerankingAPI.RerankingCreateParams;
+export declare namespace Reranking {
+  export {
+    type RerankingCreateResponse as RerankingCreateResponse,
+    type RerankingCreateParams as RerankingCreateParams,
+  };
 }

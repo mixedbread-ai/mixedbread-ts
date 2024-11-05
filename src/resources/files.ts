@@ -3,41 +3,43 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import * as FilesAPI from './files';
 import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
   /**
    * Upload a new file.
    *
-   * Args: file: The file to upload. state: The application state.
+   * Args: file: The file to upload.
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileCreateResponse> {
     return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
    * Retrieve details of a specific file by its ID.
    *
-   * Args: file_id: The ID of the file to retrieve. state: The application state.
+   * Args: file_id: The ID of the file to retrieve.
    *
    * Returns: FileResponse: The response containing the file details.
    */
-  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileRetrieveResponse> {
     return this._client.get(`/v1/files/${fileId}`, options);
   }
 
   /**
    * Update the details of a specific file.
    *
-   * Args: file_id: The ID of the file to update. file_update: The new details for
-   * the file.
+   * Args: file_id: The ID of the file to update. file: The new details for the file.
    *
    * Returns: FileObject: The updated file details.
    */
-  update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  update(
+    fileId: string,
+    body: FileUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<FileUpdateResponse> {
     return this._client.put(`/v1/files/${fileId}`, {
       body,
       ...options,
@@ -48,7 +50,7 @@ export class Files extends APIResource {
   /**
    * List all files for the authenticated user.
    *
-   * Args: state: The application state.
+   * Args: pagination: The pagination options
    *
    * Returns: A list of files belonging to the user.
    */
@@ -67,11 +69,11 @@ export class Files extends APIResource {
   /**
    * Delete a specific file by its ID.
    *
-   * Args: file_id: The ID of the file to delete. state: The application state.
+   * Args: file_id: The ID of the file to delete.
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
     return this._client.delete(`/v1/files/${fileId}`, options);
   }
 
@@ -90,7 +92,7 @@ export class Files extends APIResource {
 /**
  * Model for storing file metadata associated with users.
  */
-export interface FileObject {
+export interface FileCreateResponse {
   /**
    * Unique identifier for the record
    */
@@ -120,28 +122,164 @@ export interface FileObject {
    * Timestamp of last record update
    */
   updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
+}
+
+/**
+ * Model for storing file metadata associated with users.
+ */
+export interface FileRetrieveResponse {
+  /**
+   * Unique identifier for the record
+   */
+  id: string;
+
+  /**
+   * Timestamp of record creation
+   */
+  created_at: string;
+
+  /**
+   * MIME type of the file
+   */
+  mime_type: string;
+
+  /**
+   * Name of the file
+   */
+  name: string;
+
+  /**
+   * Size of the file in bytes
+   */
+  size: number;
+
+  /**
+   * Timestamp of last record update
+   */
+  updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
+}
+
+/**
+ * Model for storing file metadata associated with users.
+ */
+export interface FileUpdateResponse {
+  /**
+   * Unique identifier for the record
+   */
+  id: string;
+
+  /**
+   * Timestamp of record creation
+   */
+  created_at: string;
+
+  /**
+   * MIME type of the file
+   */
+  mime_type: string;
+
+  /**
+   * Name of the file
+   */
+  name: string;
+
+  /**
+   * Size of the file in bytes
+   */
+  size: number;
+
+  /**
+   * Timestamp of last record update
+   */
+  updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
 }
 
 export interface FileListResponse {
-  data: Array<FileObject>;
+  data: Array<FileListResponse.Data>;
 
   pagination: FileListResponse.Pagination;
 }
 
 export namespace FileListResponse {
-  export interface Pagination {
-    total: number;
+  /**
+   * Model for storing file metadata associated with users.
+   */
+  export interface Data {
+    /**
+     * Unique identifier for the record
+     */
+    id: string;
 
     /**
-     * The cursor after which to paginate
+     * Timestamp of record creation
      */
-    after?: string | null;
+    created_at: string;
 
     /**
-     * The maximum number of items to return
+     * MIME type of the file
      */
-    limit?: number;
+    mime_type: string;
+
+    /**
+     * Name of the file
+     */
+    name: string;
+
+    /**
+     * Size of the file in bytes
+     */
+    size: number;
+
+    /**
+     * Timestamp of last record update
+     */
+    updated_at: string;
+
+    /**
+     * Version of the file
+     */
+    version: number;
   }
+
+  export interface Pagination {
+    after?: number;
+
+    limit?: number;
+
+    total?: number;
+  }
+}
+
+export interface FileDeleteResponse {
+  /**
+   * The ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the file was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the deleted object
+   */
+  object?: 'file';
 }
 
 export interface FileCreateParams {
@@ -159,21 +297,20 @@ export interface FileUpdateParams {
 }
 
 export interface FileListParams {
-  /**
-   * The cursor after which to paginate
-   */
-  after?: string | null;
+  after?: number;
 
-  /**
-   * The maximum number of items to return
-   */
   limit?: number;
 }
 
-export namespace Files {
-  export import FileObject = FilesAPI.FileObject;
-  export import FileListResponse = FilesAPI.FileListResponse;
-  export import FileCreateParams = FilesAPI.FileCreateParams;
-  export import FileUpdateParams = FilesAPI.FileUpdateParams;
-  export import FileListParams = FilesAPI.FileListParams;
+export declare namespace Files {
+  export {
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
+    type FileUpdateResponse as FileUpdateResponse,
+    type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
+    type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
+    type FileListParams as FileListParams,
+  };
 }

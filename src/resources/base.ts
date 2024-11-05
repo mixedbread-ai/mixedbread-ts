@@ -2,9 +2,8 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as BaseStatusAPI from './base-status';
 
-export class BaseStatus extends APIResource {
+export class Base extends APIResource {
   /**
    * Perform a base search to check the service status and configuration.
    *
@@ -13,7 +12,7 @@ export class BaseStatus extends APIResource {
    * Returns: dict: A dictionary containing the service status and public
    * configuration details.
    */
-  retrieve(options?: Core.RequestOptions): Core.APIPromise<InfoResponse> {
+  status(options?: Core.RequestOptions): Core.APIPromise<BaseStatusResponse> {
     return this._client.get('/', options);
   }
 }
@@ -21,12 +20,12 @@ export class BaseStatus extends APIResource {
 /**
  * Info Pydantic Response Service Message
  */
-export interface InfoResponse {
+export interface BaseStatusResponse {
   name: string;
 
   version: string;
 }
 
-export namespace BaseStatus {
-  export import InfoResponse = BaseStatusAPI.InfoResponse;
+export declare namespace Base {
+  export { type BaseStatusResponse as BaseStatusResponse };
 }
