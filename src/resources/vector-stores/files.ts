@@ -11,7 +11,7 @@ export class Files extends APIResource {
    * Args: vector_store_id: The ID of the vector store to upload to file: The file to
    * upload and index
    *
-   * Returns: VectorStoreFileResponse: Details of the uploaded and indexed file
+   * Returns: VectorStoreFile: Details of the uploaded and indexed file
    */
   create(
     vectorStoreId: string,
@@ -26,7 +26,7 @@ export class Files extends APIResource {
    *
    * Args: vector_store_id: The ID of the vector store file_id: The ID of the file
    *
-   * Returns: VectorStoreFileResponse: Details of the vector store file
+   * Returns: VectorStoreFile: Details of the vector store file
    */
   retrieve(
     vectorStoreId: string,

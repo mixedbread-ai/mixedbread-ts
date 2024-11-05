@@ -68,7 +68,7 @@ export class VectorStores extends APIResource {
    *
    * Args: pagination: The pagination options.
    *
-   * Returns: list[VectorStore]: The list of vector stores.
+   * Returns: VectorStoreListResponse: The list of vector stores.
    */
   list(
     query?: VectorStoreListParams,
