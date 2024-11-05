@@ -1,31 +1,33 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Base, type BaseStatusResponse } from './base';
 export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
   Files,
-  type FileCreateResponse,
-  type FileRetrieveResponse,
-  type FileUpdateResponse,
+  type FileDeleted,
+  type FileObject,
   type FileListResponse,
-  type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
 } from './files';
-export { Jobs, type JobRetrieveResponse, type JobDeleteResponse } from './jobs';
-export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
+export { Jobs, type JobStatus, type JobDeleteResponse } from './jobs';
+export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
   VectorStores,
-  type VectorStoreCreateResponse,
-  type VectorStoreRetrieveResponse,
-  type VectorStoreUpdateResponse,
+  type SearchResponse,
+  type VectorStore,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
-  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
+export {
+  type EmbedResponse,
+  type RerankResponse,
+  type StatusResponse,
+  type EmbedParams,
+  type RerankParams,
+} from './top-level';

@@ -3,7 +3,7 @@
 import { APIResource } from '../resource';
 import * as Core from '../core';
 
-export class Reranking extends APIResource {
+export class Rerankings extends APIResource {
   /**
    * Rerank different kind of documents for a given query.
    *
@@ -124,7 +124,7 @@ export interface RerankingCreateParams {
   top_k?: number;
 }
 
-export declare namespace Reranking {
+export declare namespace Rerankings {
   export {
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,
