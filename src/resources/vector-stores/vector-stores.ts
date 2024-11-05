@@ -6,12 +6,11 @@ import * as Core from '../../core';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
-  FileCreateResponse,
-  FileDeleteResponse,
   FileListParams,
   FileListResponse,
-  FileRetrieveResponse,
   Files,
+  VectorStoreFile,
+  VectorStoreFileDeleted,
 } from './files';
 
 export class VectorStores extends APIResource {
@@ -25,10 +24,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the created vector store details.
    */
-  create(
-    body: VectorStoreCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreCreateResponse> {
+  create(body: VectorStoreCreateParams, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
@@ -39,10 +35,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(
-    vectorStoreId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreRetrieveResponse> {
+  retrieve(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}`, options);
   }
 
@@ -59,7 +52,7 @@ export class VectorStores extends APIResource {
     vectorStoreId: string,
     body: VectorStoreUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreUpdateResponse> {
+  ): Core.APIPromise<VectorStore> {
     return this._client.put(`/v1/vector_stores/${vectorStoreId}`, { body, ...options });
   }
 
@@ -104,61 +97,28 @@ export class VectorStores extends APIResource {
    * Returns: SearchResponse: The response containing the search results and
    * pagination details.
    */
-  search(
-    body: VectorStoreSearchParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreSearchResponse> {
+  search(body: VectorStoreSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
 
-export interface VectorStoreCreateResponse {
-  id: string;
+export interface SearchResponse {
+  data: Array<Array<FilesAPI.VectorStoreFile>>;
 
-  /**
-   * Timestamp of vector store creation
-   */
-  created_at: string;
-
-  description: string | null;
-
-  /**
-   * Timestamp of vector store expiration
-   */
-  expires_at: string | null;
-
-  name: string;
-
-  /**
-   * The status of the vector store
-   */
-  status: 'expired' | 'active';
-
-  file_counts?: VectorStoreCreateResponse.FileCounts;
-
-  /**
-   * Set of key-value pairs that can be attached to an object.
-   */
-  metadata?: unknown | null;
-
-  usage_bytes?: number;
+  pagination: SearchResponse.Pagination;
 }
 
-export namespace VectorStoreCreateResponse {
-  export interface FileCounts {
-    canceled?: number;
+export namespace SearchResponse {
+  export interface Pagination {
+    after?: number;
 
-    failed?: number;
-
-    in_progress?: number;
-
-    successful?: number;
+    limit?: number;
 
     total?: number;
   }
 }
 
-export interface VectorStoreRetrieveResponse {
+export interface VectorStore {
   id: string;
 
   /**
@@ -180,7 +140,7 @@ export interface VectorStoreRetrieveResponse {
    */
   status: 'expired' | 'active';
 
-  file_counts?: VectorStoreRetrieveResponse.FileCounts;
+  file_counts?: VectorStore.FileCounts;
 
   /**
    * Set of key-value pairs that can be attached to an object.
@@ -190,53 +150,7 @@ export interface VectorStoreRetrieveResponse {
   usage_bytes?: number;
 }
 
-export namespace VectorStoreRetrieveResponse {
-  export interface FileCounts {
-    canceled?: number;
-
-    failed?: number;
-
-    in_progress?: number;
-
-    successful?: number;
-
-    total?: number;
-  }
-}
-
-export interface VectorStoreUpdateResponse {
-  id: string;
-
-  /**
-   * Timestamp of vector store creation
-   */
-  created_at: string;
-
-  description: string | null;
-
-  /**
-   * Timestamp of vector store expiration
-   */
-  expires_at: string | null;
-
-  name: string;
-
-  /**
-   * The status of the vector store
-   */
-  status: 'expired' | 'active';
-
-  file_counts?: VectorStoreUpdateResponse.FileCounts;
-
-  /**
-   * Set of key-value pairs that can be attached to an object.
-   */
-  metadata?: unknown | null;
-
-  usage_bytes?: number;
-}
-
-export namespace VectorStoreUpdateResponse {
+export namespace VectorStore {
   export interface FileCounts {
     canceled?: number;
 
@@ -251,58 +165,12 @@ export namespace VectorStoreUpdateResponse {
 }
 
 export interface VectorStoreListResponse {
-  data: Array<VectorStoreListResponse.Data>;
+  data: Array<VectorStore>;
 
   pagination: VectorStoreListResponse.Pagination;
 }
 
 export namespace VectorStoreListResponse {
-  export interface Data {
-    id: string;
-
-    /**
-     * Timestamp of vector store creation
-     */
-    created_at: string;
-
-    description: string | null;
-
-    /**
-     * Timestamp of vector store expiration
-     */
-    expires_at: string | null;
-
-    name: string;
-
-    /**
-     * The status of the vector store
-     */
-    status: 'expired' | 'active';
-
-    file_counts?: Data.FileCounts;
-
-    /**
-     * Set of key-value pairs that can be attached to an object.
-     */
-    metadata?: unknown | null;
-
-    usage_bytes?: number;
-  }
-
-  export namespace Data {
-    export interface FileCounts {
-      canceled?: number;
-
-      failed?: number;
-
-      in_progress?: number;
-
-      successful?: number;
-
-      total?: number;
-    }
-  }
-
   export interface Pagination {
     after?: number;
 
@@ -316,43 +184,6 @@ export interface VectorStoreDeleteResponse {
   id: string;
 
   deleted: boolean;
-}
-
-export interface VectorStoreSearchResponse {
-  data: Array<Array<VectorStoreSearchResponse.Data>>;
-
-  pagination: VectorStoreSearchResponse.Pagination;
-}
-
-export namespace VectorStoreSearchResponse {
-  export interface Data {
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    vector_store_id: string;
-
-    errors?: Array<string> | null;
-
-    metadata?: unknown | null;
-
-    status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-    usage_bytes?: number | null;
-
-    version?: number | null;
-  }
-
-  export interface Pagination {
-    after?: number;
-
-    limit?: number;
-
-    total?: number;
-  }
 }
 
 export interface VectorStoreCreateParams {
@@ -2171,12 +2002,10 @@ VectorStores.Files = Files;
 
 export declare namespace VectorStores {
   export {
-    type VectorStoreCreateResponse as VectorStoreCreateResponse,
-    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
-    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
+    type SearchResponse as SearchResponse,
+    type VectorStore as VectorStore,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -2185,10 +2014,9 @@ export declare namespace VectorStores {
 
   export {
     Files as Files,
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
+    type VectorStoreFile as VectorStoreFile,
+    type VectorStoreFileDeleted as VectorStoreFileDeleted,
     type FileListResponse as FileListResponse,
-    type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };

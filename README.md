@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.mixedbread.com](https://docs.mixedbread.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [mixedbread.ai](https://mixedbread.ai/docs). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
@@ -51,7 +51,7 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStoreCreateResponse = await client.vectorStores.create();
+  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
 }
 
 main();

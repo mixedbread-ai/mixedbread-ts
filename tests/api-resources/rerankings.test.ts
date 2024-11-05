@@ -8,9 +8,9 @@ const client = new Mixedbread({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource base', () => {
-  test('status', async () => {
-    const responsePromise = client.base.status();
+describe('resource rerankings', () => {
+  test('create: only required params', async () => {
+    const responsePromise = client.rerankings.create({ input: {}, query: 'What is mixedbread ai?' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,10 +20,14 @@ describe('resource base', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('status: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.base.status({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Mixedbread.NotFoundError,
-    );
+  test('create: required and optional params', async () => {
+    const response = await client.rerankings.create({
+      input: {},
+      query: 'What is mixedbread ai?',
+      model: 'mixedbread-ai/mxbai-rerank-large-v1',
+      rank_fields: ['field1', 'field2'],
+      return_input: false,
+      top_k: 10,
+    });
   });
 });

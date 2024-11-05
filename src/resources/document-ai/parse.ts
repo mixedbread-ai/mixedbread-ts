@@ -11,7 +11,10 @@ export class Parse extends APIResource {
    *
    * Returns: ParsingJob: The created parse job.
    */
-  create(body: ParseCreateParams, options?: Core.RequestOptions): Core.APIPromise<ParseCreateResponse> {
+  createJob(
+    body: ParseCreateJobParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ParseCreateJobResponse> {
     return this._client.post('/v1/document-ai/parse', { body, ...options });
   }
 
@@ -22,7 +25,7 @@ export class Parse extends APIResource {
    *
    * Returns: ParsingJob: Detailed information about the parse job.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParseRetrieveResponse> {
+  retrieveJob(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParseRetrieveJobResponse> {
     return this._client.get(`/v1/document-ai/parse/${jobId}`, options);
   }
 }
@@ -30,12 +33,12 @@ export class Parse extends APIResource {
 /**
  * Discriminated union of all possible parsing job states
  */
-export type ParseCreateResponse =
-  | ParseCreateResponse.RunningJob
-  | ParseCreateResponse.FailedJob
-  | ParseCreateResponse.SuccessfulParsingJob;
+export type ParseCreateJobResponse =
+  | ParseCreateJobResponse.RunningJob
+  | ParseCreateJobResponse.FailedJob
+  | ParseCreateJobResponse.SuccessfulParsingJob;
 
-export namespace ParseCreateResponse {
+export namespace ParseCreateJobResponse {
   export interface RunningJob {
     /**
      * The ID of the job
@@ -265,12 +268,12 @@ export namespace ParseCreateResponse {
 /**
  * Discriminated union of all possible parsing job states
  */
-export type ParseRetrieveResponse =
-  | ParseRetrieveResponse.RunningJob
-  | ParseRetrieveResponse.FailedJob
-  | ParseRetrieveResponse.SuccessfulParsingJob;
+export type ParseRetrieveJobResponse =
+  | ParseRetrieveJobResponse.RunningJob
+  | ParseRetrieveJobResponse.FailedJob
+  | ParseRetrieveJobResponse.SuccessfulParsingJob;
 
-export namespace ParseRetrieveResponse {
+export namespace ParseRetrieveJobResponse {
   export interface RunningJob {
     /**
      * The ID of the job
@@ -497,7 +500,7 @@ export namespace ParseRetrieveResponse {
   }
 }
 
-export interface ParseCreateParams {
+export interface ParseCreateJobParams {
   /**
    * The ID of the file to parse
    */
@@ -521,8 +524,8 @@ export interface ParseCreateParams {
 
 export declare namespace Parse {
   export {
-    type ParseCreateResponse as ParseCreateResponse,
-    type ParseRetrieveResponse as ParseRetrieveResponse,
-    type ParseCreateParams as ParseCreateParams,
+    type ParseCreateJobResponse as ParseCreateJobResponse,
+    type ParseRetrieveJobResponse as ParseRetrieveJobResponse,
+    type ParseCreateJobParams as ParseCreateJobParams,
   };
 }

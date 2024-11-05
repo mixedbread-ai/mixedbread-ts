@@ -11,7 +11,7 @@ export class Jobs extends APIResource {
    *
    * Returns: JobStatusResponse: The response containing the job status.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobRetrieveResponse> {
+  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobStatus> {
     return this._client.get(`/v1/jobs/${jobId}`, {
       ...options,
       headers: { Accept: 'application/json', ...options?.headers },
@@ -31,17 +31,10 @@ export class Jobs extends APIResource {
   }
 }
 
-export type JobRetrieveResponse =
-  | 'none'
-  | 'running'
-  | 'canceled'
-  | 'successful'
-  | 'failed'
-  | 'resumable'
-  | 'pending';
+export type JobStatus = 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
 
 export type JobDeleteResponse = boolean;
 
 export declare namespace Jobs {
-  export { type JobRetrieveResponse as JobRetrieveResponse, type JobDeleteResponse as JobDeleteResponse };
+  export { type JobStatus as JobStatus, type JobDeleteResponse as JobDeleteResponse };
 }

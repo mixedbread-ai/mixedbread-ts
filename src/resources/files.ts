@@ -13,7 +13,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileCreateResponse> {
+  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
@@ -24,7 +24,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the file details.
    */
-  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileRetrieveResponse> {
+  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.get(`/v1/files/${fileId}`, options);
   }
 
@@ -35,11 +35,7 @@ export class Files extends APIResource {
    *
    * Returns: FileObject: The updated file details.
    */
-  update(
-    fileId: string,
-    body: FileUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<FileUpdateResponse> {
+  update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.put(`/v1/files/${fileId}`, {
       body,
       ...options,
@@ -73,7 +69,7 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
+  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleted> {
     return this._client.delete(`/v1/files/${fileId}`, options);
   }
 
@@ -89,90 +85,27 @@ export class Files extends APIResource {
   }
 }
 
-/**
- * Model for storing file metadata associated with users.
- */
-export interface FileCreateResponse {
+export interface FileDeleted {
   /**
-   * Unique identifier for the record
+   * The ID of the deleted file
    */
   id: string;
 
   /**
-   * Timestamp of record creation
+   * Whether the file was deleted
    */
-  created_at: string;
+  deleted?: boolean;
 
   /**
-   * MIME type of the file
+   * The type of the deleted object
    */
-  mime_type: string;
-
-  /**
-   * Name of the file
-   */
-  name: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  size: number;
-
-  /**
-   * Timestamp of last record update
-   */
-  updated_at: string;
-
-  /**
-   * Version of the file
-   */
-  version: number;
+  object?: 'file';
 }
 
 /**
  * Model for storing file metadata associated with users.
  */
-export interface FileRetrieveResponse {
-  /**
-   * Unique identifier for the record
-   */
-  id: string;
-
-  /**
-   * Timestamp of record creation
-   */
-  created_at: string;
-
-  /**
-   * MIME type of the file
-   */
-  mime_type: string;
-
-  /**
-   * Name of the file
-   */
-  name: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  size: number;
-
-  /**
-   * Timestamp of last record update
-   */
-  updated_at: string;
-
-  /**
-   * Version of the file
-   */
-  version: number;
-}
-
-/**
- * Model for storing file metadata associated with users.
- */
-export interface FileUpdateResponse {
+export interface FileObject {
   /**
    * Unique identifier for the record
    */
@@ -210,52 +143,12 @@ export interface FileUpdateResponse {
 }
 
 export interface FileListResponse {
-  data: Array<FileListResponse.Data>;
+  data: Array<FileObject>;
 
   pagination: FileListResponse.Pagination;
 }
 
 export namespace FileListResponse {
-  /**
-   * Model for storing file metadata associated with users.
-   */
-  export interface Data {
-    /**
-     * Unique identifier for the record
-     */
-    id: string;
-
-    /**
-     * Timestamp of record creation
-     */
-    created_at: string;
-
-    /**
-     * MIME type of the file
-     */
-    mime_type: string;
-
-    /**
-     * Name of the file
-     */
-    name: string;
-
-    /**
-     * Size of the file in bytes
-     */
-    size: number;
-
-    /**
-     * Timestamp of last record update
-     */
-    updated_at: string;
-
-    /**
-     * Version of the file
-     */
-    version: number;
-  }
-
   export interface Pagination {
     after?: number;
 
@@ -263,23 +156,6 @@ export namespace FileListResponse {
 
     total?: number;
   }
-}
-
-export interface FileDeleteResponse {
-  /**
-   * The ID of the deleted file
-   */
-  id: string;
-
-  /**
-   * Whether the file was deleted
-   */
-  deleted?: boolean;
-
-  /**
-   * The type of the deleted object
-   */
-  object?: 'file';
 }
 
 export interface FileCreateParams {
@@ -304,11 +180,9 @@ export interface FileListParams {
 
 export declare namespace Files {
   export {
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
-    type FileUpdateResponse as FileUpdateResponse,
+    type FileDeleted as FileDeleted,
+    type FileObject as FileObject,
     type FileListResponse as FileListResponse,
-    type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

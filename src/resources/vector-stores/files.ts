@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import * as JobsAPI from '../jobs';
 
 export class Files extends APIResource {
   /**
@@ -17,7 +18,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     body: FileCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileCreateResponse> {
+  ): Core.APIPromise<VectorStoreFile> {
     return this._client.post(`/v1/vector_stores/${vectorStoreId}/files`, { body, ...options });
   }
 
@@ -32,7 +33,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileRetrieveResponse> {
+  ): Core.APIPromise<VectorStoreFile> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 
@@ -73,12 +74,12 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileDeleteResponse> {
+  ): Core.APIPromise<VectorStoreFileDeleted> {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 }
 
-export interface FileCreateResponse {
+export interface VectorStoreFile {
   id: string;
 
   /**
@@ -92,62 +93,26 @@ export interface FileCreateResponse {
 
   metadata?: unknown | null;
 
-  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+  status?: JobsAPI.JobStatus;
 
   usage_bytes?: number | null;
 
   version?: number | null;
 }
 
-export interface FileRetrieveResponse {
+export interface VectorStoreFileDeleted {
   id: string;
 
-  /**
-   * Timestamp of vector store file creation
-   */
-  created_at: string;
-
-  vector_store_id: string;
-
-  errors?: Array<string> | null;
-
-  metadata?: unknown | null;
-
-  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-  usage_bytes?: number | null;
-
-  version?: number | null;
+  deleted: boolean;
 }
 
 export interface FileListResponse {
-  data: Array<FileListResponse.Data>;
+  data: Array<VectorStoreFile>;
 
   pagination: FileListResponse.Pagination;
 }
 
 export namespace FileListResponse {
-  export interface Data {
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    vector_store_id: string;
-
-    errors?: Array<string> | null;
-
-    metadata?: unknown | null;
-
-    status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-    usage_bytes?: number | null;
-
-    version?: number | null;
-  }
-
   export interface Pagination {
     after?: number;
 
@@ -155,12 +120,6 @@ export namespace FileListResponse {
 
     total?: number;
   }
-}
-
-export interface FileDeleteResponse {
-  id: string;
-
-  deleted: boolean;
 }
 
 export interface FileCreateParams {
@@ -177,10 +136,9 @@ export interface FileListParams {
 
 export declare namespace Files {
   export {
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
+    type VectorStoreFile as VectorStoreFile,
+    type VectorStoreFileDeleted as VectorStoreFileDeleted,
     type FileListResponse as FileListResponse,
-    type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
