@@ -26,8 +26,8 @@ export {
 } from './vector-stores/vector-stores';
 export {
   type EmbedResponse,
-  type InfoResponse,
   type RerankResponse,
+  type StatusResponse,
   type EmbedParams,
   type RerankParams,
 } from './top-level';

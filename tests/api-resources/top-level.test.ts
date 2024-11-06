@@ -34,22 +34,6 @@ describe('top level methods', () => {
     });
   });
 
-  test('info', async () => {
-    const responsePromise = client.info();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('info: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.info({ path: '/_stainless_unknown_path' })).rejects.toThrow(Mixedbread.NotFoundError);
-  });
-
   test('rerank: only required params', async () => {
     const responsePromise = client.rerank({ input: {}, query: 'What is mixedbread ai?' });
     const rawResponse = await responsePromise.asResponse();
@@ -70,5 +54,23 @@ describe('top level methods', () => {
       return_input: false,
       top_k: 10,
     });
+  });
+
+  test('status', async () => {
+    const responsePromise = client.status();
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('status: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.status({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Mixedbread.NotFoundError,
+    );
   });
 });
