@@ -122,15 +122,6 @@ export namespace EmbedResponse {
   }
 }
 
-/**
- * Info Pydantic Response Service Message
- */
-export interface InfoResponse {
-  name: string;
-
-  version: string;
-}
-
 export interface RerankResponse {
   /**
    * The ranked documents.
@@ -205,6 +196,15 @@ export namespace RerankResponse {
      */
     completion_tokens?: number | null;
   }
+}
+
+/**
+ * Info Pydantic Response Service Message
+ */
+export interface StatusResponse {
+  name: string;
+
+  version: string;
 }
 
 export interface EmbedParams {
@@ -326,8 +326,8 @@ export interface RerankParams {
 export declare namespace TopLevel {
   export {
     type EmbedResponse as EmbedResponse,
-    type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
+    type StatusResponse as StatusResponse,
     type EmbedParams as EmbedParams,
     type RerankParams as RerankParams,
   };
