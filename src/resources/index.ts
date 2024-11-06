@@ -14,17 +14,6 @@ export {
 export { Jobs, type JobStatus, type JobDeleteResponse } from './jobs';
 export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
-  VectorStores,
-  type SearchResponse,
-  type VectorStore,
-  type VectorStoreListResponse,
-  type VectorStoreDeleteResponse,
-  type VectorStoreCreateParams,
-  type VectorStoreUpdateParams,
-  type VectorStoreListParams,
-  type VectorStoreSearchParams,
-} from './vector-stores/vector-stores';
-export {
   type EmbedResponse,
   type RerankResponse,
   type StatusResponse,
