@@ -26,17 +26,6 @@ import {
 import { JobDeleteResponse, JobStatus, Jobs } from './resources/jobs';
 import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
 import { DocumentAI } from './resources/document-ai/document-ai';
-import {
-  SearchResponse,
-  VectorStore,
-  VectorStoreCreateParams,
-  VectorStoreDeleteResponse,
-  VectorStoreListParams,
-  VectorStoreListResponse,
-  VectorStoreSearchParams,
-  VectorStoreUpdateParams,
-  VectorStores,
-} from './resources/vector-stores/vector-stores';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
@@ -174,7 +163,6 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  vectorStores: API.VectorStores = new API.VectorStores(this);
   documentAI: API.DocumentAI = new API.DocumentAI(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   rerankings: API.Rerankings = new API.Rerankings(this);
@@ -277,7 +265,6 @@ export {
 export import toFile = Uploads.toFile;
 export import fileFromPath = Uploads.fileFromPath;
 
-Mixedbread.VectorStores = VectorStores;
 Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Rerankings = Rerankings;
@@ -293,18 +280,6 @@ export declare namespace Mixedbread {
     type StatusResponse as StatusResponse,
     type EmbedParams as EmbedParams,
     type RerankParams as RerankParams,
-  };
-
-  export {
-    VectorStores as VectorStores,
-    type SearchResponse as SearchResponse,
-    type VectorStore as VectorStore,
-    type VectorStoreListResponse as VectorStoreListResponse,
-    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreCreateParams as VectorStoreCreateParams,
-    type VectorStoreUpdateParams as VectorStoreUpdateParams,
-    type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 
   export { DocumentAI as DocumentAI };
