@@ -36,7 +36,7 @@ export class Files extends APIResource {
    * Returns: FileObject: The updated file details.
    */
   update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.put(`/v1/files/${fileId}`, Core.multipartFormRequestOptions({ body, ...options }));
+    return this._client.post(`/v1/files/${fileId}`, Core.multipartFormRequestOptions({ body, ...options }));
   }
 
   /**
