@@ -26,6 +26,17 @@ import {
 import { JobDeleteResponse, JobStatus, Jobs } from './resources/jobs';
 import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
 import { DocumentAI } from './resources/document-ai/document-ai';
+import {
+  SearchResponse,
+  VectorStore,
+  VectorStoreCreateParams,
+  VectorStoreDeleteResponse,
+  VectorStoreListParams,
+  VectorStoreListResponse,
+  VectorStoreSearchParams,
+  VectorStoreUpdateParams,
+  VectorStores,
+} from './resources/vector-stores/vector-stores';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
@@ -168,6 +179,7 @@ export class Mixedbread extends Core.APIClient {
   rerankings: API.Rerankings = new API.Rerankings(this);
   files: API.Files = new API.Files(this);
   jobs: API.Jobs = new API.Jobs(this);
+  vectorStores: API.VectorStores = new API.VectorStores(this);
 
   /**
    * Create embeddings for text or images using the specified model, encoding format,
@@ -270,6 +282,7 @@ Mixedbread.Embeddings = Embeddings;
 Mixedbread.Rerankings = Rerankings;
 Mixedbread.Files = Files;
 Mixedbread.Jobs = Jobs;
+Mixedbread.VectorStores = VectorStores;
 
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
@@ -307,6 +320,18 @@ export declare namespace Mixedbread {
   };
 
   export { Jobs as Jobs, type JobStatus as JobStatus, type JobDeleteResponse as JobDeleteResponse };
+
+  export {
+    VectorStores as VectorStores,
+    type SearchResponse as SearchResponse,
+    type VectorStore as VectorStore,
+    type VectorStoreListResponse as VectorStoreListResponse,
+    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreCreateParams as VectorStoreCreateParams,
+    type VectorStoreUpdateParams as VectorStoreUpdateParams,
+    type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreSearchParams as VectorStoreSearchParams,
+  };
 }
 
 export default Mixedbread;
