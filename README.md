@@ -30,12 +30,9 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const response = await client.embed({
-    input: 'This is a sample text input.',
-    model: 'mixedbread-ai/mxbai-embed-large-v1',
-  });
+  const vectorStore = await client.vectorStores.create();
 
-  console.log(response.data);
+  console.log(vectorStore.id);
 }
 
 main();
@@ -54,11 +51,7 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const params: Mixedbread.EmbedParams = {
-    input: 'This is a sample text input.',
-    model: 'mixedbread-ai/mxbai-embed-large-v1',
-  };
-  const response: Mixedbread.EmbedResponse = await client.embed(params);
+  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
 }
 
 main();
@@ -75,17 +68,15 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const response = await client
-    .embed({ input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' })
-    .catch(async (err) => {
-      if (err instanceof Mixedbread.APIError) {
-        console.log(err.status); // 400
-        console.log(err.name); // BadRequestError
-        console.log(err.headers); // {server: 'nginx', ...}
-      } else {
-        throw err;
-      }
-    });
+  const vectorStore = await client.vectorStores.create().catch(async (err) => {
+    if (err instanceof Mixedbread.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 }
 
 main();
@@ -120,7 +111,7 @@ const client = new Mixedbread({
 });
 
 // Or, configure per-request:
-await client.embed({ input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' }, {
+await client.vectorStores.create({
   maxRetries: 5,
 });
 ```
@@ -137,7 +128,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.embed({ input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' }, {
+await client.vectorStores.create({
   timeout: 5 * 1000,
 });
 ```
@@ -158,17 +149,13 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mixedbread();
 
-const response = await client
-  .embed({ input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' })
-  .asResponse();
+const response = await client.vectorStores.create().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: response, response: raw } = await client
-  .embed({ input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' })
-  .withResponse();
+const { data: vectorStore, response: raw } = await client.vectorStores.create().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(response.data);
+console.log(vectorStore.id);
 ```
 
 ### Making custom/undocumented requests
@@ -272,12 +259,9 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.embed(
-  { input: 'This is a sample text input.', model: 'mixedbread-ai/mxbai-embed-large-v1' },
-  {
-    httpAgent: new http.Agent({ keepAlive: false }),
-  },
-);
+await client.vectorStores.create({
+  httpAgent: new http.Agent({ keepAlive: false }),
+});
 ```
 
 ## Semantic versioning
