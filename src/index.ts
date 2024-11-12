@@ -43,7 +43,6 @@ const environments = {
   environment_1: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
-
 export interface ClientOptions {
   /**
    * API key used for accessing Mixedbreads API
@@ -258,32 +257,12 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export {
-  MixedbreadError,
-  APIError,
-  APIConnectionError,
-  APIConnectionTimeoutError,
-  APIUserAbortError,
-  NotFoundError,
-  ConflictError,
-  RateLimitError,
-  BadRequestError,
-  AuthenticationError,
-  InternalServerError,
-  PermissionDeniedError,
-  UnprocessableEntityError,
-} from './error';
-
-export import toFile = Uploads.toFile;
-export import fileFromPath = Uploads.fileFromPath;
-
 Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Rerankings = Rerankings;
 Mixedbread.Files = Files;
 Mixedbread.Jobs = Jobs;
 Mixedbread.VectorStores = VectorStores;
-
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -333,5 +312,22 @@ export declare namespace Mixedbread {
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }
+
+export { toFile, fileFromPath } from 'mixedbread/uploads';
+export {
+  MixedbreadError,
+  APIError,
+  APIConnectionError,
+  APIConnectionTimeoutError,
+  APIUserAbortError,
+  NotFoundError,
+  ConflictError,
+  RateLimitError,
+  BadRequestError,
+  AuthenticationError,
+  InternalServerError,
+  PermissionDeniedError,
+  UnprocessableEntityError,
+} from 'mixedbread/error';
 
 export default Mixedbread;
