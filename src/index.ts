@@ -313,7 +313,7 @@ export declare namespace Mixedbread {
   };
 }
 
-export { toFile, fileFromPath } from 'mixedbread/uploads';
+export { toFile, fileFromPath } from './uploads';
 export {
   MixedbreadError,
   APIError,
@@ -328,6 +328,6 @@ export {
   InternalServerError,
   PermissionDeniedError,
   UnprocessableEntityError,
-} from 'mixedbread/error';
+} from './error';
 
 export default Mixedbread;
