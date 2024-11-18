@@ -24,7 +24,7 @@ describe('resource parse', () => {
     const response = await client.documentAI.parse.createJob({
       file_id: 'file_id',
       chunking_strategy: 'page',
-      element_types: ['string', 'string', 'string'],
+      element_types: ['string'],
       return_format: 'html',
     });
   });

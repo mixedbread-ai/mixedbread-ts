@@ -93,10 +93,7 @@ describe('resource vectorStores', () => {
   });
 
   test('search: only required params', async () => {
-    const responsePromise = client.vectorStores.search({
-      query: 'query',
-      vector_store_ids: ['string', 'string', 'string'],
-    });
+    const responsePromise = client.vectorStores.search({ query: 'query', vector_store_ids: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -109,7 +106,7 @@ describe('resource vectorStores', () => {
   test('search: required and optional params', async () => {
     const response = await client.vectorStores.search({
       query: 'query',
-      vector_store_ids: ['string', 'string', 'string'],
+      vector_store_ids: ['string'],
       after: 0,
       filter: {
         and_: { and_: {}, not_: {}, or_: {} },
