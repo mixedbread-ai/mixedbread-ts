@@ -108,11 +108,7 @@ describe('resource vectorStores', () => {
       query: 'query',
       vector_store_ids: ['string'],
       after: 0,
-      filter: {
-        and_: { and_: {}, not_: {}, or_: {} },
-        not_: { and_: {}, not_: {}, or_: {} },
-        or_: { and_: {}, not_: {}, or_: {} },
-      },
+      filter: { and_: {}, not_: {}, or_: {} },
       limit: 0,
       options: { min_score: 0, return_chunks: true, return_metadata: true },
     });
