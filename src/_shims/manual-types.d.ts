@@ -4,8 +4,8 @@
 /**
  * Types will get added to this namespace when you import one of the following:
  *
- *   import 'mixedbread/shims/node'
- *   import 'mixedbread/shims/web'
+ *   import '@mixedbread-ai/sdk/shims/node'
+ *   import '@mixedbread-ai/sdk/shims/web'
  *
  * Importing more than one will cause type and runtime errors.
  */
