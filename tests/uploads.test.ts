@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { toFile, type ResponseLike } from '@mixedbread-ai/sdk/uploads';
-import { File } from '@mixedbread-ai/sdk/_shims/index';
+import { toFile, type ResponseLike } from '@mixedbread/sdk/uploads';
+import { File } from '@mixedbread/sdk/_shims/index';
 
 class MyClass {
   name: string = 'foo';

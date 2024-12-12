@@ -1,5 +1,5 @@
 {
-  "name": "@mixedbread-ai/sdk",
+  "name": "@mixedbread/sdk",
   "version": "0.0.1-alpha.1",
   "description": "The official TypeScript library for the Mixedbread API",
   "author": "Mixedbread <support@mixedbread.ai>",
@@ -59,8 +59,8 @@
     "./shims/web.mjs"
   ],
   "imports": {
-    "@mixedbread-ai/sdk": ".",
-    "@mixedbread-ai/sdk/*": "./src/*"
+    "@mixedbread/sdk": ".",
+    "@mixedbread/sdk/*": "./src/*"
   },
   "exports": {
     "./_shims/auto/*": {

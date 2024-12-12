@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread from '@mixedbread-ai/sdk';
-import { APIUserAbortError } from '@mixedbread-ai/sdk';
-import { Headers } from '@mixedbread-ai/sdk/core';
+import Mixedbread from '@mixedbread/sdk';
+import { APIUserAbortError } from '@mixedbread/sdk';
+import { Headers } from '@mixedbread/sdk/core';
 import defaultFetch, { Response, type RequestInit, type RequestInfo } from 'node-fetch';
 
 describe('instantiate client', () => {
