@@ -1,6 +1,6 @@
-import { multipartFormRequestOptions, createForm } from '@mixedbread-ai/sdk/core';
-import { Blob } from '@mixedbread-ai/sdk/_shims/index';
-import { toFile } from '@mixedbread-ai/sdk';
+import { multipartFormRequestOptions, createForm } from '@mixedbread/sdk/core';
+import { Blob } from '@mixedbread/sdk/_shims/index';
+import { toFile } from '@mixedbread/sdk';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {
