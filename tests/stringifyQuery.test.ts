@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { Mixedbread } from 'mixedbread';
+import { Mixedbread } from '@mixedbread-ai/sdk';
 
 const { stringifyQuery } = Mixedbread.prototype as any;
 

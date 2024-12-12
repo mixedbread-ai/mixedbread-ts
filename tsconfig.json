@@ -9,9 +9,9 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "mixedbread/_shims/auto/*": ["src/_shims/auto/*-node"],
-      "mixedbread/*": ["src/*"],
-      "mixedbread": ["src/index.ts"]
+      "@mixedbread-ai/sdk/_shims/auto/*": ["src/_shims/auto/*-node"],
+      "@mixedbread-ai/sdk/*": ["src/*"],
+      "@mixedbread-ai/sdk": ["src/index.ts"]
     },
     "noEmit": true,
 

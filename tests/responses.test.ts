@@ -1,5 +1,5 @@
-import { createResponseHeaders } from 'mixedbread/core';
-import { Headers } from 'mixedbread/_shims/index';
+import { createResponseHeaders } from '@mixedbread-ai/sdk/core';
+import { Headers } from '@mixedbread-ai/sdk/_shims/index';
 
 describe('response parsing', () => {
   // TODO: test unicode characters

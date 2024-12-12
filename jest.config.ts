@@ -7,9 +7,9 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^mixedbread$': '<rootDir>/src/index.ts',
-    '^mixedbread/_shims/auto/(.*)$': '<rootDir>/src/_shims/auto/$1-node',
-    '^mixedbread/(.*)$': '<rootDir>/src/$1',
+    '^@mixedbread-ai/sdk$': '<rootDir>/src/index.ts',
+    '^@mixedbread-ai/sdk/_shims/auto/(.*)$': '<rootDir>/src/_shims/auto/$1-node',
+    '^@mixedbread-ai/sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: [
     '<rootDir>/ecosystem-tests/',
