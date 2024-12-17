@@ -20,7 +20,7 @@ or products provided by Mixedbread please follow the respective company's securi
 
 ### Mixedbread Terms and Policies
 
-Please contact support@mixedbread.ai for any questions or concerns regarding security of our services.
+Please contact support@mixedbread.a for any questions or concerns regarding security of our services.
 
 ---
 
