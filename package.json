@@ -1,6 +1,6 @@
 {
   "name": "@mixedbread/sdk",
-  "version": "0.0.1-alpha.1",
+  "version": "0.1.0-alpha.1",
   "description": "The official TypeScript library for the Mixedbread API",
   "author": "Mixedbread <support@mixedbread.a>",
   "types": "dist/index.d.ts",
