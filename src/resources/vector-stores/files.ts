@@ -129,6 +129,9 @@ export interface VectorStoreFile {
 }
 
 export interface FileListResponse {
+  /**
+   * The list of vector store files
+   */
   data: Array<VectorStoreFile>;
 
   /**

@@ -11,11 +11,11 @@ export {
 export {
   VectorStores,
   type SearchParams,
+  type SearchResponse,
   type VectorStore,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQaResponse,
-  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
