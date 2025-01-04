@@ -104,10 +104,7 @@ export class VectorStores extends APIResource {
    * Returns: SearchResponse: The response containing the search results and
    * pagination details.
    */
-  search(
-    body: VectorStoreSearchParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreSearchResponse> {
+  search(body: VectorStoreSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
@@ -130,9 +127,9 @@ export interface SearchParams {
    * Filter or condition
    */
   filters?:
-    | SearchParams.Filter
-    | SearchParams.Condition
-    | Array<SearchParams.Filter | SearchParams.Condition>
+    | SearchParams.SearchFilter
+    | SearchParams.SearchFilterCondition
+    | Array<SearchParams.SearchFilter | SearchParams.SearchFilterCondition>
     | null;
 
   /**
@@ -150,28 +147,28 @@ export namespace SearchParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -191,7 +188,7 @@ export namespace SearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -211,7 +208,7 @@ export namespace SearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -232,7 +229,7 @@ export namespace SearchParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -252,28 +249,28 @@ export namespace SearchParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -293,7 +290,7 @@ export namespace SearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -313,7 +310,7 @@ export namespace SearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -334,7 +331,7 @@ export namespace SearchParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -392,120 +389,16 @@ export namespace SearchParams {
   }
 }
 
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStore {
+export interface SearchResponse {
   /**
-   * Unique identifier for the vector store
+   * The list of scored vector store files
    */
-  id: string;
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: VectorStore.ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: VectorStore.FileCounts;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-export namespace VectorStore {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-}
-
-export interface VectorStoreListResponse {
-  data: Array<VectorStore>;
+  data: Array<SearchResponse.Data>;
 
   /**
    * Pagination model that includes total count of items.
    */
-  pagination: VectorStoreListResponse.Pagination;
+  pagination: SearchResponse.Pagination;
 
   /**
    * The object type of the response
@@ -513,65 +406,7 @@ export interface VectorStoreListResponse {
   object?: 'list';
 }
 
-export namespace VectorStoreListResponse {
-  /**
-   * Pagination model that includes total count of items.
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Cursor from which to start returning items
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
-}
-
-/**
- * Response model for vector store deletion.
- */
-export interface VectorStoreDeleteResponse {
-  /**
-   * ID of the deleted vector store
-   */
-  id: string;
-
-  /**
-   * Whether the deletion was successful
-   */
-  deleted: boolean;
-
-  /**
-   * Type of the deleted object
-   */
-  object?: 'vector_store';
-}
-
-export type VectorStoreQaResponse = unknown;
-
-export interface VectorStoreSearchResponse {
-  data: Array<VectorStoreSearchResponse.Data>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: VectorStoreSearchResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace VectorStoreSearchResponse {
+export namespace SearchResponse {
   export interface Data {
     /**
      * file id
@@ -706,6 +541,174 @@ export namespace VectorStoreSearchResponse {
   }
 }
 
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStore {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStore.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStore.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStore {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+export interface VectorStoreListResponse {
+  /**
+   * The list of vector stores
+   */
+  data: Array<VectorStore>;
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  pagination: VectorStoreListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace VectorStoreListResponse {
+  /**
+   * Pagination model that includes total count of items.
+   */
+  export interface Pagination {
+    /**
+     * Maximum number of items to return per page
+     */
+    limit?: number;
+
+    /**
+     * Cursor from which to start returning items
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Response model for vector store deletion.
+ */
+export interface VectorStoreDeleteResponse {
+  /**
+   * ID of the deleted vector store
+   */
+  id: string;
+
+  /**
+   * Whether the deletion was successful
+   */
+  deleted: boolean;
+
+  /**
+   * Type of the deleted object
+   */
+  object?: 'vector_store';
+}
+
+export type VectorStoreQaResponse = unknown;
+
 export interface VectorStoreCreateParams {
   /**
    * Description of the vector store
@@ -811,9 +814,9 @@ export interface VectorStoreQaParams {
    * Filter or condition
    */
   filters?:
-    | VectorStoreQaParams.Filter
-    | VectorStoreQaParams.Condition
-    | Array<VectorStoreQaParams.Filter | VectorStoreQaParams.Condition>
+    | VectorStoreQaParams.SearchFilter
+    | VectorStoreQaParams.SearchFilterCondition
+    | Array<VectorStoreQaParams.SearchFilter | VectorStoreQaParams.SearchFilterCondition>
     | null;
 
   /**
@@ -847,28 +850,28 @@ export namespace VectorStoreQaParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -888,7 +891,7 @@ export namespace VectorStoreQaParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -908,7 +911,7 @@ export namespace VectorStoreQaParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -929,7 +932,7 @@ export namespace VectorStoreQaParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -949,28 +952,28 @@ export namespace VectorStoreQaParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -990,7 +993,7 @@ export namespace VectorStoreQaParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1010,7 +1013,7 @@ export namespace VectorStoreQaParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1031,7 +1034,7 @@ export namespace VectorStoreQaParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -1114,9 +1117,9 @@ export interface VectorStoreSearchParams {
    * Filter or condition
    */
   filters?:
-    | VectorStoreSearchParams.Filter
-    | VectorStoreSearchParams.Condition
-    | Array<VectorStoreSearchParams.Filter | VectorStoreSearchParams.Condition>
+    | VectorStoreSearchParams.SearchFilter
+    | VectorStoreSearchParams.SearchFilterCondition
+    | Array<VectorStoreSearchParams.SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
     | null;
 
   /**
@@ -1134,28 +1137,28 @@ export namespace VectorStoreSearchParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1175,7 +1178,7 @@ export namespace VectorStoreSearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1195,7 +1198,7 @@ export namespace VectorStoreSearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1216,7 +1219,7 @@ export namespace VectorStoreSearchParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -1236,28 +1239,28 @@ export namespace VectorStoreSearchParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
-  export interface Filter {
+  export interface SearchFilter {
     /**
      * List of conditions or filters to be ANDed together
      */
-    all?: Array<unknown | Filter.Condition> | null;
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be ORed together
      */
-    any?: Array<unknown | Filter.Condition> | null;
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
 
     /**
      * List of conditions or filters to be NOTed
      */
-    none?: Array<unknown | Filter.Condition> | null;
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
   }
 
-  export namespace Filter {
+  export namespace SearchFilter {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1277,7 +1280,7 @@ export namespace VectorStoreSearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1297,7 +1300,7 @@ export namespace VectorStoreSearchParams {
     /**
      * Represents a condition with a field, operator, and value.
      */
-    export interface Condition {
+    export interface SearchFilterCondition {
       /**
        * The field to apply the condition on
        */
@@ -1318,7 +1321,7 @@ export namespace VectorStoreSearchParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -1381,11 +1384,11 @@ VectorStores.Files = Files;
 export declare namespace VectorStores {
   export {
     type SearchParams as SearchParams,
+    type SearchResponse as SearchResponse,
     type VectorStore as VectorStore,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQaResponse as VectorStoreQaResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
