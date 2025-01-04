@@ -114,7 +114,10 @@ export namespace RerankingCreateResponse {
 }
 
 export interface RerankingCreateParams {
-  input: unknown;
+  /**
+   * The input documents to rerank.
+   */
+  input: Array<string | unknown>;
 
   /**
    * The query to rerank the documents.

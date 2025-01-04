@@ -142,6 +142,9 @@ export interface FileObject {
 }
 
 export interface FileListResponse {
+  /**
+   * The list of files
+   */
   data: Array<FileObject>;
 
   /**

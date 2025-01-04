@@ -11,7 +11,7 @@ export class Jobs extends APIResource {
    *
    * Returns: ParsingJob: The created parse job.
    */
-  create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<JobCreateResponse> {
+  create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
     return this._client.post('/v1/document-ai/parse', { body, ...options });
   }
 
@@ -22,476 +22,155 @@ export class Jobs extends APIResource {
    *
    * Returns: ParsingJob: Detailed information about the parse job.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobRetrieveResponse> {
+  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
     return this._client.get(`/v1/document-ai/parse/${jobId}`, options);
   }
 }
 
 /**
- * Discriminated union of all possible parsing job states
+ * A job for parsing documents with its current state and result.
  */
-export type JobCreateResponse =
-  | JobCreateResponse.RunningJob
-  | JobCreateResponse.FailedJob
-  | JobCreateResponse.SuccessfulParsingJob;
-
-export namespace JobCreateResponse {
-  export interface RunningJob {
-    /**
-     * The ID of the job
-     */
-    id: string;
-
-    /**
-     * The creation time of the job
-     */
-    created_at?: string;
-
-    /**
-     * The errors of the job
-     */
-    errors?: Array<string> | null;
-
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
-
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The result of the job
-     */
-    result?: unknown | null;
-
-    /**
-     * The status of the job
-     */
-    status?: 'pending' | 'running';
-  }
-
-  export interface FailedJob {
-    /**
-     * The ID of the job
-     */
-    id: string;
-
-    /**
-     * The errors of the job
-     */
-    errors: Array<string>;
-
-    /**
-     * The creation time of the job
-     */
-    created_at?: string;
-
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
-
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The result of the job
-     */
-    result?: unknown | null;
-
-    /**
-     * The status of the job
-     */
-    status?: 'failed';
-  }
+export interface ParsingJob {
+  /**
+   * The ID of the job
+   */
+  id: string;
 
   /**
-   * Represents a parsing job that has completed successfully.
-   *
-   * Contains the extracted document content and metadata from the parsing operation.
+   * The status of the job
    */
-  export interface SuccessfulParsingJob {
-    /**
-     * The ID of the job
-     */
-    id: string;
+  status: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
 
-    /**
-     * The extracted content and metadata from the document
-     */
-    result: SuccessfulParsingJob.Result;
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
 
-    /**
-     * The creation time of the job
-     */
-    created_at?: string;
+  /**
+   * The errors of the job
+   */
+  errors?: Array<string> | null;
 
-    /**
-     * The errors of the job
-     */
-    errors?: Array<string> | null;
+  /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
 
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
+  /**
+   * The type of the object
+   */
+  object?: 'job';
 
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The status of the job
-     */
-    status?: 'successful';
-  }
-
-  export namespace SuccessfulParsingJob {
-    /**
-     * The extracted content and metadata from the document
-     */
-    export interface Result {
-      /**
-       * The strategy used for chunking the document
-       */
-      chunking_strategy: 'page';
-
-      /**
-       * List of extracted chunks from the document
-       */
-      chunks: Array<Result.Chunk>;
-
-      /**
-       * The types of elements extracted
-       */
-      element_types: Array<
-        | 'caption'
-        | 'footnote'
-        | 'formula'
-        | 'list-item'
-        | 'page-footer'
-        | 'page-header'
-        | 'picture'
-        | 'section-header'
-        | 'table'
-        | 'text'
-        | 'title'
-      >;
-
-      /**
-       * The format of the returned content
-       */
-      return_format: 'html' | 'markdown' | 'plain';
-    }
-
-    export namespace Result {
-      /**
-       * A chunk of text extracted from a document page.
-       */
-      export interface Chunk {
-        /**
-         * The full content of the chunk
-         */
-        content: string;
-
-        /**
-         * The content to be used for embedding
-         */
-        content_to_embed: string;
-
-        /**
-         * List of elements contained in this chunk
-         */
-        elements: Array<Chunk.Element>;
-      }
-
-      export namespace Chunk {
-        /**
-         * Represents an extracted element from a document with its content and metadata.
-         */
-        export interface Element {
-          /**
-           * The bounding box coordinates [x1, y1, x2, y2]
-           */
-          bbox: Array<unknown>;
-
-          /**
-           * The confidence score of the extraction
-           */
-          confidence: number;
-
-          /**
-           * The full content of the extracted element
-           */
-          content: string;
-
-          /**
-           * The page number where the element was found
-           */
-          page: number;
-
-          /**
-           * The type of the extracted element
-           */
-          type:
-            | 'caption'
-            | 'footnote'
-            | 'formula'
-            | 'list-item'
-            | 'page-footer'
-            | 'page-header'
-            | 'picture'
-            | 'section-header'
-            | 'table'
-            | 'text'
-            | 'title';
-
-          /**
-           * A brief summary of the element's content
-           */
-          summary?: string | null;
-        }
-      }
-    }
-  }
+  /**
+   * Result of document parsing operation.
+   */
+  result?: ParsingJob.Result | null;
 }
 
-/**
- * Discriminated union of all possible parsing job states
- */
-export type JobRetrieveResponse =
-  | JobRetrieveResponse.RunningJob
-  | JobRetrieveResponse.FailedJob
-  | JobRetrieveResponse.SuccessfulParsingJob;
-
-export namespace JobRetrieveResponse {
-  export interface RunningJob {
-    /**
-     * The ID of the job
-     */
-    id: string;
-
-    /**
-     * The creation time of the job
-     */
-    created_at?: string;
-
-    /**
-     * The errors of the job
-     */
-    errors?: Array<string> | null;
-
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
-
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The result of the job
-     */
-    result?: unknown | null;
-
-    /**
-     * The status of the job
-     */
-    status?: 'pending' | 'running';
-  }
-
-  export interface FailedJob {
-    /**
-     * The ID of the job
-     */
-    id: string;
-
-    /**
-     * The errors of the job
-     */
-    errors: Array<string>;
-
-    /**
-     * The creation time of the job
-     */
-    created_at?: string;
-
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
-
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The result of the job
-     */
-    result?: unknown | null;
-
-    /**
-     * The status of the job
-     */
-    status?: 'failed';
-  }
-
+export namespace ParsingJob {
   /**
-   * Represents a parsing job that has completed successfully.
-   *
-   * Contains the extracted document content and metadata from the parsing operation.
+   * Result of document parsing operation.
    */
-  export interface SuccessfulParsingJob {
+  export interface Result {
     /**
-     * The ID of the job
+     * The strategy used for chunking the document
      */
-    id: string;
+    chunking_strategy: 'page';
 
     /**
-     * The extracted content and metadata from the document
+     * List of extracted chunks from the document
      */
-    result: SuccessfulParsingJob.Result;
+    chunks: Array<Result.Chunk>;
 
     /**
-     * The creation time of the job
+     * The types of elements extracted
      */
-    created_at?: string;
+    element_types: Array<
+      | 'caption'
+      | 'footnote'
+      | 'formula'
+      | 'list-item'
+      | 'page-footer'
+      | 'page-header'
+      | 'picture'
+      | 'section-header'
+      | 'table'
+      | 'text'
+      | 'title'
+    >;
 
     /**
-     * The errors of the job
+     * The format of the returned content
      */
-    errors?: Array<string> | null;
-
-    /**
-     * The finished time of the job
-     */
-    finished_at?: string | null;
-
-    /**
-     * The type of the object
-     */
-    object?: 'job';
-
-    /**
-     * The status of the job
-     */
-    status?: 'successful';
+    return_format: 'html' | 'markdown' | 'plain';
   }
 
-  export namespace SuccessfulParsingJob {
+  export namespace Result {
     /**
-     * The extracted content and metadata from the document
+     * A chunk of text extracted from a document page.
      */
-    export interface Result {
+    export interface Chunk {
       /**
-       * The strategy used for chunking the document
+       * The full content of the chunk
        */
-      chunking_strategy: 'page';
+      content: string;
 
       /**
-       * List of extracted chunks from the document
+       * The content to be used for embedding
        */
-      chunks: Array<Result.Chunk>;
+      content_to_embed: string;
 
       /**
-       * The types of elements extracted
+       * List of elements contained in this chunk
        */
-      element_types: Array<
-        | 'caption'
-        | 'footnote'
-        | 'formula'
-        | 'list-item'
-        | 'page-footer'
-        | 'page-header'
-        | 'picture'
-        | 'section-header'
-        | 'table'
-        | 'text'
-        | 'title'
-      >;
-
-      /**
-       * The format of the returned content
-       */
-      return_format: 'html' | 'markdown' | 'plain';
+      elements: Array<Chunk.Element>;
     }
 
-    export namespace Result {
+    export namespace Chunk {
       /**
-       * A chunk of text extracted from a document page.
+       * Represents an extracted element from a document with its content and metadata.
        */
-      export interface Chunk {
+      export interface Element {
         /**
-         * The full content of the chunk
+         * The bounding box coordinates [x1, y1, x2, y2]
+         */
+        bbox: Array<unknown>;
+
+        /**
+         * The confidence score of the extraction
+         */
+        confidence: number;
+
+        /**
+         * The full content of the extracted element
          */
         content: string;
 
         /**
-         * The content to be used for embedding
+         * The page number where the element was found
          */
-        content_to_embed: string;
+        page: number;
 
         /**
-         * List of elements contained in this chunk
+         * The type of the extracted element
          */
-        elements: Array<Chunk.Element>;
-      }
+        type:
+          | 'caption'
+          | 'footnote'
+          | 'formula'
+          | 'list-item'
+          | 'page-footer'
+          | 'page-header'
+          | 'picture'
+          | 'section-header'
+          | 'table'
+          | 'text'
+          | 'title';
 
-      export namespace Chunk {
         /**
-         * Represents an extracted element from a document with its content and metadata.
+         * A brief summary of the element's content
          */
-        export interface Element {
-          /**
-           * The bounding box coordinates [x1, y1, x2, y2]
-           */
-          bbox: Array<unknown>;
-
-          /**
-           * The confidence score of the extraction
-           */
-          confidence: number;
-
-          /**
-           * The full content of the extracted element
-           */
-          content: string;
-
-          /**
-           * The page number where the element was found
-           */
-          page: number;
-
-          /**
-           * The type of the extracted element
-           */
-          type:
-            | 'caption'
-            | 'footnote'
-            | 'formula'
-            | 'list-item'
-            | 'page-footer'
-            | 'page-header'
-            | 'picture'
-            | 'section-header'
-            | 'table'
-            | 'text'
-            | 'title';
-
-          /**
-           * A brief summary of the element's content
-           */
-          summary?: string | null;
-        }
+        summary?: string | null;
       }
     }
   }
@@ -532,9 +211,5 @@ export interface JobCreateParams {
 }
 
 export declare namespace Jobs {
-  export {
-    type JobCreateResponse as JobCreateResponse,
-    type JobRetrieveResponse as JobRetrieveResponse,
-    type JobCreateParams as JobCreateParams,
-  };
+  export { type ParsingJob as ParsingJob, type JobCreateParams as JobCreateParams };
 }
