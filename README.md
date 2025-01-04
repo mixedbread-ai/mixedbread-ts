@@ -26,7 +26,7 @@ The full API of this library can be found in [api.md](api.md).
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'local', // defaults to 'production'
 });
 
 async function main() {
@@ -47,7 +47,7 @@ This library includes TypeScript definitions for all request params and response
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'local', // defaults to 'production'
 });
 
 async function main() {
