@@ -99,18 +99,31 @@ export interface FileDeleted {
 }
 
 /**
- * Model for storing file metadata associated with users.
+ * A model representing a file object in the system.
+ *
+ * This model contains metadata about files stored in the system, including
+ * identifiers, size information, and timestamps.
  */
 export interface FileObject {
   /**
-   * Unique identifier for the record
+   * Unique identifier for the file
    */
   id: string;
 
   /**
-   * Timestamp of record creation
+   * Size of the file in bytes
+   */
+  bytes: number;
+
+  /**
+   * Timestamp when the file was created
    */
   created_at: string;
+
+  /**
+   * Name of the file including extension
+   */
+  filename: string;
 
   /**
    * MIME type of the file
@@ -118,17 +131,7 @@ export interface FileObject {
   mime_type: string;
 
   /**
-   * Name of the file
-   */
-  name: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  size: number;
-
-  /**
-   * Timestamp of last record update
+   * Timestamp when the file was last updated
    */
   updated_at: string;
 
@@ -141,15 +144,35 @@ export interface FileObject {
 export interface FileListResponse {
   data: Array<FileObject>;
 
+  /**
+   * Pagination model that includes total count of items.
+   */
   pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
 }
 
 export namespace FileListResponse {
+  /**
+   * Pagination model that includes total count of items.
+   */
   export interface Pagination {
-    after?: number;
-
+    /**
+     * Maximum number of items to return per page
+     */
     limit?: number;
 
+    /**
+     * Cursor from which to start returning items
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
     total?: number;
   }
 }
@@ -169,9 +192,15 @@ export interface FileUpdateParams {
 }
 
 export interface FileListParams {
-  after?: number;
-
+  /**
+   * Maximum number of items to return per page
+   */
   limit?: number;
+
+  /**
+   * Cursor from which to start returning items
+   */
+  offset?: number;
 }
 
 export declare namespace Files {

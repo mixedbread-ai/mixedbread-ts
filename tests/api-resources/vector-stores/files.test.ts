@@ -10,7 +10,9 @@ const client = new Mixedbread({
 
 describe('resource files', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.vectorStores.files.create('vector_store_id', { file_id: 'file_id' });
+    const responsePromise = client.vectorStores.files.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,14 +23,17 @@ describe('resource files', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.vectorStores.files.create('vector_store_id', {
-      file_id: 'file_id',
+    const response = await client.vectorStores.files.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
       metadata: {},
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.vectorStores.files.retrieve('vector_store_id', 'file_id');
+    const responsePromise = client.vectorStores.files.retrieve(
+      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -41,12 +46,16 @@ describe('resource files', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.files.retrieve('vector_store_id', 'file_id', { path: '/_stainless_unknown_path' }),
+      client.vectorStores.files.retrieve(
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('list', async () => {
-    const responsePromise = client.vectorStores.files.list('vector_store_id');
+    const responsePromise = client.vectorStores.files.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,7 +68,9 @@ describe('resource files', () => {
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.files.list('vector_store_id', { path: '/_stainless_unknown_path' }),
+      client.vectorStores.files.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+        path: '/_stainless_unknown_path',
+      }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
@@ -67,15 +78,18 @@ describe('resource files', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.vectorStores.files.list(
-        'vector_store_id',
-        { after: 0, limit: 0 },
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        { limit: 0, offset: 0 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.vectorStores.files.delete('vector_store_id', 'file_id');
+    const responsePromise = client.vectorStores.files.delete(
+      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    );
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,7 +102,11 @@ describe('resource files', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.files.delete('vector_store_id', 'file_id', { path: '/_stainless_unknown_path' }),
+      client.vectorStores.files.delete(
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 });

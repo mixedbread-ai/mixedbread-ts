@@ -3,7 +3,6 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import * as JobsAPI from '../jobs';
 
 export class Files extends APIResource {
   /**
@@ -79,7 +78,13 @@ export class Files extends APIResource {
   }
 }
 
+/**
+ * Represents a file stored in a vector store.
+ */
 export interface VectorStoreFile {
+  /**
+   * Unique identifier for the file
+   */
   id: string;
 
   /**
@@ -87,51 +92,120 @@ export interface VectorStoreFile {
    */
   created_at: string;
 
+  /**
+   * ID of the containing vector store
+   */
   vector_store_id: string;
 
+  /**
+   * List of error messages if processing failed
+   */
   errors?: Array<string> | null;
 
+  /**
+   * Optional file metadata
+   */
   metadata?: unknown | null;
 
-  status?: JobsAPI.JobStatus;
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
 
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
   usage_bytes?: number | null;
 
+  /**
+   * Version number of the file
+   */
   version?: number | null;
 }
 
 export interface FileListResponse {
   data: Array<VectorStoreFile>;
 
+  /**
+   * Pagination model that includes total count of items.
+   */
   pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
 }
 
 export namespace FileListResponse {
+  /**
+   * Pagination model that includes total count of items.
+   */
   export interface Pagination {
-    after?: number;
-
+    /**
+     * Maximum number of items to return per page
+     */
     limit?: number;
 
+    /**
+     * Cursor from which to start returning items
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
     total?: number;
   }
 }
 
+/**
+ * Response model for file deletion.
+ */
 export interface FileDeleteResponse {
+  /**
+   * ID of the deleted file
+   */
   id: string;
 
-  deleted: boolean;
+  /**
+   * Whether the deletion was successful
+   */
+  deleted?: boolean;
+
+  /**
+   * Type of the deleted object
+   */
+  object?: 'vector_store.file';
 }
 
 export interface FileCreateParams {
+  /**
+   * ID of the file to add
+   */
   file_id: string;
 
+  /**
+   * Optional metadata for the file
+   */
   metadata?: unknown | null;
 }
 
 export interface FileListParams {
-  after?: number;
-
+  /**
+   * Maximum number of items to return per page
+   */
   limit?: number;
+
+  /**
+   * Cursor from which to start returning items
+   */
+  offset?: number;
 }
 
 export declare namespace Files {
