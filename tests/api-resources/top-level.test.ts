@@ -51,7 +51,10 @@ describe('top level methods', () => {
   });
 
   test('rerank: only required params', async () => {
-    const responsePromise = client.rerank({ input: {}, query: 'What is mixedbread ai?' });
+    const responsePromise = client.rerank({
+      input: ['Document 1', 'Document 2'],
+      query: 'What is mixedbread ai?',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -63,9 +66,9 @@ describe('top level methods', () => {
 
   test('rerank: required and optional params', async () => {
     const response = await client.rerank({
-      input: {},
+      input: ['Document 1', 'Document 2'],
       query: 'What is mixedbread ai?',
-      model: 'mixedbread-ai/mxbai-rerank-large-v1',
+      model: 'x',
       rank_fields: ['field1', 'field2'],
       return_input: false,
       top_k: 10,
