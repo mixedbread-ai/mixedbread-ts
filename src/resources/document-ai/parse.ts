@@ -61,9 +61,9 @@ export namespace ParseCreateJobResponse {
     finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The result of the job
@@ -95,12 +95,12 @@ export namespace ParseCreateJobResponse {
     /**
      * The finished time of the job
      */
-    finished_at?: string;
+    finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The result of the job
@@ -142,12 +142,12 @@ export namespace ParseCreateJobResponse {
     /**
      * The finished time of the job
      */
-    finished_at?: string;
+    finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The status of the job
@@ -195,7 +195,7 @@ export namespace ParseCreateJobResponse {
 
     export namespace Result {
       /**
-       * A chunk of text extracted from a page.
+       * A chunk of text extracted from a document page.
        */
       export interface Chunk {
         /**
@@ -222,7 +222,7 @@ export namespace ParseCreateJobResponse {
           /**
            * The bounding box coordinates [x1, y1, x2, y2]
            */
-          bbox: Array<number>;
+          bbox: Array<unknown>;
 
           /**
            * The confidence score of the extraction
@@ -296,9 +296,9 @@ export namespace ParseRetrieveJobResponse {
     finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The result of the job
@@ -330,12 +330,12 @@ export namespace ParseRetrieveJobResponse {
     /**
      * The finished time of the job
      */
-    finished_at?: string;
+    finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The result of the job
@@ -377,12 +377,12 @@ export namespace ParseRetrieveJobResponse {
     /**
      * The finished time of the job
      */
-    finished_at?: string;
+    finished_at?: string | null;
 
     /**
-     * Job memory
+     * The type of the object
      */
-    memory?: unknown;
+    object?: 'job';
 
     /**
      * The status of the job
@@ -430,7 +430,7 @@ export namespace ParseRetrieveJobResponse {
 
     export namespace Result {
       /**
-       * A chunk of text extracted from a page.
+       * A chunk of text extracted from a document page.
        */
       export interface Chunk {
         /**
@@ -457,7 +457,7 @@ export namespace ParseRetrieveJobResponse {
           /**
            * The bounding box coordinates [x1, y1, x2, y2]
            */
-          bbox: Array<number>;
+          bbox: Array<unknown>;
 
           /**
            * The confidence score of the extraction
@@ -514,7 +514,19 @@ export interface ParseCreateJobParams {
   /**
    * The elements to extract from the document
    */
-  element_types?: Array<string> | null;
+  element_types?: Array<
+    | 'caption'
+    | 'footnote'
+    | 'formula'
+    | 'list-item'
+    | 'page-footer'
+    | 'page-header'
+    | 'picture'
+    | 'section-header'
+    | 'table'
+    | 'text'
+    | 'title'
+  > | null;
 
   /**
    * The format of the returned content

@@ -10,12 +10,15 @@ export {
 } from './files';
 export {
   VectorStores,
+  type SearchParams,
   type SearchResponse,
   type VectorStore,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
+  type VectorStoreQuestionAnsweringResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
+  type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
 } from './vector-stores';

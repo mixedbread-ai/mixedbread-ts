@@ -9,9 +9,9 @@ import * as TopLevelAPI from './resources/top-level';
 import {
   EmbedParams,
   EmbedResponse,
+  InfoResponse,
   RerankParams,
   RerankResponse,
-  StatusResponse,
 } from './resources/top-level';
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
@@ -23,16 +23,19 @@ import {
   FileUpdateParams,
   Files,
 } from './resources/files';
-import { JobDeleteResponse, JobStatus, Jobs } from './resources/jobs';
 import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
+import { Chat } from './resources/chat/chat';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
+  SearchParams,
   SearchResponse,
   VectorStore,
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
   VectorStoreListResponse,
+  VectorStoreQuestionAnsweringParams,
+  VectorStoreQuestionAnsweringResponse,
   VectorStoreSearchParams,
   VectorStoreUpdateParams,
   VectorStores,
@@ -177,8 +180,8 @@ export class Mixedbread extends Core.APIClient {
   embeddings: API.Embeddings = new API.Embeddings(this);
   rerankings: API.Rerankings = new API.Rerankings(this);
   files: API.Files = new API.Files(this);
-  jobs: API.Jobs = new API.Jobs(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
+  chat: API.Chat = new API.Chat(this);
 
   /**
    * Create embeddings for text or images using the specified model, encoding format,
@@ -196,6 +199,15 @@ export class Mixedbread extends Core.APIClient {
   }
 
   /**
+   * Returns service information, including name and version.
+   *
+   * Returns: InfoResponse: A response containing the service name and version.
+   */
+  info(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.InfoResponse> {
+    return this.get('/', options);
+  }
+
+  /**
    * Rerank different kind of documents for a given query.
    *
    * Args: params: RerankingCreateParams: The parameters for reranking.
@@ -207,18 +219,6 @@ export class Mixedbread extends Core.APIClient {
     options?: Core.RequestOptions,
   ): Core.APIPromise<TopLevelAPI.RerankResponse> {
     return this.post('/v1/reranking', { body, ...options });
-  }
-
-  /**
-   * Perform a base search to check the service status and configuration.
-   *
-   * Args: state: The application state.
-   *
-   * Returns: dict: A dictionary containing the service status and public
-   * configuration details.
-   */
-  status(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.StatusResponse> {
-    return this.get('/', options);
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
@@ -261,15 +261,15 @@ Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Rerankings = Rerankings;
 Mixedbread.Files = Files;
-Mixedbread.Jobs = Jobs;
 Mixedbread.VectorStores = VectorStores;
+Mixedbread.Chat = Chat;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
   export {
     type EmbedResponse as EmbedResponse,
+    type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
-    type StatusResponse as StatusResponse,
     type EmbedParams as EmbedParams,
     type RerankParams as RerankParams,
   };
@@ -298,19 +298,22 @@ export declare namespace Mixedbread {
     type FileListParams as FileListParams,
   };
 
-  export { Jobs as Jobs, type JobStatus as JobStatus, type JobDeleteResponse as JobDeleteResponse };
-
   export {
     VectorStores as VectorStores,
+    type SearchParams as SearchParams,
     type SearchResponse as SearchResponse,
     type VectorStore as VectorStore,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
+
+  export { Chat as Chat };
 }
 
 export { toFile, fileFromPath } from './uploads';

@@ -3,14 +3,14 @@
 Types:
 
 - <code><a href="./src/resources/top-level.ts">EmbedResponse</a></code>
+- <code><a href="./src/resources/top-level.ts">InfoResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">RerankResponse</a></code>
-- <code><a href="./src/resources/top-level.ts">StatusResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/embeddings">client.<a href="./src/index.ts">embed</a>({ ...params }) -> EmbedResponse</code>
+- <code title="get /">client.<a href="./src/index.ts">info</a>() -> InfoResponse</code>
 - <code title="post /v1/reranking">client.<a href="./src/index.ts">rerank</a>({ ...params }) -> RerankResponse</code>
-- <code title="get /">client.<a href="./src/index.ts">status</a>() -> StatusResponse</code>
 
 # DocumentAI
 
@@ -25,6 +25,34 @@ Methods:
 
 - <code title="post /v1/document-ai/parse">client.documentAI.parse.<a href="./src/resources/document-ai/parse.ts">createJob</a>({ ...params }) -> ParseCreateJobResponse</code>
 - <code title="get /v1/document-ai/parse/{job_id}">client.documentAI.parse.<a href="./src/resources/document-ai/parse.ts">retrieveJob</a>(jobId) -> ParseRetrieveJobResponse</code>
+
+## Extract
+
+Types:
+
+- <code><a href="./src/resources/document-ai/extract/extract.ts">Result</a></code>
+- <code><a href="./src/resources/document-ai/extract/extract.ts">ExtractCreateJobResponse</a></code>
+- <code><a href="./src/resources/document-ai/extract/extract.ts">ExtractRetrieveJobResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/document-ai/extract/content">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">content</a>({ ...params }) -> Result</code>
+- <code title="post /v1/document-ai/extract">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">createJob</a>({ ...params }) -> ExtractCreateJobResponse</code>
+- <code title="get /v1/document-ai/extract/{job_id}">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">retrieveJob</a>(jobId) -> ExtractRetrieveJobResponse</code>
+
+### Schema
+
+Types:
+
+- <code><a href="./src/resources/document-ai/extract/schema.ts">CreatedJsonSchema</a></code>
+- <code><a href="./src/resources/document-ai/extract/schema.ts">EnhancedJsonSchema</a></code>
+- <code><a href="./src/resources/document-ai/extract/schema.ts">ValidatedJsonSchema</a></code>
+
+Methods:
+
+- <code title="post /v1/document-ai/extract/schema">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">create</a>({ ...params }) -> CreatedJsonSchema</code>
+- <code title="post /v1/document-ai/extract/schema/enhance">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">enhance</a>({ ...params }) -> EnhancedJsonSchema</code>
+- <code title="post /v1/document-ai/extract/schema/validate">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">validate</a>({ ...params }) -> ValidatedJsonSchema</code>
 
 # Embeddings
 
@@ -63,26 +91,16 @@ Methods:
 - <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> FileDeleted</code>
 - <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
 
-# Jobs
-
-Types:
-
-- <code><a href="./src/resources/jobs.ts">JobStatus</a></code>
-- <code><a href="./src/resources/jobs.ts">JobDeleteResponse</a></code>
-
-Methods:
-
-- <code title="get /v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">retrieve</a>(jobId) -> JobStatus</code>
-- <code title="delete /v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">delete</a>(jobId) -> JobDeleteResponse</code>
-
 # VectorStores
 
 Types:
 
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchParams</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreListResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreDeleteResponse</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreQuestionAnsweringResponse</a></code>
 
 Methods:
 
@@ -91,6 +109,7 @@ Methods:
 - <code title="put /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">update</a>(vectorStoreId, { ...params }) -> VectorStore</code>
 - <code title="get /v1/vector_stores">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">list</a>({ ...params }) -> VectorStoreListResponse</code>
 - <code title="delete /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">delete</a>(vectorStoreId) -> VectorStoreDeleteResponse</code>
+- <code title="post /v1/vector_stores/question-answering">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">questionAnswering</a>({ ...params }) -> unknown</code>
 - <code title="post /v1/vector_stores/search">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">search</a>({ ...params }) -> SearchResponse</code>
 
 ## Files
@@ -107,3 +126,15 @@ Methods:
 - <code title="get /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">retrieve</a>(vectorStoreId, fileId) -> VectorStoreFile</code>
 - <code title="get /v1/vector_stores/{vector_store_id}/files">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">list</a>(vectorStoreId, { ...params }) -> FileListResponse</code>
 - <code title="delete /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">delete</a>(vectorStoreId, fileId) -> FileDeleteResponse</code>
+
+# Chat
+
+## Completions
+
+Types:
+
+- <code><a href="./src/resources/chat/completions.ts">CompletionCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/chat/completions">client.chat.completions.<a href="./src/resources/chat/completions.ts">create</a>() -> unknown</code>

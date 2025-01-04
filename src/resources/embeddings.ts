@@ -62,7 +62,16 @@ export interface EmbeddingCreateResponse {
   /**
    * The object type of the response
    */
-  object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+  object?:
+    | 'list'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'text_document'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
 }
 
 export namespace EmbeddingCreateResponse {
@@ -85,7 +94,7 @@ export namespace EmbeddingCreateResponse {
 
   export interface UnionMember1 {
     /**
-     * The encoded embedding data by encoding format. Returned, if more than one
+     * The encoded embedding data by encoding format.Returned, if more than one
      * encoding format is used.
      */
     embedding: UnionMember1.Embedding;
@@ -103,7 +112,7 @@ export namespace EmbeddingCreateResponse {
 
   export namespace UnionMember1 {
     /**
-     * The encoded embedding data by encoding format. Returned, if more than one
+     * The encoded embedding data by encoding format.Returned, if more than one
      * encoding format is used.
      */
     export interface Embedding {

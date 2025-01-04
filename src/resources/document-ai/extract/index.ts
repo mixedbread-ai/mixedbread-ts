@@ -1,6 +1,5 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { DocumentAI } from './document-ai';
 export {
   Extract,
   type Result,
@@ -8,10 +7,13 @@ export {
   type ExtractRetrieveJobResponse,
   type ExtractContentParams,
   type ExtractCreateJobParams,
-} from './extract/index';
+} from './extract';
 export {
-  Parse,
-  type ParseCreateJobResponse,
-  type ParseRetrieveJobResponse,
-  type ParseCreateJobParams,
-} from './parse';
+  Schema,
+  type CreatedJsonSchema,
+  type EnhancedJsonSchema,
+  type ValidatedJsonSchema,
+  type SchemaCreateParams,
+  type SchemaEnhanceParams,
+  type SchemaValidateParams,
+} from './schema';
