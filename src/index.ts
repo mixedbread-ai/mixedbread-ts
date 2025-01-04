@@ -12,6 +12,7 @@ import {
   InfoResponse,
   RerankParams,
   RerankResponse,
+  SearchFilter,
 } from './resources/top-level';
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
@@ -43,7 +44,7 @@ import {
 
 const environments = {
   production: 'https://api.mixedbread.ai',
-  environment_1: 'http://127.0.0.1:8000',
+  local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
 export interface ClientOptions {
@@ -57,7 +58,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mixedbread.ai`
-   * - `environment_1` corresponds to `http://127.0.0.1:8000`
+   * - `local` corresponds to `http://127.0.0.1:8000`
    */
   environment?: Environment;
 
@@ -267,6 +268,7 @@ export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
   export {
+    type SearchFilter as SearchFilter,
     type EmbedResponse as EmbedResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,

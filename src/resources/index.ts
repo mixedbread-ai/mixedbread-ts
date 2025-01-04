@@ -28,6 +28,7 @@ export {
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export {
+  type SearchFilter,
   type EmbedResponse,
   type InfoResponse,
   type RerankResponse,
