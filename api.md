@@ -26,34 +26,6 @@ Methods:
 - <code title="post /v1/document-ai/parse">client.documentAI.parse.<a href="./src/resources/document-ai/parse.ts">createJob</a>({ ...params }) -> ParseCreateJobResponse</code>
 - <code title="get /v1/document-ai/parse/{job_id}">client.documentAI.parse.<a href="./src/resources/document-ai/parse.ts">retrieveJob</a>(jobId) -> ParseRetrieveJobResponse</code>
 
-## Extract
-
-Types:
-
-- <code><a href="./src/resources/document-ai/extract/extract.ts">Result</a></code>
-- <code><a href="./src/resources/document-ai/extract/extract.ts">ExtractCreateJobResponse</a></code>
-- <code><a href="./src/resources/document-ai/extract/extract.ts">ExtractRetrieveJobResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/document-ai/extract/content">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">content</a>({ ...params }) -> Result</code>
-- <code title="post /v1/document-ai/extract">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">createJob</a>({ ...params }) -> ExtractCreateJobResponse</code>
-- <code title="get /v1/document-ai/extract/{job_id}">client.documentAI.extract.<a href="./src/resources/document-ai/extract/extract.ts">retrieveJob</a>(jobId) -> ExtractRetrieveJobResponse</code>
-
-### Schema
-
-Types:
-
-- <code><a href="./src/resources/document-ai/extract/schema.ts">CreatedJsonSchema</a></code>
-- <code><a href="./src/resources/document-ai/extract/schema.ts">EnhancedJsonSchema</a></code>
-- <code><a href="./src/resources/document-ai/extract/schema.ts">ValidatedJsonSchema</a></code>
-
-Methods:
-
-- <code title="post /v1/document-ai/extract/schema">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">create</a>({ ...params }) -> CreatedJsonSchema</code>
-- <code title="post /v1/document-ai/extract/schema/enhance">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">enhance</a>({ ...params }) -> EnhancedJsonSchema</code>
-- <code title="post /v1/document-ai/extract/schema/validate">client.documentAI.extract.schema.<a href="./src/resources/document-ai/extract/schema.ts">validate</a>({ ...params }) -> ValidatedJsonSchema</code>
-
 # Embeddings
 
 Types:
