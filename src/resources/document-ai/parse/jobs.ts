@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../../resource';
+import * as Core from '../../../core';
 
-export class Parse extends APIResource {
+export class Jobs extends APIResource {
   /**
    * Start a parse job for the provided file.
    *
@@ -11,10 +11,7 @@ export class Parse extends APIResource {
    *
    * Returns: ParsingJob: The created parse job.
    */
-  createJob(
-    body: ParseCreateJobParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<ParseCreateJobResponse> {
+  create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<JobCreateResponse> {
     return this._client.post('/v1/document-ai/parse', { body, ...options });
   }
 
@@ -25,7 +22,7 @@ export class Parse extends APIResource {
    *
    * Returns: ParsingJob: Detailed information about the parse job.
    */
-  retrieveJob(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParseRetrieveJobResponse> {
+  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobRetrieveResponse> {
     return this._client.get(`/v1/document-ai/parse/${jobId}`, options);
   }
 }
@@ -33,12 +30,12 @@ export class Parse extends APIResource {
 /**
  * Discriminated union of all possible parsing job states
  */
-export type ParseCreateJobResponse =
-  | ParseCreateJobResponse.RunningJob
-  | ParseCreateJobResponse.FailedJob
-  | ParseCreateJobResponse.SuccessfulParsingJob;
+export type JobCreateResponse =
+  | JobCreateResponse.RunningJob
+  | JobCreateResponse.FailedJob
+  | JobCreateResponse.SuccessfulParsingJob;
 
-export namespace ParseCreateJobResponse {
+export namespace JobCreateResponse {
   export interface RunningJob {
     /**
      * The ID of the job
@@ -268,12 +265,12 @@ export namespace ParseCreateJobResponse {
 /**
  * Discriminated union of all possible parsing job states
  */
-export type ParseRetrieveJobResponse =
-  | ParseRetrieveJobResponse.RunningJob
-  | ParseRetrieveJobResponse.FailedJob
-  | ParseRetrieveJobResponse.SuccessfulParsingJob;
+export type JobRetrieveResponse =
+  | JobRetrieveResponse.RunningJob
+  | JobRetrieveResponse.FailedJob
+  | JobRetrieveResponse.SuccessfulParsingJob;
 
-export namespace ParseRetrieveJobResponse {
+export namespace JobRetrieveResponse {
   export interface RunningJob {
     /**
      * The ID of the job
@@ -500,7 +497,7 @@ export namespace ParseRetrieveJobResponse {
   }
 }
 
-export interface ParseCreateJobParams {
+export interface JobCreateParams {
   /**
    * The ID of the file to parse
    */
@@ -534,10 +531,10 @@ export interface ParseCreateJobParams {
   return_format?: 'html' | 'markdown' | 'plain';
 }
 
-export declare namespace Parse {
+export declare namespace Jobs {
   export {
-    type ParseCreateJobResponse as ParseCreateJobResponse,
-    type ParseRetrieveJobResponse as ParseRetrieveJobResponse,
-    type ParseCreateJobParams as ParseCreateJobParams,
+    type JobCreateResponse as JobCreateResponse,
+    type JobRetrieveResponse as JobRetrieveResponse,
+    type JobCreateParams as JobCreateParams,
   };
 }
