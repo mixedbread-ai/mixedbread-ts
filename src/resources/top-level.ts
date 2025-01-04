@@ -322,10 +322,7 @@ export namespace EmbedParams {
 }
 
 export interface RerankParams {
-  /**
-   * The input documents to rerank.
-   */
-  input: Array<string | unknown>;
+  input: unknown;
 
   /**
    * The query to rerank the documents.
