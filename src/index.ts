@@ -28,15 +28,15 @@ import { Chat } from './resources/chat/chat';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
   SearchParams,
-  SearchResponse,
   VectorStore,
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
   VectorStoreListResponse,
-  VectorStoreQuestionAnsweringParams,
-  VectorStoreQuestionAnsweringResponse,
+  VectorStoreQaParams,
+  VectorStoreQaResponse,
   VectorStoreSearchParams,
+  VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStores,
 } from './resources/vector-stores/vector-stores';
@@ -301,15 +301,15 @@ export declare namespace Mixedbread {
   export {
     VectorStores as VectorStores,
     type SearchParams as SearchParams,
-    type SearchResponse as SearchResponse,
     type VectorStore as VectorStore,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
+    type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
+    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 

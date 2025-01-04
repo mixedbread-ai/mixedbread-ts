@@ -16,15 +16,15 @@ export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } 
 export {
   VectorStores,
   type SearchParams,
-  type SearchResponse,
   type VectorStore,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
-  type VectorStoreQuestionAnsweringResponse,
+  type VectorStoreQaResponse,
+  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
-  type VectorStoreQuestionAnsweringParams,
+  type VectorStoreQaParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export {

@@ -96,8 +96,8 @@ describe('resource vectorStores', () => {
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
-  test('questionAnswering: only required params', async () => {
-    const responsePromise = client.vectorStores.questionAnswering({
+  test('qa: only required params', async () => {
+    const responsePromise = client.vectorStores.qa({
       vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -109,16 +109,12 @@ describe('resource vectorStores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('questionAnswering: required and optional params', async () => {
-    const response = await client.vectorStores.questionAnswering({
+  test('qa: required and optional params', async () => {
+    const response = await client.vectorStores.qa({
       vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
       filters: { all: [{}], any: [{}], none: [{}] },
       pagination: { limit: 0, offset: 0 },
-      qa_options: {
-        cite: true,
-        prompts: { citation_prompt: 'x', system_prompt: 'x', user_prompt: 'x' },
-        return_sources: true,
-      },
+      qa_options: { cite: true },
       query: 'x',
       search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
       stream: true,
