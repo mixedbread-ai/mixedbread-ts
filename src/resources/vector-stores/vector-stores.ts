@@ -92,10 +92,7 @@ export class VectorStores extends APIResource {
   /**
    * Question answering
    */
-  questionAnswering(
-    body: VectorStoreQuestionAnsweringParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  qa(body: VectorStoreQaParams, options?: Core.RequestOptions): Core.APIPromise<unknown> {
     return this._client.post('/v1/vector_stores/question-answering', { body, ...options });
   }
 
@@ -107,7 +104,10 @@ export class VectorStores extends APIResource {
    * Returns: SearchResponse: The response containing the search results and
    * pagination details.
    */
-  search(body: VectorStoreSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchResponse> {
+  search(
+    body: VectorStoreSearchParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreSearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
@@ -392,155 +392,6 @@ export namespace SearchParams {
   }
 }
 
-export interface SearchResponse {
-  data: Array<SearchResponse.Data>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: SearchResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace SearchResponse {
-  export interface Data {
-    /**
-     * file id
-     */
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    /**
-     * score of the file
-     */
-    score: number;
-
-    /**
-     * usage in bytes
-     */
-    usage_bytes: number;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * version of the file
-     */
-    version: number;
-
-    /**
-     * chunks
-     */
-    chunks?: Array<Data.Chunk> | null;
-
-    /**
-     * metadata
-     */
-    metadata?: unknown | null;
-  }
-
-  export namespace Data {
-    export interface Chunk {
-      /**
-       * file id
-       */
-      file_id: string;
-
-      /**
-       * rank of the chunk in a file
-       */
-      rank: number;
-
-      /**
-       * score of the chunk
-       */
-      score: number;
-
-      /**
-       * value of the chunk
-       */
-      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
-    }
-
-    export namespace Chunk {
-      /**
-       * Model for image input validation.
-       */
-      export interface ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        image: ImageURLInput.Image;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'image_url';
-      }
-
-      export namespace ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        export interface Image {
-          /**
-           * The image URL. Can be either a URL or a Data URI.
-           */
-          url: string;
-        }
-      }
-
-      /**
-       * Model for text input validation.
-       *
-       * Attributes: type: Input type identifier, always "text" text: The actual text
-       * content, with length and whitespace constraints
-       */
-      export interface TextInput {
-        /**
-         * Text content to process
-         */
-        text: string;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'text';
-      }
-    }
-  }
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Cursor from which to start returning items
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
-}
-
 /**
  * Model representing a vector store with its metadata and timestamps.
  */
@@ -704,7 +555,156 @@ export interface VectorStoreDeleteResponse {
   object?: 'vector_store';
 }
 
-export type VectorStoreQuestionAnsweringResponse = unknown;
+export type VectorStoreQaResponse = unknown;
+
+export interface VectorStoreSearchResponse {
+  data: Array<VectorStoreSearchResponse.Data>;
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  pagination: VectorStoreSearchResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace VectorStoreSearchResponse {
+  export interface Data {
+    /**
+     * file id
+     */
+    id: string;
+
+    /**
+     * Timestamp of vector store file creation
+     */
+    created_at: string;
+
+    /**
+     * score of the file
+     */
+    score: number;
+
+    /**
+     * usage in bytes
+     */
+    usage_bytes: number;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * version of the file
+     */
+    version: number;
+
+    /**
+     * chunks
+     */
+    chunks?: Array<Data.Chunk> | null;
+
+    /**
+     * metadata
+     */
+    metadata?: unknown | null;
+  }
+
+  export namespace Data {
+    export interface Chunk {
+      /**
+       * file id
+       */
+      file_id: string;
+
+      /**
+       * rank of the chunk in a file
+       */
+      rank: number;
+
+      /**
+       * score of the chunk
+       */
+      score: number;
+
+      /**
+       * value of the chunk
+       */
+      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
+    }
+
+    export namespace Chunk {
+      /**
+       * Model for image input validation.
+       */
+      export interface ImageURLInput {
+        /**
+         * The image input specification.
+         */
+        image: ImageURLInput.Image;
+
+        /**
+         * Input type identifier
+         */
+        type?: 'image_url';
+      }
+
+      export namespace ImageURLInput {
+        /**
+         * The image input specification.
+         */
+        export interface Image {
+          /**
+           * The image URL. Can be either a URL or a Data URI.
+           */
+          url: string;
+        }
+      }
+
+      /**
+       * Model for text input validation.
+       *
+       * Attributes: type: Input type identifier, always "text" text: The actual text
+       * content, with length and whitespace constraints
+       */
+      export interface TextInput {
+        /**
+         * Text content to process
+         */
+        text: string;
+
+        /**
+         * Input type identifier
+         */
+        type?: 'text';
+      }
+    }
+  }
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  export interface Pagination {
+    /**
+     * Maximum number of items to return per page
+     */
+    limit?: number;
+
+    /**
+     * Cursor from which to start returning items
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
+    total?: number;
+  }
+}
 
 export interface VectorStoreCreateParams {
   /**
@@ -801,7 +801,7 @@ export interface VectorStoreListParams {
   offset?: number;
 }
 
-export interface VectorStoreQuestionAnsweringParams {
+export interface VectorStoreQaParams {
   /**
    * IDs of vector stores to search
    */
@@ -811,20 +811,20 @@ export interface VectorStoreQuestionAnsweringParams {
    * Filter or condition
    */
   filters?:
-    | VectorStoreQuestionAnsweringParams.Filter
-    | VectorStoreQuestionAnsweringParams.Condition
-    | Array<VectorStoreQuestionAnsweringParams.Filter | VectorStoreQuestionAnsweringParams.Condition>
+    | VectorStoreQaParams.Filter
+    | VectorStoreQaParams.Condition
+    | Array<VectorStoreQaParams.Filter | VectorStoreQaParams.Condition>
     | null;
 
   /**
    * Pagination options
    */
-  pagination?: VectorStoreQuestionAnsweringParams.Pagination;
+  pagination?: VectorStoreQaParams.Pagination;
 
   /**
    * Question answering configuration options
    */
-  qa_options?: VectorStoreQuestionAnsweringParams.QaOptions;
+  qa_options?: VectorStoreQaParams.QaOptions;
 
   /**
    * Question to answer. If not provided, the question will be extracted from the
@@ -835,7 +835,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreQuestionAnsweringParams.SearchOptions;
+  search_options?: VectorStoreQaParams.SearchOptions;
 
   /**
    * Whether to stream the answer
@@ -843,7 +843,7 @@ export interface VectorStoreQuestionAnsweringParams {
   stream?: boolean;
 }
 
-export namespace VectorStoreQuestionAnsweringParams {
+export namespace VectorStoreQaParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
@@ -1071,38 +1071,6 @@ export namespace VectorStoreQuestionAnsweringParams {
      * Whether to use citations
      */
     cite?: boolean;
-
-    /**
-     * Prompts used for question answering
-     */
-    prompts?: QaOptions.Prompts;
-
-    /**
-     * Whether to return sources
-     */
-    return_sources?: boolean;
-  }
-
-  export namespace QaOptions {
-    /**
-     * Prompts used for question answering
-     */
-    export interface Prompts {
-      /**
-       * Citation prompt
-       */
-      citation_prompt?: string | null;
-
-      /**
-       * System prompt
-       */
-      system_prompt?: string | null;
-
-      /**
-       * User prompt
-       */
-      user_prompt?: string | null;
-    }
   }
 
   /**
@@ -1413,15 +1381,15 @@ VectorStores.Files = Files;
 export declare namespace VectorStores {
   export {
     type SearchParams as SearchParams,
-    type SearchResponse as SearchResponse,
     type VectorStore as VectorStore,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
+    type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
+    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 
