@@ -48,7 +48,16 @@ export interface RerankingCreateResponse {
   /**
    * The object type of the response
    */
-  object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+  object?:
+    | 'list'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'text_document'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
 }
 
 export namespace RerankingCreateResponse {
@@ -71,7 +80,16 @@ export namespace RerankingCreateResponse {
     /**
      * The object type.
      */
-    object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+    object?:
+      | 'list'
+      | 'job'
+      | 'embedding'
+      | 'embedding_dict'
+      | 'text_document'
+      | 'file'
+      | 'vector_store'
+      | 'vector_store.file'
+      | 'api_key';
   }
 
   /**

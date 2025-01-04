@@ -42,7 +42,16 @@ export interface EmbedResponse {
   /**
    * The object type of the response
    */
-  object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+  object?:
+    | 'list'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'text_document'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
 }
 
 export namespace EmbedResponse {
@@ -65,7 +74,7 @@ export namespace EmbedResponse {
 
   export interface UnionMember1 {
     /**
-     * The encoded embedding data by encoding format. Returned, if more than one
+     * The encoded embedding data by encoding format.Returned, if more than one
      * encoding format is used.
      */
     embedding: UnionMember1.Embedding;
@@ -83,7 +92,7 @@ export namespace EmbedResponse {
 
   export namespace UnionMember1 {
     /**
-     * The encoded embedding data by encoding format. Returned, if more than one
+     * The encoded embedding data by encoding format.Returned, if more than one
      * encoding format is used.
      */
     export interface Embedding {
@@ -122,6 +131,15 @@ export namespace EmbedResponse {
   }
 }
 
+/**
+ * Info Pydantic Response Service Message
+ */
+export interface InfoResponse {
+  name: string;
+
+  version: string;
+}
+
 export interface RerankResponse {
   /**
    * The ranked documents.
@@ -151,7 +169,16 @@ export interface RerankResponse {
   /**
    * The object type of the response
    */
-  object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+  object?:
+    | 'list'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'text_document'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
 }
 
 export namespace RerankResponse {
@@ -174,7 +201,16 @@ export namespace RerankResponse {
     /**
      * The object type.
      */
-    object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+    object?:
+      | 'list'
+      | 'job'
+      | 'embedding'
+      | 'embedding_dict'
+      | 'text_document'
+      | 'file'
+      | 'vector_store'
+      | 'vector_store.file'
+      | 'api_key';
   }
 
   /**
@@ -196,15 +232,6 @@ export namespace RerankResponse {
      */
     completion_tokens?: number | null;
   }
-}
-
-/**
- * Info Pydantic Response Service Message
- */
-export interface StatusResponse {
-  name: string;
-
-  version: string;
 }
 
 export interface EmbedParams {
@@ -326,8 +353,8 @@ export interface RerankParams {
 export declare namespace TopLevel {
   export {
     type EmbedResponse as EmbedResponse,
+    type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
-    type StatusResponse as StatusResponse,
     type EmbedParams as EmbedParams,
     type RerankParams as RerankParams,
   };

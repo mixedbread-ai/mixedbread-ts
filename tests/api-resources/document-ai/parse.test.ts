@@ -24,13 +24,13 @@ describe('resource parse', () => {
     const response = await client.documentAI.parse.createJob({
       file_id: 'file_id',
       chunking_strategy: 'page',
-      element_types: ['string'],
+      element_types: ['caption'],
       return_format: 'html',
     });
   });
 
   test('retrieveJob', async () => {
-    const responsePromise = client.documentAI.parse.retrieveJob('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+    const responsePromise = client.documentAI.parse.retrieveJob('job_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,9 +43,7 @@ describe('resource parse', () => {
   test('retrieveJob: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.documentAI.parse.retrieveJob('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-        path: '/_stainless_unknown_path',
-      }),
+      client.documentAI.parse.retrieveJob('job_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 });
