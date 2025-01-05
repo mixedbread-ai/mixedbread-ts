@@ -51,7 +51,7 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
+  const vectorStore: Mixedbread.VectorStoreCreateResponse = await client.vectorStores.create();
 }
 
 main();

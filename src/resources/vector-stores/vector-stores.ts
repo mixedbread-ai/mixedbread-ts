@@ -7,11 +7,12 @@ import * as TopLevelAPI from '../top-level';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
+  FileCreateResponse,
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
+  FileRetrieveResponse,
   Files,
-  VectorStoreFile,
 } from './files';
 
 export class VectorStores extends APIResource {
@@ -25,7 +26,10 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the created vector store details.
    */
-  create(body: VectorStoreCreateParams, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
+  create(
+    body: VectorStoreCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreCreateResponse> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
@@ -36,7 +40,10 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
+  retrieve(
+    vectorStoreId: string,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreRetrieveResponse> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}`, options);
   }
 
@@ -53,7 +60,7 @@ export class VectorStores extends APIResource {
     vectorStoreId: string,
     body: VectorStoreUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStore> {
+  ): Core.APIPromise<VectorStoreUpdateResponse> {
     return this._client.put(`/v1/vector_stores/${vectorStoreId}`, { body, ...options });
   }
 
@@ -105,88 +112,462 @@ export class VectorStores extends APIResource {
    * Returns: SearchResponse: The response containing the search results and
    * pagination details.
    */
-  search(body: VectorStoreSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchResponse> {
+  search(
+    body: VectorStoreSearchParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreSearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
 
 /**
- * Query parameters for searching vector stores.
+ * Model representing a vector store with its metadata and timestamps.
  */
-export interface SearchParams {
+export interface VectorStoreCreateResponse {
   /**
-   * Search query text
+   * Unique identifier for the vector store
    */
-  query: string;
+  id: string;
 
   /**
-   * IDs of vector stores to search
+   * Timestamp when the vector store was created
    */
-  vector_store_ids: Array<string>;
+  created_at: string;
 
   /**
-   * Filter or condition
+   * Name of the vector store
    */
-  filters?:
-    | TopLevelAPI.SearchFilter
-    | SearchParams.SearchFilterCondition
-    | Array<TopLevelAPI.SearchFilter | SearchParams.SearchFilterCondition>
-    | null;
+  name: string;
 
   /**
-   * Pagination options
+   * Timestamp when the vector store was last updated
    */
-  pagination?: SearchParams.Pagination;
+  updated_at: string;
 
   /**
-   * Search configuration options
+   * Detailed description of the vector store's purpose and contents
    */
-  search_options?: SearchParams.SearchOptions;
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreCreateResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreCreateResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
 }
 
-export namespace SearchParams {
+export namespace VectorStoreCreateResponse {
   /**
-   * Represents a condition with a field, operator, and value.
+   * Represents an expiration policy for a vector store.
    */
-  export interface SearchFilterCondition {
+  export interface ExpiresAfter {
     /**
-     * The field to apply the condition on
+     * Anchor date for the expiration policy
      */
-    key: string;
+    anchor?: 'last_used_at';
 
     /**
-     * The operator for the condition
+     * Number of days after which the vector store expires
      */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
+    days?: number;
   }
 
   /**
-   * Represents a condition with a field, operator, and value.
+   * Counts of files in different states
    */
-  export interface SearchFilterCondition {
+  export interface FileCounts {
     /**
-     * The field to apply the condition on
+     * Number of files whose processing was canceled
      */
-    key: string;
+    canceled?: number;
 
     /**
-     * The operator for the condition
+     * Number of files that failed processing
      */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+    failed?: number;
 
     /**
-     * The value to compare against
+     * Number of files currently being processed
      */
-    value: unknown;
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreRetrieveResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreRetrieveResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreRetrieveResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreRetrieveResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
   }
 
   /**
-   * Pagination options
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreUpdateResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreUpdateResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreUpdateResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreUpdateResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+export interface VectorStoreListResponse {
+  /**
+   * The list of vector stores
+   */
+  data: Array<VectorStoreListResponse.Data>;
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  pagination: VectorStoreListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace VectorStoreListResponse {
+  /**
+   * Model representing a vector store with its metadata and timestamps.
+   */
+  export interface Data {
+    /**
+     * Unique identifier for the vector store
+     */
+    id: string;
+
+    /**
+     * Timestamp when the vector store was created
+     */
+    created_at: string;
+
+    /**
+     * Name of the vector store
+     */
+    name: string;
+
+    /**
+     * Timestamp when the vector store was last updated
+     */
+    updated_at: string;
+
+    /**
+     * Detailed description of the vector store's purpose and contents
+     */
+    description?: string | null;
+
+    /**
+     * Represents an expiration policy for a vector store.
+     */
+    expires_after?: Data.ExpiresAfter | null;
+
+    /**
+     * Optional expiration timestamp for the vector store
+     */
+    expires_at?: string | null;
+
+    /**
+     * Counts of files in different states
+     */
+    file_counts?: Data.FileCounts;
+
+    /**
+     * Timestamp when the vector store was last used
+     */
+    last_active_at?: string | null;
+
+    /**
+     * Additional metadata associated with the vector store
+     */
+    metadata?: unknown | null;
+
+    /**
+     * Type of the object
+     */
+    object?: 'vector_store';
+  }
+
+  export namespace Data {
+    /**
+     * Represents an expiration policy for a vector store.
+     */
+    export interface ExpiresAfter {
+      /**
+       * Anchor date for the expiration policy
+       */
+      anchor?: 'last_used_at';
+
+      /**
+       * Number of days after which the vector store expires
+       */
+      days?: number;
+    }
+
+    /**
+     * Counts of files in different states
+     */
+    export interface FileCounts {
+      /**
+       * Number of files whose processing was canceled
+       */
+      canceled?: number;
+
+      /**
+       * Number of files that failed processing
+       */
+      failed?: number;
+
+      /**
+       * Number of files currently being processed
+       */
+      in_progress?: number;
+
+      /**
+       * Number of successfully processed files
+       */
+      successful?: number;
+
+      /**
+       * Total number of files
+       */
+      total?: number;
+    }
+  }
+
+  /**
+   * Pagination model that includes total count of items.
    */
   export interface Pagination {
     /**
@@ -198,44 +579,46 @@ export namespace SearchParams {
      * Cursor from which to start returning items
      */
     offset?: number;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
 
     /**
-     * Whether to return file metadata
+     * Total number of items available
      */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
+    total?: number;
   }
 }
 
-export interface SearchResponse {
+/**
+ * Response model for vector store deletion.
+ */
+export interface VectorStoreDeleteResponse {
+  /**
+   * ID of the deleted vector store
+   */
+  id: string;
+
+  /**
+   * Whether the deletion was successful
+   */
+  deleted: boolean;
+
+  /**
+   * Type of the deleted object
+   */
+  object?: 'vector_store';
+}
+
+export type VectorStoreQaResponse = unknown;
+
+export interface VectorStoreSearchResponse {
   /**
    * The list of scored vector store files
    */
-  data: Array<SearchResponse.Data>;
+  data: Array<VectorStoreSearchResponse.Data>;
 
   /**
    * Pagination model that includes total count of items.
    */
-  pagination: SearchResponse.Pagination;
+  pagination: VectorStoreSearchResponse.Pagination;
 
   /**
    * The object type of the response
@@ -243,7 +626,7 @@ export interface SearchResponse {
   object?: 'list';
 }
 
-export namespace SearchResponse {
+export namespace VectorStoreSearchResponse {
   export interface Data {
     /**
      * file id
@@ -377,174 +760,6 @@ export namespace SearchResponse {
     total?: number;
   }
 }
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStore {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: VectorStore.ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: VectorStore.FileCounts;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-export namespace VectorStore {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-}
-
-export interface VectorStoreListResponse {
-  /**
-   * The list of vector stores
-   */
-  data: Array<VectorStore>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: VectorStoreListResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace VectorStoreListResponse {
-  /**
-   * Pagination model that includes total count of items.
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Cursor from which to start returning items
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
-}
-
-/**
- * Response model for vector store deletion.
- */
-export interface VectorStoreDeleteResponse {
-  /**
-   * ID of the deleted vector store
-   */
-  id: string;
-
-  /**
-   * Whether the deletion was successful
-   */
-  deleted: boolean;
-
-  /**
-   * Type of the deleted object
-   */
-  object?: 'vector_store';
-}
-
-export type VectorStoreQaResponse = unknown;
 
 export interface VectorStoreCreateParams {
   /**
@@ -892,12 +1107,13 @@ VectorStores.Files = Files;
 
 export declare namespace VectorStores {
   export {
-    type SearchParams as SearchParams,
-    type SearchResponse as SearchResponse,
-    type VectorStore as VectorStore,
+    type VectorStoreCreateResponse as VectorStoreCreateResponse,
+    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
+    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -907,7 +1123,8 @@ export declare namespace VectorStores {
 
   export {
     Files as Files,
-    type VectorStoreFile as VectorStoreFile,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,

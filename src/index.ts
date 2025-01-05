@@ -28,17 +28,18 @@ import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './re
 import { Chat } from './resources/chat/chat';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
-  SearchParams,
-  SearchResponse,
-  VectorStore,
   VectorStoreCreateParams,
+  VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
   VectorStoreListResponse,
   VectorStoreQaParams,
   VectorStoreQaResponse,
+  VectorStoreRetrieveResponse,
   VectorStoreSearchParams,
+  VectorStoreSearchResponse,
   VectorStoreUpdateParams,
+  VectorStoreUpdateResponse,
   VectorStores,
 } from './resources/vector-stores/vector-stores';
 
@@ -302,12 +303,13 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
-    type SearchParams as SearchParams,
-    type SearchResponse as SearchResponse,
-    type VectorStore as VectorStore,
+    type VectorStoreCreateResponse as VectorStoreCreateResponse,
+    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
+    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
