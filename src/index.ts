@@ -199,10 +199,6 @@ export class Mixedbread extends Core.APIClient {
     };
   }
 
-  protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
-    return { Authorization: this.apiKey };
-  }
-
   static Mixedbread = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
