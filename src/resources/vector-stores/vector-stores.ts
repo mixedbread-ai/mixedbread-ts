@@ -110,6 +110,21 @@ export class VectorStores extends APIResource {
 export class VectorStoresPage extends Page<VectorStore> {}
 
 /**
+ * Represents an expiration policy for a vector store.
+ */
+export interface ExpiresAfter {
+  /**
+   * Anchor date for the expiration policy
+   */
+  anchor?: 'last_used_at';
+
+  /**
+   * Number of days after which the vector store expires
+   */
+  days?: number;
+}
+
+/**
  * Tracks counts of files in different states within a vector store.
  */
 export interface FileCounts {
@@ -137,6 +152,134 @@ export interface FileCounts {
    * Total number of files
    */
   total?: number;
+}
+
+export interface ScoredVectorStoreFile {
+  /**
+   * Unique identifier for the file
+   */
+  id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
+
+  /**
+   * score of the file
+   */
+  score: number;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * chunks
+   */
+  chunks?: Array<ScoredVectorStoreFile.Chunk> | null;
+
+  /**
+   * List of error messages if processing failed
+   */
+  errors?: Array<string> | null;
+
+  /**
+   * Optional file metadata
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
+}
+
+export namespace ScoredVectorStoreFile {
+  export interface Chunk {
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * rank of the chunk in a file
+     */
+    rank: number;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * value of the chunk
+     */
+    value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
+  }
+
+  export namespace Chunk {
+    /**
+     * Model for image input validation.
+     */
+    export interface ImageURLInput {
+      /**
+       * The image input specification.
+       */
+      image: ImageURLInput.Image;
+
+      /**
+       * Input type identifier
+       */
+      type?: 'image_url';
+    }
+
+    export namespace ImageURLInput {
+      /**
+       * The image input specification.
+       */
+      export interface Image {
+        /**
+         * The image URL. Can be either a URL or a Data URI.
+         */
+        url: string;
+      }
+    }
+
+    /**
+     * Model for text input validation.
+     *
+     * Attributes: type: Input type identifier, always "text" text: The actual text
+     * content, with length and whitespace constraints
+     */
+    export interface TextInput {
+      /**
+       * Text content to process
+       */
+      text: string;
+
+      /**
+       * Input type identifier
+       */
+      type?: 'text';
+    }
+  }
 }
 
 /**
@@ -211,7 +354,7 @@ export interface VectorStore {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStore.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -239,23 +382,6 @@ export interface VectorStore {
   object?: 'vector_store';
 }
 
-export namespace VectorStore {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-}
-
 /**
  * Response model for vector store deletion.
  */
@@ -280,7 +406,7 @@ export interface VectorStoreSearchResponse {
   /**
    * The list of scored vector store files
    */
-  data: Array<VectorStoreSearchResponse.Data>;
+  data: Array<ScoredVectorStoreFile>;
 
   /**
    * Pagination model that includes total count of items.
@@ -294,119 +420,6 @@ export interface VectorStoreSearchResponse {
 }
 
 export namespace VectorStoreSearchResponse {
-  export interface Data {
-    /**
-     * file id
-     */
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    /**
-     * score of the file
-     */
-    score: number;
-
-    /**
-     * usage in bytes
-     */
-    usage_bytes: number;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * version of the file
-     */
-    version: number;
-
-    /**
-     * chunks
-     */
-    chunks?: Array<Data.Chunk> | null;
-
-    /**
-     * metadata
-     */
-    metadata?: unknown | null;
-  }
-
-  export namespace Data {
-    export interface Chunk {
-      /**
-       * file id
-       */
-      file_id: string;
-
-      /**
-       * rank of the chunk in a file
-       */
-      rank: number;
-
-      /**
-       * score of the chunk
-       */
-      score: number;
-
-      /**
-       * value of the chunk
-       */
-      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
-    }
-
-    export namespace Chunk {
-      /**
-       * Model for image input validation.
-       */
-      export interface ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        image: ImageURLInput.Image;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'image_url';
-      }
-
-      export namespace ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        export interface Image {
-          /**
-           * The image URL. Can be either a URL or a Data URI.
-           */
-          url: string;
-        }
-      }
-
-      /**
-       * Model for text input validation.
-       *
-       * Attributes: type: Input type identifier, always "text" text: The actual text
-       * content, with length and whitespace constraints
-       */
-      export interface TextInput {
-        /**
-         * Text content to process
-         */
-        text: string;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'text';
-      }
-    }
-  }
-
   /**
    * Pagination model that includes total count of items.
    */
@@ -437,7 +450,7 @@ export interface VectorStoreCreateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreCreateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional list of file IDs
@@ -455,23 +468,6 @@ export interface VectorStoreCreateParams {
   name?: string | null;
 }
 
-export namespace VectorStoreCreateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-}
-
 export interface VectorStoreUpdateParams {
   /**
    * New description
@@ -481,7 +477,7 @@ export interface VectorStoreUpdateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreUpdateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional metadata key-value pairs
@@ -492,23 +488,6 @@ export interface VectorStoreUpdateParams {
    * New name for the vector store
    */
   name?: string | null;
-}
-
-export namespace VectorStoreUpdateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
 }
 
 export interface VectorStoreListParams extends PageParams {}
@@ -588,7 +567,9 @@ VectorStores.VectorStoreFilesPage = VectorStoreFilesPage;
 
 export declare namespace VectorStores {
   export {
+    type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
+    type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type SearchFilter as SearchFilter,
     type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
