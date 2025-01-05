@@ -13,6 +13,7 @@ export {
 export {
   VectorStoreListResponsesPage,
   VectorStores,
+  type SearchFilter,
   type VectorStoreCreateResponse,
   type VectorStoreRetrieveResponse,
   type VectorStoreUpdateResponse,

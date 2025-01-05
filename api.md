@@ -67,6 +67,7 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreCreateResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreRetrieveResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreUpdateResponse</a></code>
