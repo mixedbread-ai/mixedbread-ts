@@ -169,7 +169,7 @@ export namespace FileListResponse {
     limit?: number;
 
     /**
-     * Cursor from which to start returning items
+     * Offset of the first item to return
      */
     offset?: number;
 
@@ -201,7 +201,7 @@ export interface FileListParams {
   limit?: number;
 
   /**
-   * Cursor from which to start returning items
+   * Offset of the first item to return
    */
   offset?: number;
 }

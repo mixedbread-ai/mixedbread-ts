@@ -576,7 +576,7 @@ export namespace VectorStoreListResponse {
     limit?: number;
 
     /**
-     * Cursor from which to start returning items
+     * Offset of the first item to return
      */
     offset?: number;
 
@@ -750,7 +750,7 @@ export namespace VectorStoreSearchResponse {
     limit?: number;
 
     /**
-     * Cursor from which to start returning items
+     * Offset of the first item to return
      */
     offset?: number;
 
@@ -851,7 +851,7 @@ export interface VectorStoreListParams {
   limit?: number;
 
   /**
-   * Cursor from which to start returning items
+   * Offset of the first item to return
    */
   offset?: number;
 }
@@ -949,7 +949,7 @@ export namespace VectorStoreQaParams {
     limit?: number;
 
     /**
-     * Cursor from which to start returning items
+     * Offset of the first item to return
      */
     offset?: number;
   }
@@ -1072,7 +1072,7 @@ export namespace VectorStoreSearchParams {
     limit?: number;
 
     /**
-     * Cursor from which to start returning items
+     * Offset of the first item to return
      */
     offset?: number;
   }
