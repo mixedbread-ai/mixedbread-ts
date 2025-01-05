@@ -3,7 +3,7 @@
 export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
-  FileListResponsesOffsetPage,
+  FileListResponsesPage,
   Files,
   type FileCreateResponse,
   type FileRetrieveResponse,
@@ -16,7 +16,7 @@ export {
 } from './files';
 export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
-  VectorStoreListResponsesOffsetPage,
+  VectorStoreListResponsesPage,
   VectorStores,
   type SearchFilter,
   type VectorStoreCreateResponse,

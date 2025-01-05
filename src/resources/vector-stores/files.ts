@@ -3,7 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import { OffsetPage, type OffsetPageParams } from '../../pagination';
+import { Page, type PageParams } from '../../pagination';
 
 export class Files extends APIResource {
   /**
@@ -49,20 +49,20 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
   list(
     vectorStoreId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse> {
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, FileListResponsesOffsetPage, {
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, FileListResponsesPage, {
       query,
       ...options,
     });
@@ -85,7 +85,7 @@ export class Files extends APIResource {
   }
 }
 
-export class FileListResponsesOffsetPage extends OffsetPage<FileListResponse> {}
+export class FileListResponsesPage extends Page<FileListResponse> {}
 
 /**
  * Represents a file stored in a vector store.
@@ -269,9 +269,9 @@ export interface FileCreateParams {
   metadata?: unknown | null;
 }
 
-export interface FileListParams extends OffsetPageParams {}
+export interface FileListParams extends PageParams {}
 
-Files.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
+Files.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace Files {
   export {
@@ -279,7 +279,7 @@ export declare namespace Files {
     type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
