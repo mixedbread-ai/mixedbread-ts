@@ -2,7 +2,6 @@
 
 Types:
 
-- <code><a href="./src/resources/top-level.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/top-level.ts">EmbedResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">InfoResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">RerankResponse</a></code>
