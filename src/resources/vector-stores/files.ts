@@ -18,7 +18,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     body: FileCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileCreateResponse> {
+  ): Core.APIPromise<VectorStoreFile> {
     return this._client.post(`/v1/vector_stores/${vectorStoreId}/files`, { body, ...options });
   }
 
@@ -33,7 +33,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileRetrieveResponse> {
+  ): Core.APIPromise<VectorStoreFile> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 
@@ -49,20 +49,20 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
+  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile>;
   list(
     vectorStoreId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
+  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesPage, FileListResponse> {
+  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, FileListResponsesPage, {
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesPage, {
       query,
       ...options,
     });
@@ -85,112 +85,12 @@ export class Files extends APIResource {
   }
 }
 
-export class FileListResponsesPage extends Page<FileListResponse> {}
+export class VectorStoreFilesPage extends Page<VectorStoreFile> {}
 
 /**
  * Represents a file stored in a vector store.
  */
-export interface FileCreateResponse {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Timestamp of vector store file creation
-   */
-  created_at: string;
-
-  /**
-   * ID of the containing vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * List of error messages if processing failed
-   */
-  errors?: Array<string> | null;
-
-  /**
-   * Optional file metadata
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store.file';
-
-  /**
-   * Processing status of the file
-   */
-  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-  /**
-   * Storage usage in bytes
-   */
-  usage_bytes?: number | null;
-
-  /**
-   * Version number of the file
-   */
-  version?: number | null;
-}
-
-/**
- * Represents a file stored in a vector store.
- */
-export interface FileRetrieveResponse {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Timestamp of vector store file creation
-   */
-  created_at: string;
-
-  /**
-   * ID of the containing vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * List of error messages if processing failed
-   */
-  errors?: Array<string> | null;
-
-  /**
-   * Optional file metadata
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store.file';
-
-  /**
-   * Processing status of the file
-   */
-  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-  /**
-   * Storage usage in bytes
-   */
-  usage_bytes?: number | null;
-
-  /**
-   * Version number of the file
-   */
-  version?: number | null;
-}
-
-/**
- * Represents a file stored in a vector store.
- */
-export interface FileListResponse {
+export interface VectorStoreFile {
   /**
    * Unique identifier for the file
    */
@@ -271,15 +171,13 @@ export interface FileCreateParams {
 
 export interface FileListParams extends PageParams {}
 
-Files.FileListResponsesPage = FileListResponsesPage;
+Files.VectorStoreFilesPage = VectorStoreFilesPage;
 
 export declare namespace Files {
   export {
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
-    type FileListResponse as FileListResponse,
+    type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesPage as FileListResponsesPage,
+    VectorStoreFilesPage as VectorStoreFilesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
