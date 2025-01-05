@@ -23,10 +23,8 @@ export {
   type SearchFilterCondition,
   type VectorStore,
   type VectorStoreDeleteResponse,
-  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
-  type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export { type InfoResponse } from './top-level';
