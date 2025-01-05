@@ -29,6 +29,7 @@ import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './re
 import { Chat } from './resources/chat/chat';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
+  SearchFilter,
   VectorStoreCreateParams,
   VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
@@ -305,6 +306,7 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
+    type SearchFilter as SearchFilter,
     type VectorStoreCreateResponse as VectorStoreCreateResponse,
     type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
