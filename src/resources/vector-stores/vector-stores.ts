@@ -6,13 +6,11 @@ import * as Core from '../../core';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
-  FileCreateResponse,
   FileDeleteResponse,
   FileListParams,
-  FileListResponse,
-  FileListResponsesPage,
-  FileRetrieveResponse,
   Files,
+  VectorStoreFile,
+  VectorStoreFilesPage,
 } from './files';
 import { Page, type PageParams } from '../../pagination';
 
@@ -27,10 +25,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the created vector store details.
    */
-  create(
-    body: VectorStoreCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreCreateResponse> {
+  create(body: VectorStoreCreateParams, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
@@ -41,10 +36,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(
-    vectorStoreId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreRetrieveResponse> {
+  retrieve(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}`, options);
   }
 
@@ -61,7 +53,7 @@ export class VectorStores extends APIResource {
     vectorStoreId: string,
     body: VectorStoreUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreUpdateResponse> {
+  ): Core.APIPromise<VectorStore> {
     return this._client.put(`/v1/vector_stores/${vectorStoreId}`, { body, ...options });
   }
 
@@ -75,18 +67,16 @@ export class VectorStores extends APIResource {
   list(
     query?: VectorStoreListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
-  list(
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
+  ): Core.PagePromise<VectorStoresPage, VectorStore>;
+  list(options?: Core.RequestOptions): Core.PagePromise<VectorStoresPage, VectorStore>;
   list(
     query: VectorStoreListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse> {
+  ): Core.PagePromise<VectorStoresPage, VectorStore> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/vector_stores', VectorStoreListResponsesPage, { query, ...options });
+    return this._client.getAPIList('/v1/vector_stores', VectorStoresPage, { query, ...options });
   }
 
   /**
@@ -117,7 +107,7 @@ export class VectorStores extends APIResource {
   }
 }
 
-export class VectorStoreListResponsesPage extends Page<VectorStoreListResponse> {}
+export class VectorStoresPage extends Page<VectorStore> {}
 
 /**
  * Represents an expiration policy for a vector store.
@@ -207,187 +197,7 @@ export interface SearchFilterCondition {
 /**
  * Model representing a vector store with its metadata and timestamps.
  */
-export interface VectorStoreCreateResponse {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: FileCounts;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStoreRetrieveResponse {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: FileCounts;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStoreUpdateResponse {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: FileCounts;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStoreListResponse {
+export interface VectorStore {
   /**
    * Unique identifier for the vector store
    */
@@ -736,9 +546,9 @@ export namespace VectorStoreSearchParams {
   }
 }
 
-VectorStores.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
+VectorStores.VectorStoresPage = VectorStoresPage;
 VectorStores.Files = Files;
-VectorStores.FileListResponsesPage = FileListResponsesPage;
+VectorStores.VectorStoreFilesPage = VectorStoreFilesPage;
 
 export declare namespace VectorStores {
   export {
@@ -746,13 +556,10 @@ export declare namespace VectorStores {
     type FileCounts as FileCounts,
     type SearchFilter as SearchFilter,
     type SearchFilterCondition as SearchFilterCondition,
-    type VectorStoreCreateResponse as VectorStoreCreateResponse,
-    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
-    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
-    type VectorStoreListResponse as VectorStoreListResponse,
+    type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
+    VectorStoresPage as VectorStoresPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -761,11 +568,9 @@ export declare namespace VectorStores {
 
   export {
     Files as Files,
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
-    type FileListResponse as FileListResponse,
+    type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesPage as FileListResponsesPage,
+    VectorStoreFilesPage as VectorStoreFilesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
