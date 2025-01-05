@@ -4,7 +4,7 @@ import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Pagination from './pagination';
-import { type OffsetPageParams, OffsetPageResponse } from './pagination';
+import { type PageParams, PageResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
@@ -22,7 +22,7 @@ import {
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
-  FileListResponsesOffsetPage,
+  FileListResponsesPage,
   FileRetrieveResponse,
   FileUpdateParams,
   FileUpdateResponse,
@@ -37,7 +37,7 @@ import {
   VectorStoreDeleteResponse,
   VectorStoreListParams,
   VectorStoreListResponse,
-  VectorStoreListResponsesOffsetPage,
+  VectorStoreListResponsesPage,
   VectorStoreQaParams,
   VectorStoreQaResponse,
   VectorStoreRetrieveResponse,
@@ -267,14 +267,14 @@ Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Rerankings = Rerankings;
 Mixedbread.Files = Files;
-Mixedbread.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
+Mixedbread.FileListResponsesPage = FileListResponsesPage;
 Mixedbread.VectorStores = VectorStores;
-Mixedbread.VectorStoreListResponsesOffsetPage = VectorStoreListResponsesOffsetPage;
+Mixedbread.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
-  export import OffsetPage = Pagination.OffsetPage;
-  export { type OffsetPageParams as OffsetPageParams, type OffsetPageResponse as OffsetPageResponse };
+  export import Page = Pagination.Page;
+  export { type PageParams as PageParams, type PageResponse as PageResponse };
 
   export {
     type EmbedResponse as EmbedResponse,
@@ -305,7 +305,7 @@ export declare namespace Mixedbread {
     type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
@@ -321,7 +321,7 @@ export declare namespace Mixedbread {
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQaResponse as VectorStoreQaResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoreListResponsesOffsetPage as VectorStoreListResponsesOffsetPage,
+    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,

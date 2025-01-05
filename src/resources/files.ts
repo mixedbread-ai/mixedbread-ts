@@ -3,7 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { OffsetPage, type OffsetPageParams } from '../pagination';
+import { Page, type PageParams } from '../pagination';
 import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
@@ -54,16 +54,16 @@ export class Files extends APIResource {
   list(
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileListResponsesPage, FileListResponse>;
   list(
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse> {
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/files', FileListResponsesOffsetPage, { query, ...options });
+    return this._client.getAPIList('/v1/files', FileListResponsesPage, { query, ...options });
   }
 
   /**
@@ -89,7 +89,7 @@ export class Files extends APIResource {
   }
 }
 
-export class FileListResponsesOffsetPage extends OffsetPage<FileListResponse> {}
+export class FileListResponsesPage extends Page<FileListResponse> {}
 
 /**
  * A model representing a file object in the system.
@@ -294,9 +294,9 @@ export interface FileUpdateParams {
   file: Core.Uploadable;
 }
 
-export interface FileListParams extends OffsetPageParams {}
+export interface FileListParams extends PageParams {}
 
-Files.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
+Files.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace Files {
   export {
@@ -305,7 +305,7 @@ export declare namespace Files {
     type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
