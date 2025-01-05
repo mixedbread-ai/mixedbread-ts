@@ -32,11 +32,7 @@ import {
   VectorStoreListParams,
   VectorStoreListResponse,
   VectorStoreListResponsesPage,
-  VectorStoreQaParams,
-  VectorStoreQaResponse,
   VectorStoreRetrieveResponse,
-  VectorStoreSearchParams,
-  VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStoreUpdateResponse,
   VectorStores,
@@ -278,14 +274,10 @@ export declare namespace Mixedbread {
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQaResponse as VectorStoreQaResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQaParams as VectorStoreQaParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }
 
