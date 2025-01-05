@@ -18,7 +18,10 @@ export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } f
 export {
   VectorStoreListResponsesPage,
   VectorStores,
+  type ExpiresAfter,
+  type FileCounts,
   type SearchFilter,
+  type SearchFilterCondition,
   type VectorStoreCreateResponse,
   type VectorStoreRetrieveResponse,
   type VectorStoreUpdateResponse,

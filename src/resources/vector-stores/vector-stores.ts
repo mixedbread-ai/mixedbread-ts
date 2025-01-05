@@ -120,85 +120,88 @@ export class VectorStores extends APIResource {
 export class VectorStoreListResponsesPage extends Page<VectorStoreListResponse> {}
 
 /**
+ * Represents an expiration policy for a vector store.
+ */
+export interface ExpiresAfter {
+  /**
+   * Anchor date for the expiration policy
+   */
+  anchor?: 'last_used_at';
+
+  /**
+   * Number of days after which the vector store expires
+   */
+  days?: number;
+}
+
+/**
+ * Tracks counts of files in different states within a vector store.
+ */
+export interface FileCounts {
+  /**
+   * Number of files whose processing was canceled
+   */
+  canceled?: number;
+
+  /**
+   * Number of files that failed processing
+   */
+  failed?: number;
+
+  /**
+   * Number of files currently being processed
+   */
+  in_progress?: number;
+
+  /**
+   * Number of successfully processed files
+   */
+  successful?: number;
+
+  /**
+   * Total number of files
+   */
+  total?: number;
+}
+
+/**
  * Represents a filter with AND, OR, and NOT conditions.
  */
 export interface SearchFilter {
   /**
    * List of conditions or filters to be ANDed together
    */
-  all?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  all?: Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * List of conditions or filters to be ORed together
    */
-  any?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  any?: Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * List of conditions or filters to be NOTed
    */
-  none?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  none?: Array<SearchFilter | SearchFilterCondition> | null;
 }
 
-export namespace SearchFilter {
+/**
+ * Represents a condition with a field, operator, and value.
+ */
+export interface SearchFilterCondition {
   /**
-   * Represents a condition with a field, operator, and value.
+   * The field to apply the condition on
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  key: string;
 
   /**
-   * Represents a condition with a field, operator, and value.
+   * The operator for the condition
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
 
   /**
-   * Represents a condition with a field, operator, and value.
+   * The value to compare against
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  value: unknown;
 }
 
 /**
@@ -233,7 +236,7 @@ export interface VectorStoreCreateResponse {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreCreateResponse.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -243,7 +246,7 @@ export interface VectorStoreCreateResponse {
   /**
    * Counts of files in different states
    */
-  file_counts?: VectorStoreCreateResponse.FileCounts;
+  file_counts?: FileCounts;
 
   /**
    * Timestamp when the vector store was last used
@@ -259,53 +262,6 @@ export interface VectorStoreCreateResponse {
    * Type of the object
    */
   object?: 'vector_store';
-}
-
-export namespace VectorStoreCreateResponse {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
 }
 
 /**
@@ -340,7 +296,7 @@ export interface VectorStoreRetrieveResponse {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreRetrieveResponse.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -350,7 +306,7 @@ export interface VectorStoreRetrieveResponse {
   /**
    * Counts of files in different states
    */
-  file_counts?: VectorStoreRetrieveResponse.FileCounts;
+  file_counts?: FileCounts;
 
   /**
    * Timestamp when the vector store was last used
@@ -366,53 +322,6 @@ export interface VectorStoreRetrieveResponse {
    * Type of the object
    */
   object?: 'vector_store';
-}
-
-export namespace VectorStoreRetrieveResponse {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
 }
 
 /**
@@ -447,7 +356,7 @@ export interface VectorStoreUpdateResponse {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreUpdateResponse.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -457,7 +366,7 @@ export interface VectorStoreUpdateResponse {
   /**
    * Counts of files in different states
    */
-  file_counts?: VectorStoreUpdateResponse.FileCounts;
+  file_counts?: FileCounts;
 
   /**
    * Timestamp when the vector store was last used
@@ -473,53 +382,6 @@ export interface VectorStoreUpdateResponse {
    * Type of the object
    */
   object?: 'vector_store';
-}
-
-export namespace VectorStoreUpdateResponse {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
 }
 
 /**
@@ -554,7 +416,7 @@ export interface VectorStoreListResponse {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreListResponse.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -564,7 +426,7 @@ export interface VectorStoreListResponse {
   /**
    * Counts of files in different states
    */
-  file_counts?: VectorStoreListResponse.FileCounts;
+  file_counts?: FileCounts;
 
   /**
    * Timestamp when the vector store was last used
@@ -580,53 +442,6 @@ export interface VectorStoreListResponse {
    * Type of the object
    */
   object?: 'vector_store';
-}
-
-export namespace VectorStoreListResponse {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files whose processing was canceled
-     */
-    canceled?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    successful?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
 }
 
 /**
@@ -810,7 +625,7 @@ export interface VectorStoreCreateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreCreateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional list of file IDs
@@ -828,23 +643,6 @@ export interface VectorStoreCreateParams {
   name?: string | null;
 }
 
-export namespace VectorStoreCreateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-}
-
 export interface VectorStoreUpdateParams {
   /**
    * New description
@@ -854,7 +652,7 @@ export interface VectorStoreUpdateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreUpdateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional metadata key-value pairs
@@ -865,23 +663,6 @@ export interface VectorStoreUpdateParams {
    * New name for the vector store
    */
   name?: string | null;
-}
-
-export namespace VectorStoreUpdateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_used_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
 }
 
 export interface VectorStoreListParams extends PageParams {}
@@ -900,11 +681,7 @@ export interface VectorStoreSearchParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | SearchFilter
-    | VectorStoreSearchParams.SearchFilterCondition
-    | Array<SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
-    | null;
+  filters?: SearchFilter | SearchFilterCondition | Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * Pagination options
@@ -918,46 +695,6 @@ export interface VectorStoreSearchParams {
 }
 
 export namespace VectorStoreSearchParams {
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
   /**
    * Pagination options
    */
@@ -1005,7 +742,10 @@ VectorStores.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace VectorStores {
   export {
+    type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
     type SearchFilter as SearchFilter,
+    type SearchFilterCondition as SearchFilterCondition,
     type VectorStoreCreateResponse as VectorStoreCreateResponse,
     type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,

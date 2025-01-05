@@ -13,7 +13,10 @@ export {
 export {
   VectorStoreListResponsesPage,
   VectorStores,
+  type ExpiresAfter,
+  type FileCounts,
   type SearchFilter,
+  type SearchFilterCondition,
   type VectorStoreCreateResponse,
   type VectorStoreRetrieveResponse,
   type VectorStoreUpdateResponse,
