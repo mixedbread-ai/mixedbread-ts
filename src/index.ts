@@ -12,7 +12,6 @@ import {
   InfoResponse,
   RerankParams,
   RerankResponse,
-  SearchFilter,
 } from './resources/top-level';
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
@@ -271,7 +270,6 @@ export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
   export {
-    type SearchFilter as SearchFilter,
     type EmbedResponse as EmbedResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
