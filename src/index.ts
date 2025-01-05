@@ -3,44 +3,48 @@
 import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
+import * as Pagination from './pagination';
+import { type PageParams, PageResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import {
-  EmbedParams,
-  EmbedResponse,
-  RerankParams,
-  RerankResponse,
-  StatusResponse,
-} from './resources/top-level';
+import { InfoResponse } from './resources/top-level';
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
   FileCreateParams,
-  FileDeleted,
+  FileCreateResponse,
+  FileDeleteResponse,
   FileListParams,
   FileListResponse,
-  FileObject,
+  FileListResponsesPage,
+  FileRetrieveResponse,
   FileUpdateParams,
+  FileUpdateResponse,
   Files,
 } from './resources/files';
-import { JobDeleteResponse, JobStatus, Jobs } from './resources/jobs';
-import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
+import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
-  SearchResponse,
-  VectorStore,
+  SearchFilter,
   VectorStoreCreateParams,
+  VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
   VectorStoreListResponse,
+  VectorStoreListResponsesPage,
+  VectorStoreQaParams,
+  VectorStoreQaResponse,
+  VectorStoreRetrieveResponse,
   VectorStoreSearchParams,
+  VectorStoreSearchResponse,
   VectorStoreUpdateParams,
+  VectorStoreUpdateResponse,
   VectorStores,
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
-  environment_1: 'http://127.0.0.1:8000',
+  local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
 export interface ClientOptions {
@@ -54,7 +58,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mixedbread.ai`
-   * - `environment_1` corresponds to `http://127.0.0.1:8000`
+   * - `local` corresponds to `http://127.0.0.1:8000`
    */
   environment?: Environment;
 
@@ -175,49 +179,16 @@ export class Mixedbread extends Core.APIClient {
 
   documentAI: API.DocumentAI = new API.DocumentAI(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
-  rerankings: API.Rerankings = new API.Rerankings(this);
+  reranking: API.Reranking = new API.Reranking(this);
   files: API.Files = new API.Files(this);
-  jobs: API.Jobs = new API.Jobs(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
 
   /**
-   * Create embeddings for text or images using the specified model, encoding format,
-   * and normalization.
+   * Returns service information, including name and version.
    *
-   * Args: params: The parameters for creating embeddings.
-   *
-   * Returns: EmbeddingCreateResponse: The response containing the embeddings.
+   * Returns: InfoResponse: A response containing the service name and version.
    */
-  embed(
-    body: TopLevelAPI.EmbedParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.EmbedResponse> {
-    return this.post('/v1/embeddings', { body, ...options });
-  }
-
-  /**
-   * Rerank different kind of documents for a given query.
-   *
-   * Args: params: RerankingCreateParams: The parameters for reranking.
-   *
-   * Returns: RerankingCreateResponse: The reranked documents for the input query.
-   */
-  rerank(
-    body: TopLevelAPI.RerankParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.RerankResponse> {
-    return this.post('/v1/reranking', { body, ...options });
-  }
-
-  /**
-   * Perform a base search to check the service status and configuration.
-   *
-   * Args: state: The application state.
-   *
-   * Returns: dict: A dictionary containing the service status and public
-   * configuration details.
-   */
-  status(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.StatusResponse> {
+  info(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.InfoResponse> {
     return this.get('/', options);
   }
 
@@ -230,10 +201,6 @@ export class Mixedbread extends Core.APIClient {
       ...super.defaultHeaders(opts),
       ...this._options.defaultHeaders,
     };
-  }
-
-  protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
-    return { Authorization: this.apiKey };
   }
 
   static Mixedbread = this;
@@ -259,20 +226,18 @@ export class Mixedbread extends Core.APIClient {
 
 Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
-Mixedbread.Rerankings = Rerankings;
+Mixedbread.Reranking = Reranking;
 Mixedbread.Files = Files;
-Mixedbread.Jobs = Jobs;
+Mixedbread.FileListResponsesPage = FileListResponsesPage;
 Mixedbread.VectorStores = VectorStores;
+Mixedbread.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
-  export {
-    type EmbedResponse as EmbedResponse,
-    type RerankResponse as RerankResponse,
-    type StatusResponse as StatusResponse,
-    type EmbedParams as EmbedParams,
-    type RerankParams as RerankParams,
-  };
+  export import Page = Pagination.Page;
+  export { type PageParams as PageParams, type PageResponse as PageResponse };
+
+  export { type InfoResponse as InfoResponse };
 
   export { DocumentAI as DocumentAI };
 
@@ -283,32 +248,39 @@ export declare namespace Mixedbread {
   };
 
   export {
-    Rerankings as Rerankings,
+    Reranking as Reranking,
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,
   };
 
   export {
     Files as Files,
-    type FileDeleted as FileDeleted,
-    type FileObject as FileObject,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
+    type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
   };
 
-  export { Jobs as Jobs, type JobStatus as JobStatus, type JobDeleteResponse as JobDeleteResponse };
-
   export {
     VectorStores as VectorStores,
-    type SearchResponse as SearchResponse,
-    type VectorStore as VectorStore,
+    type SearchFilter as SearchFilter,
+    type VectorStoreCreateResponse as VectorStoreCreateResponse,
+    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
+    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
+    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }

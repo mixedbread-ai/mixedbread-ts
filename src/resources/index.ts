@@ -3,31 +3,33 @@
 export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
+  FileListResponsesPage,
   Files,
-  type FileDeleted,
-  type FileObject,
+  type FileCreateResponse,
+  type FileRetrieveResponse,
+  type FileUpdateResponse,
   type FileListResponse,
+  type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
 } from './files';
-export { Jobs, type JobStatus, type JobDeleteResponse } from './jobs';
-export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
+export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
+  VectorStoreListResponsesPage,
   VectorStores,
-  type SearchResponse,
-  type VectorStore,
+  type SearchFilter,
+  type VectorStoreCreateResponse,
+  type VectorStoreRetrieveResponse,
+  type VectorStoreUpdateResponse,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
+  type VectorStoreQaResponse,
+  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
+  type VectorStoreQaParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
-export {
-  type EmbedResponse,
-  type RerankResponse,
-  type StatusResponse,
-  type EmbedParams,
-  type RerankParams,
-} from './top-level';
+export { type InfoResponse } from './top-level';

@@ -3,7 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import * as JobsAPI from '../jobs';
+import { Page, type PageParams } from '../../pagination';
 
 export class Files extends APIResource {
   /**
@@ -18,7 +18,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     body: FileCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
+  ): Core.APIPromise<FileCreateResponse> {
     return this._client.post(`/v1/vector_stores/${vectorStoreId}/files`, { body, ...options });
   }
 
@@ -33,7 +33,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
+  ): Core.APIPromise<FileRetrieveResponse> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 
@@ -49,17 +49,23 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse>;
-  list(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
+  list(
+    vectorStoreId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse> {
+  ): Core.PagePromise<FileListResponsesPage, FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.get(`/v1/vector_stores/${vectorStoreId}/files`, { query, ...options });
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, FileListResponsesPage, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -79,7 +85,15 @@ export class Files extends APIResource {
   }
 }
 
-export interface VectorStoreFile {
+export class FileListResponsesPage extends Page<FileListResponse> {}
+
+/**
+ * Represents a file stored in a vector store.
+ */
+export interface FileCreateResponse {
+  /**
+   * Unique identifier for the file
+   */
   id: string;
 
   /**
@@ -87,58 +101,185 @@ export interface VectorStoreFile {
    */
   created_at: string;
 
+  /**
+   * ID of the containing vector store
+   */
   vector_store_id: string;
 
+  /**
+   * List of error messages if processing failed
+   */
   errors?: Array<string> | null;
 
+  /**
+   * Optional file metadata
+   */
   metadata?: unknown | null;
 
-  status?: JobsAPI.JobStatus;
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
 
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
   usage_bytes?: number | null;
 
+  /**
+   * Version number of the file
+   */
   version?: number | null;
 }
 
-export interface FileListResponse {
-  data: Array<VectorStoreFile>;
-
-  pagination: FileListResponse.Pagination;
-}
-
-export namespace FileListResponse {
-  export interface Pagination {
-    after?: number;
-
-    limit?: number;
-
-    total?: number;
-  }
-}
-
-export interface FileDeleteResponse {
+/**
+ * Represents a file stored in a vector store.
+ */
+export interface FileRetrieveResponse {
+  /**
+   * Unique identifier for the file
+   */
   id: string;
 
-  deleted: boolean;
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * List of error messages if processing failed
+   */
+  errors?: Array<string> | null;
+
+  /**
+   * Optional file metadata
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
+}
+
+/**
+ * Represents a file stored in a vector store.
+ */
+export interface FileListResponse {
+  /**
+   * Unique identifier for the file
+   */
+  id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * List of error messages if processing failed
+   */
+  errors?: Array<string> | null;
+
+  /**
+   * Optional file metadata
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
+}
+
+/**
+ * Response model for file deletion.
+ */
+export interface FileDeleteResponse {
+  /**
+   * ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the deletion was successful
+   */
+  deleted?: boolean;
+
+  /**
+   * Type of the deleted object
+   */
+  object?: 'vector_store.file';
 }
 
 export interface FileCreateParams {
+  /**
+   * ID of the file to add
+   */
   file_id: string;
 
+  /**
+   * Optional metadata for the file
+   */
   metadata?: unknown | null;
 }
 
-export interface FileListParams {
-  after?: number;
+export interface FileListParams extends PageParams {}
 
-  limit?: number;
-}
+Files.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace Files {
   export {
-    type VectorStoreFile as VectorStoreFile,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };

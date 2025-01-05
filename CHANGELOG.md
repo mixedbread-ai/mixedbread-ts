@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.1.0-alpha.2 (2025-01-05)
+
+Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
+
+### Features
+
+* **api:** update via SDK Studio ([#12](https://github.com/mixedbread-ai/mixedbread-ts/issues/12)) ([1f3e324](https://github.com/mixedbread-ai/mixedbread-ts/commit/1f3e3240ea3357eed38328fe701b52c2f83f0a5b))
+* **api:** update via SDK Studio ([#13](https://github.com/mixedbread-ai/mixedbread-ts/issues/13)) ([67bd9fe](https://github.com/mixedbread-ai/mixedbread-ts/commit/67bd9fedaff62a3c39bfa94b05710d7b940bf87c))
+* **api:** update via SDK Studio ([#14](https://github.com/mixedbread-ai/mixedbread-ts/issues/14)) ([3ca388e](https://github.com/mixedbread-ai/mixedbread-ts/commit/3ca388e56bee4a5545c4f93320a11511ec9d1e3a))
+* **api:** update via SDK Studio ([#15](https://github.com/mixedbread-ai/mixedbread-ts/issues/15)) ([3eb02c2](https://github.com/mixedbread-ai/mixedbread-ts/commit/3eb02c2b3dbf393023acec92621e24265e937218))
+* **api:** update via SDK Studio ([#16](https://github.com/mixedbread-ai/mixedbread-ts/issues/16)) ([fea9877](https://github.com/mixedbread-ai/mixedbread-ts/commit/fea9877ab387f28aedd7ec9be80d9a66f03a5a62))
+* **api:** update via SDK Studio ([#17](https://github.com/mixedbread-ai/mixedbread-ts/issues/17)) ([4794f71](https://github.com/mixedbread-ai/mixedbread-ts/commit/4794f711ce5602e34b714f8ad248e91a71e29763))
+* **api:** update via SDK Studio ([#18](https://github.com/mixedbread-ai/mixedbread-ts/issues/18)) ([36fb2f6](https://github.com/mixedbread-ai/mixedbread-ts/commit/36fb2f685e54442eebe8f3869a3211d2f52a227f))
+* **api:** update via SDK Studio ([#19](https://github.com/mixedbread-ai/mixedbread-ts/issues/19)) ([711e6f1](https://github.com/mixedbread-ai/mixedbread-ts/commit/711e6f14e08abd5f4d5255fefec9b88a3a9e72fe))
+* **api:** update via SDK Studio ([#20](https://github.com/mixedbread-ai/mixedbread-ts/issues/20)) ([5a3a09b](https://github.com/mixedbread-ai/mixedbread-ts/commit/5a3a09bbc6e61487940850c0308f7f52fdd2806e))
+* **api:** update via SDK Studio ([#21](https://github.com/mixedbread-ai/mixedbread-ts/issues/21)) ([072fd22](https://github.com/mixedbread-ai/mixedbread-ts/commit/072fd22ae6b3bd82f268b3123e80972bc79ceeee))
+* **api:** update via SDK Studio ([#22](https://github.com/mixedbread-ai/mixedbread-ts/issues/22)) ([3a6e612](https://github.com/mixedbread-ai/mixedbread-ts/commit/3a6e61273be0129d038582fdd62ab776ae8bcab3))
+* **api:** update via SDK Studio ([#23](https://github.com/mixedbread-ai/mixedbread-ts/issues/23)) ([e58e2c2](https://github.com/mixedbread-ai/mixedbread-ts/commit/e58e2c2a966b725c2e9afd3b0c7ca518128e8ccb))
+* **api:** update via SDK Studio ([#24](https://github.com/mixedbread-ai/mixedbread-ts/issues/24)) ([78be684](https://github.com/mixedbread-ai/mixedbread-ts/commit/78be684d8939f8ebf44f641ee2c8abc1b1b93d2b))
+* **api:** update via SDK Studio ([#25](https://github.com/mixedbread-ai/mixedbread-ts/issues/25)) ([69d3980](https://github.com/mixedbread-ai/mixedbread-ts/commit/69d3980436d86fccdbd830ca5f176395d9618722))
+* **api:** update via SDK Studio ([#26](https://github.com/mixedbread-ai/mixedbread-ts/issues/26)) ([0b354c4](https://github.com/mixedbread-ai/mixedbread-ts/commit/0b354c49121c980397a2aec76161b98b648c6abf))
+* **api:** update via SDK Studio ([#27](https://github.com/mixedbread-ai/mixedbread-ts/issues/27)) ([54a6be4](https://github.com/mixedbread-ai/mixedbread-ts/commit/54a6be4cc538b93ac19cbf4f23916524aa1accfd))
+* **api:** update via SDK Studio ([#28](https://github.com/mixedbread-ai/mixedbread-ts/issues/28)) ([3f63072](https://github.com/mixedbread-ai/mixedbread-ts/commit/3f63072b210c02e887f13cde9eee4cb21d05182e))
+* **api:** update via SDK Studio ([#29](https://github.com/mixedbread-ai/mixedbread-ts/issues/29)) ([22d05df](https://github.com/mixedbread-ai/mixedbread-ts/commit/22d05dfccfc6bdf3d62b129529e030bd5e788ad9))
+* **api:** update via SDK Studio ([#30](https://github.com/mixedbread-ai/mixedbread-ts/issues/30)) ([25adb32](https://github.com/mixedbread-ai/mixedbread-ts/commit/25adb3230920a6151b23780ade7fa7ef00488f38))
+* **api:** update via SDK Studio ([#31](https://github.com/mixedbread-ai/mixedbread-ts/issues/31)) ([f7ae807](https://github.com/mixedbread-ai/mixedbread-ts/commit/f7ae807bf4aa4f30206375fdff024d40631f9059))
+
+
+### Bug Fixes
+
+* **client:** normalize method ([#7](https://github.com/mixedbread-ai/mixedbread-ts/issues/7)) ([968beb1](https://github.com/mixedbread-ai/mixedbread-ts/commit/968beb1d42b441d01b65957eefbbfad87d10995c))
+
+
+### Chores
+
+* **internal:** codegen related update ([#11](https://github.com/mixedbread-ai/mixedbread-ts/issues/11)) ([3f90503](https://github.com/mixedbread-ai/mixedbread-ts/commit/3f90503400311bb63548e11a3828b3587a82147a))
+* **internal:** codegen related update ([#5](https://github.com/mixedbread-ai/mixedbread-ts/issues/5)) ([a113b42](https://github.com/mixedbread-ai/mixedbread-ts/commit/a113b42aef4ae9bca7262cd4185247fa23454945))
+* **internal:** codegen related update ([#6](https://github.com/mixedbread-ai/mixedbread-ts/issues/6)) ([ec3b359](https://github.com/mixedbread-ai/mixedbread-ts/commit/ec3b359b889bb9d7f4bd30836324369f80d331ea))
+* **internal:** codegen related update ([#8](https://github.com/mixedbread-ai/mixedbread-ts/issues/8)) ([a815e19](https://github.com/mixedbread-ai/mixedbread-ts/commit/a815e195da429108be76d04874c2360b592b619a))
+* **internal:** codegen related update ([#9](https://github.com/mixedbread-ai/mixedbread-ts/issues/9)) ([22e5caf](https://github.com/mixedbread-ai/mixedbread-ts/commit/22e5cafa547ba8ec9bdd74c38b34be081d3f7430))
+
+
+### Documentation
+
+* minor formatting changes ([#10](https://github.com/mixedbread-ai/mixedbread-ts/issues/10)) ([9f9bcb6](https://github.com/mixedbread-ai/mixedbread-ts/commit/9f9bcb60b61442a45bac486fbc33f99614e4fed5))
+
 ## 0.1.0-alpha.1 (2024-12-18)
 
 Full Changelog: [v0.0.1-alpha.1...v0.1.0-alpha.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.0.1-alpha.1...v0.1.0-alpha.1)

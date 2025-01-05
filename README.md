@@ -26,7 +26,8 @@ The full API of this library can be found in [api.md](api.md).
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'local', // defaults to 'production'
+  apiKey: 'My API Key',
 });
 
 async function main() {
@@ -47,11 +48,12 @@ This library includes TypeScript definitions for all request params and response
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  environment: 'environment_1', // defaults to 'production'
+  environment: 'local', // defaults to 'production'
+  apiKey: 'My API Key',
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
+  const vectorStore: Mixedbread.VectorStoreCreateResponse = await client.vectorStores.create();
 }
 
 main();
@@ -108,6 +110,7 @@ You can use the `maxRetries` option to configure or disable this:
 // Configure the default for all requests:
 const client = new Mixedbread({
   maxRetries: 0, // default is 2
+  apiKey: 'My API Key',
 });
 
 // Or, configure per-request:
@@ -125,6 +128,7 @@ Requests time out after 1 minute by default. You can configure this with a `time
 // Configure the default for all requests:
 const client = new Mixedbread({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
+  apiKey: 'My API Key',
 });
 
 // Override per-request:
@@ -136,6 +140,37 @@ await client.vectorStores.create({
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Mixedbread API are paginated.
+You can use the `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllVectorStores(params) {
+  const allVectorStores = [];
+  // Automatically fetches more pages as needed.
+  for await (const vectorStoreListResponse of client.vectorStores.list()) {
+    allVectorStores.push(vectorStoreListResponse);
+  }
+  return allVectorStores;
+}
+```
+
+Alternatively, you can request a single page at a time:
+
+```ts
+let page = await client.vectorStores.list();
+for (const vectorStoreListResponse of page.data) {
+  console.log(vectorStoreListResponse);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = await page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 
@@ -256,6 +291,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 // Configure the default for all requests:
 const client = new Mixedbread({
   httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
+  apiKey: 'My API Key',
 });
 
 // Override per-request:

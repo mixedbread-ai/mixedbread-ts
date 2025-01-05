@@ -3,7 +3,7 @@
 import { APIResource } from '../resource';
 import * as Core from '../core';
 
-export class Rerankings extends APIResource {
+export class Reranking extends APIResource {
   /**
    * Rerank different kind of documents for a given query.
    *
@@ -48,7 +48,16 @@ export interface RerankingCreateResponse {
   /**
    * The object type of the response
    */
-  object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+  object?:
+    | 'list'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'text_document'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
 }
 
 export namespace RerankingCreateResponse {
@@ -71,7 +80,16 @@ export namespace RerankingCreateResponse {
     /**
      * The object type.
      */
-    object?: 'list' | 'embedding' | 'embedding_dict' | 'text_document' | 'file';
+    object?:
+      | 'list'
+      | 'job'
+      | 'embedding'
+      | 'embedding_dict'
+      | 'text_document'
+      | 'file'
+      | 'vector_store'
+      | 'vector_store.file'
+      | 'api_key';
   }
 
   /**
@@ -96,7 +114,10 @@ export namespace RerankingCreateResponse {
 }
 
 export interface RerankingCreateParams {
-  input: unknown;
+  /**
+   * The input documents to rerank.
+   */
+  input: Array<string | unknown>;
 
   /**
    * The query to rerank the documents.
@@ -124,7 +145,7 @@ export interface RerankingCreateParams {
   top_k?: number;
 }
 
-export declare namespace Rerankings {
+export declare namespace Reranking {
   export {
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,

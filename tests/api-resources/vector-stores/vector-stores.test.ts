@@ -21,7 +21,7 @@ describe('resource vectorStores', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.vectorStores.retrieve('vector_store_id');
+    const responsePromise = client.vectorStores.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -34,12 +34,14 @@ describe('resource vectorStores', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.retrieve('vector_store_id', { path: '/_stainless_unknown_path' }),
+      client.vectorStores.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+        path: '/_stainless_unknown_path',
+      }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('update', async () => {
-    const responsePromise = client.vectorStores.update('vector_store_id', {});
+    const responsePromise = client.vectorStores.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -70,12 +72,12 @@ describe('resource vectorStores', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.list({ after: 0, limit: 0 }, { path: '/_stainless_unknown_path' }),
+      client.vectorStores.list({ limit: 0, offset: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.vectorStores.delete('vector_store_id');
+    const responsePromise = client.vectorStores.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,12 +90,42 @@ describe('resource vectorStores', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.vectorStores.delete('vector_store_id', { path: '/_stainless_unknown_path' }),
+      client.vectorStores.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+        path: '/_stainless_unknown_path',
+      }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
+  test('qa: only required params', async () => {
+    const responsePromise = client.vectorStores.qa({
+      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('qa: required and optional params', async () => {
+    const response = await client.vectorStores.qa({
+      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+      filters: { all: [{}], any: [{}], none: [{}] },
+      pagination: { limit: 0, offset: 0 },
+      qa_options: { cite: true },
+      query: 'x',
+      search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
+      stream: true,
+    });
+  });
+
   test('search: only required params', async () => {
-    const responsePromise = client.vectorStores.search({ query: 'query', vector_store_ids: ['string'] });
+    const responsePromise = client.vectorStores.search({
+      query: 'how to configure SSL',
+      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -105,12 +137,11 @@ describe('resource vectorStores', () => {
 
   test('search: required and optional params', async () => {
     const response = await client.vectorStores.search({
-      query: 'query',
-      vector_store_ids: ['string'],
-      after: 0,
-      filter: { and_: {}, not_: {}, or_: {} },
-      limit: 0,
-      options: { min_score: 0, return_chunks: true, return_metadata: true },
+      query: 'how to configure SSL',
+      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+      filters: { all: [{}], any: [{}], none: [{}] },
+      pagination: { limit: 0, offset: 0 },
+      search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
     });
   });
 });

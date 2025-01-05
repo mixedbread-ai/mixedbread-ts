@@ -6,12 +6,15 @@ import * as Core from '../../core';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
+  FileCreateResponse,
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
+  FileListResponsesPage,
+  FileRetrieveResponse,
   Files,
-  VectorStoreFile,
 } from './files';
+import { Page, type PageParams } from '../../pagination';
 
 export class VectorStores extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
@@ -24,7 +27,10 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the created vector store details.
    */
-  create(body: VectorStoreCreateParams, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
+  create(
+    body: VectorStoreCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreCreateResponse> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
@@ -35,7 +41,10 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStore> {
+  retrieve(
+    vectorStoreId: string,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreRetrieveResponse> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}`, options);
   }
 
@@ -43,7 +52,7 @@ export class VectorStores extends APIResource {
    * Update a vector store by ID.
    *
    * Args: vector_store_id: The ID of the vector store to update.
-   * vector_store_create: VectorStoreCreate object containing the name, description,
+   * vector_store_update: VectorStoreCreate object containing the name, description,
    * and metadata.
    *
    * Returns: VectorStore: The response containing the updated vector store details.
@@ -52,7 +61,7 @@ export class VectorStores extends APIResource {
     vectorStoreId: string,
     body: VectorStoreUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStore> {
+  ): Core.APIPromise<VectorStoreUpdateResponse> {
     return this._client.put(`/v1/vector_stores/${vectorStoreId}`, { body, ...options });
   }
 
@@ -66,16 +75,18 @@ export class VectorStores extends APIResource {
   list(
     query?: VectorStoreListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreListResponse>;
-  list(options?: Core.RequestOptions): Core.APIPromise<VectorStoreListResponse>;
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
   list(
     query: VectorStoreListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreListResponse> {
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.get('/v1/vector_stores', { query, ...options });
+    return this._client.getAPIList('/v1/vector_stores', VectorStoreListResponsesPage, { query, ...options });
   }
 
   /**
@@ -90,25 +101,581 @@ export class VectorStores extends APIResource {
   }
 
   /**
+   * Question answering
+   */
+  qa(body: VectorStoreQaParams, options?: Core.RequestOptions): Core.APIPromise<unknown> {
+    return this._client.post('/v1/vector_stores/question-answering', { body, ...options });
+  }
+
+  /**
    * Perform a search based on the provided query.
    *
-   * Args: search_query: SearchQuery object containing the search parameters.
+   * Args: search_params: VectorStoreSearchParams object containing the search
+   * parameters.
    *
-   * Returns: SearchResponse: The response containing the search results and
-   * pagination details.
+   * Returns: VectorStoreSearchResponse: The response containing the search results
+   * and pagination details.
    */
-  search(body: VectorStoreSearchParams, options?: Core.RequestOptions): Core.APIPromise<SearchResponse> {
+  search(
+    body: VectorStoreSearchParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<VectorStoreSearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
 
-export interface SearchResponse {
-  data: Array<SearchResponse.Data>;
+export class VectorStoreListResponsesPage extends Page<VectorStoreListResponse> {}
 
-  pagination: SearchResponse.Pagination;
+/**
+ * Represents a filter with AND, OR, and NOT conditions.
+ */
+export interface SearchFilter {
+  /**
+   * List of conditions or filters to be ANDed together
+   */
+  all?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be ORed together
+   */
+  any?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be NOTed
+   */
+  none?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
 }
 
-export namespace SearchResponse {
+export namespace SearchFilter {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreCreateResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreCreateResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreCreateResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreCreateResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreRetrieveResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreRetrieveResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreRetrieveResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreRetrieveResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreUpdateResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreUpdateResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreUpdateResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreUpdateResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Model representing a vector store with its metadata and timestamps.
+ */
+export interface VectorStoreListResponse {
+  /**
+   * Unique identifier for the vector store
+   */
+  id: string;
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the vector store
+   */
+  name: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Detailed description of the vector store's purpose and contents
+   */
+  description?: string | null;
+
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreListResponse.ExpiresAfter | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Counts of files in different states
+   */
+  file_counts?: VectorStoreListResponse.FileCounts;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Additional metadata associated with the vector store
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
+}
+
+export namespace VectorStoreListResponse {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+
+  /**
+   * Counts of files in different states
+   */
+  export interface FileCounts {
+    /**
+     * Number of files whose processing was canceled
+     */
+    canceled?: number;
+
+    /**
+     * Number of files that failed processing
+     */
+    failed?: number;
+
+    /**
+     * Number of files currently being processed
+     */
+    in_progress?: number;
+
+    /**
+     * Number of successfully processed files
+     */
+    successful?: number;
+
+    /**
+     * Total number of files
+     */
+    total?: number;
+  }
+}
+
+/**
+ * Response model for vector store deletion.
+ */
+export interface VectorStoreDeleteResponse {
+  /**
+   * ID of the deleted vector store
+   */
+  id: string;
+
+  /**
+   * Whether the deletion was successful
+   */
+  deleted: boolean;
+
+  /**
+   * Type of the deleted object
+   */
+  object?: 'vector_store';
+}
+
+export type VectorStoreQaResponse = unknown;
+
+export interface VectorStoreSearchResponse {
+  /**
+   * The list of scored vector store files
+   */
+  data: Array<VectorStoreSearchResponse.Data>;
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  pagination: VectorStoreSearchResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace VectorStoreSearchResponse {
   export interface Data {
     /**
      * file id
@@ -119,6 +686,11 @@ export namespace SearchResponse {
      * Timestamp of vector store file creation
      */
     created_at: string;
+
+    /**
+     * score of the file
+     */
+    score: number;
 
     /**
      * usage in bytes
@@ -135,6 +707,9 @@ export namespace SearchResponse {
      */
     version: number;
 
+    /**
+     * chunks
+     */
     chunks?: Array<Data.Chunk> | null;
 
     /**
@@ -146,14 +721,24 @@ export namespace SearchResponse {
   export namespace Data {
     export interface Chunk {
       /**
+       * file id
+       */
+      file_id: string;
+
+      /**
        * rank of the chunk in a file
        */
       rank: number;
 
       /**
+       * score of the chunk
+       */
+      score: number;
+
+      /**
        * value of the chunk
        */
-      value?: string | Chunk.ImageURLInput | Chunk.TextInput | null;
+      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
     }
 
     export namespace Chunk {
@@ -204,216 +789,159 @@ export namespace SearchResponse {
     }
   }
 
+  /**
+   * Pagination model that includes total count of items.
+   */
   export interface Pagination {
-    after?: number;
-
+    /**
+     * Maximum number of items to return per page
+     */
     limit?: number;
 
+    /**
+     * Offset of the first item to return
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
     total?: number;
   }
-}
-
-export interface VectorStore {
-  id: string;
-
-  /**
-   * Timestamp of vector store creation
-   */
-  created_at: string;
-
-  description: string | null;
-
-  /**
-   * Timestamp of vector store expiration
-   */
-  expires_at: string | null;
-
-  name: string;
-
-  /**
-   * The status of the vector store
-   */
-  status: 'expired' | 'active';
-
-  file_counts?: VectorStore.FileCounts;
-
-  /**
-   * Set of key-value pairs that can be attached to an object.
-   */
-  metadata?: unknown | null;
-
-  usage_bytes?: number;
-}
-
-export namespace VectorStore {
-  export interface FileCounts {
-    canceled?: number;
-
-    failed?: number;
-
-    in_progress?: number;
-
-    successful?: number;
-
-    total?: number;
-  }
-}
-
-export interface VectorStoreListResponse {
-  data: Array<VectorStore>;
-
-  pagination: VectorStoreListResponse.Pagination;
-}
-
-export namespace VectorStoreListResponse {
-  export interface Pagination {
-    after?: number;
-
-    limit?: number;
-
-    total?: number;
-  }
-}
-
-export interface VectorStoreDeleteResponse {
-  id: string;
-
-  deleted: boolean;
 }
 
 export interface VectorStoreCreateParams {
+  /**
+   * Description of the vector store
+   */
   description?: string | null;
 
-  expires_at?: string | null;
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreCreateParams.ExpiresAfter | null;
 
+  /**
+   * Optional list of file IDs
+   */
+  file_ids?: Array<string> | null;
+
+  /**
+   * Optional metadata key-value pairs
+   */
   metadata?: unknown | null;
 
+  /**
+   * Name for the new vector store
+   */
   name?: string | null;
+}
+
+export namespace VectorStoreCreateParams {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
 }
 
 export interface VectorStoreUpdateParams {
+  /**
+   * New description
+   */
   description?: string | null;
 
-  expires_at?: string | null;
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  expires_after?: VectorStoreUpdateParams.ExpiresAfter | null;
 
+  /**
+   * Optional metadata key-value pairs
+   */
   metadata?: unknown | null;
 
+  /**
+   * New name for the vector store
+   */
   name?: string | null;
 }
 
-export interface VectorStoreListParams {
-  after?: number;
+export namespace VectorStoreUpdateParams {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
 
-  limit?: number;
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
 }
 
-export interface VectorStoreSearchParams {
-  query: string;
+export interface VectorStoreListParams extends PageParams {}
 
+export interface VectorStoreQaParams {
+  /**
+   * IDs of vector stores to search
+   */
   vector_store_ids: Array<string>;
 
-  after?: number;
-
   /**
-   * List of conditions or filters to be ANDed together
+   * Optional filter conditions
    */
-  filter?:
-    | VectorStoreSearchParams.Filter
-    | Array<VectorStoreSearchParams.Condition | VectorStoreSearchParams.Filter>
+  filters?:
+    | SearchFilter
+    | VectorStoreQaParams.SearchFilterCondition
+    | Array<SearchFilter | VectorStoreQaParams.SearchFilterCondition>
     | null;
 
-  limit?: number;
+  /**
+   * Pagination options
+   */
+  pagination?: VectorStoreQaParams.Pagination;
 
-  options?: VectorStoreSearchParams.Options | null;
+  /**
+   * Question answering configuration options
+   */
+  qa_options?: VectorStoreQaParams.QaOptions;
+
+  /**
+   * Question to answer. If not provided, the question will be extracted from the
+   * passed messages.
+   */
+  query?: string;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: VectorStoreQaParams.SearchOptions;
+
+  /**
+   * Whether to stream the answer
+   */
+  stream?: boolean;
 }
 
-export namespace VectorStoreSearchParams {
-  /**
-   * List of conditions or filters to be ANDed together
-   */
-  export interface Filter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    and_?: unknown | Array<Filter.Condition | unknown>;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    not_?: unknown | Array<Filter.Condition | unknown>;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    or_?: unknown | Array<Filter.Condition | unknown>;
-  }
-
-  export namespace Filter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
+export namespace VectorStoreQaParams {
   /**
    * Represents a condition with a field, operator, and value.
    */
-  export interface Condition {
+  export interface SearchFilterCondition {
     /**
      * The field to apply the condition on
      */
@@ -431,115 +959,218 @@ export namespace VectorStoreSearchParams {
   }
 
   /**
-   * Represents a filter with AND, OR, and NOT conditions.
+   * Represents a condition with a field, operator, and value.
    */
-  export interface Filter {
+  export interface SearchFilterCondition {
     /**
-     * List of conditions or filters to be ANDed together
+     * The field to apply the condition on
      */
-    and_?: unknown | Array<Filter.Condition | unknown>;
+    key: string;
 
     /**
-     * List of conditions or filters to be NOTed
+     * The operator for the condition
      */
-    not_?: unknown | Array<Filter.Condition | unknown>;
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
 
     /**
-     * List of conditions or filters to be ORed together
+     * The value to compare against
      */
-    or_?: unknown | Array<Filter.Condition | unknown>;
+    value: unknown;
   }
 
-  export namespace Filter {
+  /**
+   * Pagination options
+   */
+  export interface Pagination {
     /**
-     * Represents a condition with a field, operator, and value.
+     * Maximum number of items to return per page
      */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
+    limit?: number;
 
     /**
-     * Represents a condition with a field, operator, and value.
+     * Offset of the first item to return
      */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface Condition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
+    offset?: number;
   }
 
-  export interface Options {
-    min_score?: number;
+  /**
+   * Question answering configuration options
+   */
+  export interface QaOptions {
+    /**
+     * Whether to use citations
+     */
+    cite?: boolean;
+  }
 
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Whether to return matching text chunks
+     */
     return_chunks?: boolean;
 
+    /**
+     * Whether to return file metadata
+     */
     return_metadata?: boolean;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
   }
 }
 
+export interface VectorStoreSearchParams {
+  /**
+   * Search query text
+   */
+  query: string;
+
+  /**
+   * IDs of vector stores to search
+   */
+  vector_store_ids: Array<string>;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | SearchFilter
+    | VectorStoreSearchParams.SearchFilterCondition
+    | Array<SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
+    | null;
+
+  /**
+   * Pagination options
+   */
+  pagination?: VectorStoreSearchParams.Pagination;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: VectorStoreSearchParams.SearchOptions;
+}
+
+export namespace VectorStoreSearchParams {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Pagination options
+   */
+  export interface Pagination {
+    /**
+     * Maximum number of items to return per page
+     */
+    limit?: number;
+
+    /**
+     * Offset of the first item to return
+     */
+    offset?: number;
+  }
+
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+  }
+}
+
+VectorStores.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
 VectorStores.Files = Files;
+VectorStores.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace VectorStores {
   export {
-    type SearchResponse as SearchResponse,
-    type VectorStore as VectorStore,
+    type SearchFilter as SearchFilter,
+    type VectorStoreCreateResponse as VectorStoreCreateResponse,
+    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
+    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreQaResponse as VectorStoreQaResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
+    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 
   export {
     Files as Files,
-    type VectorStoreFile as VectorStoreFile,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
