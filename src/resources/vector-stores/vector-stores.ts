@@ -120,6 +120,88 @@ export class VectorStores extends APIResource {
 }
 
 /**
+ * Represents a filter with AND, OR, and NOT conditions.
+ */
+export interface SearchFilter {
+  /**
+   * List of conditions or filters to be ANDed together
+   */
+  all?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be ORed together
+   */
+  any?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be NOTed
+   */
+  none?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+}
+
+export namespace SearchFilter {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+}
+
+/**
  * Model representing a vector store with its metadata and timestamps.
  */
 export interface VectorStoreCreateResponse {
@@ -865,9 +947,9 @@ export interface VectorStoreQaParams {
    * Filter or condition
    */
   filters?:
-    | VectorStoreQaParams.SearchFilter
+    | SearchFilter
     | VectorStoreQaParams.SearchFilterCondition
-    | Array<VectorStoreQaParams.SearchFilter | VectorStoreQaParams.SearchFilterCondition>
+    | Array<SearchFilter | VectorStoreQaParams.SearchFilterCondition>
     | null;
 
   /**
@@ -899,88 +981,6 @@ export interface VectorStoreQaParams {
 
 export namespace VectorStoreQaParams {
   /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
-  /**
    * Represents a condition with a field, operator, and value.
    */
   export interface SearchFilterCondition {
@@ -998,88 +998,6 @@ export namespace VectorStoreQaParams {
      * The value to compare against
      */
     value: unknown;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
   }
 
   /**
@@ -1168,9 +1086,9 @@ export interface VectorStoreSearchParams {
    * Filter or condition
    */
   filters?:
-    | VectorStoreSearchParams.SearchFilter
+    | SearchFilter
     | VectorStoreSearchParams.SearchFilterCondition
-    | Array<VectorStoreSearchParams.SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
+    | Array<SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
     | null;
 
   /**
@@ -1185,88 +1103,6 @@ export interface VectorStoreSearchParams {
 }
 
 export namespace VectorStoreSearchParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
   /**
    * Represents a condition with a field, operator, and value.
    */
@@ -1285,88 +1121,6 @@ export namespace VectorStoreSearchParams {
      * The value to compare against
      */
     value: unknown;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
   }
 
   /**
@@ -1434,6 +1188,7 @@ VectorStores.Files = Files;
 
 export declare namespace VectorStores {
   export {
+    type SearchFilter as SearchFilter,
     type VectorStoreCreateResponse as VectorStoreCreateResponse,
     type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,

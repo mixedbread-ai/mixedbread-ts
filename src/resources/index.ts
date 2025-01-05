@@ -17,6 +17,7 @@ export {
 export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
   VectorStores,
+  type SearchFilter,
   type VectorStoreCreateResponse,
   type VectorStoreRetrieveResponse,
   type VectorStoreUpdateResponse,
