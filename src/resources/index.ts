@@ -14,7 +14,7 @@ export {
   type FileUpdateParams,
   type FileListParams,
 } from './files';
-export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
+export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
   VectorStoreListResponsesPage,
   VectorStores,
@@ -32,10 +32,4 @@ export {
   type VectorStoreQaParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
-export {
-  type EmbedResponse,
-  type InfoResponse,
-  type RerankResponse,
-  type EmbedParams,
-  type RerankParams,
-} from './top-level';
+export { type InfoResponse } from './top-level';
