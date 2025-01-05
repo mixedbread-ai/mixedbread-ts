@@ -14,7 +14,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileCreateResponse> {
+  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
@@ -25,7 +25,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the file details.
    */
-  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileRetrieveResponse> {
+  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.get(`/v1/files/${fileId}`, options);
   }
 
@@ -36,11 +36,7 @@ export class Files extends APIResource {
    *
    * Returns: FileObject: The updated file details.
    */
-  update(
-    fileId: string,
-    body: FileUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<FileUpdateResponse> {
+  update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
     return this._client.post(`/v1/files/${fileId}`, Core.multipartFormRequestOptions({ body, ...options }));
   }
 
@@ -51,19 +47,16 @@ export class Files extends APIResource {
    *
    * Returns: A list of files belonging to the user.
    */
-  list(
-    query?: FileListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesPage, FileListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<FileListResponsesPage, FileListResponse>;
+  list(query?: FileListParams, options?: Core.RequestOptions): Core.PagePromise<FileObjectsPage, FileObject>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileObjectsPage, FileObject>;
   list(
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileListResponsesPage, FileListResponse> {
+  ): Core.PagePromise<FileObjectsPage, FileObject> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/files', FileListResponsesPage, { query, ...options });
+    return this._client.getAPIList('/v1/files', FileObjectsPage, { query, ...options });
   }
 
   /**
@@ -89,7 +82,7 @@ export class Files extends APIResource {
   }
 }
 
-export class FileListResponsesPage extends Page<FileListResponse> {}
+export class FileObjectsPage extends Page<FileObject> {}
 
 /**
  * A model representing a file object in the system.
@@ -97,136 +90,7 @@ export class FileListResponsesPage extends Page<FileListResponse> {}
  * This model contains metadata about files stored in the system, including
  * identifiers, size information, and timestamps.
  */
-export interface FileCreateResponse {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  bytes: number;
-
-  /**
-   * Timestamp when the file was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the file including extension
-   */
-  filename: string;
-
-  /**
-   * MIME type of the file
-   */
-  mime_type: string;
-
-  /**
-   * Timestamp when the file was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Version of the file
-   */
-  version: number;
-}
-
-/**
- * A model representing a file object in the system.
- *
- * This model contains metadata about files stored in the system, including
- * identifiers, size information, and timestamps.
- */
-export interface FileRetrieveResponse {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  bytes: number;
-
-  /**
-   * Timestamp when the file was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the file including extension
-   */
-  filename: string;
-
-  /**
-   * MIME type of the file
-   */
-  mime_type: string;
-
-  /**
-   * Timestamp when the file was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Version of the file
-   */
-  version: number;
-}
-
-/**
- * A model representing a file object in the system.
- *
- * This model contains metadata about files stored in the system, including
- * identifiers, size information, and timestamps.
- */
-export interface FileUpdateResponse {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Size of the file in bytes
-   */
-  bytes: number;
-
-  /**
-   * Timestamp when the file was created
-   */
-  created_at: string;
-
-  /**
-   * Name of the file including extension
-   */
-  filename: string;
-
-  /**
-   * MIME type of the file
-   */
-  mime_type: string;
-
-  /**
-   * Timestamp when the file was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Version of the file
-   */
-  version: number;
-}
-
-/**
- * A model representing a file object in the system.
- *
- * This model contains metadata about files stored in the system, including
- * identifiers, size information, and timestamps.
- */
-export interface FileListResponse {
+export interface FileObject {
   /**
    * Unique identifier for the file
    */
@@ -296,16 +160,13 @@ export interface FileUpdateParams {
 
 export interface FileListParams extends PageParams {}
 
-Files.FileListResponsesPage = FileListResponsesPage;
+Files.FileObjectsPage = FileObjectsPage;
 
 export declare namespace Files {
   export {
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
-    type FileUpdateResponse as FileUpdateResponse,
-    type FileListResponse as FileListResponse,
+    type FileObject as FileObject,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesPage as FileListResponsesPage,
+    FileObjectsPage as FileObjectsPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

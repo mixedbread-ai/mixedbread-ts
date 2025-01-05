@@ -26,6 +26,7 @@ The full API of this library can be found in [api.md](api.md).
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
+  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
@@ -47,11 +48,12 @@ This library includes TypeScript definitions for all request params and response
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
+  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStoreCreateResponse = await client.vectorStores.create();
+  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
 }
 
 main();
@@ -146,8 +148,8 @@ You can use the `for await … of` syntax to iterate through items across all pa
 async function fetchAllVectorStores(params) {
   const allVectorStores = [];
   // Automatically fetches more pages as needed.
-  for await (const vectorStoreListResponse of client.vectorStores.list()) {
-    allVectorStores.push(vectorStoreListResponse);
+  for await (const vectorStore of client.vectorStores.list()) {
+    allVectorStores.push(vectorStore);
   }
   return allVectorStores;
 }
@@ -157,8 +159,8 @@ Alternatively, you can request a single page at a time:
 
 ```ts
 let page = await client.vectorStores.list();
-for (const vectorStoreListResponse of page.data) {
-  console.log(vectorStoreListResponse);
+for (const vectorStore of page.data) {
+  console.log(vectorStore);
 }
 
 // Convenience methods are provided for manually paginating:

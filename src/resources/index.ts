@@ -3,12 +3,9 @@
 export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
-  FileListResponsesPage,
+  FileObjectsPage,
   Files,
-  type FileCreateResponse,
-  type FileRetrieveResponse,
-  type FileUpdateResponse,
-  type FileListResponse,
+  type FileObject,
   type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
@@ -16,13 +13,15 @@ export {
 } from './files';
 export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
-  VectorStoreListResponsesPage,
+  VectorStoresPage,
   VectorStores,
+  type ExpiresAfter,
+  type FileCounts,
+  type ScoredVectorStoreChunk,
+  type ScoredVectorStoreFile,
   type SearchFilter,
-  type VectorStoreCreateResponse,
-  type VectorStoreRetrieveResponse,
-  type VectorStoreUpdateResponse,
-  type VectorStoreListResponse,
+  type SearchFilterCondition,
+  type VectorStore,
   type VectorStoreDeleteResponse,
   type VectorStoreSearchResponse,
   type VectorStoreCreateParams,

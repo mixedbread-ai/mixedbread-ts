@@ -1,23 +1,23 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  FileListResponsesPage,
+  VectorStoreFilesPage,
   Files,
-  type FileCreateResponse,
-  type FileRetrieveResponse,
-  type FileListResponse,
+  type VectorStoreFile,
   type FileDeleteResponse,
   type FileCreateParams,
   type FileListParams,
 } from './files';
 export {
-  VectorStoreListResponsesPage,
+  VectorStoresPage,
   VectorStores,
+  type ExpiresAfter,
+  type FileCounts,
+  type ScoredVectorStoreChunk,
+  type ScoredVectorStoreFile,
   type SearchFilter,
-  type VectorStoreCreateResponse,
-  type VectorStoreRetrieveResponse,
-  type VectorStoreUpdateResponse,
-  type VectorStoreListResponse,
+  type SearchFilterCondition,
+  type VectorStore,
   type VectorStoreDeleteResponse,
   type VectorStoreSearchResponse,
   type VectorStoreCreateParams,

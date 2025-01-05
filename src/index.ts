@@ -12,32 +12,31 @@ import { InfoResponse } from './resources/top-level';
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
   FileCreateParams,
-  FileCreateResponse,
   FileDeleteResponse,
   FileListParams,
-  FileListResponse,
-  FileListResponsesPage,
-  FileRetrieveResponse,
+  FileObject,
+  FileObjectsPage,
   FileUpdateParams,
-  FileUpdateResponse,
   Files,
 } from './resources/files';
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
+  ExpiresAfter,
+  FileCounts,
+  ScoredVectorStoreChunk,
+  ScoredVectorStoreFile,
   SearchFilter,
+  SearchFilterCondition,
+  VectorStore,
   VectorStoreCreateParams,
-  VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
-  VectorStoreListResponse,
-  VectorStoreListResponsesPage,
-  VectorStoreRetrieveResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
-  VectorStoreUpdateResponse,
   VectorStores,
+  VectorStoresPage,
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
@@ -47,7 +46,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * Api key used for accessing Mixedbreads API
+   * Defaults to process.env['MXBAI_API_KEY'].
    */
   apiKey?: string | undefined;
 
@@ -230,9 +229,9 @@ Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Reranking = Reranking;
 Mixedbread.Files = Files;
-Mixedbread.FileListResponsesPage = FileListResponsesPage;
+Mixedbread.FileObjectsPage = FileObjectsPage;
 Mixedbread.VectorStores = VectorStores;
-Mixedbread.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
+Mixedbread.VectorStoresPage = VectorStoresPage;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -257,12 +256,9 @@ export declare namespace Mixedbread {
 
   export {
     Files as Files,
-    type FileCreateResponse as FileCreateResponse,
-    type FileRetrieveResponse as FileRetrieveResponse,
-    type FileUpdateResponse as FileUpdateResponse,
-    type FileListResponse as FileListResponse,
+    type FileObject as FileObject,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesPage as FileListResponsesPage,
+    FileObjectsPage as FileObjectsPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
@@ -270,14 +266,16 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
+    type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
+    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
+    type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type SearchFilter as SearchFilter,
-    type VectorStoreCreateResponse as VectorStoreCreateResponse,
-    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
-    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
-    type VectorStoreListResponse as VectorStoreListResponse,
+    type SearchFilterCondition as SearchFilterCondition,
+    type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
+    VectorStoresPage as VectorStoresPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
