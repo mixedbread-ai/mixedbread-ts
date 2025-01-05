@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { OffsetPage, type OffsetPageParams } from '../pagination';
 import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
@@ -50,16 +51,19 @@ export class Files extends APIResource {
    *
    * Returns: A list of files belonging to the user.
    */
-  list(query?: FileListParams, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
-  list(options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
+  list(
+    query?: FileListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
   list(
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse> {
+  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.get('/v1/files', { query, ...options });
+    return this._client.getAPIList('/v1/files', FileListResponsesOffsetPage, { query, ...options });
   }
 
   /**
@@ -84,6 +88,8 @@ export class Files extends APIResource {
     return this._client.get(`/v1/files/${fileId}/content`, { ...options, __binaryResponse: true });
   }
 }
+
+export class FileListResponsesOffsetPage extends OffsetPage<FileListResponse> {}
 
 /**
  * A model representing a file object in the system.
@@ -214,86 +220,47 @@ export interface FileUpdateResponse {
   version: number;
 }
 
+/**
+ * A model representing a file object in the system.
+ *
+ * This model contains metadata about files stored in the system, including
+ * identifiers, size information, and timestamps.
+ */
 export interface FileListResponse {
   /**
-   * The list of files
+   * Unique identifier for the file
    */
-  data: Array<FileListResponse.Data>;
+  id: string;
 
   /**
-   * Pagination model that includes total count of items.
+   * Size of the file in bytes
    */
-  pagination: FileListResponse.Pagination;
+  bytes: number;
 
   /**
-   * The object type of the response
+   * Timestamp when the file was created
    */
-  object?: 'list';
-}
-
-export namespace FileListResponse {
-  /**
-   * A model representing a file object in the system.
-   *
-   * This model contains metadata about files stored in the system, including
-   * identifiers, size information, and timestamps.
-   */
-  export interface Data {
-    /**
-     * Unique identifier for the file
-     */
-    id: string;
-
-    /**
-     * Size of the file in bytes
-     */
-    bytes: number;
-
-    /**
-     * Timestamp when the file was created
-     */
-    created_at: string;
-
-    /**
-     * Name of the file including extension
-     */
-    filename: string;
-
-    /**
-     * MIME type of the file
-     */
-    mime_type: string;
-
-    /**
-     * Timestamp when the file was last updated
-     */
-    updated_at: string;
-
-    /**
-     * Version of the file
-     */
-    version: number;
-  }
+  created_at: string;
 
   /**
-   * Pagination model that includes total count of items.
+   * Name of the file including extension
    */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
+  filename: string;
 
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
+  /**
+   * MIME type of the file
+   */
+  mime_type: string;
 
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
+  /**
+   * Timestamp when the file was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
 }
 
 export interface FileDeleteResponse {
@@ -327,17 +294,9 @@ export interface FileUpdateParams {
   file: Core.Uploadable;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
+export interface FileListParams extends OffsetPageParams {}
 
-  /**
-   * Offset of the first item to return
-   */
-  offset?: number;
-}
+Files.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
 
 export declare namespace Files {
   export {
@@ -346,6 +305,7 @@ export declare namespace Files {
     type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
+    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

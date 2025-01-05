@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import { OffsetPage, type OffsetPageParams } from '../../pagination';
 
 export class Files extends APIResource {
   /**
@@ -48,17 +49,23 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse>;
-  list(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
+  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
+  list(
+    vectorStoreId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse> {
+  ): Core.PagePromise<FileListResponsesOffsetPage, FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.get(`/v1/vector_stores/${vectorStoreId}/files`, { query, ...options });
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, FileListResponsesOffsetPage, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -77,6 +84,8 @@ export class Files extends APIResource {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 }
+
+export class FileListResponsesOffsetPage extends OffsetPage<FileListResponse> {}
 
 /**
  * Represents a file stored in a vector store.
@@ -178,93 +187,54 @@ export interface FileRetrieveResponse {
   version?: number | null;
 }
 
+/**
+ * Represents a file stored in a vector store.
+ */
 export interface FileListResponse {
   /**
-   * The list of vector store files
+   * Unique identifier for the file
    */
-  data: Array<FileListResponse.Data>;
+  id: string;
 
   /**
-   * Pagination model that includes total count of items.
+   * Timestamp of vector store file creation
    */
-  pagination: FileListResponse.Pagination;
+  created_at: string;
 
   /**
-   * The object type of the response
+   * ID of the containing vector store
    */
-  object?: 'list';
-}
-
-export namespace FileListResponse {
-  /**
-   * Represents a file stored in a vector store.
-   */
-  export interface Data {
-    /**
-     * Unique identifier for the file
-     */
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    /**
-     * ID of the containing vector store
-     */
-    vector_store_id: string;
-
-    /**
-     * List of error messages if processing failed
-     */
-    errors?: Array<string> | null;
-
-    /**
-     * Optional file metadata
-     */
-    metadata?: unknown | null;
-
-    /**
-     * Type of the object
-     */
-    object?: 'vector_store.file';
-
-    /**
-     * Processing status of the file
-     */
-    status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
-
-    /**
-     * Storage usage in bytes
-     */
-    usage_bytes?: number | null;
-
-    /**
-     * Version number of the file
-     */
-    version?: number | null;
-  }
+  vector_store_id: string;
 
   /**
-   * Pagination model that includes total count of items.
+   * List of error messages if processing failed
    */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
+  errors?: Array<string> | null;
 
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
+  /**
+   * Optional file metadata
+   */
+  metadata?: unknown | null;
 
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
 }
 
 /**
@@ -299,17 +269,9 @@ export interface FileCreateParams {
   metadata?: unknown | null;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
+export interface FileListParams extends OffsetPageParams {}
 
-  /**
-   * Offset of the first item to return
-   */
-  offset?: number;
-}
+Files.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
 
 export declare namespace Files {
   export {
@@ -317,6 +279,7 @@ export declare namespace Files {
     type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
+    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
