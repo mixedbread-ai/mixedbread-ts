@@ -8,21 +8,6 @@ Methods:
 
 - <code title="get /">client.<a href="./src/index.ts">info</a>() -> InfoResponse</code>
 
-# DocumentAI
-
-## Parse
-
-### Jobs
-
-Types:
-
-- <code><a href="./src/resources/document-ai/parse/jobs.ts">ParsingJob</a></code>
-
-Methods:
-
-- <code title="post /v1/document-ai/parse">client.documentAI.parse.jobs.<a href="./src/resources/document-ai/parse/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
-- <code title="get /v1/document-ai/parse/{job_id}">client.documentAI.parse.jobs.<a href="./src/resources/document-ai/parse/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
-
 # Embeddings
 
 Types:
@@ -42,6 +27,19 @@ Types:
 Methods:
 
 - <code title="post /v1/reranking">client.reranking.<a href="./src/resources/reranking.ts">create</a>({ ...params }) -> RerankingCreateResponse</code>
+
+# Parsing
+
+## Jobs
+
+Types:
+
+- <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
+
+Methods:
+
+- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
+- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
 
 # Files
 
@@ -67,8 +65,6 @@ Types:
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">FileCounts</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVectorStoreChunk</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVectorStoreFile</a></code>
-- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilter</a></code>
-- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilterCondition</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreSearchResponse</a></code>
