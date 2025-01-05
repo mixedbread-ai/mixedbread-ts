@@ -29,7 +29,6 @@ import {
   Files,
 } from './resources/files';
 import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
-import { Chat } from './resources/chat/chat';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
   SearchFilter,
@@ -189,7 +188,6 @@ export class Mixedbread extends Core.APIClient {
   rerankings: API.Rerankings = new API.Rerankings(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
-  chat: API.Chat = new API.Chat(this);
 
   /**
    * Create embeddings for text or images using the specified model, encoding format,
@@ -272,7 +270,6 @@ Mixedbread.Files = Files;
 Mixedbread.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.VectorStoreListResponsesOffsetPage = VectorStoreListResponsesOffsetPage;
-Mixedbread.Chat = Chat;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -331,8 +328,6 @@ export declare namespace Mixedbread {
     type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
-
-  export { Chat as Chat };
 }
 
 export { toFile, fileFromPath } from './uploads';
