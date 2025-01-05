@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../../resource';
 import * as JobsAPI from './jobs';
-import { JobCreateParams, Jobs, ParsingJob } from './jobs';
+import { JobCreateParams, JobCreateResponse, JobRetrieveResponse, Jobs } from './jobs';
 
 export class Parse extends APIResource {
   jobs: JobsAPI.Jobs = new JobsAPI.Jobs(this._client);
@@ -11,5 +11,10 @@ export class Parse extends APIResource {
 Parse.Jobs = Jobs;
 
 export declare namespace Parse {
-  export { Jobs as Jobs, type ParsingJob as ParsingJob, type JobCreateParams as JobCreateParams };
+  export {
+    Jobs as Jobs,
+    type JobCreateResponse as JobCreateResponse,
+    type JobRetrieveResponse as JobRetrieveResponse,
+    type JobCreateParams as JobCreateParams,
+  };
 }
