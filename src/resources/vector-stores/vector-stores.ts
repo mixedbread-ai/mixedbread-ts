@@ -905,7 +905,7 @@ export interface VectorStoreQaParams {
   vector_store_ids: Array<string>;
 
   /**
-   * Filter or condition
+   * Optional filter conditions
    */
   filters?:
     | SearchFilter
@@ -1044,7 +1044,7 @@ export interface VectorStoreSearchParams {
   vector_store_ids: Array<string>;
 
   /**
-   * Filter or condition
+   * Optional filter conditions
    */
   filters?:
     | SearchFilter
