@@ -13,13 +13,14 @@ export {
 export {
   VectorStoreListResponsesPage,
   VectorStores,
-  type SearchFilter,
   type VectorStoreCreateResponse,
   type VectorStoreRetrieveResponse,
   type VectorStoreUpdateResponse,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
+  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
+  type VectorStoreSearchParams,
 } from './vector-stores';

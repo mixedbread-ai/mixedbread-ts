@@ -25,7 +25,6 @@ import {
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
-  SearchFilter,
   VectorStoreCreateParams,
   VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
@@ -33,6 +32,8 @@ import {
   VectorStoreListResponse,
   VectorStoreListResponsesPage,
   VectorStoreRetrieveResponse,
+  VectorStoreSearchParams,
+  VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStoreUpdateResponse,
   VectorStores,
@@ -45,7 +46,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * API key used for accessing Mixedbreads API
+   * Api key used for accessing Mixedbreads API
    */
   apiKey?: string | undefined;
 
@@ -268,16 +269,17 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
-    type SearchFilter as SearchFilter,
     type VectorStoreCreateResponse as VectorStoreCreateResponse,
     type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }
 
