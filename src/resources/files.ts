@@ -4,7 +4,6 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import { Page, type PageParams } from '../pagination';
-import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
   /**
@@ -68,17 +67,6 @@ export class Files extends APIResource {
    */
   delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
     return this._client.delete(`/v1/files/${fileId}`, options);
-  }
-
-  /**
-   * Download a specific file by its ID.
-   *
-   * Args: file_id: The ID of the file to download.
-   *
-   * Returns: FileStreamResponse: The response containing the file to be downloaded.
-   */
-  content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<Response> {
-    return this._client.get(`/v1/files/${fileId}/content`, { ...options, __binaryResponse: true });
   }
 }
 
