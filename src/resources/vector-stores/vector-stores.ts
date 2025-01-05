@@ -89,22 +89,6 @@ export class VectorStores extends APIResource {
   delete(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStoreDeleteResponse> {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}`, options);
   }
-
-  /**
-   * Perform a search based on the provided query.
-   *
-   * Args: search_params: VectorStoreSearchParams object containing the search
-   * parameters.
-   *
-   * Returns: VectorStoreSearchResponse: The response containing the search results
-   * and pagination details.
-   */
-  search(
-    body: VectorStoreSearchParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreSearchResponse> {
-    return this._client.post('/v1/vector_stores/search', { body, ...options });
-  }
 }
 
 export class VectorStoresPage extends Page<VectorStore> {}
@@ -405,45 +389,6 @@ export interface VectorStoreDeleteResponse {
   object?: 'vector_store';
 }
 
-export interface VectorStoreSearchResponse {
-  /**
-   * The list of scored vector store files
-   */
-  data: Array<ScoredVectorStoreFile>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: VectorStoreSearchResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace VectorStoreSearchResponse {
-  /**
-   * Pagination model that includes total count of items.
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
-}
-
 export interface VectorStoreCreateParams {
   /**
    * Description of the vector store
@@ -495,75 +440,6 @@ export interface VectorStoreUpdateParams {
 
 export interface VectorStoreListParams extends PageParams {}
 
-export interface VectorStoreSearchParams {
-  /**
-   * Search query text
-   */
-  query: string;
-
-  /**
-   * IDs of vector stores to search
-   */
-  vector_store_ids: Array<string>;
-
-  /**
-   * Optional filter conditions
-   */
-  filters?: SearchFilter | SearchFilterCondition | Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
-   * Pagination options
-   */
-  pagination?: VectorStoreSearchParams.Pagination;
-
-  /**
-   * Search configuration options
-   */
-  search_options?: VectorStoreSearchParams.SearchOptions;
-}
-
-export namespace VectorStoreSearchParams {
-  /**
-   * Pagination options
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-  }
-}
-
 VectorStores.VectorStoresPage = VectorStoresPage;
 VectorStores.Files = Files;
 VectorStores.VectorStoreFilesPage = VectorStoreFilesPage;
@@ -578,12 +454,10 @@ export declare namespace VectorStores {
     type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoresPage as VectorStoresPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 
   export {

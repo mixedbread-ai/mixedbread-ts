@@ -95,41 +95,4 @@ describe('resource vectorStores', () => {
       }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
-
-  test('search: only required params', async () => {
-    const responsePromise = client.vectorStores.search({
-      query: 'how to configure SSL',
-      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('search: required and optional params', async () => {
-    const response = await client.vectorStores.search({
-      query: 'how to configure SSL',
-      vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-      filters: {
-        all: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        any: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        none: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-      },
-      pagination: { limit: 0, offset: 0 },
-      search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
-    });
-  });
 });
