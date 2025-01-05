@@ -15,12 +15,13 @@ export {
 export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
   VectorStores,
-  type SearchParams,
-  type SearchResponse,
-  type VectorStore,
+  type VectorStoreCreateResponse,
+  type VectorStoreRetrieveResponse,
+  type VectorStoreUpdateResponse,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQaResponse,
+  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,

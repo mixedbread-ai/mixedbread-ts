@@ -2,7 +2,8 @@
 
 export {
   Files,
-  type VectorStoreFile,
+  type FileCreateResponse,
+  type FileRetrieveResponse,
   type FileListResponse,
   type FileDeleteResponse,
   type FileCreateParams,
@@ -10,12 +11,13 @@ export {
 } from './files';
 export {
   VectorStores,
-  type SearchParams,
-  type SearchResponse,
-  type VectorStore,
+  type VectorStoreCreateResponse,
+  type VectorStoreRetrieveResponse,
+  type VectorStoreUpdateResponse,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQaResponse,
+  type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,

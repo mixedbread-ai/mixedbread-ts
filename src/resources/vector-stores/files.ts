@@ -17,7 +17,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     body: FileCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
+  ): Core.APIPromise<FileCreateResponse> {
     return this._client.post(`/v1/vector_stores/${vectorStoreId}/files`, { body, ...options });
   }
 
@@ -32,7 +32,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
+  ): Core.APIPromise<FileRetrieveResponse> {
     return this._client.get(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 
@@ -81,7 +81,57 @@ export class Files extends APIResource {
 /**
  * Represents a file stored in a vector store.
  */
-export interface VectorStoreFile {
+export interface FileCreateResponse {
+  /**
+   * Unique identifier for the file
+   */
+  id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * List of error messages if processing failed
+   */
+  errors?: Array<string> | null;
+
+  /**
+   * Optional file metadata
+   */
+  metadata?: unknown | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
+}
+
+/**
+ * Represents a file stored in a vector store.
+ */
+export interface FileRetrieveResponse {
   /**
    * Unique identifier for the file
    */
@@ -132,7 +182,7 @@ export interface FileListResponse {
   /**
    * The list of vector store files
    */
-  data: Array<VectorStoreFile>;
+  data: Array<FileListResponse.Data>;
 
   /**
    * Pagination model that includes total count of items.
@@ -146,6 +196,56 @@ export interface FileListResponse {
 }
 
 export namespace FileListResponse {
+  /**
+   * Represents a file stored in a vector store.
+   */
+  export interface Data {
+    /**
+     * Unique identifier for the file
+     */
+    id: string;
+
+    /**
+     * Timestamp of vector store file creation
+     */
+    created_at: string;
+
+    /**
+     * ID of the containing vector store
+     */
+    vector_store_id: string;
+
+    /**
+     * List of error messages if processing failed
+     */
+    errors?: Array<string> | null;
+
+    /**
+     * Optional file metadata
+     */
+    metadata?: unknown | null;
+
+    /**
+     * Type of the object
+     */
+    object?: 'vector_store.file';
+
+    /**
+     * Processing status of the file
+     */
+    status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+
+    /**
+     * Storage usage in bytes
+     */
+    usage_bytes?: number | null;
+
+    /**
+     * Version number of the file
+     */
+    version?: number | null;
+  }
+
   /**
    * Pagination model that includes total count of items.
    */
@@ -213,7 +313,8 @@ export interface FileListParams {
 
 export declare namespace Files {
   export {
-    type VectorStoreFile as VectorStoreFile,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
