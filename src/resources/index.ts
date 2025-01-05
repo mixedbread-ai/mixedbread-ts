@@ -24,12 +24,10 @@ export {
   type VectorStoreUpdateResponse,
   type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
-  type VectorStoreQaResponse,
   type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
-  type VectorStoreQaParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export { type InfoResponse } from './top-level';

@@ -101,13 +101,6 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Question answering
-   */
-  qa(body: VectorStoreQaParams, options?: Core.RequestOptions): Core.APIPromise<unknown> {
-    return this._client.post('/v1/vector_stores/question-answering', { body, ...options });
-  }
-
-  /**
    * Perform a search based on the provided query.
    *
    * Args: search_params: VectorStoreSearchParams object containing the search
@@ -656,8 +649,6 @@ export interface VectorStoreDeleteResponse {
   object?: 'vector_store';
 }
 
-export type VectorStoreQaResponse = unknown;
-
 export interface VectorStoreSearchResponse {
   /**
    * The list of scored vector store files
@@ -895,140 +886,6 @@ export namespace VectorStoreUpdateParams {
 
 export interface VectorStoreListParams extends PageParams {}
 
-export interface VectorStoreQaParams {
-  /**
-   * IDs of vector stores to search
-   */
-  vector_store_ids: Array<string>;
-
-  /**
-   * Optional filter conditions
-   */
-  filters?:
-    | SearchFilter
-    | VectorStoreQaParams.SearchFilterCondition
-    | Array<SearchFilter | VectorStoreQaParams.SearchFilterCondition>
-    | null;
-
-  /**
-   * Pagination options
-   */
-  pagination?: VectorStoreQaParams.Pagination;
-
-  /**
-   * Question answering configuration options
-   */
-  qa_options?: VectorStoreQaParams.QaOptions;
-
-  /**
-   * Question to answer. If not provided, the question will be extracted from the
-   * passed messages.
-   */
-  query?: string;
-
-  /**
-   * Search configuration options
-   */
-  search_options?: VectorStoreQaParams.SearchOptions;
-
-  /**
-   * Whether to stream the answer
-   */
-  stream?: boolean;
-}
-
-export namespace VectorStoreQaParams {
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Pagination options
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
-  }
-
-  /**
-   * Question answering configuration options
-   */
-  export interface QaOptions {
-    /**
-     * Whether to use citations
-     */
-    cite?: boolean;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-  }
-}
-
 export interface VectorStoreSearchParams {
   /**
    * Search query text
@@ -1154,13 +1011,11 @@ export declare namespace VectorStores {
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQaResponse as VectorStoreQaResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 

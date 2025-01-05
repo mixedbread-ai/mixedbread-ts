@@ -32,8 +32,6 @@ import {
   VectorStoreListParams,
   VectorStoreListResponse,
   VectorStoreListResponsesPage,
-  VectorStoreQaParams,
-  VectorStoreQaResponse,
   VectorStoreRetrieveResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
@@ -49,7 +47,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * API key used for accessing Mixedbreads API
+   * Api key used for accessing Mixedbreads API
    */
   apiKey?: string | undefined;
 
@@ -203,6 +201,10 @@ export class Mixedbread extends Core.APIClient {
     };
   }
 
+  protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
+    return { Authorization: `Bearer ${this.apiKey}` };
+  }
+
   static Mixedbread = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
@@ -274,13 +276,11 @@ export declare namespace Mixedbread {
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
     type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQaResponse as VectorStoreQaResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQaParams as VectorStoreQaParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }
