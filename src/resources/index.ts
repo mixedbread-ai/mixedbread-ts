@@ -1,6 +1,5 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
   FileObjectsPage,
@@ -11,6 +10,7 @@ export {
   type FileUpdateParams,
   type FileListParams,
 } from './files';
+export { Parsing } from './parsing/parsing';
 export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
   VectorStoresPage,
@@ -19,8 +19,6 @@ export {
   type FileCounts,
   type ScoredVectorStoreChunk,
   type ScoredVectorStoreFile,
-  type SearchFilter,
-  type SearchFilterCondition,
   type VectorStore,
   type VectorStoreDeleteResponse,
   type VectorStoreSearchResponse,
