@@ -8,9 +8,9 @@ const client = new Mixedbread({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource rerankings', () => {
+describe('resource reranking', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.rerankings.create({
+    const responsePromise = client.reranking.create({
       input: ['Document 1', 'Document 2'],
       query: 'What is mixedbread ai?',
     });
@@ -24,7 +24,7 @@ describe('resource rerankings', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.rerankings.create({
+    const response = await client.reranking.create({
       input: ['Document 1', 'Document 2'],
       query: 'What is mixedbread ai?',
       model: 'x',
