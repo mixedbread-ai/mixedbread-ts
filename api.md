@@ -28,19 +28,6 @@ Methods:
 
 - <code title="post /v1/reranking">client.reranking.<a href="./src/resources/reranking.ts">create</a>({ ...params }) -> RerankingCreateResponse</code>
 
-# Parsing
-
-## Jobs
-
-Types:
-
-- <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
-
-Methods:
-
-- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
-- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
-
 # Files
 
 Types:
@@ -55,6 +42,7 @@ Methods:
 - <code title="post /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">update</a>(fileId, { ...params }) -> FileObject</code>
 - <code title="get /v1/files">client.files.<a href="./src/resources/files.ts">list</a>({ ...params }) -> FileObjectsPage</code>
 - <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> FileDeleteResponse</code>
+- <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
 
 # VectorStores
 
