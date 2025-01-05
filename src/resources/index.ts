@@ -4,6 +4,7 @@ export { Chat } from './chat/chat';
 export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
+  FileListResponsesOffsetPage,
   Files,
   type FileCreateResponse,
   type FileRetrieveResponse,
@@ -16,6 +17,7 @@ export {
 } from './files';
 export { Rerankings, type RerankingCreateResponse, type RerankingCreateParams } from './rerankings';
 export {
+  VectorStoreListResponsesOffsetPage,
   VectorStores,
   type SearchFilter,
   type VectorStoreCreateResponse,
