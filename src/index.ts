@@ -44,7 +44,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * Defaults to process.env['MXBAI_API_KEY'].
+   * Api key for Mixedbread
    */
   apiKey?: string | undefined;
 
