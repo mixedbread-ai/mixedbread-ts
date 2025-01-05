@@ -25,7 +25,10 @@ import {
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
 import { DocumentAI } from './resources/document-ai/document-ai';
 import {
+  ExpiresAfter,
+  FileCounts,
   SearchFilter,
+  SearchFilterCondition,
   VectorStoreCreateParams,
   VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
@@ -47,7 +50,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * Api key used for accessing Mixedbreads API
+   * Defaults to process.env['MXBAI_API_KEY'].
    */
   apiKey?: string | undefined;
 
@@ -270,7 +273,10 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
+    type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
     type SearchFilter as SearchFilter,
+    type SearchFilterCondition as SearchFilterCondition,
     type VectorStoreCreateResponse as VectorStoreCreateResponse,
     type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
     type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
