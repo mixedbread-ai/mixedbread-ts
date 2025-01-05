@@ -5,9 +5,11 @@ export { DocumentAI } from './document-ai/document-ai';
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
   Files,
-  type FileDeleted,
-  type FileObject,
+  type FileCreateResponse,
+  type FileRetrieveResponse,
+  type FileUpdateResponse,
   type FileListResponse,
+  type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
