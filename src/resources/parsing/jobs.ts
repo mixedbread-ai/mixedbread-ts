@@ -1,18 +1,18 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../../resource';
-import * as Core from '../../../core';
+import { APIResource } from '../../resource';
+import * as Core from '../../core';
 
 export class Jobs extends APIResource {
   /**
    * Start a parse job for the provided file.
    *
-   * Args: params: ParseJobCreateParams The parameters for creating a parse job.
+   * Args: params: The parameters for creating a parse job.
    *
-   * Returns: ParsingJob: The created parse job.
+   * Returns: The created parsing job.
    */
   create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
-    return this._client.post('/v1/document-ai/parse', { body, ...options });
+    return this._client.post('/v1/parsing/jobs', { body, ...options });
   }
 
   /**
@@ -20,10 +20,10 @@ export class Jobs extends APIResource {
    *
    * Args: job_id: The ID of the parse job.
    *
-   * Returns: ParsingJob: Detailed information about the parse job.
+   * Returns: Detailed information about the parse job.
    */
   retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
-    return this._client.get(`/v1/document-ai/parse/${jobId}`, options);
+    return this._client.get(`/v1/parsing/jobs/${jobId}`, options);
   }
 }
 

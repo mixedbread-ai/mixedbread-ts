@@ -20,14 +20,12 @@ import {
   Files,
 } from './resources/files';
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
-import { DocumentAI } from './resources/document-ai/document-ai';
+import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
   FileCounts,
   ScoredVectorStoreChunk,
   ScoredVectorStoreFile,
-  SearchFilter,
-  SearchFilterCondition,
   VectorStore,
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
@@ -46,7 +44,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * Defaults to process.env['MXBAI_API_KEY'].
+   * Api key for Mixedbread
    */
   apiKey?: string | undefined;
 
@@ -174,9 +172,9 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  documentAI: API.DocumentAI = new API.DocumentAI(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   reranking: API.Reranking = new API.Reranking(this);
+  parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
 
@@ -225,9 +223,9 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-Mixedbread.DocumentAI = DocumentAI;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Reranking = Reranking;
+Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.FileObjectsPage = FileObjectsPage;
 Mixedbread.VectorStores = VectorStores;
@@ -240,8 +238,6 @@ export declare namespace Mixedbread {
 
   export { type InfoResponse as InfoResponse };
 
-  export { DocumentAI as DocumentAI };
-
   export {
     Embeddings as Embeddings,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
@@ -253,6 +249,8 @@ export declare namespace Mixedbread {
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,
   };
+
+  export { Parsing as Parsing };
 
   export {
     Files as Files,
@@ -270,8 +268,6 @@ export declare namespace Mixedbread {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
-    type SearchFilter as SearchFilter,
-    type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,

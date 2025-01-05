@@ -286,46 +286,6 @@ export interface ScoredVectorStoreFile {
 }
 
 /**
- * Represents a filter with AND, OR, and NOT conditions.
- */
-export interface SearchFilter {
-  /**
-   * List of conditions or filters to be ANDed together
-   */
-  all?: Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
-   * List of conditions or filters to be ORed together
-   */
-  any?: Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
-   * List of conditions or filters to be NOTed
-   */
-  none?: Array<SearchFilter | SearchFilterCondition> | null;
-}
-
-/**
- * Represents a condition with a field, operator, and value.
- */
-export interface SearchFilterCondition {
-  /**
-   * The field to apply the condition on
-   */
-  key: string;
-
-  /**
-   * The operator for the condition
-   */
-  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-  /**
-   * The value to compare against
-   */
-  value: unknown;
-}
-
-/**
  * Model representing a vector store with its metadata and timestamps.
  */
 export interface VectorStore {
@@ -507,11 +467,6 @@ export interface VectorStoreSearchParams {
   vector_store_ids: Array<string>;
 
   /**
-   * Optional filter conditions
-   */
-  filters?: SearchFilter | SearchFilterCondition | Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
    * Pagination options
    */
   pagination?: VectorStoreSearchParams.Pagination;
@@ -574,8 +529,6 @@ export declare namespace VectorStores {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
-    type SearchFilter as SearchFilter,
-    type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,

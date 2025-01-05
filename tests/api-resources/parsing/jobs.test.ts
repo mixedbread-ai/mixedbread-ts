@@ -10,7 +10,7 @@ const client = new Mixedbread({
 
 describe('resource jobs', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.documentAI.parse.jobs.create({ file_id: 'file_id' });
+    const responsePromise = client.parsing.jobs.create({ file_id: 'file_id' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,7 +21,7 @@ describe('resource jobs', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.documentAI.parse.jobs.create({
+    const response = await client.parsing.jobs.create({
       file_id: 'file_id',
       chunking_strategy: 'page',
       element_types: ['caption'],
@@ -30,7 +30,7 @@ describe('resource jobs', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.documentAI.parse.jobs.retrieve('job_id');
+    const responsePromise = client.parsing.jobs.retrieve('job_id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -43,7 +43,7 @@ describe('resource jobs', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.documentAI.parse.jobs.retrieve('job_id', { path: '/_stainless_unknown_path' }),
+      client.parsing.jobs.retrieve('job_id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 });
