@@ -44,7 +44,7 @@ const environments = {
 type Environment = keyof typeof environments;
 export interface ClientOptions {
   /**
-   * Api key for Mixedbread
+   * Api key to authenticate with Mixedbread
    */
   apiKey?: string | undefined;
 
