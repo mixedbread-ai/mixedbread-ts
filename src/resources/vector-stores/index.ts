@@ -11,7 +11,6 @@ export {
 export {
   VectorStoresPage,
   VectorStores,
-  type ExpiresAfter,
   type FileCounts,
   type SearchFilter,
   type SearchFilterCondition,

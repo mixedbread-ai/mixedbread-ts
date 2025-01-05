@@ -110,21 +110,6 @@ export class VectorStores extends APIResource {
 export class VectorStoresPage extends Page<VectorStore> {}
 
 /**
- * Represents an expiration policy for a vector store.
- */
-export interface ExpiresAfter {
-  /**
-   * Anchor date for the expiration policy
-   */
-  anchor?: 'last_used_at';
-
-  /**
-   * Number of days after which the vector store expires
-   */
-  days?: number;
-}
-
-/**
  * Tracks counts of files in different states within a vector store.
  */
 export interface FileCounts {
@@ -226,7 +211,7 @@ export interface VectorStore {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: ExpiresAfter | null;
+  expires_after?: VectorStore.ExpiresAfter | null;
 
   /**
    * Optional expiration timestamp for the vector store
@@ -252,6 +237,23 @@ export interface VectorStore {
    * Type of the object
    */
   object?: 'vector_store';
+}
+
+export namespace VectorStore {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
 }
 
 /**
@@ -435,7 +437,7 @@ export interface VectorStoreCreateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: ExpiresAfter | null;
+  expires_after?: VectorStoreCreateParams.ExpiresAfter | null;
 
   /**
    * Optional list of file IDs
@@ -453,6 +455,23 @@ export interface VectorStoreCreateParams {
   name?: string | null;
 }
 
+export namespace VectorStoreCreateParams {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
+}
+
 export interface VectorStoreUpdateParams {
   /**
    * New description
@@ -462,7 +481,7 @@ export interface VectorStoreUpdateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: ExpiresAfter | null;
+  expires_after?: VectorStoreUpdateParams.ExpiresAfter | null;
 
   /**
    * Optional metadata key-value pairs
@@ -473,6 +492,23 @@ export interface VectorStoreUpdateParams {
    * New name for the vector store
    */
   name?: string | null;
+}
+
+export namespace VectorStoreUpdateParams {
+  /**
+   * Represents an expiration policy for a vector store.
+   */
+  export interface ExpiresAfter {
+    /**
+     * Anchor date for the expiration policy
+     */
+    anchor?: 'last_used_at';
+
+    /**
+     * Number of days after which the vector store expires
+     */
+    days?: number;
+  }
 }
 
 export interface VectorStoreListParams extends PageParams {}
@@ -552,7 +588,6 @@ VectorStores.VectorStoreFilesPage = VectorStoreFilesPage;
 
 export declare namespace VectorStores {
   export {
-    type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
     type SearchFilter as SearchFilter,
     type SearchFilterCondition as SearchFilterCondition,
