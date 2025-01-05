@@ -13,7 +13,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileCreateResponse> {
     return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
   }
 
@@ -24,7 +24,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the file details.
    */
-  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileRetrieveResponse> {
     return this._client.get(`/v1/files/${fileId}`, options);
   }
 
@@ -35,7 +35,11 @@ export class Files extends APIResource {
    *
    * Returns: FileObject: The updated file details.
    */
-  update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
+  update(
+    fileId: string,
+    body: FileUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<FileUpdateResponse> {
     return this._client.post(`/v1/files/${fileId}`, Core.multipartFormRequestOptions({ body, ...options }));
   }
 
@@ -65,7 +69,7 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleted> {
+  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
     return this._client.delete(`/v1/files/${fileId}`, options);
   }
 
@@ -81,21 +85,47 @@ export class Files extends APIResource {
   }
 }
 
-export interface FileDeleted {
+/**
+ * A model representing a file object in the system.
+ *
+ * This model contains metadata about files stored in the system, including
+ * identifiers, size information, and timestamps.
+ */
+export interface FileCreateResponse {
   /**
-   * The ID of the deleted file
+   * Unique identifier for the file
    */
   id: string;
 
   /**
-   * Whether the file was deleted
+   * Size of the file in bytes
    */
-  deleted?: boolean;
+  bytes: number;
 
   /**
-   * The type of the deleted object
+   * Timestamp when the file was created
    */
-  object?: 'file';
+  created_at: string;
+
+  /**
+   * Name of the file including extension
+   */
+  filename: string;
+
+  /**
+   * MIME type of the file
+   */
+  mime_type: string;
+
+  /**
+   * Timestamp when the file was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
 }
 
 /**
@@ -104,7 +134,50 @@ export interface FileDeleted {
  * This model contains metadata about files stored in the system, including
  * identifiers, size information, and timestamps.
  */
-export interface FileObject {
+export interface FileRetrieveResponse {
+  /**
+   * Unique identifier for the file
+   */
+  id: string;
+
+  /**
+   * Size of the file in bytes
+   */
+  bytes: number;
+
+  /**
+   * Timestamp when the file was created
+   */
+  created_at: string;
+
+  /**
+   * Name of the file including extension
+   */
+  filename: string;
+
+  /**
+   * MIME type of the file
+   */
+  mime_type: string;
+
+  /**
+   * Timestamp when the file was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Version of the file
+   */
+  version: number;
+}
+
+/**
+ * A model representing a file object in the system.
+ *
+ * This model contains metadata about files stored in the system, including
+ * identifiers, size information, and timestamps.
+ */
+export interface FileUpdateResponse {
   /**
    * Unique identifier for the file
    */
@@ -145,7 +218,7 @@ export interface FileListResponse {
   /**
    * The list of files
    */
-  data: Array<FileObject>;
+  data: Array<FileListResponse.Data>;
 
   /**
    * Pagination model that includes total count of items.
@@ -159,6 +232,49 @@ export interface FileListResponse {
 }
 
 export namespace FileListResponse {
+  /**
+   * A model representing a file object in the system.
+   *
+   * This model contains metadata about files stored in the system, including
+   * identifiers, size information, and timestamps.
+   */
+  export interface Data {
+    /**
+     * Unique identifier for the file
+     */
+    id: string;
+
+    /**
+     * Size of the file in bytes
+     */
+    bytes: number;
+
+    /**
+     * Timestamp when the file was created
+     */
+    created_at: string;
+
+    /**
+     * Name of the file including extension
+     */
+    filename: string;
+
+    /**
+     * MIME type of the file
+     */
+    mime_type: string;
+
+    /**
+     * Timestamp when the file was last updated
+     */
+    updated_at: string;
+
+    /**
+     * Version of the file
+     */
+    version: number;
+  }
+
   /**
    * Pagination model that includes total count of items.
    */
@@ -178,6 +294,23 @@ export namespace FileListResponse {
      */
     total?: number;
   }
+}
+
+export interface FileDeleteResponse {
+  /**
+   * The ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the file was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the deleted object
+   */
+  object?: 'file';
 }
 
 export interface FileCreateParams {
@@ -208,9 +341,11 @@ export interface FileListParams {
 
 export declare namespace Files {
   export {
-    type FileDeleted as FileDeleted,
-    type FileObject as FileObject,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
+    type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

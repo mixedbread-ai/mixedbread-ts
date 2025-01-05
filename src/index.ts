@@ -17,11 +17,13 @@ import {
 import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
   FileCreateParams,
-  FileDeleted,
+  FileCreateResponse,
+  FileDeleteResponse,
   FileListParams,
   FileListResponse,
-  FileObject,
+  FileRetrieveResponse,
   FileUpdateParams,
+  FileUpdateResponse,
   Files,
 } from './resources/files';
 import { RerankingCreateParams, RerankingCreateResponse, Rerankings } from './resources/rerankings';
@@ -293,9 +295,11 @@ export declare namespace Mixedbread {
 
   export {
     Files as Files,
-    type FileDeleted as FileDeleted,
-    type FileObject as FileObject,
+    type FileCreateResponse as FileCreateResponse,
+    type FileRetrieveResponse as FileRetrieveResponse,
+    type FileUpdateResponse as FileUpdateResponse,
     type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
