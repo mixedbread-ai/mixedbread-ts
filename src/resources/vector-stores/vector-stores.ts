@@ -10,11 +10,11 @@ import {
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
-  FileListResponsesOffsetPage,
+  FileListResponsesPage,
   FileRetrieveResponse,
   Files,
 } from './files';
-import { OffsetPage, type OffsetPageParams } from '../../pagination';
+import { Page, type PageParams } from '../../pagination';
 
 export class VectorStores extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
@@ -75,21 +75,18 @@ export class VectorStores extends APIResource {
   list(
     query?: VectorStoreListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesOffsetPage, VectorStoreListResponse>;
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
   list(
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesOffsetPage, VectorStoreListResponse>;
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse>;
   list(
     query: VectorStoreListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreListResponsesOffsetPage, VectorStoreListResponse> {
+  ): Core.PagePromise<VectorStoreListResponsesPage, VectorStoreListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/vector_stores', VectorStoreListResponsesOffsetPage, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList('/v1/vector_stores', VectorStoreListResponsesPage, { query, ...options });
   }
 
   /**
@@ -127,7 +124,7 @@ export class VectorStores extends APIResource {
   }
 }
 
-export class VectorStoreListResponsesOffsetPage extends OffsetPage<VectorStoreListResponse> {}
+export class VectorStoreListResponsesPage extends Page<VectorStoreListResponse> {}
 
 /**
  * Represents a filter with AND, OR, and NOT conditions.
@@ -896,7 +893,7 @@ export namespace VectorStoreUpdateParams {
   }
 }
 
-export interface VectorStoreListParams extends OffsetPageParams {}
+export interface VectorStoreListParams extends PageParams {}
 
 export interface VectorStoreQaParams {
   /**
@@ -1145,9 +1142,9 @@ export namespace VectorStoreSearchParams {
   }
 }
 
-VectorStores.VectorStoreListResponsesOffsetPage = VectorStoreListResponsesOffsetPage;
+VectorStores.VectorStoreListResponsesPage = VectorStoreListResponsesPage;
 VectorStores.Files = Files;
-VectorStores.FileListResponsesOffsetPage = FileListResponsesOffsetPage;
+VectorStores.FileListResponsesPage = FileListResponsesPage;
 
 export declare namespace VectorStores {
   export {
@@ -1159,7 +1156,7 @@ export declare namespace VectorStores {
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQaResponse as VectorStoreQaResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoreListResponsesOffsetPage as VectorStoreListResponsesOffsetPage,
+    VectorStoreListResponsesPage as VectorStoreListResponsesPage,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -1173,7 +1170,7 @@ export declare namespace VectorStores {
     type FileRetrieveResponse as FileRetrieveResponse,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    FileListResponsesOffsetPage as FileListResponsesOffsetPage,
+    FileListResponsesPage as FileListResponsesPage,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };

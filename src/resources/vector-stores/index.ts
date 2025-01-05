@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  FileListResponsesOffsetPage,
+  FileListResponsesPage,
   Files,
   type FileCreateResponse,
   type FileRetrieveResponse,
@@ -11,7 +11,7 @@ export {
   type FileListParams,
 } from './files';
 export {
-  VectorStoreListResponsesOffsetPage,
+  VectorStoreListResponsesPage,
   VectorStores,
   type SearchFilter,
   type VectorStoreCreateResponse,
