@@ -154,6 +154,80 @@ export interface FileCounts {
   total?: number;
 }
 
+export interface ScoredVectorStoreChunk {
+  /**
+   * file id
+   */
+  file_id: string;
+
+  /**
+   * rank of the chunk in a file
+   */
+  rank: number;
+
+  /**
+   * score of the chunk
+   */
+  score: number;
+
+  /**
+   * value of the chunk
+   */
+  value?:
+    | string
+    | ScoredVectorStoreChunk.ImageURLInput
+    | ScoredVectorStoreChunk.TextInput
+    | Record<string, unknown>
+    | null;
+}
+
+export namespace ScoredVectorStoreChunk {
+  /**
+   * Model for image input validation.
+   */
+  export interface ImageURLInput {
+    /**
+     * The image input specification.
+     */
+    image: ImageURLInput.Image;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+  }
+
+  export namespace ImageURLInput {
+    /**
+     * The image input specification.
+     */
+    export interface Image {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  /**
+   * Model for text input validation.
+   *
+   * Attributes: type: Input type identifier, always "text" text: The actual text
+   * content, with length and whitespace constraints
+   */
+  export interface TextInput {
+    /**
+     * Text content to process
+     */
+    text: string;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+  }
+}
+
 export interface ScoredVectorStoreFile {
   /**
    * Unique identifier for the file
@@ -178,7 +252,7 @@ export interface ScoredVectorStoreFile {
   /**
    * chunks
    */
-  chunks?: Array<ScoredVectorStoreFile.Chunk> | null;
+  chunks?: Array<ScoredVectorStoreChunk> | null;
 
   /**
    * List of error messages if processing failed
@@ -209,77 +283,6 @@ export interface ScoredVectorStoreFile {
    * Version number of the file
    */
   version?: number | null;
-}
-
-export namespace ScoredVectorStoreFile {
-  export interface Chunk {
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * rank of the chunk in a file
-     */
-    rank: number;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * value of the chunk
-     */
-    value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
-  }
-
-  export namespace Chunk {
-    /**
-     * Model for image input validation.
-     */
-    export interface ImageURLInput {
-      /**
-       * The image input specification.
-       */
-      image: ImageURLInput.Image;
-
-      /**
-       * Input type identifier
-       */
-      type?: 'image_url';
-    }
-
-    export namespace ImageURLInput {
-      /**
-       * The image input specification.
-       */
-      export interface Image {
-        /**
-         * The image URL. Can be either a URL or a Data URI.
-         */
-        url: string;
-      }
-    }
-
-    /**
-     * Model for text input validation.
-     *
-     * Attributes: type: Input type identifier, always "text" text: The actual text
-     * content, with length and whitespace constraints
-     */
-    export interface TextInput {
-      /**
-       * Text content to process
-       */
-      text: string;
-
-      /**
-       * Input type identifier
-       */
-      type?: 'text';
-    }
-  }
 }
 
 /**
@@ -569,6 +572,7 @@ export declare namespace VectorStores {
   export {
     type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
+    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type SearchFilter as SearchFilter,
     type SearchFilterCondition as SearchFilterCondition,

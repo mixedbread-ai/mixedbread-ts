@@ -24,6 +24,7 @@ import { DocumentAI } from './resources/document-ai/document-ai';
 import {
   ExpiresAfter,
   FileCounts,
+  ScoredVectorStoreChunk,
   ScoredVectorStoreFile,
   SearchFilter,
   SearchFilterCondition,
@@ -267,6 +268,7 @@ export declare namespace Mixedbread {
     VectorStores as VectorStores,
     type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
+    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type SearchFilter as SearchFilter,
     type SearchFilterCondition as SearchFilterCondition,

@@ -65,6 +65,7 @@ Types:
 
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ExpiresAfter</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">FileCounts</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVectorStoreChunk</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVectorStoreFile</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilterCondition</a></code>
