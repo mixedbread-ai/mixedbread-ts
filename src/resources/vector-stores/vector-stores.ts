@@ -107,10 +107,10 @@ export class VectorStores extends APIResource {
   /**
    * Perform a search based on the provided query.
    *
-   * Args: search_query: SearchQuery object containing the search parameters.
+   * Args: search_query: VectorStoreSearchParams object containing the search
+   * parameters.
    *
-   * Returns: SearchResponse: The response containing the search results and
-   * pagination details.
+   * Returns: The response containing the search results and pagination details.
    */
   search(
     body: VectorStoreSearchParams,
