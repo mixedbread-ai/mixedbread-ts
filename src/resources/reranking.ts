@@ -62,9 +62,6 @@ export interface RerankingCreateResponse {
 
 export namespace RerankingCreateResponse {
   export interface Data {
-    /**
-     * The index of the document.
-     */
     index: number;
 
     /**
