@@ -20,6 +20,7 @@ import {
   Files,
 } from './resources/files';
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
+import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
   FileCounts,
@@ -173,6 +174,7 @@ export class Mixedbread extends Core.APIClient {
 
   embeddings: API.Embeddings = new API.Embeddings(this);
   reranking: API.Reranking = new API.Reranking(this);
+  parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
 
@@ -223,6 +225,7 @@ export class Mixedbread extends Core.APIClient {
 
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Reranking = Reranking;
+Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.FileObjectsPage = FileObjectsPage;
 Mixedbread.VectorStores = VectorStores;
@@ -246,6 +249,8 @@ export declare namespace Mixedbread {
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,
   };
+
+  export { Parsing as Parsing };
 
   export {
     Files as Files,

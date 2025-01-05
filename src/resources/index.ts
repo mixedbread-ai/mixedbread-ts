@@ -10,6 +10,7 @@ export {
   type FileUpdateParams,
   type FileListParams,
 } from './files';
+export { Parsing } from './parsing/parsing';
 export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
   VectorStoresPage,
