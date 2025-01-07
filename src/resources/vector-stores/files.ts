@@ -114,7 +114,7 @@ export interface VectorStoreFile {
   /**
    * Optional file metadata
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 
   /**
    * Type of the object
@@ -166,7 +166,7 @@ export interface FileCreateParams {
   /**
    * Optional metadata for the file
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 }
 
 export interface FileListParams extends PageParams {}
