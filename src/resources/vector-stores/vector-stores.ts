@@ -262,7 +262,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Optional file metadata
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 
   /**
    * Type of the object
@@ -337,7 +337,7 @@ export interface VectorStore {
   /**
    * Additional metadata associated with the vector store
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 
   /**
    * Type of the object
@@ -423,7 +423,7 @@ export interface VectorStoreCreateParams {
   /**
    * Optional metadata key-value pairs
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 
   /**
    * Name for the new vector store
@@ -445,7 +445,7 @@ export interface VectorStoreUpdateParams {
   /**
    * Optional metadata key-value pairs
    */
-  metadata?: unknown | null;
+  metadata?: unknown;
 
   /**
    * New name for the vector store

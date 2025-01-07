@@ -67,7 +67,7 @@ export namespace RerankingCreateResponse {
     /**
      * The input document.
      */
-    input: unknown | null;
+    input: unknown;
 
     /**
      * The score of the document.
