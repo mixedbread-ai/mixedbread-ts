@@ -4,7 +4,7 @@ import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Pagination from './pagination';
-import { type PageParams, PageResponse } from './pagination';
+import { type LimitOffsetParams, LimitOffsetResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
@@ -15,7 +15,7 @@ import {
   FileDeleteResponse,
   FileListParams,
   FileObject,
-  FileObjectsPage,
+  FileObjectsLimitOffset,
   FileUpdateParams,
   Files,
 } from './resources/files';
@@ -34,7 +34,7 @@ import {
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStores,
-  VectorStoresPage,
+  VectorStoresLimitOffset,
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
@@ -227,14 +227,14 @@ Mixedbread.Embeddings = Embeddings;
 Mixedbread.Reranking = Reranking;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
-Mixedbread.FileObjectsPage = FileObjectsPage;
+Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
 Mixedbread.VectorStores = VectorStores;
-Mixedbread.VectorStoresPage = VectorStoresPage;
+Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
-  export import Page = Pagination.Page;
-  export { type PageParams as PageParams, type PageResponse as PageResponse };
+  export import LimitOffset = Pagination.LimitOffset;
+  export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
   export { type InfoResponse as InfoResponse };
 
@@ -256,7 +256,7 @@ export declare namespace Mixedbread {
     Files as Files,
     type FileObject as FileObject,
     type FileDeleteResponse as FileDeleteResponse,
-    FileObjectsPage as FileObjectsPage,
+    FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
@@ -271,7 +271,7 @@ export declare namespace Mixedbread {
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoresPage as VectorStoresPage,
+    VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,

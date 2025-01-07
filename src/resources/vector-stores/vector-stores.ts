@@ -10,9 +10,9 @@ import {
   FileListParams,
   Files,
   VectorStoreFile,
-  VectorStoreFilesPage,
+  VectorStoreFilesLimitOffset,
 } from './files';
-import { Page, type PageParams } from '../../pagination';
+import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
 export class VectorStores extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
@@ -67,16 +67,16 @@ export class VectorStores extends APIResource {
   list(
     query?: VectorStoreListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoresPage, VectorStore>;
-  list(options?: Core.RequestOptions): Core.PagePromise<VectorStoresPage, VectorStore>;
+  ): Core.PagePromise<VectorStoresLimitOffset, VectorStore>;
+  list(options?: Core.RequestOptions): Core.PagePromise<VectorStoresLimitOffset, VectorStore>;
   list(
     query: VectorStoreListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoresPage, VectorStore> {
+  ): Core.PagePromise<VectorStoresLimitOffset, VectorStore> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/vector_stores', VectorStoresPage, { query, ...options });
+    return this._client.getAPIList('/v1/vector_stores', VectorStoresLimitOffset, { query, ...options });
   }
 
   /**
@@ -107,7 +107,7 @@ export class VectorStores extends APIResource {
   }
 }
 
-export class VectorStoresPage extends Page<VectorStore> {}
+export class VectorStoresLimitOffset extends LimitOffset<VectorStore> {}
 
 /**
  * Represents an expiration policy for a vector store.
@@ -453,7 +453,7 @@ export interface VectorStoreUpdateParams {
   name?: string | null;
 }
 
-export interface VectorStoreListParams extends PageParams {}
+export interface VectorStoreListParams extends LimitOffsetParams {}
 
 export interface VectorStoreSearchParams {
   /**
@@ -519,9 +519,9 @@ export namespace VectorStoreSearchParams {
   }
 }
 
-VectorStores.VectorStoresPage = VectorStoresPage;
+VectorStores.VectorStoresLimitOffset = VectorStoresLimitOffset;
 VectorStores.Files = Files;
-VectorStores.VectorStoreFilesPage = VectorStoreFilesPage;
+VectorStores.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
 
 export declare namespace VectorStores {
   export {
@@ -532,7 +532,7 @@ export declare namespace VectorStores {
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    VectorStoresPage as VectorStoresPage,
+    VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -543,7 +543,7 @@ export declare namespace VectorStores {
     Files as Files,
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
-    VectorStoreFilesPage as VectorStoreFilesPage,
+    VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };
