@@ -3,7 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import { Page, type PageParams } from '../../pagination';
+import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
 export class Files extends APIResource {
   /**
@@ -49,20 +49,20 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile>;
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
   list(
     vectorStoreId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile>;
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesPage, VectorStoreFile> {
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesPage, {
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesLimitOffset, {
       query,
       ...options,
     });
@@ -85,7 +85,7 @@ export class Files extends APIResource {
   }
 }
 
-export class VectorStoreFilesPage extends Page<VectorStoreFile> {}
+export class VectorStoreFilesLimitOffset extends LimitOffset<VectorStoreFile> {}
 
 /**
  * Represents a file stored in a vector store.
@@ -169,15 +169,15 @@ export interface FileCreateParams {
   metadata?: unknown;
 }
 
-export interface FileListParams extends PageParams {}
+export interface FileListParams extends LimitOffsetParams {}
 
-Files.VectorStoreFilesPage = VectorStoreFilesPage;
+Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
 
 export declare namespace Files {
   export {
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
-    VectorStoreFilesPage as VectorStoreFilesPage,
+    VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
   };

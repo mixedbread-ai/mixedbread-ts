@@ -2,13 +2,13 @@
 
 import { AbstractPage, Response, APIClient, FinalRequestOptions, PageInfo } from './core';
 
-export interface PageResponse<Item> {
+export interface LimitOffsetResponse<Item> {
   data: Array<Item>;
 
-  pagination: PageResponse.Pagination;
+  pagination: LimitOffsetResponse.Pagination;
 }
 
-export namespace PageResponse {
+export namespace LimitOffsetResponse {
   export interface Pagination {
     offset?: number;
 
@@ -16,7 +16,7 @@ export namespace PageResponse {
   }
 }
 
-export interface PageParams {
+export interface LimitOffsetParams {
   /**
    * The number of elements to skip.
    */
@@ -28,12 +28,17 @@ export interface PageParams {
   limit?: number;
 }
 
-export class Page<Item> extends AbstractPage<Item> implements PageResponse<Item> {
+export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffsetResponse<Item> {
   data: Array<Item>;
 
-  pagination: PageResponse.Pagination;
+  pagination: LimitOffsetResponse.Pagination;
 
-  constructor(client: APIClient, response: Response, body: PageResponse<Item>, options: FinalRequestOptions) {
+  constructor(
+    client: APIClient,
+    response: Response,
+    body: LimitOffsetResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
     super(client, response, body, options);
 
     this.data = body.data || [];
@@ -45,7 +50,7 @@ export class Page<Item> extends AbstractPage<Item> implements PageResponse<Item>
   }
 
   // @deprecated Please use `nextPageInfo()` instead
-  nextPageParams(): Partial<PageParams> | null {
+  nextPageParams(): Partial<LimitOffsetParams> | null {
     const info = this.nextPageInfo();
     if (!info) return null;
     if ('params' in info) return info.params;
