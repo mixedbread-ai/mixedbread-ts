@@ -2,7 +2,7 @@
 
 export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
 export {
-  FileObjectsPage,
+  FileObjectsLimitOffset,
   Files,
   type FileObject,
   type FileDeleteResponse,
@@ -13,7 +13,7 @@ export {
 export { Parsing } from './parsing/parsing';
 export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
-  VectorStoresPage,
+  VectorStoresLimitOffset,
   VectorStores,
   type ExpiresAfter,
   type FileCounts,

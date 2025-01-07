@@ -3,7 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Page, type PageParams } from '../pagination';
+import { LimitOffset, type LimitOffsetParams } from '../pagination';
 import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
@@ -47,16 +47,19 @@ export class Files extends APIResource {
    *
    * Returns: A list of files belonging to the user.
    */
-  list(query?: FileListParams, options?: Core.RequestOptions): Core.PagePromise<FileObjectsPage, FileObject>;
-  list(options?: Core.RequestOptions): Core.PagePromise<FileObjectsPage, FileObject>;
+  list(
+    query?: FileListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
   list(
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileObjectsPage, FileObject> {
+  ): Core.PagePromise<FileObjectsLimitOffset, FileObject> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/files', FileObjectsPage, { query, ...options });
+    return this._client.getAPIList('/v1/files', FileObjectsLimitOffset, { query, ...options });
   }
 
   /**
@@ -82,7 +85,7 @@ export class Files extends APIResource {
   }
 }
 
-export class FileObjectsPage extends Page<FileObject> {}
+export class FileObjectsLimitOffset extends LimitOffset<FileObject> {}
 
 /**
  * A model representing a file object in the system.
@@ -158,15 +161,15 @@ export interface FileUpdateParams {
   file: Core.Uploadable;
 }
 
-export interface FileListParams extends PageParams {}
+export interface FileListParams extends LimitOffsetParams {}
 
-Files.FileObjectsPage = FileObjectsPage;
+Files.FileObjectsLimitOffset = FileObjectsLimitOffset;
 
 export declare namespace Files {
   export {
     type FileObject as FileObject,
     type FileDeleteResponse as FileDeleteResponse,
-    FileObjectsPage as FileObjectsPage,
+    FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
