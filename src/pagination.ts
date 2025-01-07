@@ -10,7 +10,7 @@ export interface PageResponse<Item> {
 
 export namespace PageResponse {
   export interface Pagination {
-    count?: number;
+    offset?: number;
 
     total?: number;
   }
@@ -55,7 +55,7 @@ export class Page<Item> extends AbstractPage<Item> implements PageResponse<Item>
   }
 
   nextPageInfo(): PageInfo | null {
-    const offset = this.pagination?.count;
+    const offset = this.pagination?.offset;
     if (!offset) {
       return null;
     }
