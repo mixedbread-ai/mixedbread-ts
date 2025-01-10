@@ -42,6 +42,7 @@ const environments = {
   local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
+
 export interface ClientOptions {
   /**
    * Api key to authenticate with Mixedbread
