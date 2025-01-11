@@ -8,12 +8,9 @@ const client = new Mixedbread({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource embeddings', () => {
-  test('create: only required params', async () => {
-    const responsePromise = client.embeddings.create({
-      input: 'This is a sample text input.',
-      model: 'mixedbread-ai/mxbai-embed-large-v1',
-    });
+describe('resource serviceInfo', () => {
+  test('retrieve', async () => {
+    const responsePromise = client.serviceInfo.retrieve();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,14 +20,10 @@ describe('resource embeddings', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('create: required and optional params', async () => {
-    const response = await client.embeddings.create({
-      input: 'This is a sample text input.',
-      model: 'mixedbread-ai/mxbai-embed-large-v1',
-      dimensions: 768,
-      encoding_format: 'float',
-      normalized: true,
-      prompt: 'Provide a detailed summary of the following text.',
-    });
+  test('retrieve: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.serviceInfo.retrieve({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Mixedbread.NotFoundError,
+    );
   });
 });

@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread from '@mixedbread/sdk';
+import Mixedbread from 'mixedbread';
 import { Response } from 'node-fetch';
 
 const client = new Mixedbread({

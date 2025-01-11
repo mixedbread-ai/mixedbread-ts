@@ -1,21 +1,21 @@
 # Mixedbread Node API Library
 
-[![NPM version](https://img.shields.io/npm/v/@mixedbread/sdk.svg)](https://npmjs.org/package/@mixedbread/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@mixedbread/sdk)
+[![NPM version](https://img.shields.io/npm/v/mixedbread.svg)](https://npmjs.org/package/mixedbread) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/mixedbread)
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [mixedbread.ai](https://mixedbread.ai/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.mixedbread.com](https://docs.mixedbread.com). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:mixedbread-ai/mixedbread-ts.git
+npm install git+ssh://git@github.com:stainless-sdks/mixedbread-node.git
 ```
 
 > [!NOTE]
-> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install @mixedbread/sdk`
+> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install mixedbread`
 
 ## Usage
 
@@ -23,17 +23,16 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Mixedbread from '@mixedbread/sdk';
+import Mixedbread from 'mixedbread';
 
 const client = new Mixedbread({
-  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
-  environment: 'local', // defaults to 'production'
+  environment: 'environment_1', // defaults to 'production'
 });
 
 async function main() {
-  const vectorStore = await client.vectorStores.create();
+  const fileObject = await client.files.create({ file: fs.createReadStream('path/to/file') });
 
-  console.log(vectorStore.id);
+  console.log(fileObject.id);
 }
 
 main();
@@ -45,15 +44,15 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Mixedbread from '@mixedbread/sdk';
+import Mixedbread from 'mixedbread';
 
 const client = new Mixedbread({
-  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
-  environment: 'local', // defaults to 'production'
+  environment: 'environment_1', // defaults to 'production'
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
+  const params: Mixedbread.FileCreateParams = { file: fs.createReadStream('path/to/file') };
+  const fileObject: Mixedbread.FileObject = await client.files.create(params);
 }
 
 main();
@@ -70,15 +69,17 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const vectorStore = await client.vectorStores.create().catch(async (err) => {
-    if (err instanceof Mixedbread.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
+  const fileObject = await client.files
+    .create({ file: fs.createReadStream('path/to/file') })
+    .catch(async (err) => {
+      if (err instanceof Mixedbread.APIError) {
+        console.log(err.status); // 400
+        console.log(err.name); // BadRequestError
+        console.log(err.headers); // {server: 'nginx', ...}
+      } else {
+        throw err;
+      }
+    });
 }
 
 main();
@@ -113,7 +114,7 @@ const client = new Mixedbread({
 });
 
 // Or, configure per-request:
-await client.vectorStores.create({
+await client.files.create({ file: fs.createReadStream('path/to/file') }, {
   maxRetries: 5,
 });
 ```
@@ -130,7 +131,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.vectorStores.create({
+await client.files.create({ file: fs.createReadStream('path/to/file') }, {
   timeout: 5 * 1000,
 });
 ```
@@ -138,37 +139,6 @@ await client.vectorStores.create({
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
-
-## Auto-pagination
-
-List methods in the Mixedbread API are paginated.
-You can use the `for await … of` syntax to iterate through items across all pages:
-
-```ts
-async function fetchAllVectorStores(params) {
-  const allVectorStores = [];
-  // Automatically fetches more pages as needed.
-  for await (const vectorStore of client.vectorStores.list()) {
-    allVectorStores.push(vectorStore);
-  }
-  return allVectorStores;
-}
-```
-
-Alternatively, you can request a single page at a time:
-
-```ts
-let page = await client.vectorStores.list();
-for (const vectorStore of page.data) {
-  console.log(vectorStore);
-}
-
-// Convenience methods are provided for manually paginating:
-while (page.hasNextPage()) {
-  page = await page.getNextPage();
-  // ...
-}
-```
 
 ## Advanced Usage
 
@@ -182,13 +152,15 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mixedbread();
 
-const response = await client.vectorStores.create().asResponse();
+const response = await client.files.create({ file: fs.createReadStream('path/to/file') }).asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: vectorStore, response: raw } = await client.vectorStores.create().withResponse();
+const { data: fileObject, response: raw } = await client.files
+  .create({ file: fs.createReadStream('path/to/file') })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(vectorStore.id);
+console.log(fileObject.id);
 ```
 
 ### Making custom/undocumented requests
@@ -246,12 +218,12 @@ add the following import before your first import `from "Mixedbread"`:
 ```ts
 // Tell TypeScript and the package to use the global web fetch instead of node-fetch.
 // Note, despite the name, this does not add any polyfills, but expects them to be provided if needed.
-import '@mixedbread/sdk/shims/web';
-import Mixedbread from '@mixedbread/sdk';
+import 'mixedbread/shims/web';
+import Mixedbread from 'mixedbread';
 ```
 
-To do the inverse, add `import "@mixedbread/sdk/shims/node"` (which does import polyfills).
-This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/mixedbread-ai/mixedbread-ts/tree/main/src/_shims#readme)).
+To do the inverse, add `import "mixedbread/shims/node"` (which does import polyfills).
+This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/stainless-sdks/mixedbread-node/tree/main/src/_shims#readme)).
 
 ### Logging and middleware
 
@@ -260,7 +232,7 @@ which can be used to inspect or alter the `Request` or `Response` before/after e
 
 ```ts
 import { fetch } from 'undici'; // as one example
-import Mixedbread from '@mixedbread/sdk';
+import Mixedbread from 'mixedbread';
 
 const client = new Mixedbread({
   fetch: async (url: RequestInfo, init?: RequestInit): Promise<Response> => {
@@ -292,9 +264,12 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.vectorStores.create({
-  httpAgent: new http.Agent({ keepAlive: false }),
-});
+await client.files.create(
+  { file: fs.createReadStream('path/to/file') },
+  {
+    httpAgent: new http.Agent({ keepAlive: false }),
+  },
+);
 ```
 
 ## Semantic versioning
@@ -307,7 +282,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/mixedbread-ai/mixedbread-ts/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/mixedbread-node/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

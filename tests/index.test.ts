@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread from '@mixedbread/sdk';
-import { APIUserAbortError } from '@mixedbread/sdk';
-import { Headers } from '@mixedbread/sdk/core';
+import Mixedbread from 'mixedbread';
+import { APIUserAbortError } from 'mixedbread';
+import { Headers } from 'mixedbread/core';
 import defaultFetch, { Response, type RequestInit, type RequestInfo } from 'node-fetch';
 
 describe('instantiate client', () => {
@@ -202,14 +202,14 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['MXBAI_API_KEY'] = 'My API Key';
+    process.env['API_KEY'] = 'My API Key';
     const client = new Mixedbread();
     expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['MXBAI_API_KEY'] = 'another My API Key';
+    process.env['API_KEY'] = 'another My API Key';
     const client = new Mixedbread({ apiKey: 'My API Key' });
     expect(client.apiKey).toBe('My API Key');
   });
