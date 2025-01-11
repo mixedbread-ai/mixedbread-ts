@@ -3,8 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import * as FilesAPI from '../files';
-import { LimitOffset, type LimitOffsetParams } from '../../pagination';
+import * as FilesAPI from '../files/files';
 
 export class Files extends APIResource {
   /**
@@ -50,23 +49,17 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
-  list(
-    vectorStoreId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
+  ): Core.APIPromise<FileListResponse>;
+  list(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
+  ): Core.APIPromise<FileListResponse> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesLimitOffset, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/v1/vector_stores/${vectorStoreId}/files`, { query, ...options });
   }
 
   /**
@@ -81,12 +74,32 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileDeleteResponse> {
+  ): Core.APIPromise<VectorStoreFileDeleted> {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
-}
 
-export class VectorStoreFilesLimitOffset extends LimitOffset<VectorStoreFile> {}
+  /**
+   * Perform semantic search across complete vector store files.
+   *
+   * This endpoint searches through vector store files using semantic similarity
+   * matching. Unlike chunk search, it returns complete matching files rather than
+   * individual chunks. Supports complex search queries with filters and returns
+   * relevance-scored results.
+   *
+   * Args: search_params: Search configuration including: - query text or
+   * embeddings - metadata filters - pagination parameters - sorting preferences
+   * \_state: API state dependency \_ctx: Service context dependency
+   *
+   * Returns: VectorStoreSearchFileResponse containing: - List of matched files with
+   * relevance scores - Pagination details including total result count
+   *
+   * Raises: HTTPException (400): If search parameters are invalid HTTPException
+   * (404): If no vector stores are found to search
+   */
+  search(body: FileSearchParams, options?: Core.RequestOptions): Core.APIPromise<FileSearchResponse> {
+    return this._client.post('/v1/vector_stores/files/search', { body, ...options });
+  }
+}
 
 /**
  * Represents a file stored in a vector store.
@@ -149,7 +162,7 @@ export interface VectorStoreFile {
 /**
  * Response model for file deletion.
  */
-export interface FileDeleteResponse {
+export interface VectorStoreFileDeleted {
   /**
    * ID of the deleted file
    */
@@ -166,6 +179,187 @@ export interface FileDeleteResponse {
   object?: 'vector_store.file';
 }
 
+export interface FileListResponse {
+  /**
+   * The list of vector store files
+   */
+  data: Array<VectorStoreFile>;
+
+  /**
+   * Pagination model that includes total count of items.
+   */
+  pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace FileListResponse {
+  /**
+   * Pagination model that includes total count of items.
+   */
+  export interface Pagination {
+    /**
+     * Maximum number of items to return per page
+     */
+    limit?: number;
+
+    /**
+     * Offset of the first item to return
+     */
+    offset?: number;
+
+    /**
+     * Total number of items available
+     */
+    total?: number;
+  }
+}
+
+export interface FileSearchResponse {
+  /**
+   * The list of scored vector store files
+   */
+  data: Array<FileSearchResponse.Data>;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace FileSearchResponse {
+  export interface Data {
+    /**
+     * file id
+     */
+    id: string;
+
+    /**
+     * Timestamp of vector store file creation
+     */
+    created_at: string;
+
+    /**
+     * score of the file
+     */
+    score: number;
+
+    /**
+     * usage in bytes
+     */
+    usage_bytes: number;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * version of the file
+     */
+    version: number;
+
+    /**
+     * chunks
+     */
+    chunks?: Array<Data.Chunk> | null;
+
+    /**
+     * metadata
+     */
+    metadata?: unknown;
+  }
+
+  export namespace Data {
+    export interface Chunk {
+      /**
+       * file id
+       */
+      file_id: string;
+
+      /**
+       * position of the chunk in a file
+       */
+      position: number;
+
+      /**
+       * score of the chunk
+       */
+      score: number;
+
+      /**
+       * vector store id
+       */
+      vector_store_id: string;
+
+      /**
+       * content of the chunk
+       */
+      content?: string | null;
+
+      /**
+       * file metadata
+       */
+      metadata?: unknown;
+
+      /**
+       * value of the chunk
+       */
+      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
+    }
+
+    export namespace Chunk {
+      /**
+       * Model for image input validation.
+       */
+      export interface ImageURLInput {
+        /**
+         * The image input specification.
+         */
+        image: ImageURLInput.Image;
+
+        /**
+         * Input type identifier
+         */
+        type?: 'image_url';
+      }
+
+      export namespace ImageURLInput {
+        /**
+         * The image input specification.
+         */
+        export interface Image {
+          /**
+           * The image URL. Can be either a URL or a Data URI.
+           */
+          url: string;
+        }
+      }
+
+      /**
+       * Model for text input validation.
+       *
+       * Attributes: type: Input type identifier, always "text" text: The actual text
+       * content, with length and whitespace constraints
+       */
+      export interface TextInput {
+        /**
+         * Text content to process
+         */
+        text: string;
+
+        /**
+         * Input type identifier
+         */
+        type?: 'text';
+      }
+    }
+  }
+}
+
 export interface FileCreateParams {
   /**
    * ID of the file to add
@@ -178,16 +372,288 @@ export interface FileCreateParams {
   metadata?: unknown;
 }
 
-export interface FileListParams extends LimitOffsetParams {}
+export interface FileListParams {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
 
-Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
+  /**
+   * Offset of the first item to return
+   */
+  offset?: number;
+}
+
+export interface FileSearchParams {
+  /**
+   * Search query text
+   */
+  query: string;
+
+  /**
+   * IDs of vector stores to search
+   */
+  vector_store_ids: Array<string>;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | FileSearchParams.SearchFilter
+    | FileSearchParams.SearchFilterCondition
+    | Array<FileSearchParams.SearchFilter | FileSearchParams.SearchFilterCondition>
+    | null;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: FileSearchParams.SearchOptions;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+}
+
+export namespace FileSearchParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilter {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+  }
+
+  export namespace SearchFilter {
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilter {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
+  }
+
+  export namespace SearchFilter {
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+
+    /**
+     * Represents a condition with a field, operator, and value.
+     */
+    export interface SearchFilterCondition {
+      /**
+       * The field to apply the condition on
+       */
+      key: string;
+
+      /**
+       * The operator for the condition
+       */
+      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+      /**
+       * The value to compare against
+       */
+      value: unknown;
+    }
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+  }
+}
 
 export declare namespace Files {
   export {
     type VectorStoreFile as VectorStoreFile,
-    type FileDeleteResponse as FileDeleteResponse,
-    VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
+    type VectorStoreFileDeleted as VectorStoreFileDeleted,
+    type FileListResponse as FileListResponse,
+    type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
+    type FileSearchParams as FileSearchParams,
   };
 }
