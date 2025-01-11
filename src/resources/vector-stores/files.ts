@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import * as FilesAPI from '../files';
 import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
 export class Files extends APIResource {
@@ -110,6 +111,14 @@ export interface VectorStoreFile {
    * List of error messages if processing failed
    */
   errors?: Array<string> | null;
+
+  /**
+   * A model representing a file object in the system.
+   *
+   * This model contains metadata about files stored in the system, including
+   * identifiers, size information, and timestamps.
+   */
+  file_object?: FilesAPI.FileObject | null;
 
   /**
    * Optional file metadata
