@@ -20,11 +20,28 @@ export class Embeddings extends APIResource {
   }
 }
 
+export interface Embedding {
+  /**
+   * The encoded embedding.
+   */
+  embedding: Array<number> | Array<number> | string;
+
+  /**
+   * The index of the embedding.
+   */
+  index: number;
+
+  /**
+   * The object type of the embedding.
+   */
+  object: 'embedding';
+}
+
 export interface EmbeddingCreateResponse {
   /**
    * The created embeddings.
    */
-  data: Array<EmbeddingCreateResponse.UnionMember0> | Array<EmbeddingCreateResponse.UnionMember1>;
+  data: Array<Embedding> | Array<EmbeddingCreateResponse.UnionMember1>;
 
   /**
    * The number of dimensions used for the embeddings.
@@ -75,23 +92,6 @@ export interface EmbeddingCreateResponse {
 }
 
 export namespace EmbeddingCreateResponse {
-  export interface UnionMember0 {
-    /**
-     * The encoded embedding.
-     */
-    embedding: Array<number> | Array<number> | string;
-
-    /**
-     * The index of the embedding.
-     */
-    index: number;
-
-    /**
-     * The object type of the embedding.
-     */
-    object: 'embedding';
-  }
-
   export interface UnionMember1 {
     /**
      * The encoded embedding data by encoding format.Returned, if more than one
@@ -240,6 +240,7 @@ export namespace EmbeddingCreateParams {
 
 export declare namespace Embeddings {
   export {
+    type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type EmbeddingCreateParams as EmbeddingCreateParams,
   };

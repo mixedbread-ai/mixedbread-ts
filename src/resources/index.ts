@@ -1,30 +1,34 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Completions, type CompletionCreateResponse } from './completions';
-export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
-export { Extractions } from './extractions/extractions';
 export {
+  Embeddings,
+  type Embedding,
+  type EmbeddingCreateResponse,
+  type EmbeddingCreateParams,
+} from './embeddings';
+export {
+  FileObjectsLimitOffset,
   Files,
-  type FileDeleted,
   type FileObject,
-  type FileListResponse,
+  type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
-} from './files/files';
+} from './files';
 export { Parsing } from './parsing/parsing';
 export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
-export { ServiceInfo, type InfoResponse } from './service-info';
 export {
+  VectorStoresLimitOffset,
   VectorStores,
+  type ExpiresAfter,
+  type FileCounts,
+  type ScoredVectorStoreChunk,
   type VectorStore,
-  type VectorStoreDeleted,
-  type VectorStoreListResponse,
-  type VectorStoreQuestionAnsweringResponse,
+  type VectorStoreDeleteResponse,
   type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
-  type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
+export { type InfoResponse } from './top-level';

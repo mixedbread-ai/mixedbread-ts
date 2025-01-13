@@ -9,9 +9,9 @@ export function getRuntime({ manuallyImported }: { manuallyImported?: boolean } 
   const recommendation =
     manuallyImported ?
       `You may need to use polyfills`
-    : `Add one of these imports before your first \`import … from 'mixedbread'\`:
-- \`import 'mixedbread/shims/node'\` (if you're running on Node)
-- \`import 'mixedbread/shims/web'\` (otherwise)
+    : `Add one of these imports before your first \`import … from '@mixedbread/sdk'\`:
+- \`import '@mixedbread/sdk/shims/node'\` (if you're running on Node)
+- \`import '@mixedbread/sdk/shims/web'\` (otherwise)
 `;
 
   let _fetch, _Request, _Response, _Headers;
@@ -95,7 +95,7 @@ export function getRuntime({ manuallyImported }: { manuallyImported?: boolean } 
     getDefaultAgent: (url: string) => undefined,
     fileFromPath: () => {
       throw new Error(
-        'The `fileFromPath` function is only supported in Node. See the README for more details: https://www.github.com/stainless-sdks/mixedbread-node#file-uploads',
+        'The `fileFromPath` function is only supported in Node. See the README for more details: https://www.github.com/mixedbread-ai/mixedbread-ts#file-uploads',
       );
     },
     isFsReadStream: (value: any) => false,
