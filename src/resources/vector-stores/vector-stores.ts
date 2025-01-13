@@ -127,6 +127,46 @@ export class VectorStores extends APIResource {
 }
 
 /**
+ * Represents a filter with AND, OR, and NOT conditions.
+ */
+export interface SearchFilter {
+  /**
+   * List of conditions or filters to be ANDed together
+   */
+  all?: Array<SearchFilter | SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be ORed together
+   */
+  any?: Array<SearchFilter | SearchFilterCondition> | null;
+
+  /**
+   * List of conditions or filters to be NOTed
+   */
+  none?: Array<SearchFilter | SearchFilterCondition> | null;
+}
+
+/**
+ * Represents a condition with a field, operator, and value.
+ */
+export interface SearchFilterCondition {
+  /**
+   * The field to apply the condition on
+   */
+  key: string;
+
+  /**
+   * The operator for the condition
+   */
+  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+  /**
+   * The value to compare against
+   */
+  value: unknown;
+}
+
+/**
  * Model representing a vector store with its metadata and timestamps.
  */
 export interface VectorStore {
@@ -496,14 +536,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | VectorStoreQuestionAnsweringParams.SearchFilter
-    | VectorStoreQuestionAnsweringParams.SearchFilterCondition
-    | Array<
-        | VectorStoreQuestionAnsweringParams.SearchFilter
-        | VectorStoreQuestionAnsweringParams.SearchFilterCondition
-      >
-    | null;
+  filters?: SearchFilter | SearchFilterCondition | Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * Question answering configuration options
@@ -533,210 +566,6 @@ export interface VectorStoreQuestionAnsweringParams {
 }
 
 export namespace VectorStoreQuestionAnsweringParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
   /**
    * Question answering configuration options
    */
@@ -787,11 +616,7 @@ export interface VectorStoreSearchParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | VectorStoreSearchParams.SearchFilter
-    | VectorStoreSearchParams.SearchFilterCondition
-    | Array<VectorStoreSearchParams.SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
-    | null;
+  filters?: SearchFilter | SearchFilterCondition | Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * Search configuration options
@@ -805,210 +630,6 @@ export interface VectorStoreSearchParams {
 }
 
 export namespace VectorStoreSearchParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilter {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | SearchFilter.SearchFilterCondition> | null;
-  }
-
-  export namespace SearchFilter {
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-
-    /**
-     * Represents a condition with a field, operator, and value.
-     */
-    export interface SearchFilterCondition {
-      /**
-       * The field to apply the condition on
-       */
-      key: string;
-
-      /**
-       * The operator for the condition
-       */
-      operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-      /**
-       * The value to compare against
-       */
-      value: unknown;
-    }
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
   /**
    * Search configuration options
    */
@@ -1039,6 +660,8 @@ VectorStores.Files = Files;
 
 export declare namespace VectorStores {
   export {
+    type SearchFilter as SearchFilter,
+    type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
     type VectorStoreDeleted as VectorStoreDeleted,
     type VectorStoreListResponse as VectorStoreListResponse,

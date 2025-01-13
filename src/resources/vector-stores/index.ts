@@ -12,6 +12,8 @@ export {
 } from './files';
 export {
   VectorStores,
+  type SearchFilter,
+  type SearchFilterCondition,
   type VectorStore,
   type VectorStoreDeleted,
   type VectorStoreListResponse,
