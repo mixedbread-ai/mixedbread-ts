@@ -3,7 +3,9 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import * as FilesAPI from '../files/files';
+import * as FilesAPI from '../files';
+import * as VectorStoresAPI from './vector-stores';
+import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
 export class Files extends APIResource {
   /**
@@ -49,17 +51,23 @@ export class Files extends APIResource {
     vectorStoreId: string,
     query?: FileListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse>;
-  list(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
+  list(
+    vectorStoreId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
   list(
     vectorStoreId: string,
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse> {
+  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
     if (isRequestOptions(query)) {
       return this.list(vectorStoreId, {}, query);
     }
-    return this._client.get(`/v1/vector_stores/${vectorStoreId}/files`, { query, ...options });
+    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesLimitOffset, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -74,7 +82,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     fileId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFileDeleted> {
+  ): Core.APIPromise<FileDeleteResponse> {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
   }
 
@@ -99,6 +107,50 @@ export class Files extends APIResource {
   search(body: FileSearchParams, options?: Core.RequestOptions): Core.APIPromise<FileSearchResponse> {
     return this._client.post('/v1/vector_stores/files/search', { body, ...options });
   }
+}
+
+export class VectorStoreFilesLimitOffset extends LimitOffset<VectorStoreFile> {}
+
+export interface ScoredVectorStoreFile {
+  /**
+   * file id
+   */
+  id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
+
+  /**
+   * score of the file
+   */
+  score: number;
+
+  /**
+   * usage in bytes
+   */
+  usage_bytes: number;
+
+  /**
+   * vector store id
+   */
+  vector_store_id: string;
+
+  /**
+   * version of the file
+   */
+  version: number;
+
+  /**
+   * chunks
+   */
+  chunks?: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
+
+  /**
+   * metadata
+   */
+  metadata?: unknown;
 }
 
 /**
@@ -162,7 +214,7 @@ export interface VectorStoreFile {
 /**
  * Response model for file deletion.
  */
-export interface VectorStoreFileDeleted {
+export interface FileDeleteResponse {
   /**
    * ID of the deleted file
    */
@@ -179,185 +231,16 @@ export interface VectorStoreFileDeleted {
   object?: 'vector_store.file';
 }
 
-export interface FileListResponse {
-  /**
-   * The list of vector store files
-   */
-  data: Array<VectorStoreFile>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: FileListResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace FileListResponse {
-  /**
-   * Pagination model that includes total count of items.
-   */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
-}
-
 export interface FileSearchResponse {
   /**
    * The list of scored vector store files
    */
-  data: Array<FileSearchResponse.Data>;
+  data: Array<ScoredVectorStoreFile>;
 
   /**
    * The object type of the response
    */
   object?: 'list';
-}
-
-export namespace FileSearchResponse {
-  export interface Data {
-    /**
-     * file id
-     */
-    id: string;
-
-    /**
-     * Timestamp of vector store file creation
-     */
-    created_at: string;
-
-    /**
-     * score of the file
-     */
-    score: number;
-
-    /**
-     * usage in bytes
-     */
-    usage_bytes: number;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * version of the file
-     */
-    version: number;
-
-    /**
-     * chunks
-     */
-    chunks?: Array<Data.Chunk> | null;
-
-    /**
-     * metadata
-     */
-    metadata?: unknown;
-  }
-
-  export namespace Data {
-    export interface Chunk {
-      /**
-       * file id
-       */
-      file_id: string;
-
-      /**
-       * position of the chunk in a file
-       */
-      position: number;
-
-      /**
-       * score of the chunk
-       */
-      score: number;
-
-      /**
-       * vector store id
-       */
-      vector_store_id: string;
-
-      /**
-       * content of the chunk
-       */
-      content?: string | null;
-
-      /**
-       * file metadata
-       */
-      metadata?: unknown;
-
-      /**
-       * value of the chunk
-       */
-      value?: string | Chunk.ImageURLInput | Chunk.TextInput | Record<string, unknown> | null;
-    }
-
-    export namespace Chunk {
-      /**
-       * Model for image input validation.
-       */
-      export interface ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        image: ImageURLInput.Image;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'image_url';
-      }
-
-      export namespace ImageURLInput {
-        /**
-         * The image input specification.
-         */
-        export interface Image {
-          /**
-           * The image URL. Can be either a URL or a Data URI.
-           */
-          url: string;
-        }
-      }
-
-      /**
-       * Model for text input validation.
-       *
-       * Attributes: type: Input type identifier, always "text" text: The actual text
-       * content, with length and whitespace constraints
-       */
-      export interface TextInput {
-        /**
-         * Text content to process
-         */
-        text: string;
-
-        /**
-         * Input type identifier
-         */
-        type?: 'text';
-      }
-    }
-  }
 }
 
 export interface FileCreateParams {
@@ -372,17 +255,7 @@ export interface FileCreateParams {
   metadata?: unknown;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
-
-  /**
-   * Offset of the first item to return
-   */
-  offset?: number;
-}
+export interface FileListParams extends LimitOffsetParams {}
 
 export interface FileSearchParams {
   /**
@@ -433,12 +306,15 @@ export namespace FileSearchParams {
   }
 }
 
+Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
+
 export declare namespace Files {
   export {
+    type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFile as VectorStoreFile,
-    type VectorStoreFileDeleted as VectorStoreFileDeleted,
-    type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
+    VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileListParams as FileListParams,
     type FileSearchParams as FileSearchParams,

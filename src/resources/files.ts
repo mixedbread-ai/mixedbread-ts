@@ -1,14 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
-import * as ContentAPI from './content';
-import { Content } from './content';
+import { APIResource } from '../resource';
+import { isRequestOptions } from '../core';
+import * as Core from '../core';
+import { LimitOffset, type LimitOffsetParams } from '../pagination';
+import { type Response } from '../_shims/index';
 
 export class Files extends APIResource {
-  content: ContentAPI.Content = new ContentAPI.Content(this._client);
-
   /**
    * Upload a new file.
    *
@@ -49,16 +47,19 @@ export class Files extends APIResource {
    *
    * Returns: A list of files belonging to the user.
    */
-  list(query?: FileListParams, options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
-  list(options?: Core.RequestOptions): Core.APIPromise<FileListResponse>;
+  list(
+    query?: FileListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
   list(
     query: FileListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileListResponse> {
+  ): Core.PagePromise<FileObjectsLimitOffset, FileObject> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.get('/v1/files', { query, ...options });
+    return this._client.getAPIList('/v1/files', FileObjectsLimitOffset, { query, ...options });
   }
 
   /**
@@ -68,27 +69,23 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleted> {
+  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
     return this._client.delete(`/v1/files/${fileId}`, options);
+  }
+
+  /**
+   * Download a specific file by its ID.
+   *
+   * Args: file_id: The ID of the file to download.
+   *
+   * Returns: FileStreamResponse: The response containing the file to be downloaded.
+   */
+  content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<Response> {
+    return this._client.get(`/v1/files/${fileId}/content`, { ...options, __binaryResponse: true });
   }
 }
 
-export interface FileDeleted {
-  /**
-   * The ID of the deleted file
-   */
-  id: string;
-
-  /**
-   * Whether the file was deleted
-   */
-  deleted?: boolean;
-
-  /**
-   * The type of the deleted object
-   */
-  object?: 'file';
-}
+export class FileObjectsLimitOffset extends LimitOffset<FileObject> {}
 
 /**
  * A model representing a file object in the system.
@@ -133,43 +130,21 @@ export interface FileObject {
   version: number;
 }
 
-export interface FileListResponse {
+export interface FileDeleteResponse {
   /**
-   * The list of files
+   * The ID of the deleted file
    */
-  data: Array<FileObject>;
-
-  /**
-   * Pagination model that includes total count of items.
-   */
-  pagination: FileListResponse.Pagination;
+  id: string;
 
   /**
-   * The object type of the response
+   * Whether the file was deleted
    */
-  object?: 'list';
-}
+  deleted?: boolean;
 
-export namespace FileListResponse {
   /**
-   * Pagination model that includes total count of items.
+   * The type of the deleted object
    */
-  export interface Pagination {
-    /**
-     * Maximum number of items to return per page
-     */
-    limit?: number;
-
-    /**
-     * Offset of the first item to return
-     */
-    offset?: number;
-
-    /**
-     * Total number of items available
-     */
-    total?: number;
-  }
+  object?: 'file';
 }
 
 export interface FileCreateParams {
@@ -186,29 +161,17 @@ export interface FileUpdateParams {
   file: Core.Uploadable;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
+export interface FileListParams extends LimitOffsetParams {}
 
-  /**
-   * Offset of the first item to return
-   */
-  offset?: number;
-}
-
-Files.Content = Content;
+Files.FileObjectsLimitOffset = FileObjectsLimitOffset;
 
 export declare namespace Files {
   export {
-    type FileDeleted as FileDeleted,
     type FileObject as FileObject,
-    type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
+    FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
   };
-
-  export { Content as Content };
 }
