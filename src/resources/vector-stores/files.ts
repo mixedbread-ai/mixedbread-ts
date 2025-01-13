@@ -4,7 +4,6 @@ import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as FilesAPI from '../files/files';
-import * as VectorStoresAPI from './vector-stores';
 
 export class Files extends APIResource {
   /**
@@ -395,15 +394,6 @@ export interface FileSearchParams {
    * IDs of vector stores to search
    */
   vector_store_ids: Array<string>;
-
-  /**
-   * Optional filter conditions
-   */
-  filters?:
-    | VectorStoresAPI.SearchFilter
-    | VectorStoresAPI.SearchFilterCondition
-    | Array<VectorStoresAPI.SearchFilter | VectorStoresAPI.SearchFilterCondition>
-    | null;
 
   /**
    * Search configuration options
