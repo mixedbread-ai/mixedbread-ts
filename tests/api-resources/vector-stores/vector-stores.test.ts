@@ -112,6 +112,20 @@ describe('resource vectorStores', () => {
   test('questionAnswering: required and optional params', async () => {
     const response = await client.vectorStores.questionAnswering({
       vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+      filters: {
+        all: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+      },
       qa_options: { cite: true },
       query: 'x',
       search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
@@ -138,6 +152,20 @@ describe('resource vectorStores', () => {
     const response = await client.vectorStores.search({
       query: 'how to configure SSL',
       vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+      filters: {
+        all: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'eq', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+      },
       search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
       top_k: 1,
     });
