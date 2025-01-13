@@ -17,8 +17,6 @@ export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } f
 export { ServiceInfo, type InfoResponse } from './service-info';
 export {
   VectorStores,
-  type SearchFilter,
-  type SearchFilterCondition,
   type VectorStore,
   type VectorStoreDeleted,
   type VectorStoreListResponse,

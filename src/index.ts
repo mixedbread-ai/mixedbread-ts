@@ -21,8 +21,6 @@ import {
 } from './resources/files/files';
 import { Parsing } from './resources/parsing/parsing';
 import {
-  SearchFilter,
-  SearchFilterCondition,
   VectorStore,
   VectorStoreCreateParams,
   VectorStoreDeleted,
@@ -244,8 +242,6 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
-    type SearchFilter as SearchFilter,
-    type SearchFilterCondition as SearchFilterCondition,
     type VectorStore as VectorStore,
     type VectorStoreDeleted as VectorStoreDeleted,
     type VectorStoreListResponse as VectorStoreListResponse,

@@ -44,8 +44,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilter</a></code>
-- <code><a href="./src/resources/vector-stores/vector-stores.ts">SearchFilterCondition</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreDeleted</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreListResponse</a></code>
