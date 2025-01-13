@@ -42,25 +42,25 @@ If you’d like to use the repository from source, you can either install from g
 To install via git:
 
 ```sh
-$ npm install git+ssh://git@github.com:stainless-sdks/mixedbread-node.git
+$ npm install git+ssh://git@github.com:mixedbread-ai/mixedbread-ts.git
 ```
 
 Alternatively, to link a local copy of the repo:
 
 ```sh
 # Clone
-$ git clone https://www.github.com/stainless-sdks/mixedbread-node
-$ cd mixedbread-node
+$ git clone https://www.github.com/mixedbread-ai/mixedbread-ts
+$ cd mixedbread-ts
 
 # With yarn
 $ yarn link
 $ cd ../my-package
-$ yarn link mixedbread
+$ yarn link @mixedbread/sdk
 
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global mixedbread
+$ pnpm link -—global @mixedbread/sdk
 ```
 
 ## Running tests

@@ -42,12 +42,12 @@ export let isFsReadStream: Shims['isFsReadStream'] | undefined = undefined;
 export function setShims(shims: Shims, options: { auto: boolean } = { auto: false }) {
   if (auto) {
     throw new Error(
-      `you must \`import 'mixedbread/shims/${shims.kind}'\` before importing anything else from mixedbread`,
+      `you must \`import '@mixedbread/sdk/shims/${shims.kind}'\` before importing anything else from @mixedbread/sdk`,
     );
   }
   if (kind) {
     throw new Error(
-      `can't \`import 'mixedbread/shims/${shims.kind}'\` after \`import 'mixedbread/shims/${kind}'\``,
+      `can't \`import '@mixedbread/sdk/shims/${shims.kind}'\` after \`import '@mixedbread/sdk/shims/${kind}'\``,
     );
   }
   auto = options.auto;

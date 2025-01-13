@@ -3,46 +3,53 @@
 import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
+import * as Pagination from './pagination';
+import { type LimitOffsetParams, LimitOffsetResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
-import { CompletionCreateResponse, Completions } from './resources/completions';
-import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
-import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
-import { InfoResponse, ServiceInfo } from './resources/service-info';
-import { Extractions } from './resources/extractions/extractions';
+import * as TopLevelAPI from './resources/top-level';
+import { InfoResponse } from './resources/top-level';
+import {
+  Embedding,
+  EmbeddingCreateParams,
+  EmbeddingCreateResponse,
+  Embeddings,
+} from './resources/embeddings';
 import {
   FileCreateParams,
-  FileDeleted,
+  FileDeleteResponse,
   FileListParams,
-  FileListResponse,
   FileObject,
+  FileObjectsLimitOffset,
   FileUpdateParams,
   Files,
-} from './resources/files/files';
+} from './resources/files';
+import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  ExpiresAfter,
+  FileCounts,
+  ScoredVectorStoreChunk,
   VectorStore,
   VectorStoreCreateParams,
-  VectorStoreDeleted,
+  VectorStoreDeleteResponse,
   VectorStoreListParams,
-  VectorStoreListResponse,
-  VectorStoreQuestionAnsweringParams,
-  VectorStoreQuestionAnsweringResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStores,
+  VectorStoresLimitOffset,
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
   production: 'https://api.mixedbread.ai',
-  environment_1: 'http://127.0.0.1:8000',
+  local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
 
 export interface ClientOptions {
   /**
-   * Api key to access Mixedbreads API
+   * Api key to authenticate with Mixedbread
    */
   apiKey?: string | undefined;
 
@@ -51,7 +58,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mixedbread.ai`
-   * - `environment_1` corresponds to `http://127.0.0.1:8000`
+   * - `local` corresponds to `http://127.0.0.1:8000`
    */
   environment?: Environment;
 
@@ -123,7 +130,7 @@ export class Mixedbread extends Core.APIClient {
   /**
    * API Client for interfacing with the Mixedbread API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['MXBAI_API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.ai] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -135,12 +142,12 @@ export class Mixedbread extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
-    apiKey = Core.readEnv('API_KEY'),
+    apiKey = Core.readEnv('MXBAI_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.MixedbreadError(
-        "The API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+        "The MXBAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
       );
     }
 
@@ -170,14 +177,20 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  serviceInfo: API.ServiceInfo = new API.ServiceInfo(this);
-  files: API.Files = new API.Files(this);
-  completions: API.Completions = new API.Completions(this);
-  vectorStores: API.VectorStores = new API.VectorStores(this);
-  parsing: API.Parsing = new API.Parsing(this);
-  extractions: API.Extractions = new API.Extractions(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   reranking: API.Reranking = new API.Reranking(this);
+  parsing: API.Parsing = new API.Parsing(this);
+  files: API.Files = new API.Files(this);
+  vectorStores: API.VectorStores = new API.VectorStores(this);
+
+  /**
+   * Returns service information, including name and version.
+   *
+   * Returns: InfoResponse: A response containing the service name and version.
+   */
+  info(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.InfoResponse> {
+    return this.get('/', options);
+  }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -215,51 +228,24 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-Mixedbread.ServiceInfo = ServiceInfo;
-Mixedbread.Files = Files;
-Mixedbread.Completions = Completions;
-Mixedbread.VectorStores = VectorStores;
-Mixedbread.Parsing = Parsing;
-Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Reranking = Reranking;
+Mixedbread.Parsing = Parsing;
+Mixedbread.Files = Files;
+Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
+Mixedbread.VectorStores = VectorStores;
+Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
-  export { ServiceInfo as ServiceInfo, type InfoResponse as InfoResponse };
+  export import LimitOffset = Pagination.LimitOffset;
+  export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
-  export {
-    Files as Files,
-    type FileDeleted as FileDeleted,
-    type FileObject as FileObject,
-    type FileListResponse as FileListResponse,
-    type FileCreateParams as FileCreateParams,
-    type FileUpdateParams as FileUpdateParams,
-    type FileListParams as FileListParams,
-  };
-
-  export { Completions as Completions, type CompletionCreateResponse as CompletionCreateResponse };
-
-  export {
-    VectorStores as VectorStores,
-    type VectorStore as VectorStore,
-    type VectorStoreDeleted as VectorStoreDeleted,
-    type VectorStoreListResponse as VectorStoreListResponse,
-    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoreCreateParams as VectorStoreCreateParams,
-    type VectorStoreUpdateParams as VectorStoreUpdateParams,
-    type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
-  };
-
-  export { Parsing as Parsing };
-
-  export { Extractions as Extractions };
+  export { type InfoResponse as InfoResponse };
 
   export {
     Embeddings as Embeddings,
+    type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type EmbeddingCreateParams as EmbeddingCreateParams,
   };
@@ -268,6 +254,33 @@ export declare namespace Mixedbread {
     Reranking as Reranking,
     type RerankingCreateResponse as RerankingCreateResponse,
     type RerankingCreateParams as RerankingCreateParams,
+  };
+
+  export { Parsing as Parsing };
+
+  export {
+    Files as Files,
+    type FileObject as FileObject,
+    type FileDeleteResponse as FileDeleteResponse,
+    FileObjectsLimitOffset as FileObjectsLimitOffset,
+    type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
+    type FileListParams as FileListParams,
+  };
+
+  export {
+    VectorStores as VectorStores,
+    type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
+    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
+    type VectorStore as VectorStore,
+    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreSearchResponse as VectorStoreSearchResponse,
+    VectorStoresLimitOffset as VectorStoresLimitOffset,
+    type VectorStoreCreateParams as VectorStoreCreateParams,
+    type VectorStoreUpdateParams as VectorStoreUpdateParams,
+    type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 }
 

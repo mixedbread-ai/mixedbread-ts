@@ -1,12 +1,12 @@
 {
-  "name": "mixedbread",
+  "name": "@mixedbread/sdk",
   "version": "0.1.0-alpha.5",
   "description": "The official TypeScript library for the Mixedbread API",
-  "author": "Mixedbread <dev-feedback@mixedbread.com>",
+  "author": "Mixedbread <support@mixedbread.ai>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:stainless-sdks/mixedbread-node",
+  "repository": "github:mixedbread-ai/mixedbread-ts",
   "license": "Apache-2.0",
   "packageManager": "yarn@1.22.22",
   "files": [
@@ -58,8 +58,8 @@
     "./shims/web.mjs"
   ],
   "imports": {
-    "mixedbread": ".",
-    "mixedbread/*": "./src/*"
+    "@mixedbread/sdk": ".",
+    "@mixedbread/sdk/*": "./src/*"
   },
   "exports": {
     "./_shims/auto/*": {
