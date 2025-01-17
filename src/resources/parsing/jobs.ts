@@ -1,7 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../resource';
+import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
 export class Jobs extends APIResource {
   /**
@@ -25,7 +27,42 @@ export class Jobs extends APIResource {
   retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
     return this._client.get(`/v1/parsing/jobs/${jobId}`, options);
   }
+
+  /**
+   * List parsing jobs with pagination.
+   *
+   * Args: limit: The number of items to return. offset: The number of items to skip.
+   *
+   * Returns: List of parsing jobs with pagination.
+   */
+  list(
+    query?: JobListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob>;
+  list(
+    query: JobListParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob> {
+    if (isRequestOptions(query)) {
+      return this.list({}, query);
+    }
+    return this._client.getAPIList('/v1/parsing/jobs', ParsingJobsLimitOffset, { query, ...options });
+  }
+
+  /**
+   * Cancel a specific parse job.
+   *
+   * Args: job_id: The ID of the parse job to cancel.
+   *
+   * Returns: The cancelled parsing job.
+   */
+  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
+    return this._client.delete(`/v1/parsing/jobs/${jobId}`, options);
+  }
 }
+
+export class ParsingJobsLimitOffset extends LimitOffset<ParsingJob> {}
 
 /**
  * A job for parsing documents with its current state and result.
@@ -39,7 +76,7 @@ export interface ParsingJob {
   /**
    * The status of the job
    */
-  status: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+  status: 'PENDING' | 'RUNNING' | 'CANCELLED' | 'FAILED' | 'SUCCESSFUL';
 
   /**
    * The creation time of the job
@@ -47,9 +84,9 @@ export interface ParsingJob {
   created_at?: string;
 
   /**
-   * The errors of the job
+   * The error of the job
    */
-  errors?: Array<string> | null;
+  error?: string | null;
 
   /**
    * The finished time of the job
@@ -59,12 +96,22 @@ export interface ParsingJob {
   /**
    * The type of the object
    */
-  object?: 'job';
+  object?: 'parsing_job';
 
   /**
    * Result of document parsing operation.
    */
   result?: ParsingJob.Result | null;
+
+  /**
+   * The started time of the job
+   */
+  started_at?: string | null;
+
+  /**
+   * The updated time of the job
+   */
+  updated_at?: string | null;
 }
 
 export namespace ParsingJob {
@@ -210,6 +257,15 @@ export interface JobCreateParams {
   return_format?: 'html' | 'markdown' | 'plain';
 }
 
+export interface JobListParams extends LimitOffsetParams {}
+
+Jobs.ParsingJobsLimitOffset = ParsingJobsLimitOffset;
+
 export declare namespace Jobs {
-  export { type ParsingJob as ParsingJob, type JobCreateParams as JobCreateParams };
+  export {
+    type ParsingJob as ParsingJob,
+    ParsingJobsLimitOffset as ParsingJobsLimitOffset,
+    type JobCreateParams as JobCreateParams,
+    type JobListParams as JobListParams,
+  };
 }

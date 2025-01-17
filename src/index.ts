@@ -9,6 +9,7 @@ import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { InfoResponse } from './resources/top-level';
+import { CompletionCreateResponse, Completions } from './resources/completions';
 import {
   Embedding,
   EmbeddingCreateParams,
@@ -25,6 +26,7 @@ import {
   Files,
 } from './resources/files';
 import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
+import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
@@ -34,6 +36,8 @@ import {
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
+  VectorStoreQuestionAnsweringParams,
+  VectorStoreQuestionAnsweringResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
@@ -182,6 +186,8 @@ export class Mixedbread extends Core.APIClient {
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
+  completions: API.Completions = new API.Completions(this);
+  extractions: API.Extractions = new API.Extractions(this);
 
   /**
    * Returns service information, including name and version.
@@ -235,6 +241,8 @@ Mixedbread.Files = Files;
 Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
+Mixedbread.Completions = Completions;
+Mixedbread.Extractions = Extractions;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -275,13 +283,21 @@ export declare namespace Mixedbread {
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
+
+  export { Completions as Completions, type CompletionCreateResponse as CompletionCreateResponse };
+
+  export { Extractions as Extractions };
+
+  export type SearchFilter = API.SearchFilter;
 }
 
 export { toFile, fileFromPath } from './uploads';

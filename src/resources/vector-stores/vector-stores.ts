@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import * as Shared from '../shared';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
@@ -91,6 +92,16 @@ export class VectorStores extends APIResource {
    */
   delete(vectorStoreId: string, options?: Core.RequestOptions): Core.APIPromise<VectorStoreDeleteResponse> {
     return this._client.delete(`/v1/vector_stores/${vectorStoreId}`, options);
+  }
+
+  /**
+   * Question answering
+   */
+  questionAnswering(
+    body: VectorStoreQuestionAnsweringParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<unknown> {
+    return this._client.post('/v1/vector_stores/question-answering', { body, ...options });
   }
 
   /**
@@ -334,6 +345,8 @@ export interface VectorStoreDeleteResponse {
   object?: 'vector_store';
 }
 
+export type VectorStoreQuestionAnsweringResponse = unknown;
+
 export interface VectorStoreSearchResponse {
   /**
    * The list of scored vector store file chunks
@@ -397,6 +410,125 @@ export interface VectorStoreUpdateParams {
 
 export interface VectorStoreListParams extends LimitOffsetParams {}
 
+export interface VectorStoreQuestionAnsweringParams {
+  /**
+   * IDs of vector stores to search
+   */
+  vector_store_ids: Array<string>;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | Shared.SearchFilter
+    | VectorStoreQuestionAnsweringParams.SearchFilterCondition
+    | Array<Shared.SearchFilter | VectorStoreQuestionAnsweringParams.SearchFilterCondition>
+    | null;
+
+  /**
+   * Question answering configuration options
+   */
+  qa_options?: VectorStoreQuestionAnsweringParams.QaOptions;
+
+  /**
+   * Question to answer. If not provided, the question will be extracted from the
+   * passed messages.
+   */
+  query?: string;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: VectorStoreQuestionAnsweringParams.SearchOptions;
+
+  /**
+   * Whether to stream the answer
+   */
+  stream?: boolean;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+}
+
+export namespace VectorStoreQuestionAnsweringParams {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Question answering configuration options
+   */
+  export interface QaOptions {
+    /**
+     * Whether to use citations
+     */
+    cite?: boolean;
+  }
+
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+  }
+}
+
 export interface VectorStoreSearchParams {
   /**
    * Search query text
@@ -407,6 +539,15 @@ export interface VectorStoreSearchParams {
    * IDs of vector stores to search
    */
   vector_store_ids: Array<string>;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | Shared.SearchFilter
+    | VectorStoreSearchParams.SearchFilterCondition
+    | Array<Shared.SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
+    | null;
 
   /**
    * Search configuration options
@@ -420,6 +561,46 @@ export interface VectorStoreSearchParams {
 }
 
 export namespace VectorStoreSearchParams {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
   /**
    * Search configuration options
    */
@@ -457,11 +638,13 @@ export declare namespace VectorStores {
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
+    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
     VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
+    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 

@@ -19,9 +19,11 @@ export {
   type ScoredVectorStoreChunk,
   type VectorStore,
   type VectorStoreDeleteResponse,
+  type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
   type VectorStoreCreateParams,
   type VectorStoreUpdateParams,
   type VectorStoreListParams,
+  type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
 } from './vector-stores';

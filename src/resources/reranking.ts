@@ -50,6 +50,7 @@ export interface RerankingCreateResponse {
    */
   object?:
     | 'list'
+    | 'parsing_job'
     | 'job'
     | 'embedding'
     | 'embedding_dict'
@@ -79,6 +80,7 @@ export namespace RerankingCreateResponse {
      */
     object?:
       | 'list'
+      | 'parsing_job'
       | 'job'
       | 'embedding'
       | 'embedding_dict'
