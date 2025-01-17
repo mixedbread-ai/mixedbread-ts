@@ -38,6 +38,7 @@ import {
   VectorStoreListParams,
   VectorStoreQuestionAnsweringParams,
   VectorStoreQuestionAnsweringResponse,
+  VectorStoreSearchOptions,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
@@ -282,6 +283,7 @@ export declare namespace Mixedbread {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
+    type VectorStoreSearchOptions as VectorStoreSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
@@ -298,6 +300,7 @@ export declare namespace Mixedbread {
   export { Extractions as Extractions };
 
   export type SearchFilter = API.SearchFilter;
+  export type SearchFilterCondition = API.SearchFilterCondition;
 }
 
 export { toFile, fileFromPath } from './uploads';
