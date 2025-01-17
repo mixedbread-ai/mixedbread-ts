@@ -81,6 +81,7 @@ export interface EmbeddingCreateResponse {
    */
   object?:
     | 'list'
+    | 'parsing_job'
     | 'job'
     | 'embedding'
     | 'embedding_dict'
