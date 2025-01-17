@@ -284,86 +284,19 @@ export interface FileSearchParams {
    */
   filters?:
     | Shared.SearchFilter
-    | FileSearchParams.SearchFilterCondition
-    | Array<Shared.SearchFilter | FileSearchParams.SearchFilterCondition>
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
    * Search configuration options
    */
-  search_options?: FileSearchParams.SearchOptions;
+  search_options?: VectorStoresAPI.VectorStoreSearchOptions;
 
   /**
    * Number of results to return
    */
   top_k?: number;
-}
-
-export namespace FileSearchParams {
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-  }
 }
 
 Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
