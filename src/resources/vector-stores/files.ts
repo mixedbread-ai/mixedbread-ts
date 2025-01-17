@@ -4,6 +4,7 @@ import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as FilesAPI from '../files';
+import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { LimitOffset, type LimitOffsetParams } from '../../pagination';
 
@@ -148,9 +149,19 @@ export interface ScoredVectorStoreFile {
   chunks?: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
 
   /**
+   * last error
+   */
+  last_error?: unknown;
+
+  /**
    * metadata
    */
   metadata?: unknown;
+
+  /**
+   * status of the file
+   */
+  status?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
 }
 
 /**
@@ -173,17 +184,17 @@ export interface VectorStoreFile {
   vector_store_id: string;
 
   /**
-   * List of error messages if processing failed
-   */
-  errors?: Array<string> | null;
-
-  /**
    * A model representing a file object in the system.
    *
    * This model contains metadata about files stored in the system, including
    * identifiers, size information, and timestamps.
    */
   file_object?: FilesAPI.FileObject | null;
+
+  /**
+   * Last error message if processing failed
+   */
+  last_error?: unknown;
 
   /**
    * Optional file metadata
@@ -198,7 +209,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: 'none' | 'running' | 'canceled' | 'successful' | 'failed' | 'resumable' | 'pending';
+  status?: string;
 
   /**
    * Storage usage in bytes
@@ -269,6 +280,15 @@ export interface FileSearchParams {
   vector_store_ids: Array<string>;
 
   /**
+   * Optional filter conditions
+   */
+  filters?:
+    | Shared.SearchFilter
+    | FileSearchParams.SearchFilterCondition
+    | Array<Shared.SearchFilter | FileSearchParams.SearchFilterCondition>
+    | null;
+
+  /**
    * Search configuration options
    */
   search_options?: FileSearchParams.SearchOptions;
@@ -280,6 +300,46 @@ export interface FileSearchParams {
 }
 
 export namespace FileSearchParams {
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
+  /**
+   * Represents a condition with a field, operator, and value.
+   */
+  export interface SearchFilterCondition {
+    /**
+     * The field to apply the condition on
+     */
+    key: string;
+
+    /**
+     * The operator for the condition
+     */
+    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+
+    /**
+     * The value to compare against
+     */
+    value: unknown;
+  }
+
   /**
    * Search configuration options
    */
