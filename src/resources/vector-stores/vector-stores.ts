@@ -326,6 +326,31 @@ export interface VectorStore {
 }
 
 /**
+ * Options for configuring vector store searches.
+ */
+export interface VectorStoreSearchOptions {
+  /**
+   * Whether to return matching text chunks
+   */
+  return_chunks?: boolean;
+
+  /**
+   * Whether to return file metadata
+   */
+  return_metadata?: boolean;
+
+  /**
+   * Whether to rewrite the query
+   */
+  rewrite_query?: boolean;
+
+  /**
+   * Minimum similarity score threshold
+   */
+  score_threshold?: number;
+}
+
+/**
  * Response model for vector store deletion.
  */
 export interface VectorStoreDeleteResponse {
@@ -421,8 +446,8 @@ export interface VectorStoreQuestionAnsweringParams {
    */
   filters?:
     | Shared.SearchFilter
-    | VectorStoreQuestionAnsweringParams.SearchFilterCondition
-    | Array<Shared.SearchFilter | VectorStoreQuestionAnsweringParams.SearchFilterCondition>
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -439,7 +464,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreQuestionAnsweringParams.SearchOptions;
+  search_options?: VectorStoreSearchOptions;
 
   /**
    * Whether to stream the answer
@@ -454,46 +479,6 @@ export interface VectorStoreQuestionAnsweringParams {
 
 export namespace VectorStoreQuestionAnsweringParams {
   /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
    * Question answering configuration options
    */
   export interface QaOptions {
@@ -501,31 +486,6 @@ export namespace VectorStoreQuestionAnsweringParams {
      * Whether to use citations
      */
     cite?: boolean;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
   }
 }
 
@@ -545,86 +505,19 @@ export interface VectorStoreSearchParams {
    */
   filters?:
     | Shared.SearchFilter
-    | VectorStoreSearchParams.SearchFilterCondition
-    | Array<Shared.SearchFilter | VectorStoreSearchParams.SearchFilterCondition>
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchParams.SearchOptions;
+  search_options?: VectorStoreSearchOptions;
 
   /**
    * Number of results to return
    */
   top_k?: number;
-}
-
-export namespace VectorStoreSearchParams {
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Represents a condition with a field, operator, and value.
-   */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
-
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-  }
 }
 
 VectorStores.VectorStoresLimitOffset = VectorStoresLimitOffset;
@@ -637,6 +530,7 @@ export declare namespace VectorStores {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
+    type VectorStoreSearchOptions as VectorStoreSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,

@@ -7,77 +7,35 @@ export interface SearchFilter {
   /**
    * List of conditions or filters to be ANDed together
    */
-  all?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  all?: Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * List of conditions or filters to be ORed together
    */
-  any?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  any?: Array<SearchFilter | SearchFilterCondition> | null;
 
   /**
    * List of conditions or filters to be NOTed
    */
-  none?: Array<SearchFilter | SearchFilter.SearchFilterCondition> | null;
+  none?: Array<SearchFilter | SearchFilterCondition> | null;
 }
 
-export namespace SearchFilter {
+/**
+ * Represents a condition with a field, operator, and value.
+ */
+export interface SearchFilterCondition {
   /**
-   * Represents a condition with a field, operator, and value.
+   * The field to apply the condition on
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  key: string;
 
   /**
-   * Represents a condition with a field, operator, and value.
+   * The operator for the condition
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
 
   /**
-   * Represents a condition with a field, operator, and value.
+   * The value to compare against
    */
-  export interface SearchFilterCondition {
-    /**
-     * The field to apply the condition on
-     */
-    key: string;
-
-    /**
-     * The operator for the condition
-     */
-    operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-    /**
-     * The value to compare against
-     */
-    value: unknown;
-  }
+  value: unknown;
 }
