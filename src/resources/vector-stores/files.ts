@@ -3,7 +3,6 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import * as FilesAPI from '../files';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { LimitOffset, type LimitOffsetParams } from '../../pagination';
@@ -112,11 +111,19 @@ export class Files extends APIResource {
 
 export class VectorStoreFilesLimitOffset extends LimitOffset<VectorStoreFile> {}
 
+/**
+ * Represents a scored file stored in a vector store.
+ */
 export interface ScoredVectorStoreFile {
   /**
-   * file id
+   * Unique identifier for the file
    */
   id: string;
+
+  /**
+   * chunks
+   */
+  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk>;
 
   /**
    * Timestamp of vector store file creation
@@ -129,39 +136,39 @@ export interface ScoredVectorStoreFile {
   score: number;
 
   /**
-   * usage in bytes
-   */
-  usage_bytes: number;
-
-  /**
-   * vector store id
+   * ID of the containing vector store
    */
   vector_store_id: string;
 
   /**
-   * version of the file
-   */
-  version: number;
-
-  /**
-   * chunks
-   */
-  chunks?: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
-
-  /**
-   * last error
+   * Last error message if processing failed
    */
   last_error?: unknown;
 
   /**
-   * metadata
+   * Optional file metadata
    */
   metadata?: unknown;
 
   /**
-   * status of the file
+   * Type of the object
    */
-  status?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
+  object?: 'vector_store.file';
+
+  /**
+   * Processing status of the file
+   */
+  status?: string;
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Version number of the file
+   */
+  version?: number | null;
 }
 
 /**
@@ -182,14 +189,6 @@ export interface VectorStoreFile {
    * ID of the containing vector store
    */
   vector_store_id: string;
-
-  /**
-   * A model representing a file object in the system.
-   *
-   * This model contains metadata about files stored in the system, including
-   * identifiers, size information, and timestamps.
-   */
-  file_object?: FilesAPI.FileObject | null;
 
   /**
    * Last error message if processing failed
