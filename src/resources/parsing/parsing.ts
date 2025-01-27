@@ -3,8 +3,8 @@
 import { APIResource } from '../../resource';
 import * as JobsAPI from './jobs';
 import {
-  JobCancelResponse,
   JobCreateParams,
+  JobDeleteResponse,
   JobListParams,
   JobListResponse,
   JobListResponsesLimitOffset,
@@ -24,7 +24,7 @@ export declare namespace Parsing {
     Jobs as Jobs,
     type ParsingJob as ParsingJob,
     type JobListResponse as JobListResponse,
-    type JobCancelResponse as JobCancelResponse,
+    type JobDeleteResponse as JobDeleteResponse,
     JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,

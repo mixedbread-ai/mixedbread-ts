@@ -5,7 +5,7 @@ export {
   Jobs,
   type ParsingJob,
   type JobListResponse,
-  type JobCancelResponse,
+  type JobDeleteResponse,
   type JobCreateParams,
   type JobListParams,
 } from './jobs';
