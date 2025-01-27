@@ -138,7 +138,7 @@ export interface ExpiresAfter {
   /**
    * Anchor date for the expiration policy
    */
-  anchor?: 'last_used_at';
+  anchor?: 'last_active_at';
 
   /**
    * Number of days after which the vector store expires
@@ -153,7 +153,12 @@ export interface FileCounts {
   /**
    * Number of files whose processing was canceled
    */
-  canceled?: number;
+  cancelled?: number;
+
+  /**
+   * Number of successfully processed files
+   */
+  completed?: number;
 
   /**
    * Number of files that failed processing
@@ -164,11 +169,6 @@ export interface FileCounts {
    * Number of files currently being processed
    */
   in_progress?: number;
-
-  /**
-   * Number of successfully processed files
-   */
-  successful?: number;
 
   /**
    * Total number of files
@@ -323,6 +323,11 @@ export interface VectorStore {
    * Type of the object
    */
   object?: 'vector_store';
+
+  /**
+   * Processing status of the vector store
+   */
+  status?: 'expired' | 'in_progress' | 'completed';
 }
 
 /**
