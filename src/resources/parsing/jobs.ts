@@ -57,8 +57,19 @@ export class Jobs extends APIResource {
    *
    * Returns: The deleted parsing job.
    */
-  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobCancelResponse> {
+  delete(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobDeleteResponse> {
     return this._client.delete(`/v1/parsing/jobs/${jobId}`, options);
+  }
+
+  /**
+   * Cancel a specific parse job.
+   *
+   * Args: job_id: The ID of the parse job to cancel.
+   *
+   * Returns: The cancelled parsing job.
+   */
+  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
+    return this._client.patch(`/v1/parsing/jobs/${jobId}`, options);
   }
 }
 
@@ -266,7 +277,7 @@ export interface JobListResponse {
 /**
  * A deleted parsing job.
  */
-export interface JobCancelResponse {
+export interface JobDeleteResponse {
   /**
    * The ID of the deleted job
    */
@@ -325,7 +336,7 @@ export declare namespace Jobs {
   export {
     type ParsingJob as ParsingJob,
     type JobListResponse as JobListResponse,
-    type JobCancelResponse as JobCancelResponse,
+    type JobDeleteResponse as JobDeleteResponse,
     JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
