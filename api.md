@@ -44,14 +44,15 @@ Types:
 
 - <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">JobCancelResponse</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
 - <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
 - <code title="get /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">list</a>({ ...params }) -> JobListResponsesLimitOffset</code>
-- <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobId) -> JobCancelResponse</code>
+- <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">delete</a>(jobId) -> JobDeleteResponse</code>
+- <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobId) -> ParsingJob</code>
 
 # Files
 
