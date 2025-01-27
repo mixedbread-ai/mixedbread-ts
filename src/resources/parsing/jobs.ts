@@ -38,31 +38,31 @@ export class Jobs extends APIResource {
   list(
     query?: JobListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob>;
-  list(options?: Core.RequestOptions): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob>;
+  ): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse>;
   list(
     query: JobListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ParsingJobsLimitOffset, ParsingJob> {
+  ): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse> {
     if (isRequestOptions(query)) {
       return this.list({}, query);
     }
-    return this._client.getAPIList('/v1/parsing/jobs', ParsingJobsLimitOffset, { query, ...options });
+    return this._client.getAPIList('/v1/parsing/jobs', JobListResponsesLimitOffset, { query, ...options });
   }
 
   /**
-   * Cancel a specific parse job.
+   * Delete a specific parse job.
    *
-   * Args: job_id: The ID of the parse job to cancel.
+   * Args: job_id: The ID of the parse job to delete.
    *
-   * Returns: The cancelled parsing job.
+   * Returns: The deleted parsing job.
    */
-  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
+  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobCancelResponse> {
     return this._client.delete(`/v1/parsing/jobs/${jobId}`, options);
   }
 }
 
-export class ParsingJobsLimitOffset extends LimitOffset<ParsingJob> {}
+export class JobListResponsesLimitOffset extends LimitOffset<JobListResponse> {}
 
 /**
  * A job for parsing documents with its current state and result.
@@ -76,7 +76,7 @@ export interface ParsingJob {
   /**
    * The status of the job
    */
-  status: 'PENDING' | 'RUNNING' | 'CANCELLED' | 'FAILED' | 'SUCCESSFUL';
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * The creation time of the job
@@ -86,7 +86,7 @@ export interface ParsingJob {
   /**
    * The error of the job
    */
-  error?: string | null;
+  error?: unknown;
 
   /**
    * The finished time of the job
@@ -223,6 +223,66 @@ export namespace ParsingJob {
   }
 }
 
+/**
+ * A parsing job item for list responses, omitting result and error fields.
+ */
+export interface JobListResponse {
+  /**
+   * The ID of the job
+   */
+  id: string;
+
+  /**
+   * The status of the job
+   */
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
+
+  /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
+
+  /**
+   * The started time of the job
+   */
+  started_at?: string | null;
+
+  /**
+   * The updated time of the job
+   */
+  updated_at?: string | null;
+}
+
+/**
+ * A deleted parsing job.
+ */
+export interface JobCancelResponse {
+  /**
+   * The ID of the deleted job
+   */
+  id: string;
+
+  /**
+   * Whether the job was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
+}
+
 export interface JobCreateParams {
   /**
    * The ID of the file to parse
@@ -259,12 +319,14 @@ export interface JobCreateParams {
 
 export interface JobListParams extends LimitOffsetParams {}
 
-Jobs.ParsingJobsLimitOffset = ParsingJobsLimitOffset;
+Jobs.JobListResponsesLimitOffset = JobListResponsesLimitOffset;
 
 export declare namespace Jobs {
   export {
     type ParsingJob as ParsingJob,
-    ParsingJobsLimitOffset as ParsingJobsLimitOffset,
+    type JobListResponse as JobListResponse,
+    type JobCancelResponse as JobCancelResponse,
+    JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };
