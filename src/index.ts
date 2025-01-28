@@ -9,13 +9,6 @@ import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import { InfoResponse } from './resources/top-level';
-import { CompletionCreateResponse, Completions } from './resources/completions';
-import {
-  Embedding,
-  EmbeddingCreateParams,
-  EmbeddingCreateResponse,
-  Embeddings,
-} from './resources/embeddings';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -25,8 +18,6 @@ import {
   FileUpdateParams,
   Files,
 } from './resources/files';
-import { Reranking, RerankingCreateParams, RerankingCreateResponse } from './resources/reranking';
-import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
@@ -182,13 +173,9 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  embeddings: API.Embeddings = new API.Embeddings(this);
-  reranking: API.Reranking = new API.Reranking(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
-  completions: API.Completions = new API.Completions(this);
-  extractions: API.Extractions = new API.Extractions(this);
 
   /**
    * Returns service information, including name and version.
@@ -235,15 +222,11 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-Mixedbread.Embeddings = Embeddings;
-Mixedbread.Reranking = Reranking;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
-Mixedbread.Completions = Completions;
-Mixedbread.Extractions = Extractions;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -251,19 +234,6 @@ export declare namespace Mixedbread {
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
   export { type InfoResponse as InfoResponse };
-
-  export {
-    Embeddings as Embeddings,
-    type Embedding as Embedding,
-    type EmbeddingCreateResponse as EmbeddingCreateResponse,
-    type EmbeddingCreateParams as EmbeddingCreateParams,
-  };
-
-  export {
-    Reranking as Reranking,
-    type RerankingCreateResponse as RerankingCreateResponse,
-    type RerankingCreateParams as RerankingCreateParams,
-  };
 
   export { Parsing as Parsing };
 
@@ -294,10 +264,6 @@ export declare namespace Mixedbread {
     type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
-
-  export { Completions as Completions, type CompletionCreateResponse as CompletionCreateResponse };
-
-  export { Extractions as Extractions };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
