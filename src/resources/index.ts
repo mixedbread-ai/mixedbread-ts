@@ -1,14 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export * from './shared';
-export { Completions, type CompletionCreateResponse } from './completions';
-export {
-  Embeddings,
-  type Embedding,
-  type EmbeddingCreateResponse,
-  type EmbeddingCreateParams,
-} from './embeddings';
-export { Extractions } from './extractions/extractions';
 export {
   FileObjectsLimitOffset,
   Files,
@@ -19,7 +11,6 @@ export {
   type FileListParams,
 } from './files';
 export { Parsing } from './parsing/parsing';
-export { Reranking, type RerankingCreateResponse, type RerankingCreateParams } from './reranking';
 export {
   VectorStoresLimitOffset,
   VectorStores,
