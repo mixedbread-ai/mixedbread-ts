@@ -79,7 +79,7 @@ describe('resource files', () => {
     await expect(
       client.vectorStores.files.list(
         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        { limit: 0, offset: 0 },
+        { limit: 1000, offset: 0 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
