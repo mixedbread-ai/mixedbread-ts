@@ -23,8 +23,8 @@ describe('resource jobs', () => {
   test('create: required and optional params', async () => {
     const response = await client.parsing.jobs.create({
       file_id: 'file_id',
-      chunking_strategy: 'page',
       element_types: ['caption'],
+      chunking_strategy: 'page',
       return_format: 'html',
     });
   });

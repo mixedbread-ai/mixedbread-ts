@@ -151,6 +151,11 @@ export interface ExpiresAfter {
  */
 export interface FileCounts {
   /**
+   * Number of files currently being processed
+   */
+  in_progress?: number;
+
+  /**
    * Number of files whose processing was cancelled
    */
   cancelled?: number;
@@ -166,11 +171,6 @@ export interface FileCounts {
   failed?: number;
 
   /**
-   * Number of files currently being processed
-   */
-  in_progress?: number;
-
-  /**
    * Total number of files
    */
   total?: number;
@@ -178,34 +178,9 @@ export interface FileCounts {
 
 export interface ScoredVectorStoreChunk {
   /**
-   * file id
-   */
-  file_id: string;
-
-  /**
    * position of the chunk in a file
    */
   position: number;
-
-  /**
-   * score of the chunk
-   */
-  score: number;
-
-  /**
-   * vector store id
-   */
-  vector_store_id: string;
-
-  /**
-   * content of the chunk
-   */
-  content?: string | null;
-
-  /**
-   * file metadata
-   */
-  metadata?: unknown;
 
   /**
    * value of the chunk
@@ -216,6 +191,31 @@ export interface ScoredVectorStoreChunk {
     | ScoredVectorStoreChunk.TextInput
     | Record<string, unknown>
     | null;
+
+  /**
+   * content of the chunk
+   */
+  content?: string | null;
+
+  /**
+   * score of the chunk
+   */
+  score: number;
+
+  /**
+   * file id
+   */
+  file_id: string;
+
+  /**
+   * vector store id
+   */
+  vector_store_id: string;
+
+  /**
+   * file metadata
+   */
+  metadata?: unknown;
 }
 
 export namespace ScoredVectorStoreChunk {
@@ -224,14 +224,14 @@ export namespace ScoredVectorStoreChunk {
    */
   export interface ImageURLInput {
     /**
-     * The image input specification.
-     */
-    image: ImageURLInput.Image;
-
-    /**
      * Input type identifier
      */
     type?: 'image_url';
+
+    /**
+     * The image input specification.
+     */
+    image: ImageURLInput.Image;
   }
 
   export namespace ImageURLInput {
@@ -254,14 +254,14 @@ export namespace ScoredVectorStoreChunk {
    */
   export interface TextInput {
     /**
-     * Text content to process
-     */
-    text: string;
-
-    /**
      * Input type identifier
      */
     type?: 'text';
+
+    /**
+     * Text content to process
+     */
+    text: string;
   }
 }
 
@@ -275,19 +275,9 @@ export interface VectorStore {
   id: string;
 
   /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
    * Name of the vector store
    */
   name: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
 
   /**
    * Detailed description of the vector store's purpose and contents
@@ -295,14 +285,9 @@ export interface VectorStore {
   description?: string | null;
 
   /**
-   * Represents an expiration policy for a vector store.
+   * Additional metadata associated with the vector store
    */
-  expires_after?: ExpiresAfter | null;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
+  metadata?: unknown;
 
   /**
    * Counts of files in different states
@@ -310,24 +295,39 @@ export interface VectorStore {
   file_counts?: FileCounts;
 
   /**
-   * Timestamp when the vector store was last used
+   * Represents an expiration policy for a vector store.
    */
-  last_active_at?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Processing status of the vector store
    */
   status?: 'expired' | 'in_progress' | 'completed';
+
+  /**
+   * Timestamp when the vector store was created
+   */
+  created_at: string;
+
+  /**
+   * Timestamp when the vector store was last updated
+   */
+  updated_at: string;
+
+  /**
+   * Timestamp when the vector store was last used
+   */
+  last_active_at?: string | null;
+
+  /**
+   * Optional expiration timestamp for the vector store
+   */
+  expires_at?: string | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store';
 }
 
 /**
@@ -335,24 +335,24 @@ export interface VectorStore {
  */
 export interface VectorStoreSearchOptions {
   /**
-   * Whether to return matching text chunks
-   */
-  return_chunks?: boolean;
-
-  /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
 
   /**
-   * Whether to rewrite the query
+   * Whether to return matching text chunks
    */
-  rewrite_query?: boolean;
+  return_chunks?: boolean;
 
   /**
    * Minimum similarity score threshold
    */
   score_threshold?: number;
+
+  /**
+   * Whether to rewrite the query
+   */
+  rewrite_query?: boolean;
 }
 
 /**
@@ -379,17 +379,22 @@ export type VectorStoreQuestionAnsweringResponse = unknown;
 
 export interface VectorStoreSearchResponse {
   /**
-   * The list of scored vector store file chunks
-   */
-  data: Array<ScoredVectorStoreChunk>;
-
-  /**
    * The object type of the response
    */
   object?: 'list';
+
+  /**
+   * The list of scored vector store file chunks
+   */
+  data: Array<ScoredVectorStoreChunk>;
 }
 
 export interface VectorStoreCreateParams {
+  /**
+   * Name for the new vector store
+   */
+  name?: string | null;
+
   /**
    * Description of the vector store
    */
@@ -401,22 +406,22 @@ export interface VectorStoreCreateParams {
   expires_after?: ExpiresAfter | null;
 
   /**
-   * Optional list of file IDs
-   */
-  file_ids?: Array<string> | null;
-
-  /**
    * Optional metadata key-value pairs
    */
   metadata?: unknown;
 
   /**
-   * Name for the new vector store
+   * Optional list of file IDs
    */
-  name?: string | null;
+  file_ids?: Array<string> | null;
 }
 
 export interface VectorStoreUpdateParams {
+  /**
+   * New name for the vector store
+   */
+  name?: string | null;
+
   /**
    * New description
    */
@@ -431,20 +436,26 @@ export interface VectorStoreUpdateParams {
    * Optional metadata key-value pairs
    */
   metadata?: unknown;
-
-  /**
-   * New name for the vector store
-   */
-  name?: string | null;
 }
 
 export interface VectorStoreListParams extends LimitOffsetParams {}
 
 export interface VectorStoreQuestionAnsweringParams {
   /**
+   * Question to answer. If not provided, the question will be extracted from the
+   * passed messages.
+   */
+  query?: string;
+
+  /**
    * IDs of vector stores to search
    */
   vector_store_ids: Array<string>;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
 
   /**
    * Optional filter conditions
@@ -454,17 +465,6 @@ export interface VectorStoreQuestionAnsweringParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
-
-  /**
-   * Question answering configuration options
-   */
-  qa_options?: VectorStoreQuestionAnsweringParams.QaOptions;
-
-  /**
-   * Question to answer. If not provided, the question will be extracted from the
-   * passed messages.
-   */
-  query?: string;
 
   /**
    * Search configuration options
@@ -477,9 +477,9 @@ export interface VectorStoreQuestionAnsweringParams {
   stream?: boolean;
 
   /**
-   * Number of results to return
+   * Question answering configuration options
    */
-  top_k?: number;
+  qa_options?: VectorStoreQuestionAnsweringParams.QaOptions;
 }
 
 export namespace VectorStoreQuestionAnsweringParams {
@@ -506,6 +506,11 @@ export interface VectorStoreSearchParams {
   vector_store_ids: Array<string>;
 
   /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
    * Optional filter conditions
    */
   filters?:
@@ -518,11 +523,6 @@ export interface VectorStoreSearchParams {
    * Search configuration options
    */
   search_options?: VectorStoreSearchOptions;
-
-  /**
-   * Number of results to return
-   */
-  top_k?: number;
 }
 
 VectorStores.VectorStoresLimitOffset = VectorStoresLimitOffset;

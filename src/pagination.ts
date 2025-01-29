@@ -10,9 +10,9 @@ export interface LimitOffsetResponse<Item> {
 
 export namespace LimitOffsetResponse {
   export interface Pagination {
-    offset?: number;
-
     total?: number;
+
+    offset?: number;
   }
 }
 
@@ -68,15 +68,6 @@ export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffset
     const length = this.getPaginatedItems().length;
     const currentCount = offset + length;
 
-    const totalCount = this.pagination?.total;
-    if (!totalCount) {
-      return null;
-    }
-
-    if (currentCount < totalCount) {
-      return { params: { offset: currentCount } };
-    }
-
-    return null;
+    return { params: { offset: currentCount } };
   }
 }
