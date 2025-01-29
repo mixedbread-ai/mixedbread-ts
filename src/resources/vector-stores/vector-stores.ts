@@ -151,7 +151,7 @@ export interface ExpiresAfter {
  */
 export interface FileCounts {
   /**
-   * Number of files whose processing was canceled
+   * Number of files whose processing was cancelled
    */
   cancelled?: number;
 
