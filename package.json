@@ -2,7 +2,7 @@
   "name": "@mixedbread/sdk",
   "version": "0.1.0-alpha.5",
   "description": "The official TypeScript library for the Mixedbread API",
-  "author": "Mixedbread <support@mixedbread.ait>",
+  "author": "Mixedbread <support@mixedbread.ai>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
