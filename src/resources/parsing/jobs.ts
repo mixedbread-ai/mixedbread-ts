@@ -90,24 +90,9 @@ export interface ParsingJob {
   status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
-   * The creation time of the job
-   */
-  created_at?: string;
-
-  /**
    * The error of the job
    */
   error?: unknown;
-
-  /**
-   * The finished time of the job
-   */
-  finished_at?: string | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'parsing_job';
 
   /**
    * Result of document parsing operation.
@@ -120,9 +105,24 @@ export interface ParsingJob {
   started_at?: string | null;
 
   /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
+
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
+
+  /**
    * The updated time of the job
    */
   updated_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
 }
 
 export namespace ParsingJob {
@@ -136,9 +136,9 @@ export namespace ParsingJob {
     chunking_strategy: 'page';
 
     /**
-     * List of extracted chunks from the document
+     * The format of the returned content
      */
-    chunks: Array<Result.Chunk>;
+    return_format: 'html' | 'markdown' | 'plain';
 
     /**
      * The types of elements extracted
@@ -158,9 +158,9 @@ export namespace ParsingJob {
     >;
 
     /**
-     * The format of the returned content
+     * List of extracted chunks from the document
      */
-    return_format: 'html' | 'markdown' | 'plain';
+    chunks: Array<Result.Chunk>;
   }
 
   export namespace Result {
@@ -190,26 +190,6 @@ export namespace ParsingJob {
        */
       export interface Element {
         /**
-         * The bounding box coordinates [x1, y1, x2, y2]
-         */
-        bbox: Array<unknown>;
-
-        /**
-         * The confidence score of the extraction
-         */
-        confidence: number;
-
-        /**
-         * The full content of the extracted element
-         */
-        content: string;
-
-        /**
-         * The page number where the element was found
-         */
-        page: number;
-
-        /**
          * The type of the extracted element
          */
         type:
@@ -224,6 +204,26 @@ export namespace ParsingJob {
           | 'table'
           | 'text'
           | 'title';
+
+        /**
+         * The confidence score of the extraction
+         */
+        confidence: number;
+
+        /**
+         * The bounding box coordinates [x1, y1, x2, y2]
+         */
+        bbox: Array<unknown>;
+
+        /**
+         * The page number where the element was found
+         */
+        page: number;
+
+        /**
+         * The full content of the extracted element
+         */
+        content: string;
 
         /**
          * A brief summary of the element's content
@@ -249,9 +249,9 @@ export interface JobListResponse {
   status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
-   * The creation time of the job
+   * The started time of the job
    */
-  created_at?: string;
+  started_at?: string | null;
 
   /**
    * The finished time of the job
@@ -259,19 +259,19 @@ export interface JobListResponse {
   finished_at?: string | null;
 
   /**
-   * The type of the object
+   * The creation time of the job
    */
-  object?: 'parsing_job';
-
-  /**
-   * The started time of the job
-   */
-  started_at?: string | null;
+  created_at?: string;
 
   /**
    * The updated time of the job
    */
   updated_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
 }
 
 /**
@@ -301,11 +301,6 @@ export interface JobCreateParams {
   file_id: string;
 
   /**
-   * The strategy to use for chunking the content
-   */
-  chunking_strategy?: 'page';
-
-  /**
    * The elements to extract from the document
    */
   element_types?: Array<
@@ -321,6 +316,11 @@ export interface JobCreateParams {
     | 'text'
     | 'title'
   > | null;
+
+  /**
+   * The strategy to use for chunking the content
+   */
+  chunking_strategy?: 'page';
 
   /**
    * The format of the returned content

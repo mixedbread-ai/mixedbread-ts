@@ -25,8 +25,8 @@ describe('resource files', () => {
   test('create: required and optional params', async () => {
     const response = await client.vectorStores.files.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
       file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      experimental: { parsing_strategy: 'fast' },
       metadata: {},
+      experimental: { parsing_strategy: 'fast' },
     });
   });
 
@@ -129,22 +129,22 @@ describe('resource files', () => {
     const response = await client.vectorStores.files.search({
       query: 'how to configure SSL',
       vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+      top_k: 1,
       filters: {
         all: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
+          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
         any: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
+          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
         none: [
-          { key: 'price', operator: 'eq', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
+          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
-      search_options: { return_chunks: true, return_metadata: true, rewrite_query: true, score_threshold: 0 },
-      top_k: 1,
+      search_options: { return_metadata: true, return_chunks: true, score_threshold: 0, rewrite_query: true },
     });
   });
 });

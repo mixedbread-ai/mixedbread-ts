@@ -30,12 +30,12 @@ export interface SearchFilterCondition {
   key: string;
 
   /**
-   * The operator for the condition
-   */
-  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
-
-  /**
    * The value to compare against
    */
   value: unknown;
+
+  /**
+   * The operator for the condition
+   */
+  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
 }
