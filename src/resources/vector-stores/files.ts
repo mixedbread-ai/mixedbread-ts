@@ -260,26 +260,9 @@ export interface FileCreateParams {
   file_id: string;
 
   /**
-   * Strategy for adding the file
-   */
-  experimental?: FileCreateParams.Experimental;
-
-  /**
    * Optional metadata for the file
    */
   metadata?: unknown;
-}
-
-export namespace FileCreateParams {
-  /**
-   * Strategy for adding the file
-   */
-  export interface Experimental {
-    /**
-     * Strategy for adding the file
-     */
-    parsing_strategy?: 'fast' | 'high_quality';
-  }
 }
 
 export interface FileListParams extends LimitOffsetParams {}
