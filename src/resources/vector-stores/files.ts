@@ -121,39 +121,9 @@ export interface ScoredVectorStoreFile {
   id: string;
 
   /**
-   * chunks
-   */
-  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk>;
-
-  /**
-   * Timestamp of vector store file creation
-   */
-  created_at: string;
-
-  /**
-   * score of the file
-   */
-  score: number;
-
-  /**
-   * ID of the containing vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * Last error message if processing failed
-   */
-  last_error?: unknown;
-
-  /**
    * Optional file metadata
    */
   metadata?: unknown;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store.file';
 
   /**
    * Processing status of the file
@@ -161,14 +131,44 @@ export interface ScoredVectorStoreFile {
   status?: string;
 
   /**
-   * Storage usage in bytes
+   * Last error message if processing failed
    */
-  usage_bytes?: number | null;
+  last_error?: unknown;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
 
   /**
    * Version number of the file
    */
   version?: number | null;
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
+
+  /**
+   * score of the file
+   */
+  score: number;
+
+  /**
+   * chunks
+   */
+  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk>;
 }
 
 /**
@@ -181,29 +181,9 @@ export interface VectorStoreFile {
   id: string;
 
   /**
-   * Timestamp of vector store file creation
-   */
-  created_at: string;
-
-  /**
-   * ID of the containing vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * Last error message if processing failed
-   */
-  last_error?: unknown;
-
-  /**
    * Optional file metadata
    */
   metadata?: unknown;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store.file';
 
   /**
    * Processing status of the file
@@ -211,14 +191,34 @@ export interface VectorStoreFile {
   status?: string;
 
   /**
-   * Storage usage in bytes
+   * Last error message if processing failed
    */
-  usage_bytes?: number | null;
+  last_error?: unknown;
+
+  /**
+   * ID of the containing vector store
+   */
+  vector_store_id: string;
+
+  /**
+   * Timestamp of vector store file creation
+   */
+  created_at: string;
 
   /**
    * Version number of the file
    */
   version?: number | null;
+
+  /**
+   * Storage usage in bytes
+   */
+  usage_bytes?: number | null;
+
+  /**
+   * Type of the object
+   */
+  object?: 'vector_store.file';
 }
 
 /**
@@ -243,14 +243,14 @@ export interface FileDeleteResponse {
 
 export interface FileSearchResponse {
   /**
-   * The list of scored vector store files
-   */
-  data: Array<ScoredVectorStoreFile>;
-
-  /**
    * The object type of the response
    */
   object?: 'list';
+
+  /**
+   * The list of scored vector store files
+   */
+  data: Array<ScoredVectorStoreFile>;
 }
 
 export interface FileCreateParams {
@@ -260,14 +260,14 @@ export interface FileCreateParams {
   file_id: string;
 
   /**
-   * Strategy for adding the file
-   */
-  experimental?: FileCreateParams.Experimental;
-
-  /**
    * Optional metadata for the file
    */
   metadata?: unknown;
+
+  /**
+   * Strategy for adding the file
+   */
+  experimental?: FileCreateParams.Experimental;
 }
 
 export namespace FileCreateParams {
@@ -296,6 +296,11 @@ export interface FileSearchParams {
   vector_store_ids: Array<string>;
 
   /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
    * Optional filter conditions
    */
   filters?:
@@ -308,11 +313,6 @@ export interface FileSearchParams {
    * Search configuration options
    */
   search_options?: VectorStoresAPI.VectorStoreSearchOptions;
-
-  /**
-   * Number of results to return
-   */
-  top_k?: number;
 }
 
 Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;

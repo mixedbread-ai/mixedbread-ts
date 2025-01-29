@@ -104,19 +104,14 @@ export interface FileObject {
   id: string;
 
   /**
-   * Size of the file in bytes
-   */
-  bytes: number;
-
-  /**
-   * Timestamp when the file was created
-   */
-  created_at: string;
-
-  /**
    * Name of the file including extension
    */
   filename: string;
+
+  /**
+   * Size of the file in bytes
+   */
+  bytes: number;
 
   /**
    * MIME type of the file
@@ -124,14 +119,19 @@ export interface FileObject {
   mime_type: string;
 
   /**
-   * Timestamp when the file was last updated
-   */
-  updated_at: string;
-
-  /**
    * Version of the file
    */
   version: number;
+
+  /**
+   * Timestamp when the file was created
+   */
+  created_at: string;
+
+  /**
+   * Timestamp when the file was last updated
+   */
+  updated_at: string;
 }
 
 export interface FileDeleteResponse {
