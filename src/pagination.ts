@@ -68,6 +68,15 @@ export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffset
     const length = this.getPaginatedItems().length;
     const currentCount = offset + length;
 
-    return { params: { offset: currentCount } };
+    const totalCount = this.pagination?.total;
+    if (!totalCount) {
+      return null;
+    }
+
+    if (currentCount < totalCount) {
+      return { params: { offset: currentCount } };
+    }
+
+    return null;
   }
 }
