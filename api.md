@@ -88,3 +88,40 @@ Methods:
 - <code title="get /v1/vector_stores/{vector_store_id}/files">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">list</a>(vectorStoreId, { ...params }) -> VectorStoreFilesLimitOffset</code>
 - <code title="delete /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">delete</a>(vectorStoreId, fileId) -> FileDeleteResponse</code>
 - <code title="post /v1/vector_stores/files/search">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
+
+# Extractions
+
+## Jobs
+
+Types:
+
+- <code><a href="./src/resources/extractions/jobs.ts">ExtractionJob</a></code>
+
+Methods:
+
+- <code title="post /v1/extractions/jobs">client.extractions.jobs.<a href="./src/resources/extractions/jobs.ts">create</a>({ ...params }) -> ExtractionJob</code>
+- <code title="get /v1/extractions/jobs/{job_id}">client.extractions.jobs.<a href="./src/resources/extractions/jobs.ts">retrieve</a>(jobId) -> ExtractionJob</code>
+
+## Schema
+
+Types:
+
+- <code><a href="./src/resources/extractions/schema.ts">CreatedJsonSchema</a></code>
+- <code><a href="./src/resources/extractions/schema.ts">EnhancedJsonSchema</a></code>
+- <code><a href="./src/resources/extractions/schema.ts">ValidatedJsonSchema</a></code>
+
+Methods:
+
+- <code title="post /v1/extractions/schema">client.extractions.schema.<a href="./src/resources/extractions/schema.ts">create</a>({ ...params }) -> CreatedJsonSchema</code>
+- <code title="post /v1/extractions/schema/enhance">client.extractions.schema.<a href="./src/resources/extractions/schema.ts">enhance</a>({ ...params }) -> EnhancedJsonSchema</code>
+- <code title="post /v1/extractions/schema/validate">client.extractions.schema.<a href="./src/resources/extractions/schema.ts">validate</a>({ ...params }) -> ValidatedJsonSchema</code>
+
+## Content
+
+Types:
+
+- <code><a href="./src/resources/extractions/content.ts">ExtractionResult</a></code>
+
+Methods:
+
+- <code title="post /v1/extractions/content">client.extractions.content.<a href="./src/resources/extractions/content.ts">create</a>({ ...params }) -> ExtractionResult</code>
