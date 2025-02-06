@@ -18,6 +18,7 @@ import {
   FileUpdateParams,
   Files,
 } from './resources/files';
+import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
@@ -176,6 +177,7 @@ export class Mixedbread extends Core.APIClient {
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
+  extractions: API.Extractions = new API.Extractions(this);
 
   /**
    * Returns service information, including name and version.
@@ -227,6 +229,7 @@ Mixedbread.Files = Files;
 Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
+Mixedbread.Extractions = Extractions;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -264,6 +267,8 @@ export declare namespace Mixedbread {
     type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
+
+  export { Extractions as Extractions };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
