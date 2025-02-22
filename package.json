@@ -1,6 +1,6 @@
 {
   "name": "@mixedbread/sdk",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "description": "The official TypeScript library for the Mixedbread API",
   "author": "Mixedbread <support@mixedbread.ai>",
   "types": "dist/index.d.ts",
@@ -106,17 +106,38 @@
       "default": "./dist/index.mjs"
     },
     "./*.mjs": {
-      "types": ["./dist/*.d.ts", "./dist/*/index.d.ts"],
-      "default": ["./dist/*.mjs", "./dist/*/index.mjs"]
+      "types": [
+        "./dist/*.d.ts",
+        "./dist/*/index.d.ts"
+      ],
+      "default": [
+        "./dist/*.mjs",
+        "./dist/*/index.mjs"
+      ]
     },
     "./*.js": {
-      "types": ["./dist/*.d.ts", "./dist/*/index.d.ts"],
-      "default": ["./dist/*.js", "./dist/*/index.js"]
+      "types": [
+        "./dist/*.d.ts",
+        "./dist/*/index.d.ts"
+      ],
+      "default": [
+        "./dist/*.js",
+        "./dist/*/index.js"
+      ]
     },
     "./*": {
-      "types": ["./dist/*.d.ts", "./dist/*/index.d.ts"],
-      "require": ["./dist/*.js", "./dist/*/index.js"],
-      "default": ["./dist/*.mjs", "./dist/*/index.mjs"]
+      "types": [
+        "./dist/*.d.ts",
+        "./dist/*/index.d.ts"
+      ],
+      "require": [
+        "./dist/*.js",
+        "./dist/*/index.js"
+      ],
+      "default": [
+        "./dist/*.mjs",
+        "./dist/*/index.mjs"
+      ]
     }
   }
 }
