@@ -6,7 +6,7 @@ This library provides convenient access to the Mixedbread REST API from server-s
 
 The REST API documentation can be found on [mixedbread.ai](https://mixedbread.ai/docs). The full API of this library can be found in [api.md](api.md).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
@@ -15,7 +15,7 @@ npm install git+ssh://git@github.com:mixedbread-ai/mixedbread-ts.git
 ```
 
 > [!NOTE]
-> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install @mixedbread/sdk`
+> Once this package is [published to npm](https://app.stainless.com/docs/guides/publish), this will become: `npm install @mixedbread/sdk`
 
 ## Usage
 
