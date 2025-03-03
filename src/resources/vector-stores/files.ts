@@ -6,6 +6,8 @@ import * as Core from '../../core';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { LimitOffset, type LimitOffsetParams } from '../../pagination';
+import * as polling from '../../lib/polling';
+import { Uploadable } from '../../uploads';
 
 export class Files extends APIResource {
   /**
@@ -106,6 +108,103 @@ export class Files extends APIResource {
    */
   search(body: FileSearchParams, options?: Core.RequestOptions): Core.APIPromise<FileSearchResponse> {
     return this._client.post('/v1/vector_stores/files/search', { body, ...options });
+  }
+
+  /**
+   * Poll for a file's processing status until it reaches a terminal state.
+   * 
+   * @param vectorStoreId - The ID of the vector store
+   * @param fileId - The ID of the file to poll
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The file object once it reaches a terminal state
+   */
+  async poll(
+    vectorStoreId: string,
+    fileId: string,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<VectorStoreFile> {
+    const pollingIntervalMs = pollIntervalMs || 500;
+    const pollingTimeoutMs = pollTimeoutMs;
+    
+    return polling.poll(
+      () => this.retrieve(vectorStoreId, fileId, options),
+      (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'error',
+      undefined,
+      pollingTimeoutMs ? pollingTimeoutMs / 1000 : undefined,
+      pollingIntervalMs / 1000,
+    );
+  }
+
+  /**
+   * Create a file in a vector store and wait for it to be processed.
+   * 
+   * @param vectorStoreId - The ID of the vector store to upload to
+   * @param body - The file creation parameters
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The file object once it reaches a terminal state
+   */
+  async createAndPoll(
+    vectorStoreId: string,
+    body: FileCreateParams,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<VectorStoreFile> {
+    const file = await this.create(vectorStoreId, body, options);
+    return this.poll(vectorStoreId, file.id, pollIntervalMs, pollTimeoutMs, options);
+  }
+
+  /**
+   * Upload a file to the files API and then create a file in a vector store.
+   * Note the file will be asynchronously processed.
+   * 
+   * @param vectorStoreId - The ID of the vector store to add the file to
+   * @param file - The file to upload
+   * @param body - Additional parameters for the vector store file
+   * @param options - Additional request options
+   * @returns The created vector store file
+   */
+  async upload(
+    vectorStoreId: string,
+    file: Uploadable,
+    body?: Omit<FileCreateParams, 'file_id'>,
+    options?: Core.RequestOptions,
+  ): Promise<VectorStoreFile> {
+    const fileUploadResponse = await this._client.files.create({ file }, options);
+    
+    return this.create(vectorStoreId, {
+      file_id: fileUploadResponse.id,
+      ...body,
+    }, options);
+  }
+
+  /**
+   * Upload a file to files API, create a file in a vector store, and poll until processing is complete.
+   * 
+   * @param vectorStoreId - The ID of the vector store to add the file to
+   * @param file - The file to upload
+   * @param body - Additional parameters for the vector store file
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The vector store file object once it reaches a terminal state
+   */
+  async uploadAndPoll(
+    vectorStoreId: string,
+    file: Uploadable,
+    body?: Omit<FileCreateParams, 'file_id'>,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<VectorStoreFile> {
+    const vectorStoreFile = await this.upload(vectorStoreId, file, body, options);
+    return this.poll(vectorStoreId, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
 
