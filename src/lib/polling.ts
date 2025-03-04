@@ -11,28 +11,55 @@ type RetryCallback<T> = (result: T, attempt: number) => void;
 declare const setTimeout: (callback: (...args: any[]) => void, ms: number) => any;
 
 /**
+ * Configuration options for the poll function.
+ */
+export interface PollOptions<T> {
+  /** Async function that performs the operation to be polled */
+  fn: () => Promise<T>;
+  /** Function that evaluates if the polling should continue */
+  condition: ConditionFunction<T>;
+  /** Maximum number of polling attempts (undefined for infinite) */
+  maxAttempts?: number;
+  /** Maximum total time to poll in seconds (undefined for infinite) */
+  timeoutSeconds?: number;
+  /** Time between polls in seconds, or function that returns interval */
+  intervalSeconds?: number | IntervalFunction<T>;
+  /** Optional callback for each retry attempt */
+  onRetry?: RetryCallback<T>;
+  /** Optional callback for handling exceptions during polling */
+  errorHandler?: ErrorHandlerFunction;
+}
+
+/**
  * Asynchronously polls an operation until a condition is met or timeout/max attempts are reached.
  *
- * @param fn - Async function that performs the operation to be polled
- * @param condition - Function that evaluates if the polling should continue
- * @param maxAttempts - Maximum number of polling attempts (undefined for infinite)
- * @param timeoutSeconds - Maximum total time to poll in seconds (undefined for infinite)
- * @param intervalSeconds - Time between polls in seconds, or function that returns interval
- * @param onRetry - Optional callback for each retry attempt
- * @param errorHandler - Optional callback for handling exceptions during polling
+ * @param options - Configuration options for polling
  * @returns The result of the operation once condition is met
  * @throws Error if maxAttempts is reached
  * @throws Error if timeoutSeconds is reached
+ * 
+ * @example
+ * ```typescript
+ * const result = await poll({
+ *   fn: () => fetchData(),
+ *   condition: (result) => result.status === 'completed',
+ *   maxAttempts: 5,
+ *   timeoutSeconds: 60,
+ *   intervalSeconds: 2
+ * });
+ * ```
  */
-export async function poll<T>(
-  fn: () => Promise<T>,
-  condition: ConditionFunction<T>,
-  maxAttempts?: number,
-  timeoutSeconds?: number,
-  intervalSeconds: number | IntervalFunction<T> = 1.0,
-  onRetry?: RetryCallback<T>,
-  errorHandler?: ErrorHandlerFunction
-): Promise<T> {
+export async function poll<T>(options: PollOptions<T>): Promise<T> {
+  const {
+    fn,
+    condition,
+    maxAttempts,
+    timeoutSeconds,
+    intervalSeconds = 1.0,
+    onRetry,
+    errorHandler
+  } = options;
+
   const startTime = new Date();
   let attempt = 0;
 

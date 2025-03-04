@@ -92,13 +92,12 @@ export class Jobs extends APIResource {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
     
-    return polling.poll(
-      () => this.retrieve(jobId, options),
-      (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
-      undefined,
-      pollingTimeoutMs ? pollingTimeoutMs / 1000 : undefined,
-      pollingIntervalMs / 1000,
-    );
+    return polling.poll({
+      fn: () => this.retrieve(jobId, options),
+      condition: (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
+      intervalSeconds: pollingIntervalMs / 1000,
+      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 })
+    });
   }
 
   /**

@@ -130,13 +130,12 @@ export class Files extends APIResource {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
     
-    return polling.poll(
-      () => this.retrieve(vectorStoreId, fileId, options),
-      (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'error',
-      undefined,
-      pollingTimeoutMs ? pollingTimeoutMs / 1000 : undefined,
-      pollingIntervalMs / 1000,
-    );
+    return polling.poll({
+      fn: () => this.retrieve(vectorStoreId, fileId, options),
+      condition: (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'error',
+      intervalSeconds: pollingIntervalMs / 1000,
+      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 })
+    });
   }
 
   /**
