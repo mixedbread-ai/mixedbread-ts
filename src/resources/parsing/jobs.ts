@@ -4,6 +4,8 @@ import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import { LimitOffset, type LimitOffsetParams } from '../../pagination';
+import * as polling from '../../lib/polling';
+import { Uploadable } from '../../uploads';
 
 export class Jobs extends APIResource {
   /**
@@ -70,6 +72,98 @@ export class Jobs extends APIResource {
    */
   cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
     return this._client.patch(`/v1/parsing/jobs/${jobId}`, options);
+  }
+
+  /**
+   * Poll for a job's status until it reaches a terminal state.
+   *
+   * @param jobId - The ID of the job to poll
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The job object once it reaches a terminal state
+   */
+  async poll(
+    jobId: string,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<ParsingJob> {
+    const pollingIntervalMs = pollIntervalMs || 500;
+    const pollingTimeoutMs = pollTimeoutMs;
+
+    return polling.poll({
+      fn: () => this.retrieve(jobId, options),
+      condition: (result) =>
+        result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
+      intervalSeconds: pollingIntervalMs / 1000,
+      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
+    });
+  }
+
+  /**
+   * Create a parsing job and wait for it to complete.
+   *
+   * @param body - Parameters for creating a parse job
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The job object once it reaches a terminal state
+   */
+  async createAndPoll(
+    body: JobCreateParams,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<ParsingJob> {
+    const job = await this.create(body, options);
+    return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
+  }
+
+  /**
+   * Upload a file to the files API and then create a parsing job for it.
+   * Note the job will be asynchronously processed.
+   *
+   * @param file - The file to upload
+   * @param body - Additional parameters for creating a parse job
+   * @param options - Additional request options
+   * @returns The created parsing job
+   */
+  async upload(
+    file: Uploadable,
+    body?: Omit<JobCreateParams, 'file_id'>,
+    options?: Core.RequestOptions,
+  ): Promise<ParsingJob> {
+    const fileUploadResponse = await this._client.files.create({ file }, options);
+
+    return this.create(
+      {
+        file_id: fileUploadResponse.id,
+        ...body,
+      },
+      options,
+    );
+  }
+
+  /**
+   * Upload a file and create a parsing job, then poll until processing is complete.
+   *
+   * @param file - The file to upload
+   * @param body - Additional parameters for creating a parse job
+   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
+   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
+   * @param options - Additional request options
+   * @returns The job object once it reaches a terminal state
+   */
+  async uploadAndPoll(
+    file: Uploadable,
+    body?: Omit<JobCreateParams, 'file_id'>,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: Core.RequestOptions,
+  ): Promise<ParsingJob> {
+    const job = await this.upload(file, body, options);
+    return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
 
