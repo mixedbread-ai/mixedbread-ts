@@ -76,7 +76,7 @@ export class Jobs extends APIResource {
 
   /**
    * Poll for a job's status until it reaches a terminal state.
-   * 
+   *
    * @param jobId - The ID of the job to poll
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
    * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
@@ -91,18 +91,19 @@ export class Jobs extends APIResource {
   ): Promise<ParsingJob> {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
-    
+
     return polling.poll({
       fn: () => this.retrieve(jobId, options),
-      condition: (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
+      condition: (result) =>
+        result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
-      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 })
+      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
     });
   }
 
   /**
    * Create a parsing job and wait for it to complete.
-   * 
+   *
    * @param body - Parameters for creating a parse job
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
    * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
@@ -122,7 +123,7 @@ export class Jobs extends APIResource {
   /**
    * Upload a file to the files API and then create a parsing job for it.
    * Note the job will be asynchronously processed.
-   * 
+   *
    * @param file - The file to upload
    * @param body - Additional parameters for creating a parse job
    * @param options - Additional request options
@@ -134,16 +135,19 @@ export class Jobs extends APIResource {
     options?: Core.RequestOptions,
   ): Promise<ParsingJob> {
     const fileUploadResponse = await this._client.files.create({ file }, options);
-    
-    return this.create({
-      file_id: fileUploadResponse.id,
-      ...body,
-    }, options);
+
+    return this.create(
+      {
+        file_id: fileUploadResponse.id,
+        ...body,
+      },
+      options,
+    );
   }
 
   /**
    * Upload a file and create a parsing job, then poll until processing is complete.
-   * 
+   *
    * @param file - The file to upload
    * @param body - Additional parameters for creating a parse job
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)

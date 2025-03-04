@@ -112,7 +112,7 @@ export class Files extends APIResource {
 
   /**
    * Poll for a file's processing status until it reaches a terminal state.
-   * 
+   *
    * @param vectorStoreId - The ID of the vector store
    * @param fileId - The ID of the file to poll
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
@@ -129,18 +129,19 @@ export class Files extends APIResource {
   ): Promise<VectorStoreFile> {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
-    
+
     return polling.poll({
       fn: () => this.retrieve(vectorStoreId, fileId, options),
-      condition: (result) => result.status === 'completed' || result.status === 'failed' || result.status === 'error',
+      condition: (result) =>
+        result.status === 'completed' || result.status === 'failed' || result.status === 'error',
       intervalSeconds: pollingIntervalMs / 1000,
-      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 })
+      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
     });
   }
 
   /**
    * Create a file in a vector store and wait for it to be processed.
-   * 
+   *
    * @param vectorStoreId - The ID of the vector store to upload to
    * @param body - The file creation parameters
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
@@ -162,7 +163,7 @@ export class Files extends APIResource {
   /**
    * Upload a file to the files API and then create a file in a vector store.
    * Note the file will be asynchronously processed.
-   * 
+   *
    * @param vectorStoreId - The ID of the vector store to add the file to
    * @param file - The file to upload
    * @param body - Additional parameters for the vector store file
@@ -176,16 +177,20 @@ export class Files extends APIResource {
     options?: Core.RequestOptions,
   ): Promise<VectorStoreFile> {
     const fileUploadResponse = await this._client.files.create({ file }, options);
-    
-    return this.create(vectorStoreId, {
-      file_id: fileUploadResponse.id,
-      ...body,
-    }, options);
+
+    return this.create(
+      vectorStoreId,
+      {
+        file_id: fileUploadResponse.id,
+        ...body,
+      },
+      options,
+    );
   }
 
   /**
    * Upload a file to files API, create a file in a vector store, and poll until processing is complete.
-   * 
+   *
    * @param vectorStoreId - The ID of the vector store to add the file to
    * @param file - The file to upload
    * @param body - Additional parameters for the vector store file

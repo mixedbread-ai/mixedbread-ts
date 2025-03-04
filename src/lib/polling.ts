@@ -37,7 +37,7 @@ export interface PollOptions<T> {
  * @returns The result of the operation once condition is met
  * @throws Error if maxAttempts is reached
  * @throws Error if timeoutSeconds is reached
- * 
+ *
  * @example
  * ```typescript
  * const result = await poll({
@@ -57,7 +57,7 @@ export async function poll<T>(options: PollOptions<T>): Promise<T> {
     timeoutSeconds,
     intervalSeconds = 1.0,
     onRetry,
-    errorHandler
+    errorHandler,
   } = options;
 
   const startTime = new Date();
@@ -79,7 +79,7 @@ export async function poll<T>(options: PollOptions<T>): Promise<T> {
       }
 
       let waitTime: number;
-      
+
       if (typeof intervalSeconds === 'function') {
         waitTime = intervalSeconds(result);
       } else {
@@ -99,14 +99,13 @@ export async function poll<T>(options: PollOptions<T>): Promise<T> {
       }
 
       // Sleep asynchronously
-      await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
-
+      await new Promise((resolve) => setTimeout(resolve, waitTime * 1000));
     } catch (e) {
       if (errorHandler && e instanceof Error) {
         const sleepTime = errorHandler(e);
         if (sleepTime !== null) {
           // Sleep and continue
-          await new Promise(resolve => setTimeout(resolve, sleepTime * 1000));
+          await new Promise((resolve) => setTimeout(resolve, sleepTime * 1000));
           continue;
         }
       }
