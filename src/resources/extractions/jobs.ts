@@ -33,9 +33,59 @@ export class Jobs extends APIResource {
  */
 export interface ExtractionJob {
   /**
-   * Result of an extraction operation.
+   * Unique identifier for the extraction job
+   */
+  id: string;
+
+  /**
+   * ID of the organization that owns this job
+   */
+  organization_id: string;
+
+  /**
+   * ID of the file being extracted
+   */
+  file_id: string;
+
+  /**
+   * When the job was created
+   */
+  created_at: string;
+
+  /**
+   * When the job was last updated
+   */
+  updated_at: string;
+
+  /**
+   * When the job started processing
+   */
+  started_at: string | null;
+
+  /**
+   * When the job finished processing
+   */
+  finished_at: string | null;
+
+  /**
+   * Current status of the job
+   */
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
+  /**
+   * The result of an extraction job.
    */
   result: ContentAPI.ExtractionResult | null;
+
+  /**
+   * Error information if failed
+   */
+  error: unknown | null;
+
+  /**
+   * The JSON schema used for extraction
+   */
+  json_schema: unknown;
 }
 
 export interface JobCreateParams {

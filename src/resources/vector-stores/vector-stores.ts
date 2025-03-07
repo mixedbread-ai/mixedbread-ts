@@ -320,6 +320,11 @@ export interface VectorStore {
   last_active_at?: string | null;
 
   /**
+   * Total storage usage in bytes
+   */
+  usage_bytes?: number;
+
+  /**
    * Optional expiration timestamp for the vector store
    */
   expires_at?: string | null;
@@ -331,9 +336,39 @@ export interface VectorStore {
 }
 
 /**
- * Options for configuring vector store searches.
+ * Options for configuring vector store chunk searches.
  */
-export interface VectorStoreSearchOptions {
+export interface VectorStoreChunkSearchOptions {
+  /**
+   * Minimum similarity score threshold
+   */
+  score_threshold?: number;
+
+  /**
+   * Whether to rewrite the query
+   */
+  rewrite_query?: boolean;
+
+  /**
+   * Whether to return file metadata
+   */
+  return_metadata?: boolean;
+}
+
+/**
+ * Options for configuring vector store file searches.
+ */
+export interface VectorStoreFileSearchOptions {
+  /**
+   * Minimum similarity score threshold
+   */
+  score_threshold?: number;
+
+  /**
+   * Whether to rewrite the query
+   */
+  rewrite_query?: boolean;
+
   /**
    * Whether to return file metadata
    */
@@ -345,14 +380,9 @@ export interface VectorStoreSearchOptions {
   return_chunks?: boolean;
 
   /**
-   * Minimum similarity score threshold
+   * Number of chunks to return for each file
    */
-  score_threshold?: number;
-
-  /**
-   * Whether to rewrite the query
-   */
-  rewrite_query?: boolean;
+  chunks_per_file?: number;
 }
 
 /**
@@ -469,7 +499,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchOptions;
+  search_options?: VectorStoreFileSearchOptions;
 
   /**
    * Whether to stream the answer
@@ -522,7 +552,7 @@ export interface VectorStoreSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchOptions;
+  search_options?: VectorStoreChunkSearchOptions;
 }
 
 VectorStores.VectorStoresLimitOffset = VectorStoresLimitOffset;
@@ -535,7 +565,8 @@ export declare namespace VectorStores {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
-    type VectorStoreSearchOptions as VectorStoreSearchOptions,
+    type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
+    type VectorStoreFileSearchOptions as VectorStoreFileSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,

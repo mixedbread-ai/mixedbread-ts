@@ -271,7 +271,7 @@ export interface ScoredVectorStoreFile {
   /**
    * chunks
    */
-  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk>;
+  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
 }
 
 /**
@@ -415,7 +415,7 @@ export interface FileSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoresAPI.VectorStoreSearchOptions;
+  search_options?: VectorStoresAPI.VectorStoreFileSearchOptions;
 }
 
 Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
