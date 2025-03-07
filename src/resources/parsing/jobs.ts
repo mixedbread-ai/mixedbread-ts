@@ -161,6 +161,11 @@ export namespace ParsingJob {
      * List of extracted chunks from the document
      */
     chunks: Array<Result.Chunk>;
+
+    /**
+     * List of (width, height) tuples for each page
+     */
+    page_sizes?: Array<Array<unknown>>;
   }
 
   export namespace Result {

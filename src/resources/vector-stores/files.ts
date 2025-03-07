@@ -168,7 +168,7 @@ export interface ScoredVectorStoreFile {
   /**
    * chunks
    */
-  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk>;
+  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
 }
 
 /**
@@ -312,7 +312,39 @@ export interface FileSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoresAPI.VectorStoreSearchOptions;
+  search_options?: FileSearchParams.SearchOptions;
+}
+
+export namespace FileSearchParams {
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Number of chunks to return for each file
+     */
+    chunks_per_file?: number;
+  }
 }
 
 Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
