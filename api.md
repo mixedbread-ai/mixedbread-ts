@@ -57,6 +57,8 @@ Types:
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">FileCounts</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVectorStoreChunk</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreChunkSearchOptions</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreFileSearchOptions</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreQuestionAnsweringResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreSearchResponse</a></code>

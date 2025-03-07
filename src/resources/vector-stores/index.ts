@@ -18,6 +18,8 @@ export {
   type FileCounts,
   type ScoredVectorStoreChunk,
   type VectorStore,
+  type VectorStoreChunkSearchOptions,
+  type VectorStoreFileSearchOptions,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
