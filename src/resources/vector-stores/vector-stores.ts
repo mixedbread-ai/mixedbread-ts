@@ -320,6 +320,11 @@ export interface VectorStore {
   last_active_at?: string | null;
 
   /**
+   * Total storage usage in bytes
+   */
+  usage_bytes?: number;
+
+  /**
    * Optional expiration timestamp for the vector store
    */
   expires_at?: string | null;
@@ -328,31 +333,6 @@ export interface VectorStore {
    * Type of the object
    */
   object?: 'vector_store';
-}
-
-/**
- * Options for configuring vector store searches.
- */
-export interface VectorStoreSearchOptions {
-  /**
-   * Whether to return file metadata
-   */
-  return_metadata?: boolean;
-
-  /**
-   * Whether to return matching text chunks
-   */
-  return_chunks?: boolean;
-
-  /**
-   * Minimum similarity score threshold
-   */
-  score_threshold?: number;
-
-  /**
-   * Whether to rewrite the query
-   */
-  rewrite_query?: boolean;
 }
 
 /**
@@ -469,7 +449,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchOptions;
+  search_options?: VectorStoreQuestionAnsweringParams.SearchOptions;
 
   /**
    * Whether to stream the answer
@@ -483,6 +463,36 @@ export interface VectorStoreQuestionAnsweringParams {
 }
 
 export namespace VectorStoreQuestionAnsweringParams {
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Number of chunks to return for each file
+     */
+    chunks_per_file?: number;
+  }
+
   /**
    * Question answering configuration options
    */
@@ -522,7 +532,29 @@ export interface VectorStoreSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchOptions;
+  search_options?: VectorStoreSearchParams.SearchOptions;
+}
+
+export namespace VectorStoreSearchParams {
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+  }
 }
 
 VectorStores.VectorStoresLimitOffset = VectorStoresLimitOffset;
@@ -535,7 +567,6 @@ export declare namespace VectorStores {
     type FileCounts as FileCounts,
     type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
-    type VectorStoreSearchOptions as VectorStoreSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,

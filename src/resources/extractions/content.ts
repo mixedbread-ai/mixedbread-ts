@@ -17,13 +17,12 @@ export class Content extends APIResource {
 }
 
 /**
- * Result of an extraction operation.
+ * The result of an extraction job.
  */
 export interface ExtractionResult {
-  /**
-   * The extracted data
-   */
   data: unknown;
+
+  warnings: Array<string>;
 }
 
 export interface ContentCreateParams {

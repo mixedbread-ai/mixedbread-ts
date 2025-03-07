@@ -144,7 +144,13 @@ describe('resource files', () => {
           { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
-      search_options: { return_metadata: true, return_chunks: true, score_threshold: 0, rewrite_query: true },
+      search_options: {
+        score_threshold: 0,
+        rewrite_query: true,
+        return_metadata: true,
+        return_chunks: true,
+        chunks_per_file: 0,
+      },
     });
   });
 });
