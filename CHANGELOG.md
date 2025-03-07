@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-03-05)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Chores
+
+* **internal:** version bump ([#93](https://github.com/mixedbread-ai/mixedbread-ts/issues/93)) ([1526f41](https://github.com/mixedbread-ai/mixedbread-ts/commit/1526f4104bb8465c0692ce3ed50b9c0e8b33a86a))
+
 ## 0.1.0-alpha.6 (2025-03-04)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
