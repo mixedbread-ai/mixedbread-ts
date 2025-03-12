@@ -26,7 +26,7 @@ describe('resource files', () => {
     const response = await client.vectorStores.files.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
       file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
       metadata: {},
-      experimental: { parsing_strategy: 'fast' },
+      experimental: { parsing_strategy: 'fast', contextualization: true },
     });
   });
 
