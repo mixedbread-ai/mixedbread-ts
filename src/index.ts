@@ -6,9 +6,16 @@ import * as Errors from './error';
 import * as Pagination from './pagination';
 import { type LimitOffsetParams, LimitOffsetResponse } from './pagination';
 import * as Uploads from './uploads';
+import * as EmbeddingsAPI from './resources/embeddings';
+import {
+  Embedding,
+  EmbeddingCreateParams,
+  EmbeddingCreateResponse,
+  Embeddings,
+} from './resources/embeddings';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import { InfoResponse } from './resources/top-level';
+import { EmbedParams, InfoResponse, RerankParams, RerankResponse } from './resources/top-level';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -175,10 +182,26 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
+  embeddings: API.Embeddings = new API.Embeddings(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   vectorStores: API.VectorStores = new API.VectorStores(this);
   extractions: API.Extractions = new API.Extractions(this);
+
+  /**
+   * Create embeddings for text or images using the specified model, encoding format,
+   * and normalization.
+   *
+   * Args: params: The parameters for creating embeddings.
+   *
+   * Returns: EmbeddingCreateResponse: The response containing the embeddings.
+   */
+  embed(
+    body: TopLevelAPI.EmbedParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EmbeddingsAPI.EmbeddingCreateResponse> {
+    return this.post('/v1/embeddings', { body, ...options });
+  }
 
   /**
    * Returns service information, including name and version.
@@ -187,6 +210,20 @@ export class Mixedbread extends Core.APIClient {
    */
   info(options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.InfoResponse> {
     return this.get('/', options);
+  }
+
+  /**
+   * Rerank different kind of documents for a given query.
+   *
+   * Args: params: RerankingCreateParams: The parameters for reranking.
+   *
+   * Returns: RerankingCreateResponse: The reranked documents for the input query.
+   */
+  rerank(
+    body: TopLevelAPI.RerankParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TopLevelAPI.RerankResponse> {
+    return this.post('/v1/reranking', { body, ...options });
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
@@ -225,6 +262,7 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
+Mixedbread.Embeddings = Embeddings;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
@@ -237,7 +275,19 @@ export declare namespace Mixedbread {
   export import LimitOffset = Pagination.LimitOffset;
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
-  export { type InfoResponse as InfoResponse };
+  export {
+    type InfoResponse as InfoResponse,
+    type RerankResponse as RerankResponse,
+    type EmbedParams as EmbedParams,
+    type RerankParams as RerankParams,
+  };
+
+  export {
+    Embeddings as Embeddings,
+    type Embedding as Embedding,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 
   export { Parsing as Parsing };
 
