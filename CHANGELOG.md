@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0-alpha.10 (2025-03-12)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
+
+### Features
+
+* add SKIP_BREW env var to ./scripts/bootstrap ([#106](https://github.com/mixedbread-ai/mixedbread-ts/issues/106)) ([38ade8c](https://github.com/mixedbread-ai/mixedbread-ts/commit/38ade8c9a1ac0dae63948ef6a8980b5f743eb971))
+* **api:** update via SDK Studio ([#109](https://github.com/mixedbread-ai/mixedbread-ts/issues/109)) ([086653f](https://github.com/mixedbread-ai/mixedbread-ts/commit/086653f61ac55eb7ff4a2fdef504d8e215b18877))
+* **api:** update via SDK Studio ([#110](https://github.com/mixedbread-ai/mixedbread-ts/issues/110)) ([a3100c8](https://github.com/mixedbread-ai/mixedbread-ts/commit/a3100c86966313c3223eaa117dacc16107a7a0dd))
+* **client:** accept RFC6838 JSON content types ([#108](https://github.com/mixedbread-ai/mixedbread-ts/issues/108)) ([4684e8f](https://github.com/mixedbread-ai/mixedbread-ts/commit/4684e8f97fbe887c34ff4550b3232c9c10f7d9c4))
+
 ## 0.1.0-alpha.9 (2025-03-07)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)

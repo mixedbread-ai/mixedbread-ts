@@ -179,6 +179,11 @@ export interface ParsingJob {
   id: string;
 
   /**
+   * The ID of the file to parse
+   */
+  file_id: string;
+
+  /**
    * The status of the job
    */
   status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
@@ -341,6 +346,11 @@ export interface JobListResponse {
    * The ID of the job
    */
   id: string;
+
+  /**
+   * The ID of the file to parse
+   */
+  file_id: string;
 
   /**
    * The status of the job

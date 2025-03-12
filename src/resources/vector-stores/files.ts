@@ -382,6 +382,11 @@ export namespace FileCreateParams {
      * Strategy for adding the file
      */
     parsing_strategy?: 'fast' | 'high_quality';
+
+    /**
+     * Whether to contextualize the file
+     */
+    contextualization?: boolean;
   }
 }
 
