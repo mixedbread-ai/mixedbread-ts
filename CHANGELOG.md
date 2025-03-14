@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.11 (2025-03-14)
+
+Full Changelog: [v0.1.0-alpha.10...v0.1.0-alpha.11](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.10...v0.1.0-alpha.11)
+
+### Bug Fixes
+
+* **exports:** ensure resource imports don't require /index ([#113](https://github.com/mixedbread-ai/mixedbread-ts/issues/113)) ([4b6fc86](https://github.com/mixedbread-ai/mixedbread-ts/commit/4b6fc864964a628fae802991a6b85634cb20cbd1))
+
 ## 0.1.0-alpha.10 (2025-03-12)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha.10](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.9...v0.1.0-alpha.10)
