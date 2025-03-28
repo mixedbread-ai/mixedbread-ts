@@ -224,6 +224,11 @@ export interface ScoredVectorStoreFile {
   id: string;
 
   /**
+   * Name of the file
+   */
+  filename?: string;
+
+  /**
    * Optional file metadata
    */
   metadata?: unknown;
@@ -282,6 +287,11 @@ export interface VectorStoreFile {
    * Unique identifier for the file
    */
   id: string;
+
+  /**
+   * Name of the file
+   */
+  filename?: string;
 
   /**
    * Optional file metadata
