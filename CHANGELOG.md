@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.13 (2025-03-28)
+
+Full Changelog: [v0.1.0-alpha.12...v0.1.0-alpha.13](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.12...v0.1.0-alpha.13)
+
+### Bug Fixes
+
+* **internal:** work around https://github.com/vercel/next.js/issues/76881 ([#121](https://github.com/mixedbread-ai/mixedbread-ts/issues/121)) ([ffd2773](https://github.com/mixedbread-ai/mixedbread-ts/commit/ffd27730a228b0c91ec90fb1516a3caa950afa6f))
+
 ## 0.1.0-alpha.12 (2025-03-22)
 
 Full Changelog: [v0.1.0-alpha.11...v0.1.0-alpha.12](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.11...v0.1.0-alpha.12)
