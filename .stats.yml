@@ -1,4 +1,4 @@
 configured_endpoints: 32
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/mixedbread%2Fmixedbread-2ef86079ac853f4d03a966ed6b8407bc42c01a5bc8ec89070ebaf5c49e4f56b8.yml
-openapi_spec_hash: fbba387d4317317aed486fb160a63797
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/mixedbread%2Fmixedbread-e49fa63938c7d1a40e291d7b3f486a09b88afbbecb89bb42e4f06438a1ea9f21.yml
+openapi_spec_hash: 09cf222f034cb196974b7c7c131cc860
 config_hash: 52e7472faf7b81b5fda98bd67bd7d0d9

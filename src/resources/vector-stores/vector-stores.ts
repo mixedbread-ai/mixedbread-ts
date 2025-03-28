@@ -208,6 +208,11 @@ export interface ScoredVectorStoreChunk {
   file_id: string;
 
   /**
+   * filename
+   */
+  filename: string;
+
+  /**
    * vector store id
    */
   vector_store_id: string;
