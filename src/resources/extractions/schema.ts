@@ -45,7 +45,7 @@ export interface CreatedJsonSchema {
   /**
    * The created JSON schema
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 /**
@@ -55,7 +55,7 @@ export interface EnhancedJsonSchema {
   /**
    * The enhanced JSON schema
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 /**
@@ -75,7 +75,7 @@ export interface ValidatedJsonSchema {
   /**
    * The validated JSON schema
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export interface SchemaCreateParams {
@@ -89,14 +89,14 @@ export interface SchemaEnhanceParams {
   /**
    * The JSON schema to enhance
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export interface SchemaValidateParams {
   /**
    * The JSON schema to validate
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export declare namespace Schema {
