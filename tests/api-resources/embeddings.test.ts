@@ -12,7 +12,7 @@ describe('resource embeddings', () => {
   test('create: only required params', async () => {
     const responsePromise = client.embeddings.create({
       model: 'mixedbread-ai/mxbai-embed-large-v1',
-      input: 'This is a sample text input.',
+      input: ['string'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -26,7 +26,7 @@ describe('resource embeddings', () => {
   test('create: required and optional params', async () => {
     const response = await client.embeddings.create({
       model: 'mixedbread-ai/mxbai-embed-large-v1',
-      input: 'This is a sample text input.',
+      input: ['string'],
       dimensions: 768,
       prompt: 'Provide a detailed summary of the following text.',
       normalized: true,

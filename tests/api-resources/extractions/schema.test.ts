@@ -25,7 +25,7 @@ describe('resource schema', () => {
   });
 
   test('enhance: only required params', async () => {
-    const responsePromise = client.extractions.schema.enhance({ json_schema: {} });
+    const responsePromise = client.extractions.schema.enhance({ json_schema: { foo: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -36,11 +36,11 @@ describe('resource schema', () => {
   });
 
   test('enhance: required and optional params', async () => {
-    const response = await client.extractions.schema.enhance({ json_schema: {} });
+    const response = await client.extractions.schema.enhance({ json_schema: { foo: 'bar' } });
   });
 
   test('validate: only required params', async () => {
-    const responsePromise = client.extractions.schema.validate({ json_schema: {} });
+    const responsePromise = client.extractions.schema.validate({ json_schema: { foo: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,6 +51,6 @@ describe('resource schema', () => {
   });
 
   test('validate: required and optional params', async () => {
-    const response = await client.extractions.schema.validate({ json_schema: {} });
+    const response = await client.extractions.schema.validate({ json_schema: { foo: 'bar' } });
   });
 });

@@ -10,7 +10,10 @@ const client = new Mixedbread({
 
 describe('resource content', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.extractions.content.create({ content: 'content', json_schema: {} });
+    const responsePromise = client.extractions.content.create({
+      content: 'content',
+      json_schema: { foo: 'bar' },
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,6 +24,9 @@ describe('resource content', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.extractions.content.create({ content: 'content', json_schema: {} });
+    const response = await client.extractions.content.create({
+      content: 'content',
+      json_schema: { foo: 'bar' },
+    });
   });
 });
