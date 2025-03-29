@@ -34,7 +34,7 @@ export interface RerankResponse {
     | 'job'
     | 'embedding'
     | 'embedding_dict'
-    | 'text_document'
+    | 'rank_result'
     | 'file'
     | 'vector_store'
     | 'vector_store.file'
@@ -73,6 +73,9 @@ export namespace RerankResponse {
   }
 
   export interface Data {
+    /**
+     * The index of the document.
+     */
     index: number;
 
     /**
@@ -83,22 +86,12 @@ export namespace RerankResponse {
     /**
      * The input document.
      */
-    input: unknown;
+    input?: unknown;
 
     /**
      * The object type.
      */
-    object?:
-      | 'list'
-      | 'parsing_job'
-      | 'job'
-      | 'embedding'
-      | 'embedding_dict'
-      | 'text_document'
-      | 'file'
-      | 'vector_store'
-      | 'vector_store.file'
-      | 'api_key';
+    object?: 'rank_result';
   }
 }
 
@@ -111,7 +104,7 @@ export interface EmbedParams {
   /**
    * The input to create embeddings for.
    */
-  input: string | EmbedParams.ImageURLInput | EmbedParams.TextInput;
+  input: Array<string>;
 
   /**
    * The number of dimensions to use for the embeddings.
@@ -129,7 +122,8 @@ export interface EmbedParams {
   normalized?: boolean;
 
   /**
-   * The encoding format of the embeddings.
+   * The encoding format(s) of the embeddings. Can be a single format or a list of
+   * formats.
    */
   encoding_format?:
     | 'float'
@@ -140,53 +134,6 @@ export interface EmbedParams {
     | 'int8'
     | 'uint8'
     | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
-}
-
-export namespace EmbedParams {
-  /**
-   * Model for image input validation.
-   */
-  export interface ImageURLInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'image_url';
-
-    /**
-     * The image input specification.
-     */
-    image: ImageURLInput.Image;
-  }
-
-  export namespace ImageURLInput {
-    /**
-     * The image input specification.
-     */
-    export interface Image {
-      /**
-       * The image URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
-
-  /**
-   * Model for text input validation.
-   *
-   * Attributes: type: Input type identifier, always "text" text: The actual text
-   * content, with length and whitespace constraints
-   */
-  export interface TextInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'text';
-
-    /**
-     * Text content to process
-     */
-    text: string;
-  }
 }
 
 export interface RerankParams {

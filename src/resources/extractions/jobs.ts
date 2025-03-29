@@ -80,12 +80,12 @@ export interface ExtractionJob {
   /**
    * Error information if failed
    */
-  error: unknown | null;
+  error: Record<string, unknown> | null;
 
   /**
    * The JSON schema used for extraction
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export interface JobCreateParams {
@@ -97,7 +97,7 @@ export interface JobCreateParams {
   /**
    * The JSON schema to use for extraction
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export declare namespace Jobs {

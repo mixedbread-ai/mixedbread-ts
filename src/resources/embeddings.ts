@@ -34,7 +34,7 @@ export interface Embedding {
   /**
    * The object type of the embedding.
    */
-  object: 'embedding';
+  object?: 'embedding';
 }
 
 export interface EmbeddingCreateResponse {
@@ -62,7 +62,7 @@ export interface EmbeddingCreateResponse {
     | 'job'
     | 'embedding'
     | 'embedding_dict'
-    | 'text_document'
+    | 'rank_result'
     | 'file'
     | 'vector_store'
     | 'vector_store.file'
@@ -74,7 +74,7 @@ export interface EmbeddingCreateResponse {
   normalized: boolean;
 
   /**
-   * The encoding format of the embeddings.
+   * The encoding formats of the embeddings.
    */
   encoding_format:
     | 'float'
@@ -128,7 +128,7 @@ export namespace EmbeddingCreateResponse {
     /**
      * The object type of the embedding.
      */
-    object: 'embedding_dict';
+    object?: 'embedding_dict';
   }
 
   export namespace UnionMember1 {
@@ -147,7 +147,7 @@ export namespace EmbeddingCreateResponse {
 
       ubinary?: Array<number>;
 
-      base64?: Array<string>;
+      base64?: string;
     }
   }
 }
@@ -161,7 +161,7 @@ export interface EmbeddingCreateParams {
   /**
    * The input to create embeddings for.
    */
-  input: string | EmbeddingCreateParams.ImageURLInput | EmbeddingCreateParams.TextInput;
+  input: Array<string>;
 
   /**
    * The number of dimensions to use for the embeddings.
@@ -179,7 +179,8 @@ export interface EmbeddingCreateParams {
   normalized?: boolean;
 
   /**
-   * The encoding format of the embeddings.
+   * The encoding format(s) of the embeddings. Can be a single format or a list of
+   * formats.
    */
   encoding_format?:
     | 'float'
@@ -190,53 +191,6 @@ export interface EmbeddingCreateParams {
     | 'int8'
     | 'uint8'
     | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
-}
-
-export namespace EmbeddingCreateParams {
-  /**
-   * Model for image input validation.
-   */
-  export interface ImageURLInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'image_url';
-
-    /**
-     * The image input specification.
-     */
-    image: ImageURLInput.Image;
-  }
-
-  export namespace ImageURLInput {
-    /**
-     * The image input specification.
-     */
-    export interface Image {
-      /**
-       * The image URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
-
-  /**
-   * Model for text input validation.
-   *
-   * Attributes: type: Input type identifier, always "text" text: The actual text
-   * content, with length and whitespace constraints
-   */
-  export interface TextInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'text';
-
-    /**
-     * Text content to process
-     */
-    text: string;
-  }
 }
 
 export declare namespace Embeddings {
