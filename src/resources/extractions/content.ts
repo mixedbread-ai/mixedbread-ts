@@ -20,7 +20,7 @@ export class Content extends APIResource {
  * The result of an extraction job.
  */
 export interface ExtractionResult {
-  data: unknown;
+  data: Record<string, unknown>;
 
   warnings: Array<string>;
 }
@@ -34,7 +34,7 @@ export interface ContentCreateParams {
   /**
    * The JSON schema to use for extraction
    */
-  json_schema: unknown;
+  json_schema: Record<string, unknown>;
 }
 
 export declare namespace Content {
