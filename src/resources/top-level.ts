@@ -1,5 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+import * as Shared from './shared';
+
 export interface Embedding {
   /**
    * The encoded embedding.
@@ -21,7 +23,7 @@ export interface EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
-  usage: EmbeddingCreateResponse.Usage;
+  usage: Shared.Usage;
 
   /**
    * The model used
@@ -70,28 +72,6 @@ export interface EmbeddingCreateResponse {
    * The number of dimensions used for the embeddings.
    */
   dimensions: number | null;
-}
-
-export namespace EmbeddingCreateResponse {
-  /**
-   * The usage of the model
-   */
-  export interface Usage {
-    /**
-     * The number of tokens used for the prompt
-     */
-    prompt_tokens: number;
-
-    /**
-     * The total number of tokens used
-     */
-    total_tokens: number;
-
-    /**
-     * The number of tokens used for the completion
-     */
-    completion_tokens?: number | null;
-  }
 }
 
 export interface MultiEncodingEmbedding {
@@ -145,7 +125,7 @@ export interface RerankResponse {
   /**
    * The usage of the model
    */
-  usage: RerankResponse.Usage;
+  usage: Shared.Usage;
 
   /**
    * The model used
@@ -184,26 +164,6 @@ export interface RerankResponse {
 }
 
 export namespace RerankResponse {
-  /**
-   * The usage of the model
-   */
-  export interface Usage {
-    /**
-     * The number of tokens used for the prompt
-     */
-    prompt_tokens: number;
-
-    /**
-     * The total number of tokens used
-     */
-    total_tokens: number;
-
-    /**
-     * The number of tokens used for the completion
-     */
-    completion_tokens?: number | null;
-  }
-
   export interface Data {
     /**
      * The index of the document.
