@@ -13,6 +13,7 @@ import {
   Embedding,
   EmbeddingCreateResponse,
   InfoResponse,
+  MultiEncodingEmbedding,
   RerankParams,
   RerankResponse,
 } from './resources/top-level';
@@ -279,6 +280,7 @@ export declare namespace Mixedbread {
   export {
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type MultiEncodingEmbedding as MultiEncodingEmbedding,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,

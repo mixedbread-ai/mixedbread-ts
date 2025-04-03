@@ -31,7 +31,7 @@ export interface EmbeddingCreateResponse {
   /**
    * The created embeddings.
    */
-  data: Array<Embedding> | Array<EmbeddingCreateResponse.UnionMember1>;
+  data: Array<Embedding> | Array<MultiEncodingEmbedding>;
 
   /**
    * The object type of the response
@@ -92,43 +92,43 @@ export namespace EmbeddingCreateResponse {
      */
     completion_tokens?: number | null;
   }
+}
 
-  export interface UnionMember1 {
-    /**
-     * The encoded embedding data by encoding format.Returned, if more than one
-     * encoding format is used.
-     */
-    embedding: UnionMember1.Embedding;
+export interface MultiEncodingEmbedding {
+  /**
+   * The encoded embedding data by encoding format.Returned, if more than one
+   * encoding format is used.
+   */
+  embedding: MultiEncodingEmbedding.Embedding;
 
-    /**
-     * The index of the embedding.
-     */
-    index: number;
+  /**
+   * The index of the embedding.
+   */
+  index: number;
 
-    /**
-     * The object type of the embedding.
-     */
-    object?: 'embedding_dict';
-  }
+  /**
+   * The object type of the embedding.
+   */
+  object?: 'embedding_dict';
+}
 
-  export namespace UnionMember1 {
-    /**
-     * The encoded embedding data by encoding format.Returned, if more than one
-     * encoding format is used.
-     */
-    export interface Embedding {
-      float?: Array<number>;
+export namespace MultiEncodingEmbedding {
+  /**
+   * The encoded embedding data by encoding format.Returned, if more than one
+   * encoding format is used.
+   */
+  export interface Embedding {
+    float?: Array<number>;
 
-      int8?: Array<number>;
+    int8?: Array<number>;
 
-      uint8?: Array<number>;
+    uint8?: Array<number>;
 
-      binary?: Array<number>;
+    binary?: Array<number>;
 
-      ubinary?: Array<number>;
+    ubinary?: Array<number>;
 
-      base64?: string;
-    }
+    base64?: string;
   }
 }
 
@@ -304,6 +304,7 @@ export declare namespace TopLevel {
   export {
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type MultiEncodingEmbedding as MultiEncodingEmbedding,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,
