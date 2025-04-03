@@ -30,7 +30,7 @@ export interface EmbeddingCreateParams {
   /**
    * The input to create embeddings for.
    */
-  input: Array<string>;
+  input: string | Array<string>;
 
   /**
    * The number of dimensions to use for the embeddings.
