@@ -1,10 +1,27 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export interface Em {
+export interface Embedding {
+  /**
+   * The encoded embedding.
+   */
+  embedding: Array<number> | Array<number> | string;
+
+  /**
+   * The index of the embedding.
+   */
+  index: number;
+
+  /**
+   * The object type of the embedding.
+   */
+  object?: 'embedding';
+}
+
+export interface EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
-  usage: Em.Usage;
+  usage: EmbeddingCreateResponse.Usage;
 
   /**
    * The model used
@@ -55,7 +72,7 @@ export interface Em {
   dimensions: number | null;
 }
 
-export namespace Em {
+export namespace EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
@@ -75,23 +92,6 @@ export namespace Em {
      */
     completion_tokens?: number | null;
   }
-}
-
-export interface Embedding {
-  /**
-   * The encoded embedding.
-   */
-  embedding: Array<number> | Array<number> | string;
-
-  /**
-   * The index of the embedding.
-   */
-  index: number;
-
-  /**
-   * The object type of the embedding.
-   */
-  object?: 'embedding';
 }
 
 export interface MultiEncodingEmbedding {
@@ -304,6 +304,7 @@ export declare namespace TopLevel {
   export {
     type Em as Em,
     type Embedding as Embedding,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
