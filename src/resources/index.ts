@@ -32,8 +32,8 @@ export {
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export {
+  type Em,
   type Embedding,
-  type EmbeddingCreateResponse,
   type MultiEncodingEmbedding,
   type InfoResponse,
   type RerankResponse,
