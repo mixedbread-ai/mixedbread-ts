@@ -20,6 +20,8 @@ or products provided by Mixedbread please follow the respective company's securi
 
 ### Mixedbread Terms and Policies
 
+Our Security Policy can be found at [Security Policy URL](https://mixedbread.com/pages/privacy).
+
 Please contact support@mixedbread.com for any questions or concerns regarding security of our services.
 
 ---
