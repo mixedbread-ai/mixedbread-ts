@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.16 (2025-04-03)
+
+Full Changelog: [v0.1.0-alpha.15...v0.1.0-alpha.16](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.15...v0.1.0-alpha.16)
+
+### Bug Fixes
+
+* **client:** send `X-Stainless-Timeout` in seconds ([#130](https://github.com/mixedbread-ai/mixedbread-ts/issues/130)) ([4ebe2fe](https://github.com/mixedbread-ai/mixedbread-ts/commit/4ebe2febdc5bdd944494078403b88a153205fe11))
+
 ## 0.1.0-alpha.15 (2025-03-29)
 
 Full Changelog: [v0.1.0-alpha.14...v0.1.0-alpha.15](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.14...v0.1.0-alpha.15)
