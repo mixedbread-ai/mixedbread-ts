@@ -2,6 +2,7 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
+import * as TopLevelAPI from './top-level';
 
 export class Embeddings extends APIResource {
   /**
@@ -15,140 +16,8 @@ export class Embeddings extends APIResource {
   create(
     body: EmbeddingCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<EmbeddingCreateResponse> {
+  ): Core.APIPromise<TopLevelAPI.EmbeddingCreateResponse> {
     return this._client.post('/v1/embeddings', { body, ...options });
-  }
-}
-
-export interface EmbeddingCreateResponse {
-  /**
-   * The usage of the model
-   */
-  usage: EmbeddingCreateResponse.Usage;
-
-  /**
-   * The model used
-   */
-  model: string;
-
-  /**
-   * The created embeddings.
-   */
-  data: Array<EmbeddingCreateResponse.UnionMember0> | Array<EmbeddingCreateResponse.UnionMember1>;
-
-  /**
-   * The object type of the response
-   */
-  object?:
-    | 'list'
-    | 'parsing_job'
-    | 'job'
-    | 'embedding'
-    | 'embedding_dict'
-    | 'rank_result'
-    | 'file'
-    | 'vector_store'
-    | 'vector_store.file'
-    | 'api_key';
-
-  /**
-   * Whether the embeddings are normalized.
-   */
-  normalized: boolean;
-
-  /**
-   * The encoding formats of the embeddings.
-   */
-  encoding_format:
-    | 'float'
-    | 'float16'
-    | 'base64'
-    | 'binary'
-    | 'ubinary'
-    | 'int8'
-    | 'uint8'
-    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
-
-  /**
-   * The number of dimensions used for the embeddings.
-   */
-  dimensions: number | null;
-}
-
-export namespace EmbeddingCreateResponse {
-  /**
-   * The usage of the model
-   */
-  export interface Usage {
-    /**
-     * The number of tokens used for the prompt
-     */
-    prompt_tokens: number;
-
-    /**
-     * The total number of tokens used
-     */
-    total_tokens: number;
-
-    /**
-     * The number of tokens used for the completion
-     */
-    completion_tokens?: number | null;
-  }
-
-  export interface UnionMember0 {
-    /**
-     * The encoded embedding.
-     */
-    embedding: Array<number> | Array<number> | string;
-
-    /**
-     * The index of the embedding.
-     */
-    index: number;
-
-    /**
-     * The object type of the embedding.
-     */
-    object?: 'embedding';
-  }
-
-  export interface UnionMember1 {
-    /**
-     * The encoded embedding data by encoding format.Returned, if more than one
-     * encoding format is used.
-     */
-    embedding: UnionMember1.Embedding;
-
-    /**
-     * The index of the embedding.
-     */
-    index: number;
-
-    /**
-     * The object type of the embedding.
-     */
-    object?: 'embedding_dict';
-  }
-
-  export namespace UnionMember1 {
-    /**
-     * The encoded embedding data by encoding format.Returned, if more than one
-     * encoding format is used.
-     */
-    export interface Embedding {
-      float?: Array<number>;
-
-      int8?: Array<number>;
-
-      uint8?: Array<number>;
-
-      binary?: Array<number>;
-
-      ubinary?: Array<number>;
-
-      base64?: string;
-    }
   }
 }
 
@@ -194,8 +63,5 @@ export interface EmbeddingCreateParams {
 }
 
 export declare namespace Embeddings {
-  export {
-    type EmbeddingCreateResponse as EmbeddingCreateResponse,
-    type EmbeddingCreateParams as EmbeddingCreateParams,
-  };
+  export { type EmbeddingCreateParams as EmbeddingCreateParams };
 }
