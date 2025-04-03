@@ -177,13 +177,13 @@ describe('instantiate client', () => {
     test('empty env variable', () => {
       process.env['MIXEDBREAD_BASE_URL'] = ''; // empty
       const client = new Mixedbread({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.mixedbread.ai');
+      expect(client.baseURL).toEqual('https://api.mixedbread.com');
     });
 
     test('blank env variable', () => {
       process.env['MIXEDBREAD_BASE_URL'] = '  '; // blank
       const client = new Mixedbread({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.mixedbread.ai');
+      expect(client.baseURL).toEqual('https://api.mixedbread.com');
     });
 
     test('env variable with environment', () => {
@@ -196,7 +196,7 @@ describe('instantiate client', () => {
       );
 
       const client = new Mixedbread({ apiKey: 'My API Key', baseURL: null, environment: 'production' });
-      expect(client.baseURL).toEqual('https://api.mixedbread.ai');
+      expect(client.baseURL).toEqual('https://api.mixedbread.com');
     });
   });
 
@@ -211,14 +211,14 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['MXBAI_API_KEY'] = 'My API Key';
+    process.env['MIXEDBREAD_API_KEY'] = 'My API Key';
     const client = new Mixedbread();
     expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['MXBAI_API_KEY'] = 'another My API Key';
+    process.env['MIXEDBREAD_API_KEY'] = 'another My API Key';
     const client = new Mixedbread({ apiKey: 'My API Key' });
     expect(client.apiKey).toBe('My API Key');
   });
