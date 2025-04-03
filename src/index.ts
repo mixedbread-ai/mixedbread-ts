@@ -47,7 +47,7 @@ import {
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
-  production: 'https://api.mixedbread.ai',
+  production: 'https://api.mixedbread.com',
   local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
@@ -62,7 +62,7 @@ export interface ClientOptions {
    * Specifies the environment to use for the API.
    *
    * Each environment maps to a different base URL:
-   * - `production` corresponds to `https://api.mixedbread.ai`
+   * - `production` corresponds to `https://api.mixedbread.com`
    * - `local` corresponds to `http://127.0.0.1:8000`
    */
   environment?: Environment | undefined;
@@ -135,9 +135,9 @@ export class Mixedbread extends Core.APIClient {
   /**
    * API Client for interfacing with the Mixedbread API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['MXBAI_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['MIXEDBREAD_API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
-   * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.ai] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -147,12 +147,12 @@ export class Mixedbread extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
-    apiKey = Core.readEnv('MXBAI_API_KEY'),
+    apiKey = Core.readEnv('MIXEDBREAD_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.MixedbreadError(
-        "The MXBAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+        "The MIXEDBREAD_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
       );
     }
 

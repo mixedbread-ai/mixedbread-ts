@@ -4,7 +4,7 @@
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [mixedbread.ai](https://mixedbread.ai/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [mixedbread.com](https://mixedbread.com/docs). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -23,7 +23,7 @@ The full API of this library can be found in [api.md](api.md).
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['MIXEDBREAD_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
@@ -45,7 +45,7 @@ This library includes TypeScript definitions for all request params and response
 import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
-  apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['MIXEDBREAD_API_KEY'], // This is the default and can be omitted
   environment: 'local', // defaults to 'production'
 });
 
