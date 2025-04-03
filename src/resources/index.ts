@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export * from './shared';
-export { Embeddings, type EmbeddingCreateResponse, type EmbeddingCreateParams } from './embeddings';
+export { Embeddings, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
   FileObjectsLimitOffset,
@@ -32,7 +32,8 @@ export {
   type VectorStoreSearchParams,
 } from './vector-stores/vector-stores';
 export {
-  type EmbedResponse,
+  type Embedding,
+  type EmbeddingCreateResponse,
   type InfoResponse,
   type RerankResponse,
   type EmbedParams,
