@@ -4,6 +4,7 @@ Types:
 
 - <code><a href="./src/resources/top-level.ts">Embedding</a></code>
 - <code><a href="./src/resources/top-level.ts">EmbeddingCreateResponse</a></code>
+- <code><a href="./src/resources/top-level.ts">MultiEncodingEmbedding</a></code>
 - <code><a href="./src/resources/top-level.ts">InfoResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">RerankResponse</a></code>
 
