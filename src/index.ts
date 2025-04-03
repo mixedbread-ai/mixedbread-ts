@@ -324,6 +324,7 @@ export declare namespace Mixedbread {
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
+  export type Usage = API.Usage;
 }
 
 export { toFile, fileFromPath } from './uploads';
