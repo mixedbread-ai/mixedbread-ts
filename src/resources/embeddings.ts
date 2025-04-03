@@ -13,8 +13,88 @@ export class Embeddings extends APIResource {
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
    */
-  create(body: EmbeddingCreateParams, options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.Em> {
+  create(
+    body: EmbeddingCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EmbeddingCreateResponse> {
     return this._client.post('/v1/embeddings', { body, ...options });
+  }
+}
+
+export interface EmbeddingCreateResponse {
+  /**
+   * The usage of the model
+   */
+  usage: EmbeddingCreateResponse.Usage;
+
+  /**
+   * The model used
+   */
+  model: string;
+
+  /**
+   * The created embeddings.
+   */
+  data: Array<TopLevelAPI.Embedding> | Array<TopLevelAPI.MultiEncodingEmbedding>;
+
+  /**
+   * The object type of the response
+   */
+  object?:
+    | 'list'
+    | 'parsing_job'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'rank_result'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
+
+  /**
+   * Whether the embeddings are normalized.
+   */
+  normalized: boolean;
+
+  /**
+   * The encoding formats of the embeddings.
+   */
+  encoding_format:
+    | 'float'
+    | 'float16'
+    | 'base64'
+    | 'binary'
+    | 'ubinary'
+    | 'int8'
+    | 'uint8'
+    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
+
+  /**
+   * The number of dimensions used for the embeddings.
+   */
+  dimensions: number | null;
+}
+
+export namespace EmbeddingCreateResponse {
+  /**
+   * The usage of the model
+   */
+  export interface Usage {
+    /**
+     * The number of tokens used for the prompt
+     */
+    prompt_tokens: number;
+
+    /**
+     * The total number of tokens used
+     */
+    total_tokens: number;
+
+    /**
+     * The number of tokens used for the completion
+     */
+    completion_tokens?: number | null;
   }
 }
 
@@ -60,5 +140,8 @@ export interface EmbeddingCreateParams {
 }
 
 export declare namespace Embeddings {
-  export { type EmbeddingCreateParams as EmbeddingCreateParams };
+  export {
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 }
