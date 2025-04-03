@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.17 (2025-04-03)
+
+Full Changelog: [v0.1.0-alpha.16...v0.1.0-alpha.17](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.16...v0.1.0-alpha.17)
+
+### Chores
+
+* **internal:** add aliases for Record and Array ([#133](https://github.com/mixedbread-ai/mixedbread-ts/issues/133)) ([5bb9b5d](https://github.com/mixedbread-ai/mixedbread-ts/commit/5bb9b5d43e2c8209649921a22e2ca8aa16f15cba))
+
 ## 0.1.0-alpha.16 (2025-04-03)
 
 Full Changelog: [v0.1.0-alpha.15...v0.1.0-alpha.16](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0-alpha.15...v0.1.0-alpha.16)
