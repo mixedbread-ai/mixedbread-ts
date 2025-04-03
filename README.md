@@ -1,4 +1,4 @@
-# Mixedbread Node API Library
+# Mixedbread Node/TypeScript SDK API Library
 
 [![NPM version](https://img.shields.io/npm/v/@mixedbread/sdk.svg)](https://npmjs.org/package/@mixedbread/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@mixedbread/sdk)
 
