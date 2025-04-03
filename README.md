@@ -28,12 +28,9 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const response = await client.vectorStores.search({
-    query: 'how to configure SSL',
-    vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-  });
+  const vectorStore = await client.vectorStores.create();
 
-  console.log(response.object);
+  console.log(vectorStore.id);
 }
 
 main();
@@ -53,11 +50,7 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const params: Mixedbread.VectorStoreSearchParams = {
-    query: 'how to configure SSL',
-    vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-  };
-  const response: Mixedbread.VectorStoreSearchResponse = await client.vectorStores.search(params);
+  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
 }
 
 main();
@@ -104,17 +97,15 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const response = await client.vectorStores
-    .search({ query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] })
-    .catch(async (err) => {
-      if (err instanceof Mixedbread.APIError) {
-        console.log(err.status); // 400
-        console.log(err.name); // BadRequestError
-        console.log(err.headers); // {server: 'nginx', ...}
-      } else {
-        throw err;
-      }
-    });
+  const vectorStore = await client.vectorStores.create().catch(async (err) => {
+    if (err instanceof Mixedbread.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 }
 
 main();
@@ -149,7 +140,7 @@ const client = new Mixedbread({
 });
 
 // Or, configure per-request:
-await client.vectorStores.search({ query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] }, {
+await client.vectorStores.create({
   maxRetries: 5,
 });
 ```
@@ -166,7 +157,7 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.vectorStores.search({ query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] }, {
+await client.vectorStores.create({
   timeout: 5 * 1000,
 });
 ```
@@ -174,6 +165,37 @@ await client.vectorStores.search({ query: 'how to configure SSL', vector_store_i
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Mixedbread API are paginated.
+You can use the `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllVectorStores(params) {
+  const allVectorStores = [];
+  // Automatically fetches more pages as needed.
+  for await (const vectorStore of client.vectorStores.list()) {
+    allVectorStores.push(vectorStore);
+  }
+  return allVectorStores;
+}
+```
+
+Alternatively, you can request a single page at a time:
+
+```ts
+let page = await client.vectorStores.list();
+for (const vectorStore of page.data) {
+  console.log(vectorStore);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = await page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 
@@ -187,17 +209,13 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Mixedbread();
 
-const response = await client.vectorStores
-  .search({ query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] })
-  .asResponse();
+const response = await client.vectorStores.create().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: response, response: raw } = await client.vectorStores
-  .search({ query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] })
-  .withResponse();
+const { data: vectorStore, response: raw } = await client.vectorStores.create().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(response.object);
+console.log(vectorStore.id);
 ```
 
 ### Making custom/undocumented requests
@@ -301,12 +319,9 @@ const client = new Mixedbread({
 });
 
 // Override per-request:
-await client.vectorStores.search(
-  { query: 'how to configure SSL', vector_store_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'] },
-  {
-    httpAgent: new http.Agent({ keepAlive: false }),
-  },
-);
+await client.vectorStores.create({
+  httpAgent: new http.Agent({ keepAlive: false }),
+});
 ```
 
 ## Semantic versioning
