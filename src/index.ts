@@ -9,7 +9,6 @@ import * as Uploads from './uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import {
-  Em,
   EmbedParams,
   Embedding,
   EmbeddingCreateResponse,
@@ -279,7 +278,6 @@ export declare namespace Mixedbread {
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
   export {
-    type Em as Em,
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
