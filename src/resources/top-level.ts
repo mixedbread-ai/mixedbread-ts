@@ -1,10 +1,27 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export interface EmbedResponse {
+export interface Embedding {
+  /**
+   * The encoded embedding.
+   */
+  embedding: Array<number> | Array<number> | string;
+
+  /**
+   * The index of the embedding.
+   */
+  index: number;
+
+  /**
+   * The object type of the embedding.
+   */
+  object?: 'embedding';
+}
+
+export interface EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
-  usage: EmbedResponse.Usage;
+  usage: EmbeddingCreateResponse.Usage;
 
   /**
    * The model used
@@ -14,7 +31,7 @@ export interface EmbedResponse {
   /**
    * The created embeddings.
    */
-  data: Array<EmbedResponse.UnionMember0> | Array<EmbedResponse.UnionMember1>;
+  data: Array<Embedding> | Array<EmbeddingCreateResponse.UnionMember1>;
 
   /**
    * The object type of the response
@@ -55,7 +72,7 @@ export interface EmbedResponse {
   dimensions: number | null;
 }
 
-export namespace EmbedResponse {
+export namespace EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
@@ -74,23 +91,6 @@ export namespace EmbedResponse {
      * The number of tokens used for the completion
      */
     completion_tokens?: number | null;
-  }
-
-  export interface UnionMember0 {
-    /**
-     * The encoded embedding.
-     */
-    embedding: Array<number> | Array<number> | string;
-
-    /**
-     * The index of the embedding.
-     */
-    index: number;
-
-    /**
-     * The object type of the embedding.
-     */
-    object?: 'embedding';
   }
 
   export interface UnionMember1 {
@@ -302,7 +302,8 @@ export interface RerankParams {
 
 export declare namespace TopLevel {
   export {
-    type EmbedResponse as EmbedResponse,
+    type Embedding as Embedding,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,
