@@ -2,7 +2,6 @@
 
 Types:
 
-- <code><a href="./src/resources/top-level.ts">Em</a></code>
 - <code><a href="./src/resources/top-level.ts">Embedding</a></code>
 - <code><a href="./src/resources/top-level.ts">EmbeddingCreateResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">MultiEncodingEmbedding</a></code>
@@ -138,4 +137,4 @@ Methods:
 
 Methods:
 
-- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> Em</code>
+- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>

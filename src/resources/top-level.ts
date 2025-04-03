@@ -302,7 +302,6 @@ export interface RerankParams {
 
 export declare namespace TopLevel {
   export {
-    type Em as Em,
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
