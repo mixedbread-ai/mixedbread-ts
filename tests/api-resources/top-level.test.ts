@@ -10,7 +10,7 @@ const client = new Mixedbread({
 
 describe('top level methods', () => {
   test('embed: only required params', async () => {
-    const responsePromise = client.embed({ model: 'mixedbread-ai/mxbai-embed-large-v1', input: ['string'] });
+    const responsePromise = client.embed({ model: 'mixedbread-ai/mxbai-embed-large-v1', input: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +23,7 @@ describe('top level methods', () => {
   test('embed: required and optional params', async () => {
     const response = await client.embed({
       model: 'mixedbread-ai/mxbai-embed-large-v1',
-      input: ['string'],
+      input: 'x',
       dimensions: 768,
       prompt: 'Provide a detailed summary of the following text.',
       normalized: true,
@@ -49,7 +49,7 @@ describe('top level methods', () => {
 
   test('rerank: only required params', async () => {
     const responsePromise = client.rerank({
-      query: 'What is mixedbread ai?',
+      query: 'What are the key features of the Mixedbread embedding model?',
       input: ['Document 1', 'Document 2'],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -63,10 +63,10 @@ describe('top level methods', () => {
 
   test('rerank: required and optional params', async () => {
     const response = await client.rerank({
-      model: 'x',
-      query: 'What is mixedbread ai?',
+      model: 'mixedbread-ai/mxbai-rerank-large-v2',
+      query: 'What are the key features of the Mixedbread embedding model?',
       input: ['Document 1', 'Document 2'],
-      rank_fields: ['field1', 'field2'],
+      rank_fields: ['content', 'title'],
       top_k: 10,
       return_input: false,
     });
