@@ -2,12 +2,13 @@
 
 Types:
 
+- <code><a href="./src/resources/top-level.ts">EmbedResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">InfoResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">RerankResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/embeddings">client.<a href="./src/index.ts">embed</a>({ ...params }) -> EmbeddingCreateResponse</code>
+- <code title="post /v1/embeddings">client.<a href="./src/index.ts">embed</a>({ ...params }) -> EmbedResponse</code>
 - <code title="get /">client.<a href="./src/index.ts">info</a>() -> InfoResponse</code>
 - <code title="post /v1/reranking">client.<a href="./src/index.ts">rerank</a>({ ...params }) -> RerankResponse</code>
 
@@ -17,51 +18,6 @@ Types:
 
 - <code><a href="./src/resources/shared.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/shared.ts">SearchFilterCondition</a></code>
-
-# Embeddings
-
-Types:
-
-- <code><a href="./src/resources/embeddings.ts">Embedding</a></code>
-- <code><a href="./src/resources/embeddings.ts">EmbeddingCreateResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
-
-# Parsing
-
-## Jobs
-
-Types:
-
-- <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
-- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
-- <code title="get /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">list</a>({ ...params }) -> JobListResponsesLimitOffset</code>
-- <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">delete</a>(jobId) -> JobDeleteResponse</code>
-- <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobId) -> ParsingJob</code>
-
-# Files
-
-Types:
-
-- <code><a href="./src/resources/files.ts">FileObject</a></code>
-- <code><a href="./src/resources/files.ts">FileDeleteResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/files">client.files.<a href="./src/resources/files.ts">create</a>({ ...params }) -> FileObject</code>
-- <code title="get /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">retrieve</a>(fileId) -> FileObject</code>
-- <code title="post /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">update</a>(fileId, { ...params }) -> FileObject</code>
-- <code title="get /v1/files">client.files.<a href="./src/resources/files.ts">list</a>({ ...params }) -> FileObjectsLimitOffset</code>
-- <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> FileDeleteResponse</code>
-- <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
 
 # VectorStores
 
@@ -104,6 +60,40 @@ Methods:
 - <code title="delete /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">delete</a>(vectorStoreId, fileId) -> FileDeleteResponse</code>
 - <code title="post /v1/vector_stores/files/search">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
+# Parsing
+
+## Jobs
+
+Types:
+
+- <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
+- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobId) -> ParsingJob</code>
+- <code title="get /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">list</a>({ ...params }) -> JobListResponsesLimitOffset</code>
+- <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">delete</a>(jobId) -> JobDeleteResponse</code>
+- <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobId) -> ParsingJob</code>
+
+# Files
+
+Types:
+
+- <code><a href="./src/resources/files.ts">FileObject</a></code>
+- <code><a href="./src/resources/files.ts">FileDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/files">client.files.<a href="./src/resources/files.ts">create</a>({ ...params }) -> FileObject</code>
+- <code title="get /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">retrieve</a>(fileId) -> FileObject</code>
+- <code title="post /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">update</a>(fileId, { ...params }) -> FileObject</code>
+- <code title="get /v1/files">client.files.<a href="./src/resources/files.ts">list</a>({ ...params }) -> FileObjectsLimitOffset</code>
+- <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileId) -> FileDeleteResponse</code>
+- <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileId) -> Response</code>
+
 # Extractions
 
 ## Jobs
@@ -140,3 +130,13 @@ Types:
 Methods:
 
 - <code title="post /v1/extractions/content">client.extractions.content.<a href="./src/resources/extractions/content.ts">create</a>({ ...params }) -> ExtractionResult</code>
+
+# Embeddings
+
+Types:
+
+- <code><a href="./src/resources/embeddings.ts">EmbeddingCreateResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
