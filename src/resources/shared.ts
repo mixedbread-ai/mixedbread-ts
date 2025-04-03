@@ -39,3 +39,20 @@ export interface SearchFilterCondition {
    */
   operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
 }
+
+export interface Usage {
+  /**
+   * The number of tokens used for the prompt
+   */
+  prompt_tokens: number;
+
+  /**
+   * The total number of tokens used
+   */
+  total_tokens: number;
+
+  /**
+   * The number of tokens used for the completion
+   */
+  completion_tokens?: number | null;
+}
