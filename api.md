@@ -2,15 +2,15 @@
 
 Types:
 
+- <code><a href="./src/resources/top-level.ts">Em</a></code>
 - <code><a href="./src/resources/top-level.ts">Embedding</a></code>
 - <code><a href="./src/resources/top-level.ts">MultiEncodingEmbedding</a></code>
-- <code><a href="./src/resources/top-level.ts">EmbedResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">InfoResponse</a></code>
 - <code><a href="./src/resources/top-level.ts">RerankResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/embeddings">client.<a href="./src/index.ts">embed</a>({ ...params }) -> EmbedResponse</code>
+- <code title="post /v1/embeddings">client.<a href="./src/index.ts">embed</a>({ ...params }) -> Em</code>
 - <code title="get /">client.<a href="./src/index.ts">info</a>() -> InfoResponse</code>
 - <code title="post /v1/reranking">client.<a href="./src/index.ts">rerank</a>({ ...params }) -> RerankResponse</code>
 
@@ -135,10 +135,6 @@ Methods:
 
 # Embeddings
 
-Types:
-
-- <code><a href="./src/resources/embeddings.ts">EmbeddingCreateResponse</a></code>
-
 Methods:
 
-- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
+- <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> Em</code>
