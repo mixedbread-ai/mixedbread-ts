@@ -6,16 +6,16 @@ import * as Errors from './error';
 import * as Pagination from './pagination';
 import { type LimitOffsetParams, LimitOffsetResponse } from './pagination';
 import * as Uploads from './uploads';
-import * as EmbeddingsAPI from './resources/embeddings';
-import {
-  Embedding,
-  EmbeddingCreateParams,
-  EmbeddingCreateResponse,
-  Embeddings,
-} from './resources/embeddings';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import { EmbedParams, InfoResponse, RerankParams, RerankResponse } from './resources/top-level';
+import {
+  EmbedParams,
+  EmbedResponse,
+  InfoResponse,
+  RerankParams,
+  RerankResponse,
+} from './resources/top-level';
+import { EmbeddingCreateParams, EmbeddingCreateResponse, Embeddings } from './resources/embeddings';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -182,11 +182,11 @@ export class Mixedbread extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  embeddings: API.Embeddings = new API.Embeddings(this);
+  vectorStores: API.VectorStores = new API.VectorStores(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
-  vectorStores: API.VectorStores = new API.VectorStores(this);
   extractions: API.Extractions = new API.Extractions(this);
+  embeddings: API.Embeddings = new API.Embeddings(this);
 
   /**
    * Create embeddings for text or images using the specified model, encoding format,
@@ -199,7 +199,7 @@ export class Mixedbread extends Core.APIClient {
   embed(
     body: TopLevelAPI.EmbedParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<EmbeddingsAPI.EmbeddingCreateResponse> {
+  ): Core.APIPromise<TopLevelAPI.EmbedResponse> {
     return this.post('/v1/embeddings', { body, ...options });
   }
 
@@ -215,9 +215,9 @@ export class Mixedbread extends Core.APIClient {
   /**
    * Rerank different kind of documents for a given query.
    *
-   * Args: params: RerankingCreateParams: The parameters for reranking.
+   * Args: params: RerankParams: The parameters for reranking.
    *
-   * Returns: RerankingCreateResponse: The reranked documents for the input query.
+   * Returns: RerankResponse: The reranked documents for the input query.
    */
   rerank(
     body: TopLevelAPI.RerankParams,
@@ -262,13 +262,13 @@ export class Mixedbread extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-Mixedbread.Embeddings = Embeddings;
+Mixedbread.VectorStores = VectorStores;
+Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.FileObjectsLimitOffset = FileObjectsLimitOffset;
-Mixedbread.VectorStores = VectorStores;
-Mixedbread.VectorStoresLimitOffset = VectorStoresLimitOffset;
 Mixedbread.Extractions = Extractions;
+Mixedbread.Embeddings = Embeddings;
 export declare namespace Mixedbread {
   export type RequestOptions = Core.RequestOptions;
 
@@ -276,29 +276,11 @@ export declare namespace Mixedbread {
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
   export {
+    type EmbedResponse as EmbedResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,
     type RerankParams as RerankParams,
-  };
-
-  export {
-    Embeddings as Embeddings,
-    type Embedding as Embedding,
-    type EmbeddingCreateResponse as EmbeddingCreateResponse,
-    type EmbeddingCreateParams as EmbeddingCreateParams,
-  };
-
-  export { Parsing as Parsing };
-
-  export {
-    Files as Files,
-    type FileObject as FileObject,
-    type FileDeleteResponse as FileDeleteResponse,
-    FileObjectsLimitOffset as FileObjectsLimitOffset,
-    type FileCreateParams as FileCreateParams,
-    type FileUpdateParams as FileUpdateParams,
-    type FileListParams as FileListParams,
   };
 
   export {
@@ -320,7 +302,25 @@ export declare namespace Mixedbread {
     type VectorStoreSearchParams as VectorStoreSearchParams,
   };
 
+  export { Parsing as Parsing };
+
+  export {
+    Files as Files,
+    type FileObject as FileObject,
+    type FileDeleteResponse as FileDeleteResponse,
+    FileObjectsLimitOffset as FileObjectsLimitOffset,
+    type FileCreateParams as FileCreateParams,
+    type FileUpdateParams as FileUpdateParams,
+    type FileListParams as FileListParams,
+  };
+
   export { Extractions as Extractions };
+
+  export {
+    Embeddings as Embeddings,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
