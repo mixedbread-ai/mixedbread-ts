@@ -17,49 +17,11 @@ export interface Embedding {
   object?: 'embedding';
 }
 
-export interface MultiEncodingEmbedding {
-  /**
-   * The encoded embedding data by encoding format.Returned, if more than one
-   * encoding format is used.
-   */
-  embedding: MultiEncodingEmbedding.Embedding;
-
-  /**
-   * The index of the embedding.
-   */
-  index: number;
-
-  /**
-   * The object type of the embedding.
-   */
-  object?: 'embedding_dict';
-}
-
-export namespace MultiEncodingEmbedding {
-  /**
-   * The encoded embedding data by encoding format.Returned, if more than one
-   * encoding format is used.
-   */
-  export interface Embedding {
-    float?: Array<number>;
-
-    int8?: Array<number>;
-
-    uint8?: Array<number>;
-
-    binary?: Array<number>;
-
-    ubinary?: Array<number>;
-
-    base64?: string;
-  }
-}
-
-export interface EmbedResponse {
+export interface EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
-  usage: EmbedResponse.Usage;
+  usage: EmbeddingCreateResponse.Usage;
 
   /**
    * The model used
@@ -110,7 +72,7 @@ export interface EmbedResponse {
   dimensions: number | null;
 }
 
-export namespace EmbedResponse {
+export namespace EmbeddingCreateResponse {
   /**
    * The usage of the model
    */
@@ -129,6 +91,44 @@ export namespace EmbedResponse {
      * The number of tokens used for the completion
      */
     completion_tokens?: number | null;
+  }
+}
+
+export interface MultiEncodingEmbedding {
+  /**
+   * The encoded embedding data by encoding format.Returned, if more than one
+   * encoding format is used.
+   */
+  embedding: MultiEncodingEmbedding.Embedding;
+
+  /**
+   * The index of the embedding.
+   */
+  index: number;
+
+  /**
+   * The object type of the embedding.
+   */
+  object?: 'embedding_dict';
+}
+
+export namespace MultiEncodingEmbedding {
+  /**
+   * The encoded embedding data by encoding format.Returned, if more than one
+   * encoding format is used.
+   */
+  export interface Embedding {
+    float?: Array<number>;
+
+    int8?: Array<number>;
+
+    uint8?: Array<number>;
+
+    binary?: Array<number>;
+
+    ubinary?: Array<number>;
+
+    base64?: string;
   }
 }
 
@@ -303,8 +303,8 @@ export interface RerankParams {
 export declare namespace TopLevel {
   export {
     type Embedding as Embedding,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
-    type EmbedResponse as EmbedResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,
