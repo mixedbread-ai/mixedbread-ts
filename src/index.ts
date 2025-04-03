@@ -12,6 +12,7 @@ import {
   Em,
   EmbedParams,
   Embedding,
+  EmbeddingCreateResponse,
   InfoResponse,
   MultiEncodingEmbedding,
   RerankParams,
@@ -198,7 +199,10 @@ export class Mixedbread extends Core.APIClient {
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
    */
-  embed(body: TopLevelAPI.EmbedParams, options?: Core.RequestOptions): Core.APIPromise<TopLevelAPI.Em> {
+  embed(
+    body: TopLevelAPI.EmbedParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TopLevelAPI.EmbeddingCreateResponse> {
     return this.post('/v1/embeddings', { body, ...options });
   }
 
@@ -277,6 +281,7 @@ export declare namespace Mixedbread {
   export {
     type Em as Em,
     type Embedding as Embedding,
+    type EmbeddingCreateResponse as EmbeddingCreateResponse,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,

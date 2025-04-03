@@ -34,6 +34,7 @@ export {
 export {
   type Em,
   type Embedding,
+  type EmbeddingCreateResponse,
   type MultiEncodingEmbedding,
   type InfoResponse,
   type RerankResponse,
