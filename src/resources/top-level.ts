@@ -1,82 +1,5 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export interface Em {
-  /**
-   * The usage of the model
-   */
-  usage: Em.Usage;
-
-  /**
-   * The model used
-   */
-  model: string;
-
-  /**
-   * The created embeddings.
-   */
-  data: Array<Embedding> | Array<MultiEncodingEmbedding>;
-
-  /**
-   * The object type of the response
-   */
-  object?:
-    | 'list'
-    | 'parsing_job'
-    | 'job'
-    | 'embedding'
-    | 'embedding_dict'
-    | 'rank_result'
-    | 'file'
-    | 'vector_store'
-    | 'vector_store.file'
-    | 'api_key';
-
-  /**
-   * Whether the embeddings are normalized.
-   */
-  normalized: boolean;
-
-  /**
-   * The encoding formats of the embeddings.
-   */
-  encoding_format:
-    | 'float'
-    | 'float16'
-    | 'base64'
-    | 'binary'
-    | 'ubinary'
-    | 'int8'
-    | 'uint8'
-    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
-
-  /**
-   * The number of dimensions used for the embeddings.
-   */
-  dimensions: number | null;
-}
-
-export namespace Em {
-  /**
-   * The usage of the model
-   */
-  export interface Usage {
-    /**
-     * The number of tokens used for the prompt
-     */
-    prompt_tokens: number;
-
-    /**
-     * The total number of tokens used
-     */
-    total_tokens: number;
-
-    /**
-     * The number of tokens used for the completion
-     */
-    completion_tokens?: number | null;
-  }
-}
-
 export interface Embedding {
   /**
    * The encoded embedding.
@@ -129,6 +52,83 @@ export namespace MultiEncodingEmbedding {
     ubinary?: Array<number>;
 
     base64?: string;
+  }
+}
+
+export interface EmbedResponse {
+  /**
+   * The usage of the model
+   */
+  usage: EmbedResponse.Usage;
+
+  /**
+   * The model used
+   */
+  model: string;
+
+  /**
+   * The created embeddings.
+   */
+  data: Array<Embedding> | Array<MultiEncodingEmbedding>;
+
+  /**
+   * The object type of the response
+   */
+  object?:
+    | 'list'
+    | 'parsing_job'
+    | 'job'
+    | 'embedding'
+    | 'embedding_dict'
+    | 'rank_result'
+    | 'file'
+    | 'vector_store'
+    | 'vector_store.file'
+    | 'api_key';
+
+  /**
+   * Whether the embeddings are normalized.
+   */
+  normalized: boolean;
+
+  /**
+   * The encoding formats of the embeddings.
+   */
+  encoding_format:
+    | 'float'
+    | 'float16'
+    | 'base64'
+    | 'binary'
+    | 'ubinary'
+    | 'int8'
+    | 'uint8'
+    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
+
+  /**
+   * The number of dimensions used for the embeddings.
+   */
+  dimensions: number | null;
+}
+
+export namespace EmbedResponse {
+  /**
+   * The usage of the model
+   */
+  export interface Usage {
+    /**
+     * The number of tokens used for the prompt
+     */
+    prompt_tokens: number;
+
+    /**
+     * The total number of tokens used
+     */
+    total_tokens: number;
+
+    /**
+     * The number of tokens used for the completion
+     */
+    completion_tokens?: number | null;
   }
 }
 
@@ -302,9 +302,9 @@ export interface RerankParams {
 
 export declare namespace TopLevel {
   export {
-    type Em as Em,
     type Embedding as Embedding,
     type MultiEncodingEmbedding as MultiEncodingEmbedding,
+    type EmbedResponse as EmbedResponse,
     type InfoResponse as InfoResponse,
     type RerankResponse as RerankResponse,
     type EmbedParams as EmbedParams,
