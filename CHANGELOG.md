@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2025-04-04)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.2.0...v0.2.1)
+
+### Bug Fixes
+
+* **api:** improve type resolution when importing as a package ([#165](https://github.com/mixedbread-ai/mixedbread-ts/issues/165)) ([e62361c](https://github.com/mixedbread-ai/mixedbread-ts/commit/e62361cd9a65741ab2ccf6f92bd2ead53597a761))
+
 ## 0.2.0 (2025-04-03)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0...v0.2.0)
