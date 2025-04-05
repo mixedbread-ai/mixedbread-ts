@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 (2025-04-05)
+
+Full Changelog: [v0.2.1...v0.2.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.2.1...v0.2.2)
+
+### Bug Fixes
+
+* **mcp:** remove unused tools.ts ([#168](https://github.com/mixedbread-ai/mixedbread-ts/issues/168)) ([e00ba46](https://github.com/mixedbread-ai/mixedbread-ts/commit/e00ba46a1541b08f76b8e04c60edd987d8e10697))
+
 ## 0.2.1 (2025-04-04)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.2.0...v0.2.1)
