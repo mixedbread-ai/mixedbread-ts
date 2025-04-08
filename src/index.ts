@@ -137,7 +137,7 @@ export class Mixedbread extends Core.APIClient {
   /**
    * API Client for interfacing with the Mixedbread API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['MIXEDBREAD_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['MXBAI_API_KEY'] ?? undefined]
    * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
    * @param {string} [opts.baseURL=process.env['MIXEDBREAD_BASE_URL'] ?? https://api.mixedbread.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
@@ -149,12 +149,12 @@ export class Mixedbread extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('MIXEDBREAD_BASE_URL'),
-    apiKey = Core.readEnv('MIXEDBREAD_API_KEY'),
+    apiKey = Core.readEnv('MXBAI_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.MixedbreadError(
-        "The MIXEDBREAD_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
+        "The MXBAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the Mixedbread client with an apiKey option, like new Mixedbread({ apiKey: 'My API Key' }).",
       );
     }
 
