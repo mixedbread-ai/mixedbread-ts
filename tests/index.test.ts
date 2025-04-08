@@ -211,14 +211,14 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['MIXEDBREAD_API_KEY'] = 'My API Key';
+    process.env['MXBAI_API_KEY'] = 'My API Key';
     const client = new Mixedbread();
     expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['MIXEDBREAD_API_KEY'] = 'another My API Key';
+    process.env['MXBAI_API_KEY'] = 'another My API Key';
     const client = new Mixedbread({ apiKey: 'My API Key' });
     expect(client.apiKey).toBe('My API Key');
   });
