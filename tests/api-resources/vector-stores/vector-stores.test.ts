@@ -116,15 +116,15 @@ describe('resource vectorStores', () => {
       top_k: 1,
       filters: {
         all: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         any: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         none: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
@@ -161,15 +161,15 @@ describe('resource vectorStores', () => {
       top_k: 1,
       filters: {
         all: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         any: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         none: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
