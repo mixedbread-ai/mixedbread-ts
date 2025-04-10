@@ -4,17 +4,16 @@ export * from './shared';
 export { Embeddings, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
-  FileObjectsLimitOffset,
   Files,
   type FileObject,
   type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
+  type FileObjectsLimitOffset,
 } from './files';
 export { Parsing } from './parsing/parsing';
 export {
-  VectorStoresLimitOffset,
   VectorStores,
   type ExpiresAfter,
   type FileCounts,
@@ -30,6 +29,7 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
+  type VectorStoresLimitOffset,
 } from './vector-stores/vector-stores';
 export {
   type Embedding,

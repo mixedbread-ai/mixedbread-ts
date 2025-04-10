@@ -63,7 +63,6 @@ export async function poll<T>(options: PollOptions<T>): Promise<T> {
   const startTime = new Date();
   let attempt = 0;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     attempt += 1;
 

@@ -1,11 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
-import { LimitOffset, type LimitOffsetParams } from '../../pagination';
+import { APIPromise } from '../../core/api-promise';
+import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 import * as polling from '../../lib/polling';
 import { Uploadable } from '../../uploads';
 
@@ -19,11 +20,11 @@ export class Files extends APIResource {
    * Returns: VectorStoreFile: Details of the uploaded and indexed file
    */
   create(
-    vectorStoreId: string,
+    vectorStoreID: string,
     body: FileCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
-    return this._client.post(`/v1/vector_stores/${vectorStoreId}/files`, { body, ...options });
+    options?: RequestOptions,
+  ): APIPromise<VectorStoreFile> {
+    return this._client.post(path`/v1/vector_stores/${vectorStoreID}/files`, { body, ...options });
   }
 
   /**
@@ -34,11 +35,12 @@ export class Files extends APIResource {
    * Returns: VectorStoreFile: Details of the vector store file
    */
   retrieve(
-    vectorStoreId: string,
-    fileId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<VectorStoreFile> {
-    return this._client.get(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
+    fileID: string,
+    params: FileRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<VectorStoreFile> {
+    const { vector_store_id } = params;
+    return this._client.get(path`/v1/vector_stores/${vector_store_id}/files/${fileID}`, options);
   }
 
   /**
@@ -50,26 +52,15 @@ export class Files extends APIResource {
    * Returns: VectorStoreFileListResponse: Paginated list of vector store files
    */
   list(
-    vectorStoreId: string,
-    query?: FileListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
-  list(
-    vectorStoreId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile>;
-  list(
-    vectorStoreId: string,
-    query: FileListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
-    if (isRequestOptions(query)) {
-      return this.list(vectorStoreId, {}, query);
-    }
-    return this._client.getAPIList(`/v1/vector_stores/${vectorStoreId}/files`, VectorStoreFilesLimitOffset, {
-      query,
-      ...options,
-    });
+    vectorStoreID: string,
+    query: FileListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
+    return this._client.getAPIList(
+      path`/v1/vector_stores/${vectorStoreID}/files`,
+      LimitOffset<VectorStoreFile>,
+      { query, ...options },
+    );
   }
 
   /**
@@ -80,12 +71,9 @@ export class Files extends APIResource {
    *
    * Returns: VectorStoreFileDeleted: The deleted file
    */
-  delete(
-    vectorStoreId: string,
-    fileId: string,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<FileDeleteResponse> {
-    return this._client.delete(`/v1/vector_stores/${vectorStoreId}/files/${fileId}`, options);
+  delete(fileID: string, params: FileDeleteParams, options?: RequestOptions): APIPromise<FileDeleteResponse> {
+    const { vector_store_id } = params;
+    return this._client.delete(path`/v1/vector_stores/${vector_store_id}/files/${fileID}`, options);
   }
 
   /**
@@ -106,7 +94,7 @@ export class Files extends APIResource {
    * Raises: HTTPException (400): If search parameters are invalid HTTPException
    * (404): If no vector stores are found to search
    */
-  search(body: FileSearchParams, options?: Core.RequestOptions): Core.APIPromise<FileSearchResponse> {
+  search(body: FileSearchParams, options?: RequestOptions): APIPromise<FileSearchResponse> {
     return this._client.post('/v1/vector_stores/files/search', { body, ...options });
   }
 
@@ -125,13 +113,13 @@ export class Files extends APIResource {
     fileId: string,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<VectorStoreFile> {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
 
     return polling.poll({
-      fn: () => this.retrieve(vectorStoreId, fileId, options),
+      fn: () => this.retrieve(fileId, { vector_store_id: vectorStoreId, ...options }),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'error',
       intervalSeconds: pollingIntervalMs / 1000,
@@ -154,7 +142,7 @@ export class Files extends APIResource {
     body: FileCreateParams,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<VectorStoreFile> {
     const file = await this.create(vectorStoreId, body, options);
     return this.poll(vectorStoreId, file.id, pollIntervalMs, pollTimeoutMs, options);
@@ -174,7 +162,7 @@ export class Files extends APIResource {
     vectorStoreId: string,
     file: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<VectorStoreFile> {
     const fileUploadResponse = await this._client.files.create({ file }, options);
 
@@ -205,14 +193,14 @@ export class Files extends APIResource {
     body?: Omit<FileCreateParams, 'file_id'>,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<VectorStoreFile> {
     const vectorStoreFile = await this.upload(vectorStoreId, file, body, options);
     return this.poll(vectorStoreId, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
 
-export class VectorStoreFilesLimitOffset extends LimitOffset<VectorStoreFile> {}
+export type VectorStoreFilesLimitOffset = LimitOffset<VectorStoreFile>;
 
 /**
  * Represents a scored file stored in a vector store.
@@ -400,7 +388,21 @@ export namespace FileCreateParams {
   }
 }
 
+export interface FileRetrieveParams {
+  /**
+   * The ID of the vector store
+   */
+  vector_store_id: string;
+}
+
 export interface FileListParams extends LimitOffsetParams {}
+
+export interface FileDeleteParams {
+  /**
+   * The ID of the vector store
+   */
+  vector_store_id: string;
+}
 
 export interface FileSearchParams {
   /**
@@ -433,17 +435,17 @@ export interface FileSearchParams {
   search_options?: VectorStoresAPI.VectorStoreFileSearchOptions;
 }
 
-Files.VectorStoreFilesLimitOffset = VectorStoreFilesLimitOffset;
-
 export declare namespace Files {
   export {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
+    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
     type FileCreateParams as FileCreateParams,
+    type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
+    type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
   };
 }

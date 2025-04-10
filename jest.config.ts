@@ -8,7 +8,6 @@ const config: JestConfigWithTsJest = {
   },
   moduleNameMapper: {
     '^@mixedbread/sdk$': '<rootDir>/src/index.ts',
-    '^@mixedbread/sdk/_shims/auto/(.*)$': '<rootDir>/src/_shims/auto/$1-node',
     '^@mixedbread/sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: [

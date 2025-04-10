@@ -1,18 +1,19 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  VectorStoreFilesLimitOffset,
   Files,
   type ScoredVectorStoreFile,
   type VectorStoreFile,
   type FileDeleteResponse,
   type FileSearchResponse,
   type FileCreateParams,
+  type FileRetrieveParams,
   type FileListParams,
+  type FileDeleteParams,
   type FileSearchParams,
+  type VectorStoreFilesLimitOffset,
 } from './files';
 export {
-  VectorStoresLimitOffset,
   VectorStores,
   type ExpiresAfter,
   type FileCounts,
@@ -28,4 +29,5 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
+  type VectorStoresLimitOffset,
 } from './vector-stores';

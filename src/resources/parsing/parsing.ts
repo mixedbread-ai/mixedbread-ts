@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
+import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
 import {
   JobCreateParams,
@@ -17,7 +17,6 @@ export class Parsing extends APIResource {
 }
 
 Parsing.Jobs = Jobs;
-Parsing.JobListResponsesLimitOffset = JobListResponsesLimitOffset;
 
 export declare namespace Parsing {
   export {
@@ -25,7 +24,7 @@ export declare namespace Parsing {
     type ParsingJob as ParsingJob,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
-    JobListResponsesLimitOffset as JobListResponsesLimitOffset,
+    type JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };
