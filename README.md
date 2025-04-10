@@ -1,4 +1,4 @@
-# Mixedbread API Node/TypeScript SDK API Library
+# Mixedbread API TypeScript SDK API Library
 
 [![NPM version](https://img.shields.io/npm/v/@mixedbread/sdk.svg)](https://npmjs.org/package/@mixedbread/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@mixedbread/sdk)
 
@@ -11,11 +11,8 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:stainless-sdks/mixedbread-typescript.git
+npm install @mixedbread/sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://app.stainless.com/docs/guides/publish), this will become: `npm install @mixedbread/sdk`
 
 ## Usage
 
@@ -410,7 +407,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/mixedbread-typescript/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/mixedbread-ai/mixedbread-ts/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
