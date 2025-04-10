@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
-import { Response } from 'node-fetch';
 
 const client = new Mixedbread({
   apiKey: 'My API Key',
@@ -40,15 +39,6 @@ describe('resource jobs', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.parsing.jobs.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-        path: '/_stainless_unknown_path',
-      }),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
-  });
-
   test('list', async () => {
     const responsePromise = client.parsing.jobs.list();
     const rawResponse = await responsePromise.asResponse();
@@ -58,13 +48,6 @@ describe('resource jobs', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.parsing.jobs.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Mixedbread.NotFoundError,
-    );
   });
 
   test('list: request options and params are passed correctly', async () => {
@@ -85,15 +68,6 @@ describe('resource jobs', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.parsing.jobs.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-        path: '/_stainless_unknown_path',
-      }),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
-  });
-
   test('cancel', async () => {
     const responsePromise = client.parsing.jobs.cancel('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
@@ -103,14 +77,5 @@ describe('resource jobs', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('cancel: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.parsing.jobs.cancel('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-        path: '/_stainless_unknown_path',
-      }),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 });

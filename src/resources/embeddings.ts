@@ -1,8 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import * as Core from '../core';
+import { APIResource } from '../core/resource';
 import * as TopLevelAPI from './top-level';
+import { APIPromise } from '../core/api-promise';
+import { RequestOptions } from '../internal/request-options';
 
 export class Embeddings extends APIResource {
   /**
@@ -15,8 +16,8 @@ export class Embeddings extends APIResource {
    */
   create(
     body: EmbeddingCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<TopLevelAPI.EmbeddingCreateResponse> {
+    options?: RequestOptions,
+  ): APIPromise<TopLevelAPI.EmbeddingCreateResponse> {
     return this._client.post('/v1/embeddings', { body, ...options });
   }
 }

@@ -1,8 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
 import * as ContentAPI from './content';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Jobs extends APIResource {
   /**
@@ -12,7 +14,7 @@ export class Jobs extends APIResource {
    *
    * Returns: The created extraction job.
    */
-  create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<ExtractionJob> {
+  create(body: JobCreateParams, options?: RequestOptions): APIPromise<ExtractionJob> {
     return this._client.post('/v1/extractions/jobs', { body, ...options });
   }
 
@@ -23,8 +25,8 @@ export class Jobs extends APIResource {
    *
    * Returns: Detailed information about the extraction job.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ExtractionJob> {
-    return this._client.get(`/v1/extractions/jobs/${jobId}`, options);
+  retrieve(jobID: string, options?: RequestOptions): APIPromise<ExtractionJob> {
+    return this._client.get(path`/v1/extractions/jobs/${jobID}`, options);
   }
 }
 

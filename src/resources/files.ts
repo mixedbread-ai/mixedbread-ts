@@ -1,10 +1,13 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import { isRequestOptions } from '../core';
-import * as Core from '../core';
-import { LimitOffset, type LimitOffsetParams } from '../pagination';
-import { type Response } from '../_shims/index';
+import { APIResource } from '../core/resource';
+import { APIPromise } from '../core/api-promise';
+import { LimitOffset, type LimitOffsetParams, PagePromise } from '../core/pagination';
+import { type Uploadable } from '../core/uploads';
+import { buildHeaders } from '../internal/headers';
+import { RequestOptions } from '../internal/request-options';
+import { multipartFormRequestOptions } from '../internal/uploads';
+import { path } from '../internal/utils/path';
 
 export class Files extends APIResource {
   /**
@@ -14,8 +17,8 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.post('/v1/files', Core.multipartFormRequestOptions({ body, ...options }));
+  create(body: FileCreateParams, options?: RequestOptions): APIPromise<FileObject> {
+    return this._client.post('/v1/files', multipartFormRequestOptions({ body, ...options }, this._client));
   }
 
   /**
@@ -25,8 +28,8 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the file details.
    */
-  retrieve(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.get(`/v1/files/${fileId}`, options);
+  retrieve(fileID: string, options?: RequestOptions): APIPromise<FileObject> {
+    return this._client.get(path`/v1/files/${fileID}`, options);
   }
 
   /**
@@ -36,8 +39,11 @@ export class Files extends APIResource {
    *
    * Returns: FileObject: The updated file details.
    */
-  update(fileId: string, body: FileUpdateParams, options?: Core.RequestOptions): Core.APIPromise<FileObject> {
-    return this._client.post(`/v1/files/${fileId}`, Core.multipartFormRequestOptions({ body, ...options }));
+  update(fileID: string, body: FileUpdateParams, options?: RequestOptions): APIPromise<FileObject> {
+    return this._client.post(
+      path`/v1/files/${fileID}`,
+      multipartFormRequestOptions({ body, ...options }, this._client),
+    );
   }
 
   /**
@@ -48,18 +54,10 @@ export class Files extends APIResource {
    * Returns: A list of files belonging to the user.
    */
   list(
-    query?: FileListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
-  list(options?: Core.RequestOptions): Core.PagePromise<FileObjectsLimitOffset, FileObject>;
-  list(
-    query: FileListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<FileObjectsLimitOffset, FileObject> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/v1/files', FileObjectsLimitOffset, { query, ...options });
+    query: FileListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<FileObjectsLimitOffset, FileObject> {
+    return this._client.getAPIList('/v1/files', LimitOffset<FileObject>, { query, ...options });
   }
 
   /**
@@ -69,8 +67,8 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileId: string, options?: Core.RequestOptions): Core.APIPromise<FileDeleteResponse> {
-    return this._client.delete(`/v1/files/${fileId}`, options);
+  delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleteResponse> {
+    return this._client.delete(path`/v1/files/${fileID}`, options);
   }
 
   /**
@@ -80,16 +78,16 @@ export class Files extends APIResource {
    *
    * Returns: FileStreamResponse: The response containing the file to be downloaded.
    */
-  content(fileId: string, options?: Core.RequestOptions): Core.APIPromise<Response> {
-    return this._client.get(`/v1/files/${fileId}/content`, {
+  content(fileID: string, options?: RequestOptions): APIPromise<Response> {
+    return this._client.get(path`/v1/files/${fileID}/content`, {
       ...options,
-      headers: { Accept: 'application/octet-stream', ...options?.headers },
+      headers: buildHeaders([{ Accept: 'application/octet-stream' }, options?.headers]),
       __binaryResponse: true,
     });
   }
 }
 
-export class FileObjectsLimitOffset extends LimitOffset<FileObject> {}
+export type FileObjectsLimitOffset = LimitOffset<FileObject>;
 
 /**
  * A model representing a file object in the system.
@@ -155,25 +153,23 @@ export interface FileCreateParams {
   /**
    * The file to upload
    */
-  file: Core.Uploadable;
+  file: Uploadable;
 }
 
 export interface FileUpdateParams {
   /**
    * The file to update
    */
-  file: Core.Uploadable;
+  file: Uploadable;
 }
 
 export interface FileListParams extends LimitOffsetParams {}
-
-Files.FileObjectsLimitOffset = FileObjectsLimitOffset;
 
 export declare namespace Files {
   export {
     type FileObject as FileObject,
     type FileDeleteResponse as FileDeleteResponse,
-    FileObjectsLimitOffset as FileObjectsLimitOffset,
+    type FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

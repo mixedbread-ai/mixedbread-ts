@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
 
 export class Content extends APIResource {
   /**
@@ -11,7 +12,7 @@ export class Content extends APIResource {
    *
    * Returns: The extracted content.
    */
-  create(body: ContentCreateParams, options?: Core.RequestOptions): Core.APIPromise<ExtractionResult> {
+  create(body: ContentCreateParams, options?: RequestOptions): APIPromise<ExtractionResult> {
     return this._client.post('/v1/extractions/content', { body, ...options });
   }
 }
