@@ -1,6 +1,6 @@
 # Migration guide
 
-This guide outlines the changes and steps needed to migrate your codebase to the latest version of the Mixedbread API Node/TypeScript SDK SDK.
+This guide outlines the changes and steps needed to migrate your codebase to the latest version of the Mixedbread API TypeScript SDK SDK.
 
 The main changes are that the SDK now relies on the [builtin Web fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) instead of `node-fetch` and has zero dependencies.
 
@@ -149,10 +149,10 @@ This affects the following methods:
 
 ### Removed `httpAgent` in favor of `fetchOptions`
 
-The `httpAgent` client option has been removed in favor of a [platform-specific `fetchOptions` property](https://github.com/stainless-sdks/mixedbread-typescript#fetch-options).
+The `httpAgent` client option has been removed in favor of a [platform-specific `fetchOptions` property](https://github.com/mixedbread-ai/mixedbread-ts#fetch-options).
 This change was made as `httpAgent` relied on `node:http` agents which are not supported by any runtime's builtin fetch implementation.
 
-If you were using `httpAgent` for proxy support, check out the [new proxy documentation](https://github.com/stainless-sdks/mixedbread-typescript#configuring-proxies).
+If you were using `httpAgent` for proxy support, check out the [new proxy documentation](https://github.com/mixedbread-ai/mixedbread-ts#configuring-proxies).
 
 Before:
 
