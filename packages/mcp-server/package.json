@@ -1,6 +1,6 @@
 {
   "name": "@mixedbread/sdk-mcp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The official MCP Server for the Mixedbread API",
   "author": "Mixedbread <support@mixedbread.com>",
   "types": "dist/index.d.ts",
