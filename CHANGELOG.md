@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0 (2025-04-10)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** update via SDK Studio ([68874d1](https://github.com/mixedbread-ai/mixedbread-ts/commit/68874d18ab8856b36afcee59465d5ade72cfdbcf))
+* **api:** update via SDK Studio ([227709d](https://github.com/mixedbread-ai/mixedbread-ts/commit/227709df8b0b9294f29160f2bd86d0aaacdf5017))
+
+
+### Chores
+
+* configure new SDK language ([33ad60b](https://github.com/mixedbread-ai/mixedbread-ts/commit/33ad60b9de23d8de6f1dfa31d90f6b1094b9bcd8))
+* **tests:** improve enum examples ([#173](https://github.com/mixedbread-ai/mixedbread-ts/issues/173)) ([4e10ecc](https://github.com/mixedbread-ai/mixedbread-ts/commit/4e10ecc0ff7942e4bce1059802c56a678746524e))
+
 ## 0.3.0 (2025-04-08)
 
 Full Changelog: [v0.2.2...v0.3.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.2.2...v0.3.0)
