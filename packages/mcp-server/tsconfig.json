@@ -9,8 +9,8 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@mixedbread/sdk-mcp/*": ["src/*"],
-      "@mixedbread/sdk-mcp": ["src/index.ts"]
+      "@mixedbread/mcp/*": ["src/*"],
+      "@mixedbread/mcp": ["src/index.ts"]
     },
     "noEmit": true,
 
