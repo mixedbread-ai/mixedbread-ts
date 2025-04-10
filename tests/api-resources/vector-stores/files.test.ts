@@ -1,7 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
-import { Response } from 'node-fetch';
 
 const client = new Mixedbread({
   apiKey: 'My API Key',
@@ -30,11 +29,10 @@ describe('resource files', () => {
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.vectorStores.files.retrieve(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    );
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.vectorStores.files.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,15 +42,10 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.vectorStores.files.retrieve(
-        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
+  test('retrieve: required and optional params', async () => {
+    const response = await client.vectorStores.files.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
   });
 
   test('list', async () => {
@@ -66,15 +59,6 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.vectorStores.files.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-        path: '/_stainless_unknown_path',
-      }),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
-  });
-
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
@@ -86,11 +70,10 @@ describe('resource files', () => {
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.vectorStores.files.delete(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    );
+  test('delete: only required params', async () => {
+    const responsePromise = client.vectorStores.files.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -100,15 +83,10 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.vectorStores.files.delete(
-        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
+  test('delete: required and optional params', async () => {
+    const response = await client.vectorStores.files.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
   });
 
   test('search: only required params', async () => {
@@ -132,15 +110,15 @@ describe('resource files', () => {
       top_k: 1,
       filters: {
         all: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         any: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
         none: [
-          { key: 'price', value: '100', operator: 'eq' },
+          { key: 'price', value: '100', operator: 'gt' },
           { key: 'color', value: 'red', operator: 'eq' },
         ],
       },

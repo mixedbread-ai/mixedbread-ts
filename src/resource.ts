@@ -1,11 +1,2 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-
-import type { Mixedbread } from './index';
-
-export class APIResource {
-  protected _client: Mixedbread;
-
-  constructor(client: Mixedbread) {
-    this._client = client;
-  }
-}
+/** @deprecated Import from ./core/resource instead */
+export * from './core/resource';

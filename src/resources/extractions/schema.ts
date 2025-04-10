@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import * as Core from '../../core';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
 
 export class Schema extends APIResource {
   /**
@@ -11,7 +12,7 @@ export class Schema extends APIResource {
    *
    * Returns: The created schema.
    */
-  create(body: SchemaCreateParams, options?: Core.RequestOptions): Core.APIPromise<CreatedJsonSchema> {
+  create(body: SchemaCreateParams, options?: RequestOptions): APIPromise<CreatedJsonSchema> {
     return this._client.post('/v1/extractions/schema', { body, ...options });
   }
 
@@ -22,7 +23,7 @@ export class Schema extends APIResource {
    *
    * Returns: The enhanced schema.
    */
-  enhance(body: SchemaEnhanceParams, options?: Core.RequestOptions): Core.APIPromise<EnhancedJsonSchema> {
+  enhance(body: SchemaEnhanceParams, options?: RequestOptions): APIPromise<EnhancedJsonSchema> {
     return this._client.post('/v1/extractions/schema/enhance', { body, ...options });
   }
 
@@ -33,7 +34,7 @@ export class Schema extends APIResource {
    *
    * Returns: The validation result.
    */
-  validate(body: SchemaValidateParams, options?: Core.RequestOptions): Core.APIPromise<ValidatedJsonSchema> {
+  validate(body: SchemaValidateParams, options?: RequestOptions): APIPromise<ValidatedJsonSchema> {
     return this._client.post('/v1/extractions/schema/validate', { body, ...options });
   }
 }

@@ -1,11 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../resource';
-import { isRequestOptions } from '../../core';
-import * as Core from '../../core';
-import { LimitOffset, type LimitOffsetParams } from '../../pagination';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 import * as polling from '../../lib/polling';
-import { Uploadable } from '../../uploads';
+import { Uploadable } from '../../core/uploads';
 
 export class Jobs extends APIResource {
   /**
@@ -15,7 +16,7 @@ export class Jobs extends APIResource {
    *
    * Returns: The created parsing job.
    */
-  create(body: JobCreateParams, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
+  create(body: JobCreateParams, options?: RequestOptions): APIPromise<ParsingJob> {
     return this._client.post('/v1/parsing/jobs', { body, ...options });
   }
 
@@ -26,8 +27,8 @@ export class Jobs extends APIResource {
    *
    * Returns: Detailed information about the parse job.
    */
-  retrieve(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
-    return this._client.get(`/v1/parsing/jobs/${jobId}`, options);
+  retrieve(jobID: string, options?: RequestOptions): APIPromise<ParsingJob> {
+    return this._client.get(path`/v1/parsing/jobs/${jobID}`, options);
   }
 
   /**
@@ -38,18 +39,10 @@ export class Jobs extends APIResource {
    * Returns: List of parsing jobs with pagination.
    */
   list(
-    query?: JobListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse>;
-  list(options?: Core.RequestOptions): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse>;
-  list(
-    query: JobListParams | Core.RequestOptions = {},
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<JobListResponsesLimitOffset, JobListResponse> {
-    if (isRequestOptions(query)) {
-      return this.list({}, query);
-    }
-    return this._client.getAPIList('/v1/parsing/jobs', JobListResponsesLimitOffset, { query, ...options });
+    query: JobListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<JobListResponsesLimitOffset, JobListResponse> {
+    return this._client.getAPIList('/v1/parsing/jobs', LimitOffset<JobListResponse>, { query, ...options });
   }
 
   /**
@@ -59,8 +52,8 @@ export class Jobs extends APIResource {
    *
    * Returns: The deleted parsing job.
    */
-  delete(jobId: string, options?: Core.RequestOptions): Core.APIPromise<JobDeleteResponse> {
-    return this._client.delete(`/v1/parsing/jobs/${jobId}`, options);
+  delete(jobID: string, options?: RequestOptions): APIPromise<JobDeleteResponse> {
+    return this._client.delete(path`/v1/parsing/jobs/${jobID}`, options);
   }
 
   /**
@@ -70,8 +63,8 @@ export class Jobs extends APIResource {
    *
    * Returns: The cancelled parsing job.
    */
-  cancel(jobId: string, options?: Core.RequestOptions): Core.APIPromise<ParsingJob> {
-    return this._client.patch(`/v1/parsing/jobs/${jobId}`, options);
+  cancel(jobID: string, options?: RequestOptions): APIPromise<ParsingJob> {
+    return this._client.patch(path`/v1/parsing/jobs/${jobID}`, options);
   }
 
   /**
@@ -87,7 +80,7 @@ export class Jobs extends APIResource {
     jobId: string,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<ParsingJob> {
     const pollingIntervalMs = pollIntervalMs || 500;
     const pollingTimeoutMs = pollTimeoutMs;
@@ -114,7 +107,7 @@ export class Jobs extends APIResource {
     body: JobCreateParams,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<ParsingJob> {
     const job = await this.create(body, options);
     return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
@@ -132,7 +125,7 @@ export class Jobs extends APIResource {
   async upload(
     file: Uploadable,
     body?: Omit<JobCreateParams, 'file_id'>,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<ParsingJob> {
     const fileUploadResponse = await this._client.files.create({ file }, options);
 
@@ -160,14 +153,14 @@ export class Jobs extends APIResource {
     body?: Omit<JobCreateParams, 'file_id'>,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
-    options?: Core.RequestOptions,
+    options?: RequestOptions,
   ): Promise<ParsingJob> {
     const job = await this.upload(file, body, options);
     return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
 
-export class JobListResponsesLimitOffset extends LimitOffset<JobListResponse> {}
+export type JobListResponsesLimitOffset = LimitOffset<JobListResponse>;
 
 /**
  * A job for parsing documents with its current state and result.
@@ -439,14 +432,12 @@ export interface JobCreateParams {
 
 export interface JobListParams extends LimitOffsetParams {}
 
-Jobs.JobListResponsesLimitOffset = JobListResponsesLimitOffset;
-
 export declare namespace Jobs {
   export {
     type ParsingJob as ParsingJob,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
-    JobListResponsesLimitOffset as JobListResponsesLimitOffset,
+    type JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };
