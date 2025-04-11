@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "@mixedbread/sdk-mcp/*": ["dist/src/*"],
-      "@mixedbread/sdk-mcp": ["dist/src/index.ts"]
+      "@mixedbread/mcp/*": ["dist/src/*"],
+      "@mixedbread/mcp": ["dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,
