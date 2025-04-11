@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0 (2025-04-11)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** update via SDK Studio ([19d1598](https://github.com/mixedbread-ai/mixedbread-ts/commit/19d15980550109a207ef74da87c14ed64e2612a5))
+
+
+### Bug Fixes
+
+* **internal:** fix file uploads in node 18 jest ([2bb600d](https://github.com/mixedbread-ai/mixedbread-ts/commit/2bb600dd7d69d21527879ec4fd29cb244e7716cf))
+
 ## 0.4.0 (2025-04-10)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.3.0...v0.4.0)
