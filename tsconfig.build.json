@@ -6,7 +6,7 @@
     "rootDir": "./dist/src",
     "paths": {
       "@mixedbread/sdk/*": ["dist/src/*"],
-      "@mixedbread/sdk": ["dist/src/index.ts"],
+      "@mixedbread/sdk": ["dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,
