@@ -41,14 +41,16 @@ export interface EmbeddingCreateResponse {
   object?:
     | 'list'
     | 'parsing_job'
-    | 'job'
+    | 'extraction_job'
     | 'embedding'
     | 'embedding_dict'
     | 'rank_result'
     | 'file'
     | 'vector_store'
     | 'vector_store.file'
-    | 'api_key';
+    | 'api_key'
+    | 'data_source'
+    | 'data_source.connector';
 
   /**
    * Whether the embeddings are normalized.
@@ -143,14 +145,16 @@ export interface RerankResponse {
   object?:
     | 'list'
     | 'parsing_job'
-    | 'job'
+    | 'extraction_job'
     | 'embedding'
     | 'embedding_dict'
     | 'rank_result'
     | 'file'
     | 'vector_store'
     | 'vector_store.file'
-    | 'api_key';
+    | 'api_key'
+    | 'data_source'
+    | 'data_source.connector';
 
   /**
    * The number of documents to return.
@@ -258,6 +262,11 @@ export interface RerankParams {
    * Whether to return the documents.
    */
   return_input?: boolean;
+
+  /**
+   * Wether or not to rewrite the query before passing it to the reranking model
+   */
+  rewrite_query?: boolean;
 }
 
 export declare namespace TopLevel {

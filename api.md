@@ -43,7 +43,7 @@ Methods:
 - <code title="put /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">update</a>(vectorStoreID, { ...params }) -> VectorStore</code>
 - <code title="get /v1/vector_stores">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">list</a>({ ...params }) -> VectorStoresLimitOffset</code>
 - <code title="delete /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">delete</a>(vectorStoreID) -> VectorStoreDeleteResponse</code>
-- <code title="post /v1/vector_stores/question-answering">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">questionAnswering</a>({ ...params }) -> unknown</code>
+- <code title="post /v1/vector_stores/question-answering">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">questionAnswering</a>({ ...params }) -> VectorStoreQuestionAnsweringResponse</code>
 - <code title="post /v1/vector_stores/search">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">search</a>({ ...params }) -> VectorStoreSearchResponse</code>
 
 ## Files

@@ -10,7 +10,7 @@ const client = new Mixedbread({
 describe('resource content', () => {
   test('create: only required params', async () => {
     const responsePromise = client.extractions.content.create({
-      content: 'content',
+      content: 'string',
       json_schema: { foo: 'bar' },
     });
     const rawResponse = await responsePromise.asResponse();
@@ -24,8 +24,9 @@ describe('resource content', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.extractions.content.create({
-      content: 'content',
+      content: 'string',
       json_schema: { foo: 'bar' },
+      instructions: 'instructions',
     });
   });
 });

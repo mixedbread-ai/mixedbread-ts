@@ -63,6 +63,7 @@ describe('top level methods', () => {
       rank_fields: ['content', 'title'],
       top_k: 10,
       return_input: false,
+      rewrite_query: false,
     });
   });
 });
