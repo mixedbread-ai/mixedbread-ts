@@ -102,13 +102,7 @@ describe('resource vectorStores', () => {
           { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
-      search_options: {
-        score_threshold: 0,
-        rewrite_query: true,
-        return_metadata: true,
-        return_chunks: true,
-        chunks_per_file: 0,
-      },
+      search_options: { score_threshold: 0, rewrite_query: true, return_metadata: true },
       stream: true,
       qa_options: { cite: true },
     });
