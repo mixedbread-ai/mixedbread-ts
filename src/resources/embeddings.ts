@@ -13,6 +13,15 @@ export class Embeddings extends APIResource {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
+   *
+   * @example
+   * ```ts
+   * const embeddingCreateResponse =
+   *   await client.embeddings.create({
+   *     model: 'mixedbread-ai/mxbai-embed-large-v1',
+   *     input: 'x',
+   *   });
+   * ```
    */
   create(
     body: EmbeddingCreateParams,

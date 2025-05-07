@@ -230,12 +230,38 @@ export class Mixedbread {
   }
 
   /**
+   * Create a new client instance re-using the same options given to the current client with optional overriding.
+   */
+  withOptions(options: Partial<ClientOptions>): this {
+    return new (this.constructor as any as new (props: ClientOptions) => typeof this)({
+      ...this._options,
+      environment: options.environment ? options.environment : undefined,
+      baseURL: options.environment ? undefined : this.baseURL,
+      maxRetries: this.maxRetries,
+      timeout: this.timeout,
+      logger: this.logger,
+      logLevel: this.logLevel,
+      fetchOptions: this.fetchOptions,
+      apiKey: this.apiKey,
+      ...options,
+    });
+  }
+
+  /**
    * Create embeddings for text or images using the specified model, encoding format,
    * and normalization.
    *
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
+   *
+   * @example
+   * ```ts
+   * const embeddingCreateResponse = await client.embed({
+   *   model: 'mixedbread-ai/mxbai-embed-large-v1',
+   *   input: 'x',
+   * });
+   * ```
    */
   embed(
     body: TopLevelAPI.EmbedParams,
@@ -248,6 +274,11 @@ export class Mixedbread {
    * Returns service information, including name and version.
    *
    * Returns: InfoResponse: A response containing the service name and version.
+   *
+   * @example
+   * ```ts
+   * const response = await client.info();
+   * ```
    */
   info(options?: RequestOptions): APIPromise<TopLevelAPI.InfoResponse> {
     return this.get('/', options);
@@ -259,6 +290,15 @@ export class Mixedbread {
    * Args: params: RerankParams: The parameters for reranking.
    *
    * Returns: RerankResponse: The reranked documents for the input query.
+   *
+   * @example
+   * ```ts
+   * const response = await client.rerank({
+   *   query:
+   *     'What are the key features of the Mixedbread embedding model?',
+   *   input: ['Document 1', 'Document 2'],
+   * });
+   * ```
    */
   rerank(body: TopLevelAPI.RerankParams, options?: RequestOptions): APIPromise<TopLevelAPI.RerankResponse> {
     return this.post('/v1/reranking', { body, ...options });
@@ -587,12 +627,12 @@ export class Mixedbread {
       fetchOptions.method = method.toUpperCase();
     }
 
-    return (
+    try {
       // use undefined this binding; fetch errors if bound to something else in browser/cloudflare
-      this.fetch.call(undefined, url, fetchOptions).finally(() => {
-        clearTimeout(timeout);
-      })
-    );
+      return await this.fetch.call(undefined, url, fetchOptions);
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   private shouldRetry(response: Response): boolean {
@@ -673,17 +713,17 @@ export class Mixedbread {
   }
 
   buildRequest(
-    options: FinalRequestOptions,
+    inputOptions: FinalRequestOptions,
     { retryCount = 0 }: { retryCount?: number } = {},
   ): { req: FinalizedRequestInit; url: string; timeout: number } {
-    options = { ...options };
+    const options = { ...inputOptions };
     const { method, path, query } = options;
 
     const url = this.buildURL(path!, query as Record<string, unknown>);
     if ('timeout' in options) validatePositiveInteger('timeout', options.timeout);
     options.timeout = options.timeout ?? this.timeout;
     const { bodyHeaders, body } = this.buildBody({ options });
-    const reqHeaders = this.buildHeaders({ options, method, bodyHeaders, retryCount });
+    const reqHeaders = this.buildHeaders({ options: inputOptions, method, bodyHeaders, retryCount });
 
     const req: FinalizedRequestInit = {
       method,

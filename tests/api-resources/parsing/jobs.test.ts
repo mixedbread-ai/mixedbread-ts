@@ -25,6 +25,7 @@ describe('resource jobs', () => {
       element_types: ['caption'],
       chunking_strategy: 'page',
       return_format: 'html',
+      mode: 'fast',
     });
   });
 

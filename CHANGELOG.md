@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.5.0 (2025-05-07)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** update via SDK Studio ([9421b8d](https://github.com/mixedbread-ai/mixedbread-ts/commit/9421b8dac8c4eab0a745e11058d7387f70177aeb))
+* **api:** update via SDK Studio ([19d1598](https://github.com/mixedbread-ai/mixedbread-ts/commit/19d15980550109a207ef74da87c14ed64e2612a5))
+* **client:** add withOptions helper ([cc39c84](https://github.com/mixedbread-ai/mixedbread-ts/commit/cc39c842d23f2ab3c473b82e7e2914eb2a1fed14))
+* more gracefully handle $refs and work around schema limitations ([294db31](https://github.com/mixedbread-ai/mixedbread-ts/commit/294db3165718ce7752b0e4f779cd648d47c17b4c))
+
+
+### Bug Fixes
+
+* **internal:** fix file uploads in node 18 jest ([2bb600d](https://github.com/mixedbread-ai/mixedbread-ts/commit/2bb600dd7d69d21527879ec4fd29cb244e7716cf))
+* **mcp:** remove ajv dependency so MCP servers are more compatible with Cloudflare Workers ([9a0f0a6](https://github.com/mixedbread-ai/mixedbread-ts/commit/9a0f0a640cf4c34216fffce2e2967cd98594f9bd))
+
+
+### Chores
+
+* **ci:** add timeout thresholds for CI jobs ([a68ffcc](https://github.com/mixedbread-ai/mixedbread-ts/commit/a68ffccb66c7ad79887369c83261af71fdb3869f))
+* **ci:** only use depot for staging repos ([d3a9912](https://github.com/mixedbread-ai/mixedbread-ts/commit/d3a991253e679040b9cb44728e82ec1a33be145e))
+* **client:** drop support for EOL node versions ([c995474](https://github.com/mixedbread-ai/mixedbread-ts/commit/c9954746fd8a970c0fc28aa683e72b3e8694f8be))
+* **client:** minor internal fixes ([1b43dad](https://github.com/mixedbread-ai/mixedbread-ts/commit/1b43dad1fbc09a382f51b57b32588f3347e85b87))
+* **internal:** codegen related update ([755d9f9](https://github.com/mixedbread-ai/mixedbread-ts/commit/755d9f9451196171b169ae36d9e1c757332a5535))
+* **internal:** codegen related update ([c3e0876](https://github.com/mixedbread-ai/mixedbread-ts/commit/c3e087658a0f8b43a87b8656ee20b914b6634be6))
+* **internal:** refactor utils ([6a22a08](https://github.com/mixedbread-ai/mixedbread-ts/commit/6a22a088a0c112dca1f7f2271b4b95cd9110de00))
+* **internal:** share typescript helpers ([24e088a](https://github.com/mixedbread-ai/mixedbread-ts/commit/24e088a19695be197f935611c334c233a5aaeab9))
+* **perf:** faster base64 decoding ([e8c7f9a](https://github.com/mixedbread-ai/mixedbread-ts/commit/e8c7f9ae682c8fc9e0c67e1730f8fc79f08f8b73))
+
+
+### Documentation
+
+* add examples to tsdocs ([929c293](https://github.com/mixedbread-ai/mixedbread-ts/commit/929c293b7a6fee0645408307c2cab96600fbdd4b))
+* **readme:** fix typo ([0b4473f](https://github.com/mixedbread-ai/mixedbread-ts/commit/0b4473f6b8b9eac8b351badb22db5438bddc9e43))
+
 ## 0.4.0 (2025-04-10)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.3.0...v0.4.0)

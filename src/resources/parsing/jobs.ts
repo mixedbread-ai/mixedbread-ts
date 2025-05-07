@@ -271,7 +271,7 @@ export namespace ParsingJob {
       content: string;
 
       /**
-       * The content to be used for embedding
+       * The content of the chunk to embed
        */
       content_to_embed: string;
 
@@ -428,6 +428,11 @@ export interface JobCreateParams {
    * The format of the returned content
    */
   return_format?: 'html' | 'markdown' | 'plain';
+
+  /**
+   * The strategy to use for OCR
+   */
+  mode?: 'fast' | 'high_quality';
 }
 
 export interface JobListParams extends LimitOffsetParams {}
