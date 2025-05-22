@@ -10,6 +10,7 @@ You can run the MCP Server directly via `npx`:
 
 ```sh
 export MXBAI_API_KEY="My API Key"
+export MIXEDBREAD_ENVIRONMENT="production"
 npx -y @mixedbread/mcp@latest
 ```
 
@@ -27,7 +28,8 @@ For clients with a configuration JSON, it might look something like this:
       "command": "npx",
       "args": ["-y", "@mixedbread/mcp", "--client=claude", "--tools=all"],
       "env": {
-        "MXBAI_API_KEY": "My API Key"
+        "MXBAI_API_KEY": "My API Key",
+        "MIXEDBREAD_ENVIRONMENT": "production"
       }
     }
   }
