@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.6.0 (2025-05-24)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* **mcp:** support dynamically discovering and invoking tools for APIs with many endpoints ([285308d](https://github.com/mixedbread-ai/mixedbread-ts/commit/285308da19b88ba5e39d42d52c3e364a0d6d0a00))
+* **mcp:** support initializing the server with an "environment" ([925075d](https://github.com/mixedbread-ai/mixedbread-ts/commit/925075d05ac63cf2e75fef791f8d6c7a11ba8cd1))
+
+
+### Bug Fixes
+
+* **client:** always overwrite when merging headers ([9c69eb5](https://github.com/mixedbread-ai/mixedbread-ts/commit/9c69eb509fe085968f5dcbceb3dc0aad361e6c8e))
+* **mcp:** explicitly include zod and zod-to-json-schema in package.json ([44952cb](https://github.com/mixedbread-ai/mixedbread-ts/commit/44952cb96fe51e8f43dc43aa07dc29d53ec2573b))
+* **mcp:** fix cursor schema transformation issue with recursive references ([1a50cfe](https://github.com/mixedbread-ai/mixedbread-ts/commit/1a50cfe6b8d5fdbad923865b56e4c170b7f546da))
+
+
+### Chores
+
+* **build:** automatically build subpackages if present ([99dcafa](https://github.com/mixedbread-ai/mixedbread-ts/commit/99dcafaaec25a90571c311b2c918ee399b4b3982))
+* **docs:** grammar improvements ([b10ade0](https://github.com/mixedbread-ai/mixedbread-ts/commit/b10ade0841b0d0b884677963c18bb7300a8d149c))
+* **internal:** codegen related update ([69ba23e](https://github.com/mixedbread-ai/mixedbread-ts/commit/69ba23e8fcdfec9fdc711afc72834eb4430af673))
+* **internal:** codegen related update ([048457f](https://github.com/mixedbread-ai/mixedbread-ts/commit/048457f38564e35fe8ca08f5677397b12526ec62))
+* **package:** remove engines ([ef7cf2c](https://github.com/mixedbread-ai/mixedbread-ts/commit/ef7cf2c85bb78773daead80ea6a51401870908b0))
+* **tests:** use node 22 for CI tests ([60d63ff](https://github.com/mixedbread-ai/mixedbread-ts/commit/60d63ff560eab0bd34e2282f292fda4dba4dd17b))
+
 ## 0.5.0 (2025-05-07)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.4.0...v0.5.0)
