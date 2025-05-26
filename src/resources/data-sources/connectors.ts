@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../../core/resource';
-import { APIPromise } from '../../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../../core/pagination';
-import { RequestOptions } from '../../../internal/request-options';
-import { path } from '../../../internal/utils/path';
+import { APIResource } from '../../core/resource';
+import { APIPromise } from '../../core/api-promise';
+import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Connectors extends APIResource {
   /**
@@ -14,15 +14,6 @@ export class Connectors extends APIResource {
    * params: The connector to create.
    *
    * Returns: The created connector.
-   *
-   * @example
-   * ```ts
-   * const connector =
-   *   await client.client.dataSources.connectors.create(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     { vector_store_id: 'vector_store_id' },
-   *   );
-   * ```
    */
   create(
     dataSourceID: string,
@@ -39,18 +30,6 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to get.
    *
    * Returns: The connector.
-   *
-   * @example
-   * ```ts
-   * const connector =
-   *   await client.client.dataSources.connectors.retrieve(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   retrieve(
     connectorID: string,
@@ -69,18 +48,6 @@ export class Connectors extends APIResource {
    * update.
    *
    * Returns: The updated connector.
-   *
-   * @example
-   * ```ts
-   * const connector =
-   *   await client.client.dataSources.connectors.update(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   update(
     connectorID: string,
@@ -101,16 +68,6 @@ export class Connectors extends APIResource {
    * pagination: The pagination options.
    *
    * Returns: The list of connectors.
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const connectorListResponse of client.client.dataSources.connectors.list(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * )) {
-   *   // ...
-   * }
-   * ```
    */
   list(
     dataSourceID: string,
@@ -131,18 +88,6 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to delete.
    *
    * Returns: The deleted connector.
-   *
-   * @example
-   * ```ts
-   * const connector =
-   *   await client.client.dataSources.connectors.delete(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   delete(
     connectorID: string,
@@ -159,7 +104,7 @@ export type ConnectorListResponsesLimitOffset = LimitOffset<ConnectorListRespons
 /**
  * Service-level representation of a connector.
  */
-export interface DataSourceConnector {
+export interface ConnectorCreateResponse {
   /**
    * The ID of the connector
    */
@@ -234,7 +179,7 @@ export interface DataSourceConnector {
 /**
  * Service-level representation of a connector.
  */
-export interface DataSourceConnector {
+export interface ConnectorRetrieveResponse {
   /**
    * The ID of the connector
    */
@@ -309,7 +254,7 @@ export interface DataSourceConnector {
 /**
  * Service-level representation of a connector.
  */
-export interface DataSourceConnector {
+export interface ConnectorUpdateResponse {
   /**
    * The ID of the connector
    */
@@ -384,7 +329,7 @@ export interface DataSourceConnector {
 /**
  * Service-level representation of a connector.
  */
-export interface DataSourceConnector {
+export interface ConnectorListResponse {
   /**
    * The ID of the connector
    */
@@ -459,7 +404,7 @@ export interface DataSourceConnector {
 /**
  * Deleted connector.
  */
-export interface DataSourceConnectorDeleted {
+export interface ConnectorDeleteResponse {
   /**
    * The ID of the connector
    */

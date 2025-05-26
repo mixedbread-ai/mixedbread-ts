@@ -14,62 +14,6 @@ Methods:
 - <code title="get /">client.<a href="./src/index.ts">info</a>() -> InfoResponse</code>
 - <code title="post /v1/reranking">client.<a href="./src/index.ts">rerank</a>({ ...params }) -> RerankResponse</code>
 
-## APIKeys
-
-Types:
-
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyCreateResponse</a></code>
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyRetrieveResponse</a></code>
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyListResponse</a></code>
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyDeleteResponse</a></code>
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyRerollResponse</a></code>
-- <code><a href="./src/resources/top-level/api-keys.ts">APIKeyRevokeResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/api-keys">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">create</a>({ ...params }) -> APIKeyCreateResponse</code>
-- <code title="get /v1/api-keys/{api_key_id}">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">retrieve</a>(apiKeyID) -> APIKeyRetrieveResponse</code>
-- <code title="get /v1/api-keys">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">list</a>({ ...params }) -> APIKeyListResponsesLimitOffset</code>
-- <code title="delete /v1/api-keys/{api_key_id}">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">delete</a>(apiKeyID) -> APIKeyDeleteResponse</code>
-- <code title="post /v1/api-keys/{api_key_id}/reroll">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">reroll</a>(apiKeyID) -> APIKeyRerollResponse</code>
-- <code title="post /v1/api-keys/{api_key_id}/revoke">client.client.apiKeys.<a href="./src/resources/top-level/api-keys.ts">revoke</a>(apiKeyID) -> APIKeyRevokeResponse</code>
-
-## DataSources
-
-Types:
-
-- <code><a href="./src/resources/top-level/data-sources/data-sources.ts">DataSourceCreateResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/data-sources.ts">DataSourceRetrieveResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/data-sources.ts">DataSourceUpdateResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/data-sources.ts">DataSourceListResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/data-sources.ts">DataSourceDeleteResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/data_sources/">client.client.dataSources.<a href="./src/resources/top-level/data-sources/data-sources.ts">create</a>({ ...params }) -> DataSourceCreateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}">client.client.dataSources.<a href="./src/resources/top-level/data-sources/data-sources.ts">retrieve</a>(dataSourceID) -> DataSourceRetrieveResponse</code>
-- <code title="put /v1/data_sources/{data_source_id}">client.client.dataSources.<a href="./src/resources/top-level/data-sources/data-sources.ts">update</a>(dataSourceID, { ...params }) -> DataSourceUpdateResponse</code>
-- <code title="get /v1/data_sources/">client.client.dataSources.<a href="./src/resources/top-level/data-sources/data-sources.ts">list</a>({ ...params }) -> DataSourceListResponsesLimitOffset</code>
-- <code title="delete /v1/data_sources/{data_source_id}">client.client.dataSources.<a href="./src/resources/top-level/data-sources/data-sources.ts">delete</a>(dataSourceID) -> DataSourceDeleteResponse</code>
-
-### Connectors
-
-Types:
-
-- <code><a href="./src/resources/top-level/data-sources/connectors.ts">ConnectorCreateResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/connectors.ts">ConnectorRetrieveResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/connectors.ts">ConnectorUpdateResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/connectors.ts">ConnectorListResponse</a></code>
-- <code><a href="./src/resources/top-level/data-sources/connectors.ts">ConnectorDeleteResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/data_sources/{data_source_id}/connectors">client.client.dataSources.connectors.<a href="./src/resources/top-level/data-sources/connectors.ts">create</a>(dataSourceID, { ...params }) -> ConnectorCreateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.client.dataSources.connectors.<a href="./src/resources/top-level/data-sources/connectors.ts">retrieve</a>(connectorID, { ...params }) -> ConnectorRetrieveResponse</code>
-- <code title="put /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.client.dataSources.connectors.<a href="./src/resources/top-level/data-sources/connectors.ts">update</a>(connectorID, { ...params }) -> ConnectorUpdateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}/connectors">client.client.dataSources.connectors.<a href="./src/resources/top-level/data-sources/connectors.ts">list</a>(dataSourceID, { ...params }) -> ConnectorListResponsesLimitOffset</code>
-- <code title="delete /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.client.dataSources.connectors.<a href="./src/resources/top-level/data-sources/connectors.ts">delete</a>(connectorID, { ...params }) -> ConnectorDeleteResponse</code>
-
 # Shared
 
 Types:
@@ -205,3 +149,39 @@ Types:
 Methods:
 
 - <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>() -> unknown</code>
+
+# DataSources
+
+Types:
+
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceCreateResponse</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceRetrieveResponse</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceUpdateResponse</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceListResponse</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">create</a>({ ...params }) -> DataSourceCreateResponse</code>
+- <code title="get /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">retrieve</a>(dataSourceID) -> DataSourceRetrieveResponse</code>
+- <code title="put /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">update</a>(dataSourceID, { ...params }) -> DataSourceUpdateResponse</code>
+- <code title="get /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">list</a>({ ...params }) -> DataSourceListResponsesLimitOffset</code>
+- <code title="delete /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">delete</a>(dataSourceID) -> DataSourceDeleteResponse</code>
+
+## Connectors
+
+Types:
+
+- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorCreateResponse</a></code>
+- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorRetrieveResponse</a></code>
+- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorUpdateResponse</a></code>
+- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorListResponse</a></code>
+- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">create</a>(dataSourceID, { ...params }) -> ConnectorCreateResponse</code>
+- <code title="get /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">retrieve</a>(connectorID, { ...params }) -> ConnectorRetrieveResponse</code>
+- <code title="put /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">update</a>(connectorID, { ...params }) -> ConnectorUpdateResponse</code>
+- <code title="get /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">list</a>(dataSourceID, { ...params }) -> ConnectorListResponsesLimitOffset</code>
+- <code title="delete /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">delete</a>(connectorID, { ...params }) -> ConnectorDeleteResponse</code>

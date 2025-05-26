@@ -4,7 +4,73 @@
   "clientClass": "Mixedbread",
   "methods": [
     {
-      "base": "client.dataSources.connectors",
+      "base": "vectorStores.files",
+      "name": "retrieve",
+      "params": [
+        {
+          "type": "param",
+          "key": "file_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "vector_store_id",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "file_id",
+          "location": "path"
+        },
+        {
+          "type": "options"
+        }
+      ]
+    },
+    {
+      "base": "vectorStores.files",
+      "name": "delete",
+      "params": [
+        {
+          "type": "param",
+          "key": "file_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "vector_store_id",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "file_id",
+          "location": "path"
+        },
+        {
+          "type": "options"
+        }
+      ]
+    },
+    {
+      "base": "dataSources.connectors",
       "name": "retrieve",
       "params": [
         {
@@ -37,7 +103,7 @@
       ]
     },
     {
-      "base": "client.dataSources.connectors",
+      "base": "dataSources.connectors",
       "name": "update",
       "params": [
         {
@@ -74,7 +140,7 @@
       ]
     },
     {
-      "base": "client.dataSources.connectors",
+      "base": "dataSources.connectors",
       "name": "delete",
       "params": [
         {
@@ -99,72 +165,6 @@
         {
           "type": "param",
           "key": "connector_id",
-          "location": "path"
-        },
-        {
-          "type": "options"
-        }
-      ]
-    },
-    {
-      "base": "vectorStores.files",
-      "name": "retrieve",
-      "params": [
-        {
-          "type": "param",
-          "key": "file_id",
-          "location": "path"
-        },
-        {
-          "type": "params",
-          "maybeOverload": false
-        },
-        {
-          "type": "options"
-        }
-      ],
-      "oldParams": [
-        {
-          "type": "param",
-          "key": "vector_store_id",
-          "location": "path"
-        },
-        {
-          "type": "param",
-          "key": "file_id",
-          "location": "path"
-        },
-        {
-          "type": "options"
-        }
-      ]
-    },
-    {
-      "base": "vectorStores.files",
-      "name": "delete",
-      "params": [
-        {
-          "type": "param",
-          "key": "file_id",
-          "location": "path"
-        },
-        {
-          "type": "params",
-          "maybeOverload": false
-        },
-        {
-          "type": "options"
-        }
-      ],
-      "oldParams": [
-        {
-          "type": "param",
-          "key": "vector_store_id",
-          "location": "path"
-        },
-        {
-          "type": "param",
-          "key": "file_id",
           "location": "path"
         },
         {

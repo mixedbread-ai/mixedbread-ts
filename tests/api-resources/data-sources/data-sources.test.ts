@@ -9,7 +9,7 @@ const client = new Mixedbread({
 
 describe('resource dataSources', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.client.dataSources.create({ type: 'notion', name: 'name' });
+    const responsePromise = client.dataSources.create({ type: 'notion', name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +20,7 @@ describe('resource dataSources', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.client.dataSources.create({
+    const response = await client.dataSources.create({
       type: 'notion',
       name: 'name',
       metadata: {},
@@ -40,7 +40,7 @@ describe('resource dataSources', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.client.dataSources.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+    const responsePromise = client.dataSources.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,7 +51,7 @@ describe('resource dataSources', () => {
   });
 
   test('update', async () => {
-    const responsePromise = client.client.dataSources.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {});
+    const responsePromise = client.dataSources.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,7 +62,7 @@ describe('resource dataSources', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.client.dataSources.list();
+    const responsePromise = client.dataSources.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -75,12 +75,12 @@ describe('resource dataSources', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.client.dataSources.list({ limit: 1000, offset: 0 }, { path: '/_stainless_unknown_path' }),
+      client.dataSources.list({ limit: 1000, offset: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.client.dataSources.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+    const responsePromise = client.dataSources.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

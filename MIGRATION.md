@@ -54,11 +54,11 @@ client.parents.children.retrieve('c_456', { parent_id: 'p_123' });
 
 This affects the following methods:
 
-- `client.client.dataSources.connectors.retrieve()`
-- `client.client.dataSources.connectors.update()`
-- `client.client.dataSources.connectors.delete()`
 - `client.vectorStores.files.retrieve()`
 - `client.vectorStores.files.delete()`
+- `client.dataSources.connectors.retrieve()`
+- `client.dataSources.connectors.update()`
+- `client.dataSources.connectors.delete()`
 
 ### URI encoded path parameters
 
@@ -89,13 +89,12 @@ client.example.list(undefined, { headers: { ... } });
 
 This affects the following methods:
 
-- `client.client.apiKeys.list()`
-- `client.client.dataSources.list()`
-- `client.client.dataSources.connectors.list()`
 - `client.vectorStores.list()`
 - `client.vectorStores.files.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
+- `client.dataSources.list()`
+- `client.dataSources.connectors.list()`
 
 ### Removed `httpAgent` in favor of `fetchOptions`
 
