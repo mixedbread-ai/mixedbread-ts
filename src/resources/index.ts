@@ -2,6 +2,18 @@
 
 export * from './shared';
 export { Chat, type ChatCreateCompletionResponse } from './chat';
+export {
+  DataSources,
+  type DataSourceCreateResponse,
+  type DataSourceRetrieveResponse,
+  type DataSourceUpdateResponse,
+  type DataSourceListResponse,
+  type DataSourceDeleteResponse,
+  type DataSourceCreateParams,
+  type DataSourceUpdateParams,
+  type DataSourceListParams,
+  type DataSourceListResponsesLimitOffset,
+} from './data-sources/data-sources';
 export { Embeddings, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
@@ -40,4 +52,4 @@ export {
   type RerankResponse,
   type EmbedParams,
   type RerankParams,
-} from './top-level/top-level';
+} from './top-level';

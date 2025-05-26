@@ -9,10 +9,9 @@ const client = new Mixedbread({
 
 describe('resource connectors', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.client.dataSources.connectors.create(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { vector_store_id: 'vector_store_id' },
-    );
+    const responsePromise = client.dataSources.connectors.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: 'vector_store_id',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,23 +22,19 @@ describe('resource connectors', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.client.dataSources.connectors.create(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      {
-        vector_store_id: 'vector_store_id',
-        name: 'name',
-        trigger_sync: true,
-        metadata: {},
-        polling_interval: 'polling_interval',
-      },
-    );
+    const response = await client.dataSources.connectors.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      vector_store_id: 'vector_store_id',
+      name: 'name',
+      trigger_sync: true,
+      metadata: {},
+      polling_interval: 'polling_interval',
+    });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.client.dataSources.connectors.retrieve(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-    );
+    const responsePromise = client.dataSources.connectors.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,17 +45,15 @@ describe('resource connectors', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.client.dataSources.connectors.retrieve(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-    );
+    const response = await client.dataSources.connectors.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.client.dataSources.connectors.update(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-    );
+    const responsePromise = client.dataSources.connectors.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -71,20 +64,17 @@ describe('resource connectors', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.client.dataSources.connectors.update(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      {
-        data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        name: 'name',
-        metadata: { foo: 'bar' },
-        trigger_sync: true,
-        polling_interval: 'polling_interval',
-      },
-    );
+    const response = await client.dataSources.connectors.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      name: 'name',
+      metadata: { foo: 'bar' },
+      trigger_sync: true,
+      polling_interval: 'polling_interval',
+    });
   });
 
   test('list', async () => {
-    const responsePromise = client.client.dataSources.connectors.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
+    const responsePromise = client.dataSources.connectors.list('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -97,7 +87,7 @@ describe('resource connectors', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.client.dataSources.connectors.list(
+      client.dataSources.connectors.list(
         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
         { limit: 1000, offset: 0 },
         { path: '/_stainless_unknown_path' },
@@ -106,10 +96,9 @@ describe('resource connectors', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.client.dataSources.connectors.delete(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-    );
+    const responsePromise = client.dataSources.connectors.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -120,9 +109,8 @@ describe('resource connectors', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.client.dataSources.connectors.delete(
-      '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      { data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-    );
+    const response = await client.dataSources.connectors.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
   });
 });

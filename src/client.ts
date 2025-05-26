@@ -18,7 +18,7 @@ import * as Pagination from './core/pagination';
 import { AbstractPage, type LimitOffsetParams, LimitOffsetResponse } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
-import * as TopLevelAPI from './resources/top-level/top-level';
+import * as TopLevelAPI from './resources/top-level';
 import {
   EmbedParams,
   Embedding,
@@ -27,7 +27,7 @@ import {
   MultiEncodingEmbedding,
   RerankParams,
   RerankResponse,
-} from './resources/top-level/top-level';
+} from './resources/top-level';
 import { APIPromise } from './core/api-promise';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -46,6 +46,18 @@ import {
 import { readEnv } from './internal/utils/env';
 import { formatRequestDetails, loggerFor } from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
+import {
+  DataSourceCreateParams,
+  DataSourceCreateResponse,
+  DataSourceDeleteResponse,
+  DataSourceListParams,
+  DataSourceListResponse,
+  DataSourceListResponsesLimitOffset,
+  DataSourceRetrieveResponse,
+  DataSourceUpdateParams,
+  DataSourceUpdateResponse,
+  DataSources,
+} from './resources/data-sources/data-sources';
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
@@ -839,6 +851,7 @@ export class Mixedbread {
   extractions: API.Extractions = new API.Extractions(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
   chat: API.Chat = new API.Chat(this);
+  dataSources: API.DataSources = new API.DataSources(this);
 }
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
@@ -846,6 +859,7 @@ Mixedbread.Files = Files;
 Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Chat = Chat;
+Mixedbread.DataSources = DataSources;
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
@@ -898,6 +912,19 @@ export declare namespace Mixedbread {
   export { Embeddings as Embeddings, type EmbeddingCreateParams as EmbeddingCreateParams };
 
   export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
+
+  export {
+    DataSources as DataSources,
+    type DataSourceCreateResponse as DataSourceCreateResponse,
+    type DataSourceRetrieveResponse as DataSourceRetrieveResponse,
+    type DataSourceUpdateResponse as DataSourceUpdateResponse,
+    type DataSourceListResponse as DataSourceListResponse,
+    type DataSourceDeleteResponse as DataSourceDeleteResponse,
+    type DataSourceListResponsesLimitOffset as DataSourceListResponsesLimitOffset,
+    type DataSourceCreateParams as DataSourceCreateParams,
+    type DataSourceUpdateParams as DataSourceUpdateParams,
+    type DataSourceListParams as DataSourceListParams,
+  };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;

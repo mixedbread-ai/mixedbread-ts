@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../../../core/resource';
+import { APIResource } from '../../core/resource';
 import * as ConnectorsAPI from './connectors';
 import {
   ConnectorCreateParams,
@@ -16,10 +16,10 @@ import {
   ConnectorUpdateResponse,
   Connectors,
 } from './connectors';
-import { APIPromise } from '../../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../../core/pagination';
-import { RequestOptions } from '../../../internal/request-options';
-import { path } from '../../../internal/utils/path';
+import { APIPromise } from '../../core/api-promise';
+import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class DataSources extends APIResource {
   connectors: ConnectorsAPI.Connectors = new ConnectorsAPI.Connectors(this._client);
@@ -30,14 +30,6 @@ export class DataSources extends APIResource {
    * Args: params: The data source to create.
    *
    * Returns: The created data source.
-   *
-   * @example
-   * ```ts
-   * const dataSource = await client.client.dataSources.create({
-   *   type: 'notion',
-   *   name: 'name',
-   * });
-   * ```
    */
   create(body: DataSourceCreateParams, options?: RequestOptions): APIPromise<DataSourceCreateResponse> {
     return this._client.post('/v1/data_sources/', { body, ...options });
@@ -49,13 +41,6 @@ export class DataSources extends APIResource {
    * Args: data_source_id: The ID of the data source to fetch.
    *
    * Returns: The data source.
-   *
-   * @example
-   * ```ts
-   * const dataSource = await client.client.dataSources.retrieve(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   * ```
    */
   retrieve(dataSourceID: string, options?: RequestOptions): APIPromise<DataSourceRetrieveResponse> {
     return this._client.get(path`/v1/data_sources/${dataSourceID}`, options);
@@ -68,13 +53,6 @@ export class DataSources extends APIResource {
    * source to update.
    *
    * Returns: The updated data source.
-   *
-   * @example
-   * ```ts
-   * const dataSource = await client.client.dataSources.update(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   * ```
    */
   update(
     dataSourceID: string,
@@ -88,14 +66,6 @@ export class DataSources extends APIResource {
    * Get all data sources.
    *
    * Returns: The list of data sources.
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const dataSourceListResponse of client.client.dataSources.list()) {
-   *   // ...
-   * }
-   * ```
    */
   list(
     query: DataSourceListParams | null | undefined = {},
@@ -111,13 +81,6 @@ export class DataSources extends APIResource {
    * Delete a data source.
    *
    * Args: data_source_id: The ID of the data source to delete.
-   *
-   * @example
-   * ```ts
-   * const dataSource = await client.client.dataSources.delete(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   * ```
    */
   delete(dataSourceID: string, options?: RequestOptions): APIPromise<DataSourceDeleteResponse> {
     return this._client.delete(path`/v1/data_sources/${dataSourceID}`, options);
@@ -129,7 +92,7 @@ export type DataSourceListResponsesLimitOffset = LimitOffset<DataSourceListRespo
 /**
  * Service-level representation of a data source.
  */
-export interface DataSource {
+export interface DataSourceCreateResponse {
   /**
    * The ID of the data source
    */
@@ -163,7 +126,7 @@ export interface DataSource {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params: DataSource.AuthParams | null;
+  auth_params: DataSourceCreateResponse.AuthParams | null;
 
   /**
    * The type of the object
@@ -171,7 +134,7 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
+export namespace DataSourceCreateResponse {
   /**
    * Authentication parameters for a OAuth data source.
    */
@@ -228,7 +191,7 @@ export namespace DataSource {
 /**
  * Service-level representation of a data source.
  */
-export interface DataSource {
+export interface DataSourceRetrieveResponse {
   /**
    * The ID of the data source
    */
@@ -262,7 +225,7 @@ export interface DataSource {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params: DataSource.AuthParams | null;
+  auth_params: DataSourceRetrieveResponse.AuthParams | null;
 
   /**
    * The type of the object
@@ -270,7 +233,7 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
+export namespace DataSourceRetrieveResponse {
   /**
    * Authentication parameters for a OAuth data source.
    */
@@ -327,7 +290,7 @@ export namespace DataSource {
 /**
  * Service-level representation of a data source.
  */
-export interface DataSource {
+export interface DataSourceUpdateResponse {
   /**
    * The ID of the data source
    */
@@ -361,7 +324,7 @@ export interface DataSource {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params: DataSource.AuthParams | null;
+  auth_params: DataSourceUpdateResponse.AuthParams | null;
 
   /**
    * The type of the object
@@ -369,7 +332,7 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
+export namespace DataSourceUpdateResponse {
   /**
    * Authentication parameters for a OAuth data source.
    */
@@ -426,7 +389,7 @@ export namespace DataSource {
 /**
  * Service-level representation of a data source.
  */
-export interface DataSource {
+export interface DataSourceListResponse {
   /**
    * The ID of the data source
    */
@@ -460,7 +423,7 @@ export interface DataSource {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params: DataSource.AuthParams | null;
+  auth_params: DataSourceListResponse.AuthParams | null;
 
   /**
    * The type of the object
@@ -468,7 +431,7 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
+export namespace DataSourceListResponse {
   /**
    * Authentication parameters for a OAuth data source.
    */
@@ -525,7 +488,7 @@ export namespace DataSource {
 /**
  * Deleted data source.
  */
-export interface DataSourceDeleted {
+export interface DataSourceDeleteResponse {
   /**
    * The ID of the data source
    */
