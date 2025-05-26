@@ -104,7 +104,7 @@ describe('resource vectorStores', () => {
       },
       search_options: { score_threshold: 0, rewrite_query: true, return_metadata: true },
       stream: true,
-      qa_options: { cite: true },
+      qa_options: { cite: true, multimodal: true },
     });
   });
 

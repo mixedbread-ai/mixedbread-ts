@@ -123,7 +123,7 @@ export interface RerankResponse {
   /**
    * The object type of the response
    */
-  object?: EmbeddingsAPI.ObjectType;
+  object?: 'list';
 
   /**
    * The number of documents to return.
