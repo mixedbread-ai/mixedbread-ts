@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as JobsAPI from './jobs';
 import { APIPromise } from '../../core/api-promise';
 import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -69,6 +70,29 @@ export class Jobs extends APIResource {
 export type JobListResponsesLimitOffset = LimitOffset<JobListResponse>;
 
 /**
+ * Strategy used for chunking document content.
+ */
+export type ChunkingStrategy = 'page';
+
+/**
+ * Types of elements that can be extracted from a document.
+ */
+export type ElementType =
+  | 'caption'
+  | 'footnote'
+  | 'formula'
+  | 'list-item'
+  | 'page-footer'
+  | 'page-header'
+  | 'picture'
+  | 'section-header'
+  | 'table'
+  | 'text'
+  | 'title';
+
+export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
+/**
  * A job for parsing documents with its current state and result.
  */
 export interface ParsingJob {
@@ -85,7 +109,7 @@ export interface ParsingJob {
   /**
    * The status of the job
    */
-  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status: ParsingJobStatus;
 
   /**
    * The error of the job
@@ -131,29 +155,17 @@ export namespace ParsingJob {
     /**
      * The strategy used for chunking the document
      */
-    chunking_strategy: 'page';
+    chunking_strategy: JobsAPI.ChunkingStrategy;
 
     /**
      * The format of the returned content
      */
-    return_format: 'html' | 'markdown' | 'plain';
+    return_format: JobsAPI.ReturnFormat;
 
     /**
      * The types of elements extracted
      */
-    element_types: Array<
-      | 'caption'
-      | 'footnote'
-      | 'formula'
-      | 'list-item'
-      | 'page-footer'
-      | 'page-header'
-      | 'picture'
-      | 'section-header'
-      | 'table'
-      | 'text'
-      | 'title'
-    >;
+    element_types: Array<JobsAPI.ElementType>;
 
     /**
      * List of extracted chunks from the document
@@ -195,18 +207,7 @@ export namespace ParsingJob {
         /**
          * The type of the extracted element
          */
-        type:
-          | 'caption'
-          | 'footnote'
-          | 'formula'
-          | 'list-item'
-          | 'page-footer'
-          | 'page-header'
-          | 'picture'
-          | 'section-header'
-          | 'table'
-          | 'text'
-          | 'title';
+        type: JobsAPI.ElementType;
 
         /**
          * The confidence score of the extraction
@@ -238,6 +239,11 @@ export namespace ParsingJob {
 }
 
 /**
+ * Format options for the returned document content.
+ */
+export type ReturnFormat = 'html' | 'markdown' | 'plain';
+
+/**
  * A parsing job item for list responses, omitting result and error fields.
  */
 export interface JobListResponse {
@@ -254,7 +260,7 @@ export interface JobListResponse {
   /**
    * The status of the job
    */
-  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status: ParsingJobStatus;
 
   /**
    * The started time of the job
@@ -311,29 +317,17 @@ export interface JobCreateParams {
   /**
    * The elements to extract from the document
    */
-  element_types?: Array<
-    | 'caption'
-    | 'footnote'
-    | 'formula'
-    | 'list-item'
-    | 'page-footer'
-    | 'page-header'
-    | 'picture'
-    | 'section-header'
-    | 'table'
-    | 'text'
-    | 'title'
-  > | null;
+  element_types?: Array<ElementType> | null;
 
   /**
    * The strategy to use for chunking the content
    */
-  chunking_strategy?: 'page';
+  chunking_strategy?: ChunkingStrategy;
 
   /**
    * The format of the returned content
    */
-  return_format?: 'html' | 'markdown' | 'plain';
+  return_format?: ReturnFormat;
 
   /**
    * The strategy to use for OCR
@@ -345,7 +339,11 @@ export interface JobListParams extends LimitOffsetParams {}
 
 export declare namespace Jobs {
   export {
+    type ChunkingStrategy as ChunkingStrategy,
+    type ElementType as ElementType,
+    type ParsingJobStatus as ParsingJobStatus,
     type ParsingJob as ParsingJob,
+    type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
     type JobListResponsesLimitOffset as JobListResponsesLimitOffset,

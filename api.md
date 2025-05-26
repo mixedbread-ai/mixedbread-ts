@@ -69,7 +69,11 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/parsing/jobs.ts">ChunkingStrategy</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">ElementType</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">ParsingJobStatus</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">ReturnFormat</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
 
@@ -86,6 +90,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/files.ts">FileObject</a></code>
+- <code><a href="./src/resources/files.ts">PaginationWithTotal</a></code>
 - <code><a href="./src/resources/files.ts">FileDeleteResponse</a></code>
 
 Methods:
@@ -129,12 +134,19 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/extractions/content.ts">ExtractionResult</a></code>
+- <code><a href="./src/resources/extractions/content.ts">ImageURLInput</a></code>
+- <code><a href="./src/resources/extractions/content.ts">TextInput</a></code>
 
 Methods:
 
 - <code title="post /v1/extractions/content">client.extractions.content.<a href="./src/resources/extractions/content.ts">create</a>({ ...params }) -> ExtractionResult</code>
 
 # Embeddings
+
+Types:
+
+- <code><a href="./src/resources/embeddings.ts">EncodingFormat</a></code>
+- <code><a href="./src/resources/embeddings.ts">ObjectType</a></code>
 
 Methods:
 
@@ -154,34 +166,47 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceCreateResponse</a></code>
-- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceRetrieveResponse</a></code>
-- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceUpdateResponse</a></code>
-- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceListResponse</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSource</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceOauth2Params</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceType</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">create</a>({ ...params }) -> DataSourceCreateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">retrieve</a>(dataSourceID) -> DataSourceRetrieveResponse</code>
-- <code title="put /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">update</a>(dataSourceID, { ...params }) -> DataSourceUpdateResponse</code>
-- <code title="get /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">list</a>({ ...params }) -> DataSourceListResponsesLimitOffset</code>
+- <code title="post /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">create</a>({ ...params }) -> DataSource</code>
+- <code title="get /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">retrieve</a>(dataSourceID) -> DataSource</code>
+- <code title="put /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">update</a>(dataSourceID, { ...params }) -> DataSource</code>
+- <code title="get /v1/data_sources/">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">list</a>({ ...params }) -> DataSourcesLimitOffset</code>
 - <code title="delete /v1/data_sources/{data_source_id}">client.dataSources.<a href="./src/resources/data-sources/data-sources.ts">delete</a>(dataSourceID) -> DataSourceDeleteResponse</code>
 
 ## Connectors
 
 Types:
 
-- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorCreateResponse</a></code>
-- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorRetrieveResponse</a></code>
-- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorUpdateResponse</a></code>
-- <code><a href="./src/resources/data-sources/connectors.ts">ConnectorListResponse</a></code>
+- <code><a href="./src/resources/data-sources/connectors.ts">DataSourceConnector</a></code>
 - <code><a href="./src/resources/data-sources/connectors.ts">ConnectorDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">create</a>(dataSourceID, { ...params }) -> ConnectorCreateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">retrieve</a>(connectorID, { ...params }) -> ConnectorRetrieveResponse</code>
-- <code title="put /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">update</a>(connectorID, { ...params }) -> ConnectorUpdateResponse</code>
-- <code title="get /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">list</a>(dataSourceID, { ...params }) -> ConnectorListResponsesLimitOffset</code>
+- <code title="post /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">create</a>(dataSourceID, { ...params }) -> DataSourceConnector</code>
+- <code title="get /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">retrieve</a>(connectorID, { ...params }) -> DataSourceConnector</code>
+- <code title="put /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">update</a>(connectorID, { ...params }) -> DataSourceConnector</code>
+- <code title="get /v1/data_sources/{data_source_id}/connectors">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">list</a>(dataSourceID, { ...params }) -> DataSourceConnectorsLimitOffset</code>
 - <code title="delete /v1/data_sources/{data_source_id}/connectors/{connector_id}">client.dataSources.connectors.<a href="./src/resources/data-sources/connectors.ts">delete</a>(connectorID, { ...params }) -> ConnectorDeleteResponse</code>
+
+# APIKeys
+
+Types:
+
+- <code><a href="./src/resources/api-keys.ts">APIKey</a></code>
+- <code><a href="./src/resources/api-keys.ts">APIKeyCreated</a></code>
+- <code><a href="./src/resources/api-keys.ts">APIKeyDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/api-keys">client.apiKeys.<a href="./src/resources/api-keys.ts">create</a>({ ...params }) -> APIKeyCreated</code>
+- <code title="get /v1/api-keys/{api_key_id}">client.apiKeys.<a href="./src/resources/api-keys.ts">retrieve</a>(apiKeyID) -> APIKey</code>
+- <code title="get /v1/api-keys">client.apiKeys.<a href="./src/resources/api-keys.ts">list</a>({ ...params }) -> APIKeysLimitOffset</code>
+- <code title="delete /v1/api-keys/{api_key_id}">client.apiKeys.<a href="./src/resources/api-keys.ts">delete</a>(apiKeyID) -> APIKeyDeleteResponse</code>
+- <code title="post /v1/api-keys/{api_key_id}/reroll">client.apiKeys.<a href="./src/resources/api-keys.ts">reroll</a>(apiKeyID) -> APIKeyCreated</code>
+- <code title="post /v1/api-keys/{api_key_id}/revoke">client.apiKeys.<a href="./src/resources/api-keys.ts">revoke</a>(apiKeyID) -> APIKey</code>

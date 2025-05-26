@@ -2,7 +2,11 @@
 
 export {
   Jobs,
+  type ChunkingStrategy,
+  type ElementType,
+  type ParsingJobStatus,
   type ParsingJob,
+  type ReturnFormat,
   type JobListResponse,
   type JobDeleteResponse,
   type JobCreateParams,

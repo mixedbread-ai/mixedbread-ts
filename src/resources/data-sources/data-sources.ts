@@ -4,17 +4,14 @@ import { APIResource } from '../../core/resource';
 import * as ConnectorsAPI from './connectors';
 import {
   ConnectorCreateParams,
-  ConnectorCreateResponse,
   ConnectorDeleteParams,
   ConnectorDeleteResponse,
   ConnectorListParams,
-  ConnectorListResponse,
-  ConnectorListResponsesLimitOffset,
   ConnectorRetrieveParams,
-  ConnectorRetrieveResponse,
   ConnectorUpdateParams,
-  ConnectorUpdateResponse,
   Connectors,
+  DataSourceConnector,
+  DataSourceConnectorsLimitOffset,
 } from './connectors';
 import { APIPromise } from '../../core/api-promise';
 import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
@@ -31,7 +28,7 @@ export class DataSources extends APIResource {
    *
    * Returns: The created data source.
    */
-  create(body: DataSourceCreateParams, options?: RequestOptions): APIPromise<DataSourceCreateResponse> {
+  create(body: DataSourceCreateParams, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.post('/v1/data_sources/', { body, ...options });
   }
 
@@ -42,7 +39,7 @@ export class DataSources extends APIResource {
    *
    * Returns: The data source.
    */
-  retrieve(dataSourceID: string, options?: RequestOptions): APIPromise<DataSourceRetrieveResponse> {
+  retrieve(dataSourceID: string, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.get(path`/v1/data_sources/${dataSourceID}`, options);
   }
 
@@ -58,7 +55,7 @@ export class DataSources extends APIResource {
     dataSourceID: string,
     body: DataSourceUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<DataSourceUpdateResponse> {
+  ): APIPromise<DataSource> {
     return this._client.put(path`/v1/data_sources/${dataSourceID}`, { body, ...options });
   }
 
@@ -70,11 +67,8 @@ export class DataSources extends APIResource {
   list(
     query: DataSourceListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<DataSourceListResponsesLimitOffset, DataSourceListResponse> {
-    return this._client.getAPIList('/v1/data_sources/', LimitOffset<DataSourceListResponse>, {
-      query,
-      ...options,
-    });
+  ): PagePromise<DataSourcesLimitOffset, DataSource> {
+    return this._client.getAPIList('/v1/data_sources/', LimitOffset<DataSource>, { query, ...options });
   }
 
   /**
@@ -87,12 +81,12 @@ export class DataSources extends APIResource {
   }
 }
 
-export type DataSourceListResponsesLimitOffset = LimitOffset<DataSourceListResponse>;
+export type DataSourcesLimitOffset = LimitOffset<DataSource>;
 
 /**
  * Service-level representation of a data source.
  */
-export interface DataSourceCreateResponse {
+export interface DataSource {
   /**
    * The ID of the data source
    */
@@ -111,7 +105,7 @@ export interface DataSourceCreateResponse {
   /**
    * The type of data source
    */
-  type: 'notion' | 'linear';
+  type: DataSourceType;
 
   /**
    * The name of the data source
@@ -126,364 +120,67 @@ export interface DataSourceCreateResponse {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params: DataSourceCreateResponse.AuthParams | null;
+  auth_params: DataSourceOauth2Params | null;
 
   /**
    * The type of the object
    */
   object?: 'data_source';
-}
-
-export namespace DataSourceCreateResponse {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
 }
 
 /**
- * Service-level representation of a data source.
+ * Authentication parameters for a OAuth data source.
  */
-export interface DataSourceRetrieveResponse {
-  /**
-   * The ID of the data source
-   */
-  id: string;
+export interface DataSourceOauth2Params {
+  type?: 'oauth2';
 
   /**
-   * The creation time of the data source
+   * The timestamp when the OAuth2 credentials were created
    */
-  created_at: string;
+  created_at?: string;
 
   /**
-   * The last update time of the data source
+   * The OAuth2 client ID
    */
-  updated_at: string;
+  client_id: string;
 
   /**
-   * The type of data source
+   * The OAuth2 client secret
    */
-  type: 'notion' | 'linear';
+  client_secret: string;
 
   /**
-   * The name of the data source
+   * The OAuth2 redirect URI
    */
-  name: string;
+  redirect_uri: string;
 
   /**
-   * The metadata of the data source
+   * The OAuth2 scope
    */
-  metadata: unknown;
+  scope: string;
 
   /**
-   * Authentication parameters for a OAuth data source.
+   * The OAuth2 access token
    */
-  auth_params: DataSourceRetrieveResponse.AuthParams | null;
+  access_token?: string | null;
 
   /**
-   * The type of the object
+   * The OAuth2 refresh token
    */
-  object?: 'data_source';
+  refresh_token?: string | null;
+
+  /**
+   * The OAuth2 token type
+   */
+  token_type?: string | null;
+
+  /**
+   * The OAuth2 token expiration timestamp
+   */
+  expires_on?: string | null;
 }
 
-export namespace DataSourceRetrieveResponse {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
-}
-
-/**
- * Service-level representation of a data source.
- */
-export interface DataSourceUpdateResponse {
-  /**
-   * The ID of the data source
-   */
-  id: string;
-
-  /**
-   * The creation time of the data source
-   */
-  created_at: string;
-
-  /**
-   * The last update time of the data source
-   */
-  updated_at: string;
-
-  /**
-   * The type of data source
-   */
-  type: 'notion' | 'linear';
-
-  /**
-   * The name of the data source
-   */
-  name: string;
-
-  /**
-   * The metadata of the data source
-   */
-  metadata: unknown;
-
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params: DataSourceUpdateResponse.AuthParams | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'data_source';
-}
-
-export namespace DataSourceUpdateResponse {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
-}
-
-/**
- * Service-level representation of a data source.
- */
-export interface DataSourceListResponse {
-  /**
-   * The ID of the data source
-   */
-  id: string;
-
-  /**
-   * The creation time of the data source
-   */
-  created_at: string;
-
-  /**
-   * The last update time of the data source
-   */
-  updated_at: string;
-
-  /**
-   * The type of data source
-   */
-  type: 'notion' | 'linear';
-
-  /**
-   * The name of the data source
-   */
-  name: string;
-
-  /**
-   * The metadata of the data source
-   */
-  metadata: unknown;
-
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params: DataSourceListResponse.AuthParams | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'data_source';
-}
-
-export namespace DataSourceListResponse {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
-}
+export type DataSourceType = 'notion' | 'linear';
 
 /**
  * Deleted data source.
@@ -509,7 +206,7 @@ export interface DataSourceCreateParams {
   /**
    * The type of data source to create
    */
-  type: 'notion' | 'linear';
+  type: DataSourceType;
 
   /**
    * The name of the data source
@@ -524,61 +221,7 @@ export interface DataSourceCreateParams {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params?: DataSourceCreateParams.AuthParams | null;
-}
-
-export namespace DataSourceCreateParams {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
+  auth_params?: DataSourceOauth2Params | null;
 }
 
 export interface DataSourceUpdateParams {
@@ -595,61 +238,7 @@ export interface DataSourceUpdateParams {
   /**
    * Authentication parameters for a OAuth data source.
    */
-  auth_params?: DataSourceUpdateParams.AuthParams | null;
-}
-
-export namespace DataSourceUpdateParams {
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  export interface AuthParams {
-    type?: 'oauth2';
-
-    /**
-     * The timestamp when the OAuth2 credentials were created
-     */
-    created_at?: string;
-
-    /**
-     * The OAuth2 client ID
-     */
-    client_id: string;
-
-    /**
-     * The OAuth2 client secret
-     */
-    client_secret: string;
-
-    /**
-     * The OAuth2 redirect URI
-     */
-    redirect_uri: string;
-
-    /**
-     * The OAuth2 scope
-     */
-    scope: string;
-
-    /**
-     * The OAuth2 access token
-     */
-    access_token?: string | null;
-
-    /**
-     * The OAuth2 refresh token
-     */
-    refresh_token?: string | null;
-
-    /**
-     * The OAuth2 token type
-     */
-    token_type?: string | null;
-
-    /**
-     * The OAuth2 token expiration timestamp
-     */
-    expires_on?: string | null;
-  }
+  auth_params?: DataSourceOauth2Params | null;
 }
 
 export interface DataSourceListParams extends LimitOffsetParams {}
@@ -658,12 +247,11 @@ DataSources.Connectors = Connectors;
 
 export declare namespace DataSources {
   export {
-    type DataSourceCreateResponse as DataSourceCreateResponse,
-    type DataSourceRetrieveResponse as DataSourceRetrieveResponse,
-    type DataSourceUpdateResponse as DataSourceUpdateResponse,
-    type DataSourceListResponse as DataSourceListResponse,
+    type DataSource as DataSource,
+    type DataSourceOauth2Params as DataSourceOauth2Params,
+    type DataSourceType as DataSourceType,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
-    type DataSourceListResponsesLimitOffset as DataSourceListResponsesLimitOffset,
+    type DataSourcesLimitOffset as DataSourcesLimitOffset,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
@@ -671,12 +259,9 @@ export declare namespace DataSources {
 
   export {
     Connectors as Connectors,
-    type ConnectorCreateResponse as ConnectorCreateResponse,
-    type ConnectorRetrieveResponse as ConnectorRetrieveResponse,
-    type ConnectorUpdateResponse as ConnectorUpdateResponse,
-    type ConnectorListResponse as ConnectorListResponse,
+    type DataSourceConnector as DataSourceConnector,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type ConnectorListResponsesLimitOffset as ConnectorListResponsesLimitOffset,
+    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,

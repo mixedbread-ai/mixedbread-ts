@@ -1,6 +1,12 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Content, type ExtractionResult, type ContentCreateParams } from './content';
+export {
+  Content,
+  type ExtractionResult,
+  type ImageURLInput,
+  type TextInput,
+  type ContentCreateParams,
+} from './content';
 export { Extractions } from './extractions';
 export { Jobs, type ExtractionJob, type JobCreateParams } from './jobs';
 export {

@@ -1,5 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+import * as EmbeddingsAPI from './embeddings';
 import * as Shared from './shared';
 
 export interface Embedding {
@@ -38,19 +39,7 @@ export interface EmbeddingCreateResponse {
   /**
    * The object type of the response
    */
-  object?:
-    | 'list'
-    | 'parsing_job'
-    | 'extraction_job'
-    | 'embedding'
-    | 'embedding_dict'
-    | 'rank_result'
-    | 'file'
-    | 'vector_store'
-    | 'vector_store.file'
-    | 'api_key'
-    | 'data_source'
-    | 'data_source.connector';
+  object?: EmbeddingsAPI.ObjectType;
 
   /**
    * Whether the embeddings are normalized.
@@ -60,15 +49,7 @@ export interface EmbeddingCreateResponse {
   /**
    * The encoding formats of the embeddings.
    */
-  encoding_format:
-    | 'float'
-    | 'float16'
-    | 'base64'
-    | 'binary'
-    | 'ubinary'
-    | 'int8'
-    | 'uint8'
-    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
+  encoding_format: EmbeddingsAPI.EncodingFormat | Array<EmbeddingsAPI.EncodingFormat>;
 
   /**
    * The number of dimensions used for the embeddings.
@@ -142,19 +123,7 @@ export interface RerankResponse {
   /**
    * The object type of the response
    */
-  object?:
-    | 'list'
-    | 'parsing_job'
-    | 'extraction_job'
-    | 'embedding'
-    | 'embedding_dict'
-    | 'rank_result'
-    | 'file'
-    | 'vector_store'
-    | 'vector_store.file'
-    | 'api_key'
-    | 'data_source'
-    | 'data_source.connector';
+  object?: EmbeddingsAPI.ObjectType;
 
   /**
    * The number of documents to return.
@@ -221,15 +190,7 @@ export interface EmbedParams {
    * The encoding format(s) of the embeddings. Can be a single format or a list of
    * formats.
    */
-  encoding_format?:
-    | 'float'
-    | 'float16'
-    | 'base64'
-    | 'binary'
-    | 'ubinary'
-    | 'int8'
-    | 'uint8'
-    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
+  encoding_format?: EmbeddingsAPI.EncodingFormat | Array<EmbeddingsAPI.EncodingFormat>;
 }
 
 export interface RerankParams {
