@@ -239,8 +239,8 @@ The `for await` syntax **is not affected**. This still works as-is:
 
 ```ts
 // Automatically fetches more pages as needed.
-for await (const vectorStore of client.vectorStores.list()) {
-  console.log(vectorStore);
+for await (const vectorStoreListResponse of client.vectorStores.list()) {
+  console.log(vectorStoreListResponse);
 }
 ```
 
@@ -262,10 +262,10 @@ Page classes for individual methods are now type aliases:
 
 ```ts
 // Before
-export class VectorStoresLimitOffset extends LimitOffset<VectorStore> {}
+export class VectorStoreListResponsesLimitOffset extends LimitOffset<VectorStoreListResponse> {}
 
 // After
-export type VectorStoresLimitOffset = LimitOffset<VectorStore>;
+export type VectorStoreListResponsesLimitOffset = LimitOffset<VectorStoreListResponse>;
 ```
 
 If you were importing these classes at runtime, you'll need to switch to importing the base class or only import them at the type-level.

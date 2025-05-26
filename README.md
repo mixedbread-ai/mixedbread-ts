@@ -50,7 +50,7 @@ const client = new Mixedbread({
 });
 
 async function main() {
-  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
+  const vectorStore: Mixedbread.VectorStoreCreateResponse = await client.vectorStores.create();
 }
 
 main();
@@ -174,8 +174,8 @@ You can use the `for await … of` syntax to iterate through items across all pa
 async function fetchAllVectorStores(params) {
   const allVectorStores = [];
   // Automatically fetches more pages as needed.
-  for await (const vectorStore of client.vectorStores.list()) {
-    allVectorStores.push(vectorStore);
+  for await (const vectorStoreListResponse of client.vectorStores.list()) {
+    allVectorStores.push(vectorStoreListResponse);
   }
   return allVectorStores;
 }
@@ -185,8 +185,8 @@ Alternatively, you can request a single page at a time:
 
 ```ts
 let page = await client.vectorStores.list();
-for (const vectorStore of page.data) {
-  console.log(vectorStore);
+for (const vectorStoreListResponse of page.data) {
+  console.log(vectorStoreListResponse);
 }
 
 // Convenience methods are provided for manually paginating:
