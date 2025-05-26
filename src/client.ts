@@ -72,7 +72,6 @@ import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
   FileCounts,
-  ScoredVectorStoreChunk,
   VectorStore,
   VectorStoreChunkSearchOptions,
   VectorStoreCreateParams,
@@ -276,14 +275,6 @@ export class Mixedbread {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
-   *
-   * @example
-   * ```ts
-   * const embeddingCreateResponse = await client.embed({
-   *   model: 'mixedbread-ai/mxbai-embed-large-v1',
-   *   input: 'x',
-   * });
-   * ```
    */
   embed(
     body: TopLevelAPI.EmbedParams,
@@ -296,11 +287,6 @@ export class Mixedbread {
    * Returns service information, including name and version.
    *
    * Returns: InfoResponse: A response containing the service name and version.
-   *
-   * @example
-   * ```ts
-   * const response = await client.info();
-   * ```
    */
   info(options?: RequestOptions): APIPromise<TopLevelAPI.InfoResponse> {
     return this.get('/', options);
@@ -312,15 +298,6 @@ export class Mixedbread {
    * Args: params: RerankParams: The parameters for reranking.
    *
    * Returns: RerankResponse: The reranked documents for the input query.
-   *
-   * @example
-   * ```ts
-   * const response = await client.rerank({
-   *   query:
-   *     'What are the key features of the Mixedbread embedding model?',
-   *   input: ['Document 1', 'Document 2'],
-   * });
-   * ```
    */
   rerank(body: TopLevelAPI.RerankParams, options?: RequestOptions): APIPromise<TopLevelAPI.RerankResponse> {
     return this.post('/v1/reranking', { body, ...options });
@@ -891,7 +868,6 @@ export declare namespace Mixedbread {
     VectorStores as VectorStores,
     type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
-    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
     type VectorStoreFileSearchOptions as VectorStoreFileSearchOptions,

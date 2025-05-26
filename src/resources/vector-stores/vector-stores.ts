@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
-import * as ContentAPI from '../extractions/content';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
@@ -169,48 +168,6 @@ export interface FileCounts {
   total?: number;
 }
 
-export interface ScoredVectorStoreChunk {
-  /**
-   * position of the chunk in a file
-   */
-  position: number;
-
-  /**
-   * value of the chunk
-   */
-  value?: string | ContentAPI.ImageURLInput | ContentAPI.TextInput | Record<string, unknown> | null;
-
-  /**
-   * content of the chunk
-   */
-  content?: string | null;
-
-  /**
-   * score of the chunk
-   */
-  score: number;
-
-  /**
-   * file id
-   */
-  file_id: string;
-
-  /**
-   * filename
-   */
-  filename: string;
-
-  /**
-   * vector store id
-   */
-  vector_store_id: string;
-
-  /**
-   * file metadata
-   */
-  metadata?: unknown;
-}
-
 /**
  * Model representing a vector store with its metadata and timestamps.
  */
@@ -363,7 +320,288 @@ export interface VectorStoreQuestionAnsweringResponse {
   /**
    * Source documents used to generate the answer
    */
-  sources?: Array<ScoredVectorStoreChunk>;
+  sources?: Array<
+    | VectorStoreQuestionAnsweringResponse.ScoredTextInputChunk
+    | VectorStoreQuestionAnsweringResponse.ScoredImageURLInputChunk
+    | VectorStoreQuestionAnsweringResponse.ScoredAudioURLInputChunk
+    | VectorStoreQuestionAnsweringResponse.ScoredVideoURLInputChunk
+  >;
+}
+
+export namespace VectorStoreQuestionAnsweringResponse {
+  export interface ScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  export interface ScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * The image input specification.
+     */
+    image_url: ScoredImageURLInputChunk.ImageURL;
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface ScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: ScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface ScoredVideoURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * The video input specification.
+     */
+    video_url: ScoredVideoURLInputChunk.VideoURL;
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredVideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
 }
 
 export interface VectorStoreSearchResponse {
@@ -375,7 +613,288 @@ export interface VectorStoreSearchResponse {
   /**
    * The list of scored vector store file chunks
    */
-  data: Array<ScoredVectorStoreChunk>;
+  data: Array<
+    | VectorStoreSearchResponse.ScoredTextInputChunk
+    | VectorStoreSearchResponse.ScoredImageURLInputChunk
+    | VectorStoreSearchResponse.ScoredAudioURLInputChunk
+    | VectorStoreSearchResponse.ScoredVideoURLInputChunk
+  >;
+}
+
+export namespace VectorStoreSearchResponse {
+  export interface ScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  export interface ScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * The image input specification.
+     */
+    image_url: ScoredImageURLInputChunk.ImageURL;
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface ScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: ScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface ScoredVideoURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * The video input specification.
+     */
+    video_url: ScoredVideoURLInputChunk.VideoURL;
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredVideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
 }
 
 export interface VectorStoreCreateParams {
@@ -480,6 +999,11 @@ export namespace VectorStoreQuestionAnsweringParams {
      * Whether to use citations
      */
     cite?: boolean;
+
+    /**
+     * Whether to use multimodal context
+     */
+    multimodal?: boolean;
   }
 }
 
@@ -520,7 +1044,6 @@ export declare namespace VectorStores {
   export {
     type ExpiresAfter as ExpiresAfter,
     type FileCounts as FileCounts,
-    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
     type VectorStoreFileSearchOptions as VectorStoreFileSearchOptions,
