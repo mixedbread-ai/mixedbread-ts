@@ -28,6 +28,10 @@ Types:
 
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ExpiresAfter</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">FileCounts</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredAudioURLInputChunk</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredImageURLInputChunk</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredTextInputChunk</a></code>
+- <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVideoURLInputChunk</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreChunkSearchOptions</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreFileSearchOptions</a></code>
