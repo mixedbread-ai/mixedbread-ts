@@ -32,7 +32,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the created vector store details.
    */
-  create(body: VectorStoreCreateParams, options?: RequestOptions): APIPromise<VectorStoreCreateResponse> {
+  create(body: VectorStoreCreateParams, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
@@ -43,7 +43,7 @@ export class VectorStores extends APIResource {
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStoreRetrieveResponse> {
+  retrieve(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.get(path`/v1/vector_stores/${vectorStoreID}`, options);
   }
 
@@ -60,7 +60,7 @@ export class VectorStores extends APIResource {
     vectorStoreID: string,
     body: VectorStoreUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<VectorStoreUpdateResponse> {
+  ): APIPromise<VectorStore> {
     return this._client.put(path`/v1/vector_stores/${vectorStoreID}`, { body, ...options });
   }
 
@@ -74,11 +74,8 @@ export class VectorStores extends APIResource {
   list(
     query: VectorStoreListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoreListResponsesLimitOffset, VectorStoreListResponse> {
-    return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStoreListResponse>, {
-      query,
-      ...options,
-    });
+  ): PagePromise<VectorStoresLimitOffset, VectorStore> {
+    return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStore>, { query, ...options });
   }
 
   /**
@@ -124,7 +121,222 @@ export class VectorStores extends APIResource {
   }
 }
 
-export type VectorStoreListResponsesLimitOffset = LimitOffset<VectorStoreListResponse>;
+export type VectorStoresLimitOffset = LimitOffset<VectorStore>;
+
+/**
+ * Represents an expiration policy for a vector store.
+ */
+export interface ExpiresAfter {
+  /**
+   * Anchor date for the expiration policy
+   */
+  anchor?: 'last_active_at';
+
+  /**
+   * Number of days after which the vector store expires
+   */
+  days?: number;
+}
+
+export interface ScoredAudioURLInputChunk {
+  /**
+   * position of the chunk in a file
+   */
+  chunk_index: number;
+
+  /**
+   * mime type of the chunk
+   */
+  mime_type?: string;
+
+  /**
+   * model used for this chunk
+   */
+  model?: string | null;
+
+  /**
+   * score of the chunk
+   */
+  score: number;
+
+  /**
+   * file id
+   */
+  file_id: string;
+
+  /**
+   * filename
+   */
+  filename: string;
+
+  /**
+   * vector store id
+   */
+  vector_store_id: string;
+
+  /**
+   * file metadata
+   */
+  metadata?: unknown;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'audio_url';
+
+  /**
+   * The audio input specification.
+   */
+  audio_url: ScoredAudioURLInputChunk.AudioURL;
+
+  /**
+   * speech recognition (sr) text of the audio
+   */
+  transcription?: string | null;
+
+  /**
+   * summary of the audio
+   */
+  summary?: string | null;
+}
+
+export namespace ScoredAudioURLInputChunk {
+  /**
+   * The audio input specification.
+   */
+  export interface AudioURL {
+    /**
+     * The audio URL. Can be either a URL or a Data URI.
+     */
+    url: string;
+  }
+}
+
+export interface ScoredImageURLInputChunk {
+  /**
+   * position of the chunk in a file
+   */
+  chunk_index: number;
+
+  /**
+   * mime type of the chunk
+   */
+  mime_type?: string;
+
+  /**
+   * model used for this chunk
+   */
+  model?: string | null;
+
+  /**
+   * score of the chunk
+   */
+  score: number;
+
+  /**
+   * file id
+   */
+  file_id: string;
+
+  /**
+   * filename
+   */
+  filename: string;
+
+  /**
+   * vector store id
+   */
+  vector_store_id: string;
+
+  /**
+   * file metadata
+   */
+  metadata?: unknown;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'image_url';
+
+  /**
+   * The image input specification.
+   */
+  image_url: ScoredImageURLInputChunk.ImageURL;
+
+  /**
+   * ocr text of the image
+   */
+  ocr_text?: string | null;
+
+  /**
+   * summary of the image
+   */
+  summary?: string | null;
+}
+
+export namespace ScoredImageURLInputChunk {
+  /**
+   * The image input specification.
+   */
+  export interface ImageURL {
+    /**
+     * The image URL. Can be either a URL or a Data URI.
+     */
+    url: string;
+  }
+}
+
+export interface ScoredTextInputChunk {
+  /**
+   * position of the chunk in a file
+   */
+  chunk_index: number;
+
+  /**
+   * mime type of the chunk
+   */
+  mime_type?: string;
+
+  /**
+   * model used for this chunk
+   */
+  model?: string | null;
+
+  /**
+   * score of the chunk
+   */
+  score: number;
+
+  /**
+   * file id
+   */
+  file_id: string;
+
+  /**
+   * filename
+   */
+  filename: string;
+
+  /**
+   * vector store id
+   */
+  vector_store_id: string;
+
+  /**
+   * file metadata
+   */
+  metadata?: unknown;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'text';
+
+  /**
+   * Text content to process
+   */
+  text: string;
+}
 
 export interface ScoredVideoURLInputChunk {
   /**
@@ -203,7 +415,7 @@ export namespace ScoredVideoURLInputChunk {
 /**
  * Model representing a vector store with its metadata and timestamps.
  */
-export interface VectorStoreCreateResponse {
+export interface VectorStore {
   /**
    * Unique identifier for the vector store
    */
@@ -227,12 +439,12 @@ export interface VectorStoreCreateResponse {
   /**
    * Counts of files in different states
    */
-  file_counts?: VectorStoreCreateResponse.FileCounts;
+  file_counts?: VectorStore.FileCounts;
 
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreCreateResponse.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Processing status of the vector store
@@ -270,7 +482,7 @@ export interface VectorStoreCreateResponse {
   object?: 'vector_store';
 }
 
-export namespace VectorStoreCreateResponse {
+export namespace VectorStore {
   /**
    * Counts of files in different states
    */
@@ -299,373 +511,27 @@ export namespace VectorStoreCreateResponse {
      * Total number of files
      */
     total?: number;
-  }
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
   }
 }
 
 /**
- * Model representing a vector store with its metadata and timestamps.
+ * Options for configuring vector store chunk searches.
  */
-export interface VectorStoreRetrieveResponse {
+export interface VectorStoreChunkSearchOptions {
   /**
-   * Unique identifier for the vector store
+   * Minimum similarity score threshold
    */
-  id: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
+  score_threshold?: number;
 
   /**
-   * Detailed description of the vector store's purpose and contents
+   * Whether to rewrite the query
    */
-  description?: string | null;
+  rewrite_query?: boolean;
 
   /**
-   * Additional metadata associated with the vector store
+   * Whether to return file metadata
    */
-  metadata?: unknown;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: VectorStoreRetrieveResponse.FileCounts;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: VectorStoreRetrieveResponse.ExpiresAfter | null;
-
-  /**
-   * Processing status of the vector store
-   */
-  status?: 'expired' | 'in_progress' | 'completed';
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Total storage usage in bytes
-   */
-  usage_bytes?: number;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-export namespace VectorStoreRetrieveResponse {
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of files whose processing was cancelled
-     */
-    cancelled?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    completed?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-}
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStoreUpdateResponse {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: VectorStoreUpdateResponse.FileCounts;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: VectorStoreUpdateResponse.ExpiresAfter | null;
-
-  /**
-   * Processing status of the vector store
-   */
-  status?: 'expired' | 'in_progress' | 'completed';
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Total storage usage in bytes
-   */
-  usage_bytes?: number;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-export namespace VectorStoreUpdateResponse {
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of files whose processing was cancelled
-     */
-    cancelled?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    completed?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
-}
-
-/**
- * Model representing a vector store with its metadata and timestamps.
- */
-export interface VectorStoreListResponse {
-  /**
-   * Unique identifier for the vector store
-   */
-  id: string;
-
-  /**
-   * Name of the vector store
-   */
-  name: string;
-
-  /**
-   * Detailed description of the vector store's purpose and contents
-   */
-  description?: string | null;
-
-  /**
-   * Additional metadata associated with the vector store
-   */
-  metadata?: unknown;
-
-  /**
-   * Counts of files in different states
-   */
-  file_counts?: VectorStoreListResponse.FileCounts;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: VectorStoreListResponse.ExpiresAfter | null;
-
-  /**
-   * Processing status of the vector store
-   */
-  status?: 'expired' | 'in_progress' | 'completed';
-
-  /**
-   * Timestamp when the vector store was created
-   */
-  created_at: string;
-
-  /**
-   * Timestamp when the vector store was last updated
-   */
-  updated_at: string;
-
-  /**
-   * Timestamp when the vector store was last used
-   */
-  last_active_at?: string | null;
-
-  /**
-   * Total storage usage in bytes
-   */
-  usage_bytes?: number;
-
-  /**
-   * Optional expiration timestamp for the vector store
-   */
-  expires_at?: string | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'vector_store';
-}
-
-export namespace VectorStoreListResponse {
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of files whose processing was cancelled
-     */
-    cancelled?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    completed?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
+  return_metadata?: boolean;
 }
 
 /**
@@ -701,213 +567,8 @@ export interface VectorStoreQuestionAnsweringResponse {
    * Source documents used to generate the answer
    */
   sources?: Array<
-    | VectorStoreQuestionAnsweringResponse.ScoredTextInputChunk
-    | VectorStoreQuestionAnsweringResponse.ScoredImageURLInputChunk
-    | VectorStoreQuestionAnsweringResponse.ScoredAudioURLInputChunk
-    | ScoredVideoURLInputChunk
+    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
   >;
-}
-
-export namespace VectorStoreQuestionAnsweringResponse {
-  export interface ScoredTextInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'text';
-
-    /**
-     * Text content to process
-     */
-    text: string;
-  }
-
-  export interface ScoredImageURLInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'image_url';
-
-    /**
-     * The image input specification.
-     */
-    image_url: ScoredImageURLInputChunk.ImageURL;
-
-    /**
-     * ocr text of the image
-     */
-    ocr_text?: string | null;
-
-    /**
-     * summary of the image
-     */
-    summary?: string | null;
-  }
-
-  export namespace ScoredImageURLInputChunk {
-    /**
-     * The image input specification.
-     */
-    export interface ImageURL {
-      /**
-       * The image URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
-
-  export interface ScoredAudioURLInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'audio_url';
-
-    /**
-     * The audio input specification.
-     */
-    audio_url: ScoredAudioURLInputChunk.AudioURL;
-
-    /**
-     * speech recognition (sr) text of the audio
-     */
-    transcription?: string | null;
-
-    /**
-     * summary of the audio
-     */
-    summary?: string | null;
-  }
-
-  export namespace ScoredAudioURLInputChunk {
-    /**
-     * The audio input specification.
-     */
-    export interface AudioURL {
-      /**
-       * The audio URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
 }
 
 export interface VectorStoreSearchResponse {
@@ -920,213 +581,8 @@ export interface VectorStoreSearchResponse {
    * The list of scored vector store file chunks
    */
   data: Array<
-    | VectorStoreSearchResponse.ScoredTextInputChunk
-    | VectorStoreSearchResponse.ScoredImageURLInputChunk
-    | VectorStoreSearchResponse.ScoredAudioURLInputChunk
-    | ScoredVideoURLInputChunk
+    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
   >;
-}
-
-export namespace VectorStoreSearchResponse {
-  export interface ScoredTextInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'text';
-
-    /**
-     * Text content to process
-     */
-    text: string;
-  }
-
-  export interface ScoredImageURLInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'image_url';
-
-    /**
-     * The image input specification.
-     */
-    image_url: ScoredImageURLInputChunk.ImageURL;
-
-    /**
-     * ocr text of the image
-     */
-    ocr_text?: string | null;
-
-    /**
-     * summary of the image
-     */
-    summary?: string | null;
-  }
-
-  export namespace ScoredImageURLInputChunk {
-    /**
-     * The image input specification.
-     */
-    export interface ImageURL {
-      /**
-       * The image URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
-
-  export interface ScoredAudioURLInputChunk {
-    /**
-     * position of the chunk in a file
-     */
-    chunk_index: number;
-
-    /**
-     * mime type of the chunk
-     */
-    mime_type?: string;
-
-    /**
-     * model used for this chunk
-     */
-    model?: string | null;
-
-    /**
-     * score of the chunk
-     */
-    score: number;
-
-    /**
-     * file id
-     */
-    file_id: string;
-
-    /**
-     * filename
-     */
-    filename: string;
-
-    /**
-     * vector store id
-     */
-    vector_store_id: string;
-
-    /**
-     * file metadata
-     */
-    metadata?: unknown;
-
-    /**
-     * Input type identifier
-     */
-    type?: 'audio_url';
-
-    /**
-     * The audio input specification.
-     */
-    audio_url: ScoredAudioURLInputChunk.AudioURL;
-
-    /**
-     * speech recognition (sr) text of the audio
-     */
-    transcription?: string | null;
-
-    /**
-     * summary of the audio
-     */
-    summary?: string | null;
-  }
-
-  export namespace ScoredAudioURLInputChunk {
-    /**
-     * The audio input specification.
-     */
-    export interface AudioURL {
-      /**
-       * The audio URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
 }
 
 export interface VectorStoreCreateParams {
@@ -1143,7 +599,7 @@ export interface VectorStoreCreateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreCreateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional metadata key-value pairs
@@ -1154,23 +610,6 @@ export interface VectorStoreCreateParams {
    * Optional list of file IDs
    */
   file_ids?: Array<string> | null;
-}
-
-export namespace VectorStoreCreateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
 }
 
 export interface VectorStoreUpdateParams {
@@ -1187,29 +626,12 @@ export interface VectorStoreUpdateParams {
   /**
    * Represents an expiration policy for a vector store.
    */
-  expires_after?: VectorStoreUpdateParams.ExpiresAfter | null;
+  expires_after?: ExpiresAfter | null;
 
   /**
    * Optional metadata key-value pairs
    */
   metadata?: unknown;
-}
-
-export namespace VectorStoreUpdateParams {
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  export interface ExpiresAfter {
-    /**
-     * Anchor date for the expiration policy
-     */
-    anchor?: 'last_active_at';
-
-    /**
-     * Number of days after which the vector store expires
-     */
-    days?: number;
-  }
 }
 
 export interface VectorStoreListParams extends LimitOffsetParams {}
@@ -1243,7 +665,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreQuestionAnsweringParams.SearchOptions;
+  search_options?: VectorStoreChunkSearchOptions;
 
   /**
    * Whether to stream the answer
@@ -1257,26 +679,6 @@ export interface VectorStoreQuestionAnsweringParams {
 }
 
 export namespace VectorStoreQuestionAnsweringParams {
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-  }
-
   /**
    * Question answering configuration options
    */
@@ -1321,44 +723,24 @@ export interface VectorStoreSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoreSearchParams.SearchOptions;
-}
-
-export namespace VectorStoreSearchParams {
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-
-    /**
-     * Whether to rewrite the query
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-  }
+  search_options?: VectorStoreChunkSearchOptions;
 }
 
 VectorStores.Files = Files;
 
 export declare namespace VectorStores {
   export {
+    type ExpiresAfter as ExpiresAfter,
+    type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
+    type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
+    type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
-    type VectorStoreCreateResponse as VectorStoreCreateResponse,
-    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
-    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
-    type VectorStoreListResponse as VectorStoreListResponse,
+    type VectorStore as VectorStore,
+    type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoreListResponsesLimitOffset as VectorStoreListResponsesLimitOffset,
+    type VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
