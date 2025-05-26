@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export * from './shared';
+export { Chat, type ChatCreateCompletionResponse } from './chat';
 export { Embeddings, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
@@ -39,4 +40,4 @@ export {
   type RerankResponse,
   type EmbedParams,
   type RerankParams,
-} from './top-level';
+} from './top-level/top-level';

@@ -18,7 +18,7 @@ import * as Pagination from './core/pagination';
 import { AbstractPage, type LimitOffsetParams, LimitOffsetResponse } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
-import * as TopLevelAPI from './resources/top-level';
+import * as TopLevelAPI from './resources/top-level/top-level';
 import {
   EmbedParams,
   Embedding,
@@ -27,11 +27,12 @@ import {
   MultiEncodingEmbedding,
   RerankParams,
   RerankResponse,
-} from './resources/top-level';
+} from './resources/top-level/top-level';
 import { APIPromise } from './core/api-promise';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
+import { Chat, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings } from './resources/embeddings';
 import {
   FileCreateParams,
@@ -837,12 +838,14 @@ export class Mixedbread {
   files: API.Files = new API.Files(this);
   extractions: API.Extractions = new API.Extractions(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
+  chat: API.Chat = new API.Chat(this);
 }
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
+Mixedbread.Chat = Chat;
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
@@ -893,6 +896,8 @@ export declare namespace Mixedbread {
   export { Extractions as Extractions };
 
   export { Embeddings as Embeddings, type EmbeddingCreateParams as EmbeddingCreateParams };
+
+  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
