@@ -70,21 +70,23 @@ import {
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  ExpiresAfter,
+  ScoredAudioURLInputChunk,
+  ScoredImageURLInputChunk,
+  ScoredTextInputChunk,
   ScoredVideoURLInputChunk,
+  VectorStore,
+  VectorStoreChunkSearchOptions,
   VectorStoreCreateParams,
-  VectorStoreCreateResponse,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
-  VectorStoreListResponse,
-  VectorStoreListResponsesLimitOffset,
   VectorStoreQuestionAnsweringParams,
   VectorStoreQuestionAnsweringResponse,
-  VectorStoreRetrieveResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
-  VectorStoreUpdateResponse,
   VectorStores,
+  VectorStoresLimitOffset,
 } from './resources/vector-stores/vector-stores';
 
 const environments = {
@@ -866,15 +868,17 @@ export declare namespace Mixedbread {
 
   export {
     VectorStores as VectorStores,
+    type ExpiresAfter as ExpiresAfter,
+    type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
+    type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
+    type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
-    type VectorStoreCreateResponse as VectorStoreCreateResponse,
-    type VectorStoreRetrieveResponse as VectorStoreRetrieveResponse,
-    type VectorStoreUpdateResponse as VectorStoreUpdateResponse,
-    type VectorStoreListResponse as VectorStoreListResponse,
+    type VectorStore as VectorStore,
+    type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoreListResponsesLimitOffset as VectorStoreListResponsesLimitOffset,
+    type VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,

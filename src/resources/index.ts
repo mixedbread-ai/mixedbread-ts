@@ -37,11 +37,13 @@ export {
 export { Parsing } from './parsing/parsing';
 export {
   VectorStores,
+  type ExpiresAfter,
+  type ScoredAudioURLInputChunk,
+  type ScoredImageURLInputChunk,
+  type ScoredTextInputChunk,
   type ScoredVideoURLInputChunk,
-  type VectorStoreCreateResponse,
-  type VectorStoreRetrieveResponse,
-  type VectorStoreUpdateResponse,
-  type VectorStoreListResponse,
+  type VectorStore,
+  type VectorStoreChunkSearchOptions,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
@@ -50,7 +52,7 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
-  type VectorStoreListResponsesLimitOffset,
+  type VectorStoresLimitOffset,
 } from './vector-stores/vector-stores';
 export {
   type Embedding,
