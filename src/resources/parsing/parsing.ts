@@ -3,6 +3,8 @@
 import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
 import {
+  ChunkingStrategy,
+  ElementType,
   JobCreateParams,
   JobDeleteResponse,
   JobListParams,
@@ -10,6 +12,8 @@ import {
   JobListResponsesLimitOffset,
   Jobs,
   ParsingJob,
+  ParsingJobStatus,
+  ReturnFormat,
 } from './jobs';
 
 export class Parsing extends APIResource {
@@ -21,7 +25,11 @@ Parsing.Jobs = Jobs;
 export declare namespace Parsing {
   export {
     Jobs as Jobs,
+    type ChunkingStrategy as ChunkingStrategy,
+    type ElementType as ElementType,
+    type ParsingJobStatus as ParsingJobStatus,
     type ParsingJob as ParsingJob,
+    type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
     type JobListResponsesLimitOffset as JobListResponsesLimitOffset,

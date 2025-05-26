@@ -2,6 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as ContentAPI from './content';
+import * as ParsingJobsAPI from '../parsing/jobs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -72,7 +73,7 @@ export interface ExtractionJob {
   /**
    * Current status of the job
    */
-  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status: ParsingJobsAPI.ParsingJobStatus;
 
   /**
    * The result of an extraction job.

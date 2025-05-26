@@ -132,6 +132,26 @@ export interface FileObject {
   updated_at: string;
 }
 
+/**
+ * Pagination model that includes total count of items.
+ */
+export interface PaginationWithTotal {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
+
+  /**
+   * Offset of the first item to return
+   */
+  offset?: number;
+
+  /**
+   * Total number of items available
+   */
+  total?: number;
+}
+
 export interface FileDeleteResponse {
   /**
    * The ID of the deleted file
@@ -168,6 +188,7 @@ export interface FileListParams extends LimitOffsetParams {}
 export declare namespace Files {
   export {
     type FileObject as FileObject,
+    type PaginationWithTotal as PaginationWithTotal,
     type FileDeleteResponse as FileDeleteResponse,
     type FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,

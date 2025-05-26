@@ -32,8 +32,17 @@ import { APIPromise } from './core/api-promise';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
+import {
+  APIKey,
+  APIKeyCreateParams,
+  APIKeyCreated,
+  APIKeyDeleteResponse,
+  APIKeyListParams,
+  APIKeys,
+  APIKeysLimitOffset,
+} from './resources/api-keys';
 import { Chat, ChatCreateCompletionResponse } from './resources/chat';
-import { EmbeddingCreateParams, Embeddings } from './resources/embeddings';
+import { EmbeddingCreateParams, Embeddings, EncodingFormat, ObjectType } from './resources/embeddings';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -42,21 +51,21 @@ import {
   FileObjectsLimitOffset,
   FileUpdateParams,
   Files,
+  PaginationWithTotal,
 } from './resources/files';
 import { readEnv } from './internal/utils/env';
 import { formatRequestDetails, loggerFor } from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
 import {
+  DataSource,
   DataSourceCreateParams,
-  DataSourceCreateResponse,
   DataSourceDeleteResponse,
   DataSourceListParams,
-  DataSourceListResponse,
-  DataSourceListResponsesLimitOffset,
-  DataSourceRetrieveResponse,
+  DataSourceOauth2Params,
+  DataSourceType,
   DataSourceUpdateParams,
-  DataSourceUpdateResponse,
   DataSources,
+  DataSourcesLimitOffset,
 } from './resources/data-sources/data-sources';
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
@@ -852,6 +861,7 @@ export class Mixedbread {
   embeddings: API.Embeddings = new API.Embeddings(this);
   chat: API.Chat = new API.Chat(this);
   dataSources: API.DataSources = new API.DataSources(this);
+  apiKeys: API.APIKeys = new API.APIKeys(this);
 }
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
@@ -860,6 +870,7 @@ Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.Chat = Chat;
 Mixedbread.DataSources = DataSources;
+Mixedbread.APIKeys = APIKeys;
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
@@ -900,6 +911,7 @@ export declare namespace Mixedbread {
   export {
     Files as Files,
     type FileObject as FileObject,
+    type PaginationWithTotal as PaginationWithTotal,
     type FileDeleteResponse as FileDeleteResponse,
     type FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
@@ -909,21 +921,35 @@ export declare namespace Mixedbread {
 
   export { Extractions as Extractions };
 
-  export { Embeddings as Embeddings, type EmbeddingCreateParams as EmbeddingCreateParams };
+  export {
+    Embeddings as Embeddings,
+    type EncodingFormat as EncodingFormat,
+    type ObjectType as ObjectType,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 
   export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
 
   export {
     DataSources as DataSources,
-    type DataSourceCreateResponse as DataSourceCreateResponse,
-    type DataSourceRetrieveResponse as DataSourceRetrieveResponse,
-    type DataSourceUpdateResponse as DataSourceUpdateResponse,
-    type DataSourceListResponse as DataSourceListResponse,
+    type DataSource as DataSource,
+    type DataSourceOauth2Params as DataSourceOauth2Params,
+    type DataSourceType as DataSourceType,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
-    type DataSourceListResponsesLimitOffset as DataSourceListResponsesLimitOffset,
+    type DataSourcesLimitOffset as DataSourcesLimitOffset,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
+  };
+
+  export {
+    APIKeys as APIKeys,
+    type APIKey as APIKey,
+    type APIKeyCreated as APIKeyCreated,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeysLimitOffset as APIKeysLimitOffset,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyListParams as APIKeyListParams,
   };
 
   export type SearchFilter = API.SearchFilter;

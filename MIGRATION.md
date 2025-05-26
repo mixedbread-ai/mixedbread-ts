@@ -95,6 +95,7 @@ This affects the following methods:
 - `client.files.list()`
 - `client.dataSources.list()`
 - `client.dataSources.connectors.list()`
+- `client.apiKeys.list()`
 
 ### Removed `httpAgent` in favor of `fetchOptions`
 

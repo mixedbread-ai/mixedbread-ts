@@ -19,7 +19,7 @@ export class Connectors extends APIResource {
     dataSourceID: string,
     body: ConnectorCreateParams,
     options?: RequestOptions,
-  ): APIPromise<ConnectorCreateResponse> {
+  ): APIPromise<DataSourceConnector> {
     return this._client.post(path`/v1/data_sources/${dataSourceID}/connectors`, { body, ...options });
   }
 
@@ -35,7 +35,7 @@ export class Connectors extends APIResource {
     connectorID: string,
     params: ConnectorRetrieveParams,
     options?: RequestOptions,
-  ): APIPromise<ConnectorRetrieveResponse> {
+  ): APIPromise<DataSourceConnector> {
     const { data_source_id } = params;
     return this._client.get(path`/v1/data_sources/${data_source_id}/connectors/${connectorID}`, options);
   }
@@ -53,7 +53,7 @@ export class Connectors extends APIResource {
     connectorID: string,
     params: ConnectorUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<ConnectorUpdateResponse> {
+  ): APIPromise<DataSourceConnector> {
     const { data_source_id, ...body } = params;
     return this._client.put(path`/v1/data_sources/${data_source_id}/connectors/${connectorID}`, {
       body,
@@ -73,10 +73,10 @@ export class Connectors extends APIResource {
     dataSourceID: string,
     query: ConnectorListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<ConnectorListResponsesLimitOffset, ConnectorListResponse> {
+  ): PagePromise<DataSourceConnectorsLimitOffset, DataSourceConnector> {
     return this._client.getAPIList(
       path`/v1/data_sources/${dataSourceID}/connectors`,
-      LimitOffset<ConnectorListResponse>,
+      LimitOffset<DataSourceConnector>,
       { query, ...options },
     );
   }
@@ -99,237 +99,12 @@ export class Connectors extends APIResource {
   }
 }
 
-export type ConnectorListResponsesLimitOffset = LimitOffset<ConnectorListResponse>;
+export type DataSourceConnectorsLimitOffset = LimitOffset<DataSourceConnector>;
 
 /**
  * Service-level representation of a connector.
  */
-export interface ConnectorCreateResponse {
-  /**
-   * The ID of the connector
-   */
-  id: string;
-
-  /**
-   * The creation time of the connector
-   */
-  created_at: string;
-
-  /**
-   * The last update time of the connector
-   */
-  updated_at: string;
-
-  /**
-   * The ID of the vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * The ID of the data source
-   */
-  data_source_id: string;
-
-  /**
-   * The name of the connector
-   */
-  name?: string;
-
-  /**
-   * The metadata of the connector
-   */
-  metadata: unknown;
-
-  /**
-   * The polling interval of the connector
-   */
-  polling_interval: string;
-
-  /**
-   * The start time of the connector
-   */
-  started_at: string | null;
-
-  /**
-   * The finish time of the connector
-   */
-  finished_at: string | null;
-
-  /**
-   * The last sync time of the connector
-   */
-  last_synced_at: string | null;
-
-  /**
-   * The sync status of the connector
-   */
-  status: 'idle' | 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
-
-  /**
-   * The sync error of the connector
-   */
-  error: string | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'data_source.connector';
-}
-
-/**
- * Service-level representation of a connector.
- */
-export interface ConnectorRetrieveResponse {
-  /**
-   * The ID of the connector
-   */
-  id: string;
-
-  /**
-   * The creation time of the connector
-   */
-  created_at: string;
-
-  /**
-   * The last update time of the connector
-   */
-  updated_at: string;
-
-  /**
-   * The ID of the vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * The ID of the data source
-   */
-  data_source_id: string;
-
-  /**
-   * The name of the connector
-   */
-  name?: string;
-
-  /**
-   * The metadata of the connector
-   */
-  metadata: unknown;
-
-  /**
-   * The polling interval of the connector
-   */
-  polling_interval: string;
-
-  /**
-   * The start time of the connector
-   */
-  started_at: string | null;
-
-  /**
-   * The finish time of the connector
-   */
-  finished_at: string | null;
-
-  /**
-   * The last sync time of the connector
-   */
-  last_synced_at: string | null;
-
-  /**
-   * The sync status of the connector
-   */
-  status: 'idle' | 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
-
-  /**
-   * The sync error of the connector
-   */
-  error: string | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'data_source.connector';
-}
-
-/**
- * Service-level representation of a connector.
- */
-export interface ConnectorUpdateResponse {
-  /**
-   * The ID of the connector
-   */
-  id: string;
-
-  /**
-   * The creation time of the connector
-   */
-  created_at: string;
-
-  /**
-   * The last update time of the connector
-   */
-  updated_at: string;
-
-  /**
-   * The ID of the vector store
-   */
-  vector_store_id: string;
-
-  /**
-   * The ID of the data source
-   */
-  data_source_id: string;
-
-  /**
-   * The name of the connector
-   */
-  name?: string;
-
-  /**
-   * The metadata of the connector
-   */
-  metadata: unknown;
-
-  /**
-   * The polling interval of the connector
-   */
-  polling_interval: string;
-
-  /**
-   * The start time of the connector
-   */
-  started_at: string | null;
-
-  /**
-   * The finish time of the connector
-   */
-  finished_at: string | null;
-
-  /**
-   * The last sync time of the connector
-   */
-  last_synced_at: string | null;
-
-  /**
-   * The sync status of the connector
-   */
-  status: 'idle' | 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
-
-  /**
-   * The sync error of the connector
-   */
-  error: string | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'data_source.connector';
-}
-
-/**
- * Service-level representation of a connector.
- */
-export interface ConnectorListResponse {
+export interface DataSourceConnector {
   /**
    * The ID of the connector
    */
@@ -493,12 +268,9 @@ export interface ConnectorDeleteParams {
 
 export declare namespace Connectors {
   export {
-    type ConnectorCreateResponse as ConnectorCreateResponse,
-    type ConnectorRetrieveResponse as ConnectorRetrieveResponse,
-    type ConnectorUpdateResponse as ConnectorUpdateResponse,
-    type ConnectorListResponse as ConnectorListResponse,
+    type DataSourceConnector as DataSourceConnector,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type ConnectorListResponsesLimitOffset as ConnectorListResponsesLimitOffset,
+    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,

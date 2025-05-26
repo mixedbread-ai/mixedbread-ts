@@ -2,27 +2,23 @@
 
 export {
   Connectors,
-  type ConnectorCreateResponse,
-  type ConnectorRetrieveResponse,
-  type ConnectorUpdateResponse,
-  type ConnectorListResponse,
+  type DataSourceConnector,
   type ConnectorDeleteResponse,
   type ConnectorCreateParams,
   type ConnectorRetrieveParams,
   type ConnectorUpdateParams,
   type ConnectorListParams,
   type ConnectorDeleteParams,
-  type ConnectorListResponsesLimitOffset,
+  type DataSourceConnectorsLimitOffset,
 } from './connectors';
 export {
   DataSources,
-  type DataSourceCreateResponse,
-  type DataSourceRetrieveResponse,
-  type DataSourceUpdateResponse,
-  type DataSourceListResponse,
+  type DataSource,
+  type DataSourceOauth2Params,
+  type DataSourceType,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourceListResponsesLimitOffset,
+  type DataSourcesLimitOffset,
 } from './data-sources';
