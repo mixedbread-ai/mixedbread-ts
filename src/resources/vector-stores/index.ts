@@ -15,15 +15,11 @@ export {
 } from './files';
 export {
   VectorStores,
-  type ExpiresAfter,
-  type FileCounts,
-  type ScoredAudioURLInputChunk,
-  type ScoredImageURLInputChunk,
-  type ScoredTextInputChunk,
   type ScoredVideoURLInputChunk,
-  type VectorStore,
-  type VectorStoreChunkSearchOptions,
-  type VectorStoreFileSearchOptions,
+  type VectorStoreCreateResponse,
+  type VectorStoreRetrieveResponse,
+  type VectorStoreUpdateResponse,
+  type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
@@ -32,5 +28,5 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
-  type VectorStoresLimitOffset,
+  type VectorStoreListResponsesLimitOffset,
 } from './vector-stores';

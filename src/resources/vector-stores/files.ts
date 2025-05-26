@@ -265,11 +265,213 @@ export interface ScoredVectorStoreFile {
    * chunks
    */
   chunks: Array<
-    | VectorStoresAPI.ScoredTextInputChunk
-    | VectorStoresAPI.ScoredImageURLInputChunk
-    | VectorStoresAPI.ScoredAudioURLInputChunk
+    | ScoredVectorStoreFile.ScoredTextInputChunk
+    | ScoredVectorStoreFile.ScoredImageURLInputChunk
+    | ScoredVectorStoreFile.ScoredAudioURLInputChunk
     | VectorStoresAPI.ScoredVideoURLInputChunk
   > | null;
+}
+
+export namespace ScoredVectorStoreFile {
+  export interface ScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  export interface ScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * The image input specification.
+     */
+    image_url: ScoredImageURLInputChunk.ImageURL;
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface ScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * vector store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: ScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+  }
+
+  export namespace ScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
 }
 
 /**
@@ -437,7 +639,39 @@ export interface FileSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoresAPI.VectorStoreFileSearchOptions;
+  search_options?: FileSearchParams.SearchOptions;
+}
+
+export namespace FileSearchParams {
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Number of chunks to return for each file
+     */
+    chunks_per_file?: number;
+  }
 }
 
 export declare namespace Files {
