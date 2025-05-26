@@ -13,15 +13,6 @@ export class Embeddings extends APIResource {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
-   *
-   * @example
-   * ```ts
-   * const embeddingCreateResponse =
-   *   await client.embeddings.create({
-   *     model: 'mixedbread-ai/mxbai-embed-large-v1',
-   *     input: 'x',
-   *   });
-   * ```
    */
   create(
     body: EmbeddingCreateParams,
@@ -30,6 +21,25 @@ export class Embeddings extends APIResource {
     return this._client.post('/v1/embeddings', { body, ...options });
   }
 }
+
+/**
+ * Enumeration of encoding formats.
+ */
+export type EncodingFormat = 'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8';
+
+export type ObjectType =
+  | 'list'
+  | 'parsing_job'
+  | 'extraction_job'
+  | 'embedding'
+  | 'embedding_dict'
+  | 'rank_result'
+  | 'file'
+  | 'vector_store'
+  | 'vector_store.file'
+  | 'api_key'
+  | 'data_source'
+  | 'data_source.connector';
 
 export interface EmbeddingCreateParams {
   /**
@@ -61,17 +71,13 @@ export interface EmbeddingCreateParams {
    * The encoding format(s) of the embeddings. Can be a single format or a list of
    * formats.
    */
-  encoding_format?:
-    | 'float'
-    | 'float16'
-    | 'base64'
-    | 'binary'
-    | 'ubinary'
-    | 'int8'
-    | 'uint8'
-    | Array<'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8'>;
+  encoding_format?: EncodingFormat | Array<EncodingFormat>;
 }
 
 export declare namespace Embeddings {
-  export { type EmbeddingCreateParams as EmbeddingCreateParams };
+  export {
+    type EncodingFormat as EncodingFormat,
+    type ObjectType as ObjectType,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
 }

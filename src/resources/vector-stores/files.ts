@@ -264,7 +264,12 @@ export interface ScoredVectorStoreFile {
   /**
    * chunks
    */
-  chunks: Array<VectorStoresAPI.ScoredVectorStoreChunk> | null;
+  chunks: Array<
+    | VectorStoresAPI.ScoredTextInputChunk
+    | VectorStoresAPI.ScoredImageURLInputChunk
+    | VectorStoresAPI.ScoredAudioURLInputChunk
+    | VectorStoresAPI.ScoredVideoURLInputChunk
+  > | null;
 }
 
 /**
@@ -432,7 +437,39 @@ export interface FileSearchParams {
   /**
    * Search configuration options
    */
-  search_options?: VectorStoresAPI.VectorStoreFileSearchOptions;
+  search_options?: FileSearchParams.SearchOptions;
+}
+
+export namespace FileSearchParams {
+  /**
+   * Search configuration options
+   */
+  export interface SearchOptions {
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Whether to rewrite the query
+     */
+    rewrite_query?: boolean;
+
+    /**
+     * Whether to return file metadata
+     */
+    return_metadata?: boolean;
+
+    /**
+     * Whether to return matching text chunks
+     */
+    return_chunks?: boolean;
+
+    /**
+     * Number of chunks to return for each file
+     */
+    chunks_per_file?: number;
+  }
 }
 
 export declare namespace Files {

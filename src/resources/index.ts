@@ -1,11 +1,33 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export * from './shared';
-export { Embeddings, type EmbeddingCreateParams } from './embeddings';
+export {
+  APIKeys,
+  type APIKey,
+  type APIKeyCreated,
+  type APIKeyDeleteResponse,
+  type APIKeyCreateParams,
+  type APIKeyListParams,
+  type APIKeysLimitOffset,
+} from './api-keys';
+export { Chat, type ChatCreateCompletionResponse } from './chat';
+export {
+  DataSources,
+  type DataSource,
+  type DataSourceOauth2Params,
+  type DataSourceType,
+  type DataSourceDeleteResponse,
+  type DataSourceCreateParams,
+  type DataSourceUpdateParams,
+  type DataSourceListParams,
+  type DataSourcesLimitOffset,
+} from './data-sources/data-sources';
+export { Embeddings, type EncodingFormat, type ObjectType, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
   Files,
   type FileObject,
+  type PaginationWithTotal,
   type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
@@ -16,11 +38,12 @@ export { Parsing } from './parsing/parsing';
 export {
   VectorStores,
   type ExpiresAfter,
-  type FileCounts,
-  type ScoredVectorStoreChunk,
+  type ScoredAudioURLInputChunk,
+  type ScoredImageURLInputChunk,
+  type ScoredTextInputChunk,
+  type ScoredVideoURLInputChunk,
   type VectorStore,
   type VectorStoreChunkSearchOptions,
-  type VectorStoreFileSearchOptions,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,

@@ -32,7 +32,17 @@ import { APIPromise } from './core/api-promise';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
-import { EmbeddingCreateParams, Embeddings } from './resources/embeddings';
+import {
+  APIKey,
+  APIKeyCreateParams,
+  APIKeyCreated,
+  APIKeyDeleteResponse,
+  APIKeyListParams,
+  APIKeys,
+  APIKeysLimitOffset,
+} from './resources/api-keys';
+import { Chat, ChatCreateCompletionResponse } from './resources/chat';
+import { EmbeddingCreateParams, Embeddings, EncodingFormat, ObjectType } from './resources/embeddings';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -41,21 +51,34 @@ import {
   FileObjectsLimitOffset,
   FileUpdateParams,
   Files,
+  PaginationWithTotal,
 } from './resources/files';
 import { readEnv } from './internal/utils/env';
 import { formatRequestDetails, loggerFor } from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
+import {
+  DataSource,
+  DataSourceCreateParams,
+  DataSourceDeleteResponse,
+  DataSourceListParams,
+  DataSourceOauth2Params,
+  DataSourceType,
+  DataSourceUpdateParams,
+  DataSources,
+  DataSourcesLimitOffset,
+} from './resources/data-sources/data-sources';
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
-  FileCounts,
-  ScoredVectorStoreChunk,
+  ScoredAudioURLInputChunk,
+  ScoredImageURLInputChunk,
+  ScoredTextInputChunk,
+  ScoredVideoURLInputChunk,
   VectorStore,
   VectorStoreChunkSearchOptions,
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
-  VectorStoreFileSearchOptions,
   VectorStoreListParams,
   VectorStoreQuestionAnsweringParams,
   VectorStoreQuestionAnsweringResponse,
@@ -254,14 +277,6 @@ export class Mixedbread {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
-   *
-   * @example
-   * ```ts
-   * const embeddingCreateResponse = await client.embed({
-   *   model: 'mixedbread-ai/mxbai-embed-large-v1',
-   *   input: 'x',
-   * });
-   * ```
    */
   embed(
     body: TopLevelAPI.EmbedParams,
@@ -274,11 +289,6 @@ export class Mixedbread {
    * Returns service information, including name and version.
    *
    * Returns: InfoResponse: A response containing the service name and version.
-   *
-   * @example
-   * ```ts
-   * const response = await client.info();
-   * ```
    */
   info(options?: RequestOptions): APIPromise<TopLevelAPI.InfoResponse> {
     return this.get('/', options);
@@ -290,15 +300,6 @@ export class Mixedbread {
    * Args: params: RerankParams: The parameters for reranking.
    *
    * Returns: RerankResponse: The reranked documents for the input query.
-   *
-   * @example
-   * ```ts
-   * const response = await client.rerank({
-   *   query:
-   *     'What are the key features of the Mixedbread embedding model?',
-   *   input: ['Document 1', 'Document 2'],
-   * });
-   * ```
    */
   rerank(body: TopLevelAPI.RerankParams, options?: RequestOptions): APIPromise<TopLevelAPI.RerankResponse> {
     return this.post('/v1/reranking', { body, ...options });
@@ -837,12 +838,18 @@ export class Mixedbread {
   files: API.Files = new API.Files(this);
   extractions: API.Extractions = new API.Extractions(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
+  chat: API.Chat = new API.Chat(this);
+  dataSources: API.DataSources = new API.DataSources(this);
+  apiKeys: API.APIKeys = new API.APIKeys(this);
 }
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
+Mixedbread.Chat = Chat;
+Mixedbread.DataSources = DataSources;
+Mixedbread.APIKeys = APIKeys;
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
@@ -862,11 +869,12 @@ export declare namespace Mixedbread {
   export {
     VectorStores as VectorStores,
     type ExpiresAfter as ExpiresAfter,
-    type FileCounts as FileCounts,
-    type ScoredVectorStoreChunk as ScoredVectorStoreChunk,
+    type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
+    type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
+    type ScoredTextInputChunk as ScoredTextInputChunk,
+    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
-    type VectorStoreFileSearchOptions as VectorStoreFileSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
@@ -883,6 +891,7 @@ export declare namespace Mixedbread {
   export {
     Files as Files,
     type FileObject as FileObject,
+    type PaginationWithTotal as PaginationWithTotal,
     type FileDeleteResponse as FileDeleteResponse,
     type FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
@@ -892,7 +901,36 @@ export declare namespace Mixedbread {
 
   export { Extractions as Extractions };
 
-  export { Embeddings as Embeddings, type EmbeddingCreateParams as EmbeddingCreateParams };
+  export {
+    Embeddings as Embeddings,
+    type EncodingFormat as EncodingFormat,
+    type ObjectType as ObjectType,
+    type EmbeddingCreateParams as EmbeddingCreateParams,
+  };
+
+  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
+
+  export {
+    DataSources as DataSources,
+    type DataSource as DataSource,
+    type DataSourceOauth2Params as DataSourceOauth2Params,
+    type DataSourceType as DataSourceType,
+    type DataSourceDeleteResponse as DataSourceDeleteResponse,
+    type DataSourcesLimitOffset as DataSourcesLimitOffset,
+    type DataSourceCreateParams as DataSourceCreateParams,
+    type DataSourceUpdateParams as DataSourceUpdateParams,
+    type DataSourceListParams as DataSourceListParams,
+  };
+
+  export {
+    APIKeys as APIKeys,
+    type APIKey as APIKey,
+    type APIKeyCreated as APIKeyCreated,
+    type APIKeyDeleteResponse as APIKeyDeleteResponse,
+    type APIKeysLimitOffset as APIKeysLimitOffset,
+    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyListParams as APIKeyListParams,
+  };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;

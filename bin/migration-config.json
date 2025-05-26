@@ -68,6 +68,109 @@
           "type": "options"
         }
       ]
+    },
+    {
+      "base": "dataSources.connectors",
+      "name": "retrieve",
+      "params": [
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "data_source_id",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "options"
+        }
+      ]
+    },
+    {
+      "base": "dataSources.connectors",
+      "name": "update",
+      "params": [
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "data_source_id",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ]
+    },
+    {
+      "base": "dataSources.connectors",
+      "name": "delete",
+      "params": [
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "data_source_id",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "connector_id",
+          "location": "path"
+        },
+        {
+          "type": "options"
+        }
+      ]
     }
   ]
 }

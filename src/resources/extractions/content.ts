@@ -26,11 +26,56 @@ export interface ExtractionResult {
   warnings: Array<string>;
 }
 
+/**
+ * Model for image input validation.
+ */
+export interface ImageURLInput {
+  /**
+   * Input type identifier
+   */
+  type?: 'image_url';
+
+  /**
+   * The image input specification.
+   */
+  image_url: ImageURLInput.ImageURL;
+}
+
+export namespace ImageURLInput {
+  /**
+   * The image input specification.
+   */
+  export interface ImageURL {
+    /**
+     * The image URL. Can be either a URL or a Data URI.
+     */
+    url: string;
+  }
+}
+
+/**
+ * Model for text input validation.
+ *
+ * Attributes: type: Input type identifier, always "text" text: The actual text
+ * content, with length and whitespace constraints
+ */
+export interface TextInput {
+  /**
+   * Input type identifier
+   */
+  type?: 'text';
+
+  /**
+   * Text content to process
+   */
+  text: string;
+}
+
 export interface ContentCreateParams {
   /**
    * The content to extract from
    */
-  content: string | Array<string> | Array<ContentCreateParams.TextInput | ContentCreateParams.ImageURLInput>;
+  content: string | Array<string> | Array<TextInput | ImageURLInput>;
 
   /**
    * The JSON schema to use for extraction
@@ -43,53 +88,11 @@ export interface ContentCreateParams {
   instructions?: string | null;
 }
 
-export namespace ContentCreateParams {
-  /**
-   * Model for text input validation.
-   *
-   * Attributes: type: Input type identifier, always "text" text: The actual text
-   * content, with length and whitespace constraints
-   */
-  export interface TextInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'text';
-
-    /**
-     * Text content to process
-     */
-    text: string;
-  }
-
-  /**
-   * Model for image input validation.
-   */
-  export interface ImageURLInput {
-    /**
-     * Input type identifier
-     */
-    type?: 'image_url';
-
-    /**
-     * The image input specification.
-     */
-    image_url: ImageURLInput.ImageURL;
-  }
-
-  export namespace ImageURLInput {
-    /**
-     * The image input specification.
-     */
-    export interface ImageURL {
-      /**
-       * The image URL. Can be either a URL or a Data URI.
-       */
-      url: string;
-    }
-  }
-}
-
 export declare namespace Content {
-  export { type ExtractionResult as ExtractionResult, type ContentCreateParams as ContentCreateParams };
+  export {
+    type ExtractionResult as ExtractionResult,
+    type ImageURLInput as ImageURLInput,
+    type TextInput as TextInput,
+    type ContentCreateParams as ContentCreateParams,
+  };
 }

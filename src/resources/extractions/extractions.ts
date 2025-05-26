@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as ContentAPI from './content';
-import { Content, ContentCreateParams, ExtractionResult } from './content';
+import { Content, ContentCreateParams, ExtractionResult, ImageURLInput, TextInput } from './content';
 import * as JobsAPI from './jobs';
 import { ExtractionJob, JobCreateParams, Jobs } from './jobs';
 import * as SchemaAPI from './schema';
@@ -42,6 +42,8 @@ export declare namespace Extractions {
   export {
     Content as Content,
     type ExtractionResult as ExtractionResult,
+    type ImageURLInput as ImageURLInput,
+    type TextInput as TextInput,
     type ContentCreateParams as ContentCreateParams,
   };
 }

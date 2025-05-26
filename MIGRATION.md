@@ -56,6 +56,9 @@ This affects the following methods:
 
 - `client.vectorStores.files.retrieve()`
 - `client.vectorStores.files.delete()`
+- `client.dataSources.connectors.retrieve()`
+- `client.dataSources.connectors.update()`
+- `client.dataSources.connectors.delete()`
 
 ### URI encoded path parameters
 
@@ -90,6 +93,9 @@ This affects the following methods:
 - `client.vectorStores.files.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
+- `client.dataSources.list()`
+- `client.dataSources.connectors.list()`
+- `client.apiKeys.list()`
 
 ### Removed `httpAgent` in favor of `fetchOptions`
 
