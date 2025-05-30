@@ -125,6 +125,7 @@ describe('resource files', () => {
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
+        rerank: true,
         return_metadata: true,
         return_chunks: true,
         chunks_per_file: 0,
