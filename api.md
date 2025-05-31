@@ -153,16 +153,6 @@ Methods:
 
 - <code title="post /v1/embeddings">client.embeddings.<a href="./src/resources/embeddings.ts">create</a>({ ...params }) -> EmbeddingCreateResponse</code>
 
-# Chat
-
-Types:
-
-- <code><a href="./src/resources/chat.ts">ChatCreateCompletionResponse</a></code>
-
-Methods:
-
-- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>() -> unknown</code>
-
 # DataSources
 
 Types:
