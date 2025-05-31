@@ -10,7 +10,6 @@ export {
   type APIKeyListParams,
   type APIKeysLimitOffset,
 } from './api-keys';
-export { Chat, type ChatCreateCompletionResponse } from './chat';
 export {
   DataSources,
   type DataSource,

@@ -456,6 +456,11 @@ export namespace FileSearchParams {
     rewrite_query?: boolean;
 
     /**
+     * Whether to rerank results and optional reranking configuration
+     */
+    rerank?: boolean | SearchOptions.RerankConfig | null;
+
+    /**
      * Whether to return file metadata
      */
     return_metadata?: boolean;
@@ -469,6 +474,29 @@ export namespace FileSearchParams {
      * Number of chunks to return for each file
      */
     chunks_per_file?: number;
+  }
+
+  export namespace SearchOptions {
+    /**
+     * Represents a reranking configuration.
+     */
+    export interface RerankConfig {
+      /**
+       * The name of the reranking model
+       */
+      model?: string;
+
+      /**
+       * Whether to include metadata in the reranked results
+       */
+      with_metadata?: boolean | Array<string>;
+
+      /**
+       * Maximum number of results to return after reranking. If None, returns all
+       * reranked results.
+       */
+      top_k?: number | null;
+    }
   }
 }
 

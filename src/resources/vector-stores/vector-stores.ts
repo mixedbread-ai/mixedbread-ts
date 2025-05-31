@@ -283,6 +283,11 @@ export namespace ScoredImageURLInputChunk {
      * The image URL. Can be either a URL or a Data URI.
      */
     url: string;
+
+    /**
+     * The image format/mimetype
+     */
+    format?: string;
   }
 }
 
@@ -529,9 +534,37 @@ export interface VectorStoreChunkSearchOptions {
   rewrite_query?: boolean;
 
   /**
+   * Whether to rerank results and optional reranking configuration
+   */
+  rerank?: boolean | VectorStoreChunkSearchOptions.RerankConfig | null;
+
+  /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
+}
+
+export namespace VectorStoreChunkSearchOptions {
+  /**
+   * Represents a reranking configuration.
+   */
+  export interface RerankConfig {
+    /**
+     * The name of the reranking model
+     */
+    model?: string;
+
+    /**
+     * Whether to include metadata in the reranked results
+     */
+    with_metadata?: boolean | Array<string>;
+
+    /**
+     * Maximum number of results to return after reranking. If None, returns all
+     * reranked results.
+     */
+    top_k?: number | null;
+  }
 }
 
 /**

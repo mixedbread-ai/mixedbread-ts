@@ -131,9 +131,94 @@ over time, you can manually enable or disable certain capabilities:
 ## Importing the tools and server individually
 
 ```js
+// Import the server, generated endpoints, or the init function
+import { server, endpoints, init } from "@mixedbread/mcp/server";
 
+// import a specific tool
+import retrieveVectorStores from "@mixedbread/mcp/tools/vector-stores/retrieve-vector-stores";
+
+// initialize the server and all endpoints
+init({ server, endpoints });
+
+// manually start server
+const transport = new StdioServerTransport();
+await server.connect(transport);
+
+// or initialize your own server with specific tools
+const myServer = new McpServer(...);
+
+// define your own endpoint
+const myCustomEndpoint = {
+  tool: {
+    name: 'my_custom_tool',
+    description: 'My custom tool',
+    inputSchema: zodToJsonSchema(z.object({ a_property: z.string() })),
+  },
+  handler: async (client: client, args: any) => {
+    return { myResponse: 'Hello world!' };
+  })
+};
+
+// initialize the server with your custom endpoints
+init({ server: myServer, endpoints: [retrieveVectorStores, myCustomEndpoint] });
 ```
 
 ## Available Tools
 
 The following tools are available in this MCP server.
+
+### Resource `vector_stores`:
+
+- `retrieve_vector_stores` (`read`): Get a vector store by ID.
+
+  Args:
+  vector_store_id: The ID of the vector store to retrieve.
+
+  Returns:
+  VectorStore: The response containing the vector store details.
+
+- `list_vector_stores` (`read`): List all vector stores.
+
+  Args:
+  pagination: The pagination options.
+
+  Returns:
+  VectorStoreListResponse: The list of vector stores.
+
+- `question_answering_vector_stores` (`write`): Question answering
+- `search_vector_stores` (`write`): Perform semantic search across vector store chunks.
+
+  This endpoint searches through vector store chunks using semantic similarity matching.
+  It supports complex search queries with filters and returns relevance-scored results.
+
+  Args:
+  search_params: Search configuration including: - query text or embeddings - metadata filters - pagination parameters - sorting preferences
+  \_state: API state dependency
+  \_ctx: Service context dependency
+
+  Returns:
+  VectorStoreSearchChunkResponse containing: - List of matched chunks with relevance scores - Pagination details including total result count
+
+  Raises:
+  HTTPException (400): If search parameters are invalid
+  HTTPException (404): If no vector stores are found to search
+
+### Resource `vector_stores.files`:
+
+- `retrieve_vector_stores_files` (`read`): Get details of a specific file in a vector store.
+
+  Args:
+  vector_store_id: The ID of the vector store
+  file_id: The ID of the file
+
+  Returns:
+  VectorStoreFile: Details of the vector store file
+
+- `list_vector_stores_files` (`read`): List files indexed in a vector store with pagination.
+
+  Args:
+  vector_store_id: The ID of the vector store
+  pagination: Pagination parameters
+
+  Returns:
+  VectorStoreFileListResponse: Paginated list of vector store files
