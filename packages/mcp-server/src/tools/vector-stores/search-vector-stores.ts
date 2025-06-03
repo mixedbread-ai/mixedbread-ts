@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export const tool: Tool = {
   name: 'search_vector_stores',
   description:
-    'Perform semantic search across vector store chunks.\n\nThis endpoint searches through vector store chunks using semantic similarity matching.\nIt supports complex search queries with filters and returns relevance-scored results.\n\nArgs:\n    search_params: Search configuration including:\n        - query text or embeddings\n        - metadata filters\n        - pagination parameters\n        - sorting preferences\n    _state: API state dependency\n    _ctx: Service context dependency\n\nReturns:\n    VectorStoreSearchChunkResponse containing:\n        - List of matched chunks with relevance scores\n        - Pagination details including total result count\n\nRaises:\n    HTTPException (400): If search parameters are invalid\n    HTTPException (404): If no vector stores are found to search',
+    'Perform semantic search across vector store chunks.\n\nThis endpoint searches through vector store chunks using semantic similarity matching.\nIt supports complex search queries with filters and returns relevance-scored results.\n\nArgs:\n    search_params: Search configuration including:\n        - query text or embeddings\n        - vector_store_ids: List of vector stores to search\n        - file_ids: Optional list of file IDs to filter chunks by (or tuple of list and condition operator)\n        - metadata filters\n        - pagination parameters\n        - sorting preferences\n    _state: API state dependency\n    _ctx: Service context dependency\n\nReturns:\n    VectorStoreSearchChunkResponse containing:\n        - List of matched chunks with relevance scores\n        - Pagination details including total result count\n\nRaises:\n    HTTPException (400): If search parameters are invalid\n    HTTPException (404): If no vector stores are found to search',
   inputSchema: {
     type: 'object',
     properties: {
@@ -25,10 +25,17 @@ export const tool: Tool = {
         title: 'Query',
         description: 'Search query text',
       },
+      vector_store_identifiers: {
+        type: 'array',
+        title: 'Vector Store Identifiers',
+        description: 'IDs or names of vector stores to search',
+        items: {
+          type: 'string',
+        },
+      },
       vector_store_ids: {
         type: 'array',
         title: 'Vector Store Ids',
-        description: 'IDs of vector stores to search',
         items: {
           type: 'string',
         },
@@ -63,6 +70,24 @@ export const tool: Tool = {
         ],
         title: 'Filters',
         description: 'Optional filter conditions',
+      },
+      file_ids: {
+        anyOf: [
+          {
+            type: 'array',
+            items: {
+              type: 'object',
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        ],
+        title: 'File Ids',
+        description: 'Optional list of file IDs to filter chunks by (inclusion filter)',
       },
       search_options: {
         $ref: '#/$defs/vector_store_chunk_search_options',

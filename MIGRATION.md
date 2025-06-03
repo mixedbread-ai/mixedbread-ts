@@ -54,8 +54,6 @@ client.parents.children.retrieve('c_456', { parent_id: 'p_123' });
 
 This affects the following methods:
 
-- `client.vectorStores.files.retrieve()`
-- `client.vectorStores.files.delete()`
 - `client.dataSources.connectors.retrieve()`
 - `client.dataSources.connectors.update()`
 - `client.dataSources.connectors.delete()`
@@ -90,7 +88,6 @@ client.example.list(undefined, { headers: { ... } });
 This affects the following methods:
 
 - `client.vectorStores.list()`
-- `client.vectorStores.files.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
 - `client.dataSources.list()`

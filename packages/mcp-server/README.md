@@ -135,7 +135,7 @@ over time, you can manually enable or disable certain capabilities:
 import { server, endpoints, init } from "@mixedbread/mcp/server";
 
 // import a specific tool
-import retrieveVectorStores from "@mixedbread/mcp/tools/vector-stores/retrieve-vector-stores";
+import listVectorStores from "@mixedbread/mcp/tools/vector-stores/list-vector-stores";
 
 // initialize the server and all endpoints
 init({ server, endpoints });
@@ -160,7 +160,7 @@ const myCustomEndpoint = {
 };
 
 // initialize the server with your custom endpoints
-init({ server: myServer, endpoints: [retrieveVectorStores, myCustomEndpoint] });
+init({ server: myServer, endpoints: [listVectorStores, myCustomEndpoint] });
 ```
 
 ## Available Tools
@@ -168,14 +168,6 @@ init({ server: myServer, endpoints: [retrieveVectorStores, myCustomEndpoint] });
 The following tools are available in this MCP server.
 
 ### Resource `vector_stores`:
-
-- `retrieve_vector_stores` (`read`): Get a vector store by ID.
-
-  Args:
-  vector_store_id: The ID of the vector store to retrieve.
-
-  Returns:
-  VectorStore: The response containing the vector store details.
 
 - `list_vector_stores` (`read`): List all vector stores.
 
@@ -192,7 +184,7 @@ The following tools are available in this MCP server.
   It supports complex search queries with filters and returns relevance-scored results.
 
   Args:
-  search_params: Search configuration including: - query text or embeddings - metadata filters - pagination parameters - sorting preferences
+  search_params: Search configuration including: - query text or embeddings - vector_store_ids: List of vector stores to search - file_ids: Optional list of file IDs to filter chunks by (or tuple of list and condition operator) - metadata filters - pagination parameters - sorting preferences
   \_state: API state dependency
   \_ctx: Service context dependency
 
@@ -202,23 +194,3 @@ The following tools are available in this MCP server.
   Raises:
   HTTPException (400): If search parameters are invalid
   HTTPException (404): If no vector stores are found to search
-
-### Resource `vector_stores.files`:
-
-- `retrieve_vector_stores_files` (`read`): Get details of a specific file in a vector store.
-
-  Args:
-  vector_store_id: The ID of the vector store
-  file_id: The ID of the file
-
-  Returns:
-  VectorStoreFile: Details of the vector store file
-
-- `list_vector_stores_files` (`read`): List files indexed in a vector store with pagination.
-
-  Args:
-  vector_store_id: The ID of the vector store
-  pagination: Pagination parameters
-
-  Returns:
-  VectorStoreFileListResponse: Paginated list of vector store files

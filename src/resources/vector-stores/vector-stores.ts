@@ -3,23 +3,10 @@
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
 import * as FilesAPI from './files';
-import {
-  FileCreateParams,
-  FileDeleteParams,
-  FileDeleteResponse,
-  FileListParams,
-  FileRetrieveParams,
-  FileSearchParams,
-  FileSearchResponse,
-  Files,
-  ScoredVectorStoreFile,
-  VectorStoreFile,
-  VectorStoreFilesLimitOffset,
-} from './files';
+import { FileSearchParams, FileSearchResponse, Files, ScoredVectorStoreFile, VectorStoreFile } from './files';
 import { APIPromise } from '../../core/api-promise';
 import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
 
 export class VectorStores extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
@@ -37,34 +24,6 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Get a vector store by ID.
-   *
-   * Args: vector_store_id: The ID of the vector store to retrieve.
-   *
-   * Returns: VectorStore: The response containing the vector store details.
-   */
-  retrieve(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStore> {
-    return this._client.get(path`/v1/vector_stores/${vectorStoreID}`, options);
-  }
-
-  /**
-   * Update a vector store by ID.
-   *
-   * Args: vector_store_id: The ID of the vector store to update.
-   * vector_store_update: VectorStoreCreate object containing the name, description,
-   * and metadata.
-   *
-   * Returns: VectorStore: The response containing the updated vector store details.
-   */
-  update(
-    vectorStoreID: string,
-    body: VectorStoreUpdateParams,
-    options?: RequestOptions,
-  ): APIPromise<VectorStore> {
-    return this._client.put(path`/v1/vector_stores/${vectorStoreID}`, { body, ...options });
-  }
-
-  /**
    * List all vector stores.
    *
    * Args: pagination: The pagination options.
@@ -76,17 +35,6 @@ export class VectorStores extends APIResource {
     options?: RequestOptions,
   ): PagePromise<VectorStoresLimitOffset, VectorStore> {
     return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStore>, { query, ...options });
-  }
-
-  /**
-   * Delete a vector store by ID.
-   *
-   * Args: vector_store_id: The ID of the vector store to delete.
-   *
-   * Returns: VectorStore: The response containing the deleted vector store details.
-   */
-  delete(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
-    return this._client.delete(path`/v1/vector_stores/${vectorStoreID}`, options);
   }
 
   /**
@@ -107,7 +55,9 @@ export class VectorStores extends APIResource {
    * relevance-scored results.
    *
    * Args: search_params: Search configuration including: - query text or
-   * embeddings - metadata filters - pagination parameters - sorting preferences
+   * embeddings - vector_store_ids: List of vector stores to search - file_ids:
+   * Optional list of file IDs to filter chunks by (or tuple of list and condition
+   * operator) - metadata filters - pagination parameters - sorting preferences
    * \_state: API state dependency \_ctx: Service context dependency
    *
    * Returns: VectorStoreSearchChunkResponse containing: - List of matched chunks
@@ -568,26 +518,6 @@ export namespace VectorStoreChunkSearchOptions {
 }
 
 /**
- * Response model for vector store deletion.
- */
-export interface VectorStoreDeleteResponse {
-  /**
-   * ID of the deleted vector store
-   */
-  id: string;
-
-  /**
-   * Whether the deletion was successful
-   */
-  deleted: boolean;
-
-  /**
-   * Type of the deleted object
-   */
-  object?: 'vector_store';
-}
-
-/**
  * Results from a question answering operation.
  */
 export interface VectorStoreQuestionAnsweringResponse {
@@ -645,28 +575,6 @@ export interface VectorStoreCreateParams {
   file_ids?: Array<string> | null;
 }
 
-export interface VectorStoreUpdateParams {
-  /**
-   * New name for the vector store
-   */
-  name?: string | null;
-
-  /**
-   * New description
-   */
-  description?: string | null;
-
-  /**
-   * Represents an expiration policy for a vector store.
-   */
-  expires_after?: ExpiresAfter | null;
-
-  /**
-   * Optional metadata key-value pairs
-   */
-  metadata?: unknown;
-}
-
 export interface VectorStoreListParams extends LimitOffsetParams {}
 
 export interface VectorStoreQuestionAnsweringParams {
@@ -677,9 +585,14 @@ export interface VectorStoreQuestionAnsweringParams {
   query?: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -694,6 +607,11 @@ export interface VectorStoreQuestionAnsweringParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -735,9 +653,14 @@ export interface VectorStoreSearchParams {
   query: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -752,6 +675,11 @@ export interface VectorStoreSearchParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -770,12 +698,10 @@ export declare namespace VectorStores {
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
-    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
     type VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
-    type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
     type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
@@ -785,13 +711,7 @@ export declare namespace VectorStores {
     Files as Files,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFile as VectorStoreFile,
-    type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
-    type FileCreateParams as FileCreateParams,
-    type FileRetrieveParams as FileRetrieveParams,
-    type FileListParams as FileListParams,
-    type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
   };
 }
