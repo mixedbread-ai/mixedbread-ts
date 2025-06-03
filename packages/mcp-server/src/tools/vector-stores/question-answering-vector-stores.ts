@@ -25,10 +25,17 @@ export const tool: Tool = {
         description:
           'Question to answer. If not provided, the question will be extracted from the passed messages.',
       },
+      vector_store_identifiers: {
+        type: 'array',
+        title: 'Vector Store Identifiers',
+        description: 'IDs or names of vector stores to search',
+        items: {
+          type: 'string',
+        },
+      },
       vector_store_ids: {
         type: 'array',
         title: 'Vector Store Ids',
-        description: 'IDs of vector stores to search',
         items: {
           type: 'string',
         },
@@ -63,6 +70,24 @@ export const tool: Tool = {
         ],
         title: 'Filters',
         description: 'Optional filter conditions',
+      },
+      file_ids: {
+        anyOf: [
+          {
+            type: 'array',
+            items: {
+              type: 'object',
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        ],
+        title: 'File Ids',
+        description: 'Optional list of file IDs to filter chunks by (inclusion filter)',
       },
       search_options: {
         $ref: '#/$defs/vector_store_chunk_search_options',

@@ -33,17 +33,13 @@ Types:
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">ScoredVideoURLInputChunk</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStore</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreChunkSearchOptions</a></code>
-- <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreQuestionAnsweringResponse</a></code>
 - <code><a href="./src/resources/vector-stores/vector-stores.ts">VectorStoreSearchResponse</a></code>
 
 Methods:
 
 - <code title="post /v1/vector_stores">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">create</a>({ ...params }) -> VectorStore</code>
-- <code title="get /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">retrieve</a>(vectorStoreID) -> VectorStore</code>
-- <code title="put /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">update</a>(vectorStoreID, { ...params }) -> VectorStore</code>
 - <code title="get /v1/vector_stores">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">list</a>({ ...params }) -> VectorStoresLimitOffset</code>
-- <code title="delete /v1/vector_stores/{vector_store_id}">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">delete</a>(vectorStoreID) -> VectorStoreDeleteResponse</code>
 - <code title="post /v1/vector_stores/question-answering">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">questionAnswering</a>({ ...params }) -> VectorStoreQuestionAnsweringResponse</code>
 - <code title="post /v1/vector_stores/search">client.vectorStores.<a href="./src/resources/vector-stores/vector-stores.ts">search</a>({ ...params }) -> VectorStoreSearchResponse</code>
 
@@ -53,15 +49,10 @@ Types:
 
 - <code><a href="./src/resources/vector-stores/files.ts">ScoredVectorStoreFile</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">VectorStoreFile</a></code>
-- <code><a href="./src/resources/vector-stores/files.ts">FileDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">FileSearchResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/vector_stores/{vector_store_id}/files">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">create</a>(vectorStoreID, { ...params }) -> VectorStoreFile</code>
-- <code title="get /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">retrieve</a>(fileID, { ...params }) -> VectorStoreFile</code>
-- <code title="get /v1/vector_stores/{vector_store_id}/files">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">list</a>(vectorStoreID, { ...params }) -> VectorStoreFilesLimitOffset</code>
-- <code title="delete /v1/vector_stores/{vector_store_id}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">delete</a>(fileID, { ...params }) -> FileDeleteResponse</code>
 - <code title="post /v1/vector_stores/files/search">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
 # Parsing
