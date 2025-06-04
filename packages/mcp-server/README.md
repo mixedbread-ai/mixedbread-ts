@@ -135,7 +135,7 @@ over time, you can manually enable or disable certain capabilities:
 import { server, endpoints, init } from "@mixedbread/mcp/server";
 
 // import a specific tool
-import listVectorStores from "@mixedbread/mcp/tools/vector-stores/list-vector-stores";
+import retrieveVectorStores from "@mixedbread/mcp/tools/vector-stores/retrieve-vector-stores";
 
 // initialize the server and all endpoints
 init({ server, endpoints });
@@ -160,7 +160,7 @@ const myCustomEndpoint = {
 };
 
 // initialize the server with your custom endpoints
-init({ server: myServer, endpoints: [listVectorStores, myCustomEndpoint] });
+init({ server: myServer, endpoints: [retrieveVectorStores, myCustomEndpoint] });
 ```
 
 ## Available Tools
@@ -168,6 +168,14 @@ init({ server: myServer, endpoints: [listVectorStores, myCustomEndpoint] });
 The following tools are available in this MCP server.
 
 ### Resource `vector_stores`:
+
+- `retrieve_vector_stores` (`read`): Get a vector store by ID or name.
+
+  Args:
+  vector_store_identifier: The ID or name of the vector store to retrieve.
+
+  Returns:
+  VectorStore: The response containing the vector store details.
 
 - `list_vector_stores` (`read`): List all vector stores.
 
@@ -194,3 +202,23 @@ The following tools are available in this MCP server.
   Raises:
   HTTPException (400): If search parameters are invalid
   HTTPException (404): If no vector stores are found to search
+
+### Resource `vector_stores.files`:
+
+- `retrieve_vector_stores_files` (`read`): Get details of a specific file in a vector store.
+
+  Args:
+  vector_store_identifier: The ID or name of the vector store
+  file_id: The ID of the file
+
+  Returns:
+  VectorStoreFile: Details of the vector store file
+
+- `list_vector_stores_files` (`read`): List files indexed in a vector store with pagination.
+
+  Args:
+  vector_store_identifier: The ID or name of the vector store
+  pagination: Pagination parameters
+
+  Returns:
+  VectorStoreFileListResponse: Paginated list of vector store files
