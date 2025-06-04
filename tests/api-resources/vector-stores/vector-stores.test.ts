@@ -19,6 +19,28 @@ describe('resource vectorStores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve', async () => {
+    const responsePromise = client.vectorStores.retrieve('vector_store_identifier');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update', async () => {
+    const responsePromise = client.vectorStores.update('vector_store_identifier', {});
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('list', async () => {
     const responsePromise = client.vectorStores.list();
     const rawResponse = await responsePromise.asResponse();
@@ -35,6 +57,17 @@ describe('resource vectorStores', () => {
     await expect(
       client.vectorStores.list({ limit: 1000, offset: 0 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Mixedbread.NotFoundError);
+  });
+
+  test('delete', async () => {
+    const responsePromise = client.vectorStores.delete('vector_store_identifier');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
   });
 
   test('questionAnswering', async () => {
