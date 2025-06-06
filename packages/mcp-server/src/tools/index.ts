@@ -1,7 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread from '@mixedbread/sdk';
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { Metadata, Endpoint, HandlerFunction } from './types';
+
+export { Metadata, Endpoint, HandlerFunction };
 
 import retrieve_vector_stores from './vector-stores/retrieve-vector-stores';
 import list_vector_stores from './vector-stores/list-vector-stores';
@@ -9,24 +10,6 @@ import question_answering_vector_stores from './vector-stores/question-answering
 import search_vector_stores from './vector-stores/search-vector-stores';
 import retrieve_vector_stores_files from './vector-stores/files/retrieve-vector-stores-files';
 import list_vector_stores_files from './vector-stores/files/list-vector-stores-files';
-
-export type HandlerFunction = (client: Mixedbread, args: Record<string, unknown> | undefined) => Promise<any>;
-
-export type Metadata = {
-  resource: string;
-  operation: 'read' | 'write';
-  tags: string[];
-
-  httpMethod?: string;
-  httpPath?: string;
-  operationId?: string;
-};
-
-export type Endpoint = {
-  metadata: Metadata;
-  tool: Tool;
-  handler: HandlerFunction;
-};
 
 export const endpoints: Endpoint[] = [];
 
