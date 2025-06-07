@@ -1,23 +1,23 @@
-import { Command } from 'commander';
-import { createListCommand } from './list';
-import { createCreateCommand } from './create';
-import { createGetCommand } from './get';
-import { createDeleteCommand } from './delete';
-import { createUpdateCommand } from './update';
-import { createUploadCommand } from './upload';
-import { createFilesCommand } from './files';
-import { createSearchCommand } from './search';
-import { createQACommand } from './qa';
-import { createSyncCommand } from './sync';
+import { Command } from "commander";
+import { createListCommand } from "./list";
+import { createCreateCommand } from "./create";
+import { createGetCommand } from "./get";
+import { createDeleteCommand } from "./delete";
+import { createUpdateCommand } from "./update";
+import { createUploadCommand } from "./upload";
+import { createFilesCommand } from "./files";
+import { createSearchCommand } from "./search";
+import { createQACommand } from "./qa";
+import { createSyncCommand } from "./sync";
 
 export function createVectorStoreCommand(): Command {
-  const vsCommand = new Command('vs')
-    .alias('vector-store')
-    .description('Manage vector stores');
+  const vsCommand = new Command("vs")
+    .alias("vector-store")
+    .description("Manage vector stores");
 
   // // Add global options to the vs command itself
   // addGlobalOptions(vsCommand);
-  
+
   // // Enable passing options to subcommands
   // vsCommand.configureHelp({ helpWidth: 80 });
 

@@ -1,10 +1,13 @@
-import { Command } from 'commander';
-import chalk from 'chalk';
-import { createClient } from '../../utils/client';
-import { formatOutput } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
-import { resolveVectorStore } from '../../utils/vector-store';
-import { loadConfig } from '../../utils/config';
+import { Command } from "commander";
+import chalk from "chalk";
+import { createClient } from "../../utils/client";
+import { formatOutput } from "../../utils/output";
+import {
+  type GlobalOptions,
+  mergeCommandOptions,
+} from "../../utils/global-options";
+import { resolveVectorStore } from "../../utils/vector-store";
+import { loadConfig } from "../../utils/config";
 
 interface SearchOptions extends GlobalOptions {
   topK?: number;
@@ -15,90 +18,107 @@ interface SearchOptions extends GlobalOptions {
 }
 
 export function createSearchCommand(): Command {
-  const command = new Command('search')
-    .description('Search within a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('<query>', 'Search query')
-    .option('--top-k <n>', 'Number of results to return', parseInt)
-    .option('--threshold <score>', 'Minimum score threshold', parseFloat)
-    .option('--filter <json>', 'Metadata filters as JSON')
-    .option('--rerank', 'Enable reranking')
-    .option('--show-chunks', 'Display matching chunks', false);
+  const command = new Command("search")
+    .description("Search within a vector store")
+    .argument("<name-or-id>", "Name or ID of the vector store")
+    .argument("<query>", "Search query")
+    .option("--top-k <n>", "Number of results to return", Number.parseInt)
+    .option("--threshold <score>", "Minimum score threshold", Number.parseFloat)
+    .option("--filter <json>", "Metadata filters as JSON")
+    .option("--rerank", "Enable reranking")
+    .option("--show-chunks", "Display matching chunks", false);
 
-  command.action(async (nameOrId: string, query: string, options: SearchOptions) => {
-    try {
-      const mergedOptions = mergeCommandOptions(command, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
-      const config = loadConfig();
+  command.action(
+    async (nameOrId: string, query: string, options: SearchOptions) => {
+      try {
+        const mergedOptions = mergeCommandOptions(command, options);
+        const client = createClient(mergedOptions);
+        const vectorStore = await resolveVectorStore(client, nameOrId);
+        const config = loadConfig();
 
-      // Get default values from config
-      const topK = mergedOptions.topK || config.defaults?.search?.top_k || 10;
-      const rerank = mergedOptions.rerank ?? config.defaults?.search?.rerank ?? false;
+        // Get default values from config
+        const topK = mergedOptions.topK || config.defaults?.search?.top_k || 10;
+        const rerank =
+          mergedOptions.rerank ?? config.defaults?.search?.rerank ?? false;
 
-      // Parse filter if provided
-      let filter: Record<string, any> | undefined;
-      if (mergedOptions.filter) {
-        try {
-          filter = JSON.parse(mergedOptions.filter);
-        } catch (error) {
-          console.error(chalk.red('Error:'), 'Invalid JSON in filter option');
-          process.exit(1);
+        // Parse filter if provided
+        let filter: Record<string, any> | undefined;
+        if (mergedOptions.filter) {
+          try {
+            filter = JSON.parse(mergedOptions.filter);
+          } catch (error) {
+            console.error(chalk.red("Error:"), "Invalid JSON in filter option");
+            process.exit(1);
+          }
         }
-      }
 
-      const searchParams: any = {
-        query,
-        top_k: topK,
-        ...(mergedOptions.threshold && { threshold: mergedOptions.threshold }),
-        ...(filter && { filter }),
-        ...(rerank && { rerank }),
-      };
+        const searchParams: any = {
+          query,
+          top_k: topK,
+          ...(mergedOptions.threshold && {
+            threshold: mergedOptions.threshold,
+          }),
+          ...(filter && { filter }),
+          ...(rerank && { rerank }),
+        };
 
-      const results = await (client.vectorStores.search as any)(vectorStore.id, searchParams);
+        const results = await (client.vectorStores.search as any)(
+          vectorStore.id,
+          searchParams
+        );
 
-      if (!results.data || results.data.length === 0) {
-        console.log(chalk.gray('No results found.'));
-        return;
-      }
+        if (!results.data || results.data.length === 0) {
+          console.log(chalk.gray("No results found."));
+          return;
+        }
 
-      if (mergedOptions.format === 'json') {
-        formatOutput(results, mergedOptions.format);
-      } else {
-        console.log(chalk.bold(`Found ${results.data.length} results:\n`));
+        if (mergedOptions.format === "json") {
+          formatOutput(results, mergedOptions.format);
+        } else {
+          console.log(chalk.bold(`Found ${results.data.length} results:\n`));
 
-        results.data.forEach((result: any, index: number) => {
-          console.log(chalk.blue(`${index + 1}. Score: ${result.score?.toFixed(4) || 'N/A'}`));
-          
-          if (result.metadata?.file_path) {
-            console.log(chalk.gray(`   File: ${result.metadata.file_path}`));
-          }
+          results.data.forEach((result: any, index: number) => {
+            console.log(
+              chalk.blue(
+                `${index + 1}. Score: ${result.score?.toFixed(4) || "N/A"}`
+              )
+            );
 
-          if (mergedOptions.showChunks && result.chunk) {
-            console.log(chalk.white(`   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? '...' : ''}`));
-          }
-
-          if (result.metadata && Object.keys(result.metadata).length > 0) {
-            const filteredMetadata = { ...result.metadata };
-            delete filteredMetadata.file_path; // Already shown above
-            if (Object.keys(filteredMetadata).length > 0) {
-              console.log(chalk.gray(`   Metadata: ${JSON.stringify(filteredMetadata)}`));
+            if (result.metadata?.file_path) {
+              console.log(chalk.gray(`   File: ${result.metadata.file_path}`));
             }
-          }
 
-          console.log();
-        });
-      }
+            if (mergedOptions.showChunks && result.chunk) {
+              console.log(
+                chalk.white(
+                  `   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? "..." : ""}`
+                )
+              );
+            }
 
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(chalk.red('Error:'), error.message);
-      } else {
-        console.error(chalk.red('Error:'), 'Failed to search vector store');
+            if (result.metadata && Object.keys(result.metadata).length > 0) {
+              const filteredMetadata = { ...result.metadata };
+              delete filteredMetadata.file_path; // Already shown above
+              if (Object.keys(filteredMetadata).length > 0) {
+                console.log(
+                  chalk.gray(`   Metadata: ${JSON.stringify(filteredMetadata)}`)
+                );
+              }
+            }
+
+            console.log();
+          });
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(chalk.red("Error:"), error.message);
+        } else {
+          console.error(chalk.red("Error:"), "Failed to search vector store");
+        }
+        process.exit(1);
       }
-      process.exit(1);
     }
-  });
+  );
 
   return command;
 }
