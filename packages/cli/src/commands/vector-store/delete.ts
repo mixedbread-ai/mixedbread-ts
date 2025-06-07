@@ -2,8 +2,19 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { createClient } from '../../utils/client';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
+import { z } from 'zod';
+
+const DeleteVectorStoreSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  force: z.boolean().optional(),
+});
 
 interface DeleteOptions extends GlobalOptions {
   force?: boolean;
@@ -19,11 +30,14 @@ export function createDeleteCommand(): Command {
   command.action(async (nameOrId: string, options: DeleteOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
+
+      const parsedOptions = parseOptions(DeleteVectorStoreSchema, { ...mergedOptions, nameOrId });
+
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
       // Confirmation prompt unless --force is used
-      if (!mergedOptions.force) {
+      if (!parsedOptions.force) {
         const { confirmed } = await inquirer.prompt([
           {
             type: 'confirm',

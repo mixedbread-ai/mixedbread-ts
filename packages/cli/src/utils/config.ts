@@ -4,16 +4,41 @@ import { join } from 'path';
 import chalk from 'chalk';
 import { z } from 'zod';
 
-// Zod schemas for validation
 export const UploadDefaultsSchema = z.object({
-  strategy: z.enum(['fast', 'high_quality']).optional(),
-  contextualization: z.boolean().optional(),
-  parallel: z.number().int().positive().optional(),
+  strategy: z.enum(['fast', 'high_quality'], { message: 'Must be "fast" or "high_quality"' }).optional(),
+  contextualization: z
+    .preprocess(
+      (val) => {
+        if (val === 'true' || val === true) return true;
+        if (val === 'false' || val === false) return false;
+        throw new Error('Must be "true" or "false"');
+      },
+      z.boolean({ message: 'Must be "true" or "false"' }),
+    )
+    .optional(),
+  parallel: z.coerce
+    .number({ message: 'Must be a number' })
+    .int({ message: 'Must be an integer' })
+    .positive({ message: 'Must be a positive number' })
+    .optional(),
 });
 
 export const SearchDefaultsSchema = z.object({
-  top_k: z.number().int().positive().optional(),
-  rerank: z.boolean().optional(),
+  top_k: z.coerce
+    .number({ message: 'Must be a number' })
+    .int({ message: 'Must be an integer' })
+    .positive({ message: 'Must be a positive number' })
+    .optional(),
+  rerank: z
+    .preprocess(
+      (val) => {
+        if (val === 'true' || val === true) return true;
+        if (val === 'false' || val === false) return false;
+        throw new Error('Must be "true" or "false"');
+      },
+      z.boolean({ message: 'Must be "true" or "false"' }),
+    )
+    .optional(),
 });
 
 export const DefaultsSchema = z.object({
@@ -23,7 +48,7 @@ export const DefaultsSchema = z.object({
 
 export const CliConfigSchema = z.object({
   version: z.string(),
-  api_key: z.string().optional(),
+  api_key: z.string().startsWith('mxb_', 'API key must start with "mxb_"').optional(),
   defaults: DefaultsSchema.optional(),
   aliases: z.record(z.string(), z.string()).optional(),
 });
@@ -120,6 +145,11 @@ function resolveSchemaPath(schema: z.ZodSchema, path: string[]): z.ZodSchema | n
     }
   }
 
+  // Handle ZodRecord (for dynamic keys like aliases)
+  if (schema instanceof z.ZodRecord) {
+    return resolveSchemaPath(schema._def.valueType, tail);
+  }
+
   // Handle ZodOptional
   if (schema instanceof z.ZodOptional) {
     return resolveSchemaPath(schema._def.innerType, path);
@@ -128,57 +158,30 @@ function resolveSchemaPath(schema: z.ZodSchema, path: string[]): z.ZodSchema | n
   return null;
 }
 
-// Enhanced value parsing using existing schemas
-export function parseConfigValue(key: string, value: string): unknown {
-  // Split the key into path segments
+export function parseConfigValue(key: string, value: string) {
   const pathSegments = key.split('.');
 
   // Try to resolve the schema for this key path
   const targetSchema = resolveSchemaPath(CliConfigSchema, pathSegments);
 
-  if (targetSchema) {
-    // Create a coercing version of the target schema
-    const coercedSchema = z.coerce
-      .string()
-      .pipe(
-        z.union([
-          z.literal('true').transform(() => true),
-          z.literal('false').transform(() => false),
-          z.coerce.number(),
-          targetSchema,
-        ]),
-      );
-
-    try {
-      return coercedSchema.parse(value);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const messages = error.issues.map((i) => i.message).join(', ');
-        throw new Error(`Invalid value for ${key}: ${messages}`);
-      }
-      throw error;
-    }
-  }
-
-  // Fallback to auto-parsing for unknown keys (like aliases)
-  const AutoValueSchema = z.coerce
-    .string()
-    .pipe(
-      z.union([
-        z.literal('true').transform(() => true),
-        z.literal('false').transform(() => false),
-        z.coerce.number(),
-        z.string(),
-      ]),
+  if (!targetSchema) {
+    console.error(
+      chalk.red('Error:'),
+      `Unknown config key: ${key}. Use 'mxbai config --help' to see available options.`,
     );
-
-  try {
-    return AutoValueSchema.parse(value);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const messages = error.issues.map((i) => i.message).join(', ');
-      throw new Error(`Invalid value for ${key}: ${messages}`);
-    }
-    throw error;
+    process.exit(1);
   }
+
+  const parsed = targetSchema.safeParse(value);
+
+  if (!parsed.success) {
+    console.error(
+      chalk.red('Error:'),
+      `Invalid value for ${key}:`,
+      parsed.error.issues.map((i) => i.message).join(', '),
+    );
+    process.exit(1);
+  }
+
+  return parsed.data;
 }

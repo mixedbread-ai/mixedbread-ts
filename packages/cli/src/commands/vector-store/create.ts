@@ -2,7 +2,24 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
 import { formatOutput } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
+import { z } from 'zod';
+
+const CreateVectorStoreSchema = GlobalOptionsSchema.extend({
+  name: z.string().min(1, { message: '"name" is required' }),
+  description: z.string().optional(),
+  expiresAfter: z
+    .number({ message: '"expires-after" must be a number' })
+    .int({ message: '"expires-after" must be an integer' })
+    .positive({ message: '"expires-after" must be positive' })
+    .optional(),
+  metadata: z.string().optional(),
+});
 
 interface CreateOptions extends GlobalOptions {
   description?: string;
@@ -22,12 +39,14 @@ export function createCreateCommand(): Command {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const client = createClient(mergedOptions);
+      console.log(options, mergedOptions);
 
-      // Parse metadata if provided
+      const parsedOptions = parseOptions(CreateVectorStoreSchema, { ...mergedOptions, name });
+
       let metadata: Record<string, unknown> | undefined;
-      if (mergedOptions.metadata) {
+      if (parsedOptions.metadata) {
         try {
-          metadata = JSON.parse(mergedOptions.metadata);
+          metadata = JSON.parse(parsedOptions.metadata);
         } catch (error) {
           console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
           process.exit(1);
@@ -35,16 +54,16 @@ export function createCreateCommand(): Command {
       }
 
       const vectorStore = await client.vectorStores.create({
-        name,
-        description: mergedOptions.description,
+        name: parsedOptions.name,
+        description: parsedOptions.description,
         expires_after:
-          mergedOptions.expiresAfter ?
+          parsedOptions.expiresAfter ?
             {
               anchor: 'last_active_at',
-              days: mergedOptions.expiresAfter,
+              days: parsedOptions.expiresAfter,
             }
           : undefined,
-        metadata: metadata,
+        metadata,
       });
 
       console.log(chalk.green('✓'), `Vector store "${name}" created successfully`);
@@ -57,7 +76,7 @@ export function createCreateCommand(): Command {
           expires_after: vectorStore.expires_after,
           metadata: vectorStore.metadata,
         },
-        mergedOptions.format,
+        parsedOptions.format,
       );
     } catch (error) {
       if (error instanceof Error) {

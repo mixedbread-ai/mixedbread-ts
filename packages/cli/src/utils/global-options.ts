@@ -1,10 +1,20 @@
+import chalk from 'chalk';
 import { Command } from 'commander';
+import { z } from 'zod';
 
 export interface GlobalOptions {
   apiKey?: string;
   format?: 'table' | 'json' | 'csv';
   debug?: boolean;
 }
+
+export const GlobalOptionsSchema = z.object({
+  apiKey: z.string().startsWith('mxb_', '"api-key" must start with "mxb_"').optional(),
+  format: z
+    .enum(['table', 'json', 'csv'], { message: '"format" must be either "table", "json", or "csv"' })
+    .optional(),
+  debug: z.boolean({ message: '"debug" must be "true" or "false"' }).optional(),
+});
 
 export function setupGlobalOptions(program: Command): void {
   program
@@ -50,4 +60,15 @@ export function mergeCommandOptions(command: Command, options: any): any {
   }
 
   return merged;
+}
+
+export function parseOptions<T>(schema: z.ZodSchema<T>, options: Record<string, unknown>) {
+  const parsed = schema.safeParse(options);
+
+  if (!parsed.success) {
+    console.error(chalk.red('Error:'), parsed.error.issues.map((i) => i.message).join(', '));
+    process.exit(1);
+  }
+
+  return parsed.data;
 }

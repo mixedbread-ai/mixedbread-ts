@@ -2,8 +2,18 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
+import { z } from 'zod';
+
+const GetVectorStoreSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+});
 
 interface GetOptions extends GlobalOptions {}
 
@@ -15,8 +25,11 @@ export function createGetCommand(): Command {
   command.action(async (nameOrId: string, options: GetOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
+
+      const parsedOptions = parseOptions(GetVectorStoreSchema, { ...mergedOptions, nameOrId });
+
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
       const formattedData = {
         name: vectorStore.name,
@@ -42,7 +55,7 @@ export function createGetCommand(): Command {
         : {}),
       };
 
-      formatOutput(formattedData, mergedOptions.format);
+      formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

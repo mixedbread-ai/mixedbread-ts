@@ -25,7 +25,6 @@ export function createSetCommand(): Command {
 
         const finalKey = keys[keys.length - 1];
 
-        // Parse and validate value using Zod
         const parsedValue = parseConfigValue(key, value);
         current[finalKey] = parsedValue;
 

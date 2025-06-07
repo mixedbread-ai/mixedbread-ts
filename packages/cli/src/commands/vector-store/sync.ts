@@ -1,6 +1,25 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
+import { z } from 'zod';
+
+const SyncVectorStoreSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  patterns: z.array(z.string()).min(1, { message: 'At least one file pattern is required' }),
+  strategy: z
+    .enum(['fast', 'high_quality'], { message: '"strategy" must be either "fast" or "high_quality"' })
+    .optional(),
+  fromGit: z.string().optional(),
+  dryRun: z.boolean().optional(),
+  force: z.boolean().optional(),
+  metadata: z.string().optional(),
+  ci: z.boolean().optional(),
+});
 
 interface SyncOptions extends GlobalOptions {
   strategy?: 'fast' | 'high_quality';
@@ -26,9 +45,16 @@ export function createSyncCommand(): Command {
   command.action(async (nameOrId: string, patterns: string[], options: SyncOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
+
+      const parsedOptions = parseOptions(SyncVectorStoreSchema, { ...mergedOptions, nameOrId, patterns });
+
       console.log(chalk.yellow('Note: The sync command is not yet fully implemented.'));
       console.log(chalk.gray('For now, you can use the upload command with --unique flag:'));
-      console.log(chalk.blue(`mxbai vs upload "${nameOrId}" ${patterns.join(' ')} --unique`));
+      console.log(
+        chalk.blue(
+          `mxbai vs upload "${parsedOptions.nameOrId}" ${parsedOptions.patterns.join(' ')} --unique`,
+        ),
+      );
 
       // TODO: Implement full sync functionality with:
       // 1. Change detection (git-based and hash-based)

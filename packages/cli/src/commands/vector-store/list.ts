@@ -2,7 +2,23 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
+import { z } from 'zod';
+
+const ListVectorStoreSchema = GlobalOptionsSchema.extend({
+  filter: z.string().optional(),
+  limit: z.coerce
+    .number({ message: '"limit" must be a number' })
+    .int({ message: '"limit" must be an integer' })
+    .positive({ message: '"limit" must be positive' })
+    .max(100, { message: '"limit" must be less than or equal to 100' })
+    .optional(),
+});
 
 interface ListOptions extends GlobalOptions {
   filter?: string;
@@ -18,17 +34,18 @@ export function createListCommand(): Command {
   command.action(async (options: ListOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
+      const parsedOptions = parseOptions(ListVectorStoreSchema, mergedOptions);
 
-      const client = createClient(mergedOptions);
+      const client = createClient(parsedOptions);
       const response = await client.vectorStores.list({
-        limit: mergedOptions.limit || 10,
+        limit: parsedOptions.limit || 10,
       });
 
       let vectorStores = response.data;
 
       // Apply filter if provided
-      if (mergedOptions.filter) {
-        const filterPattern = mergedOptions.filter.toLowerCase();
+      if (parsedOptions.filter) {
+        const filterPattern = parsedOptions.filter.toLowerCase();
         vectorStores = vectorStores.filter((vs) => vs.name.toLowerCase().includes(filterPattern));
       }
 
@@ -47,7 +64,7 @@ export function createListCommand(): Command {
         created: new Date(vs.created_at).toLocaleDateString(),
       }));
 
-      formatOutput(formattedData, mergedOptions.format);
+      formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

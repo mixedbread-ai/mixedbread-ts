@@ -2,9 +2,41 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import inquirer from 'inquirer';
+import { z } from 'zod';
+
+const ListFilesSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  status: z
+    .enum(['all', 'completed', 'in_progress', 'failed'], {
+      message: '"status" must be one of: all, completed, in_progress, failed',
+    })
+    .optional(),
+  limit: z.coerce
+    .number({ message: '"limit" must be a number' })
+    .int({ message: '"limit" must be an integer' })
+    .positive({ message: '"limit" must be positive' })
+    .max(1000, { message: '"limit" must be less than or equal to 1000' })
+    .optional(),
+});
+
+const GetFileSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  fileId: z.string().min(1, { message: '"file-id" is required' }),
+});
+
+const DeleteFileSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  fileId: z.string().min(1, { message: '"file-id" is required' }),
+  force: z.boolean().optional(),
+});
 
 interface FilesOptions extends GlobalOptions {
   status?: 'all' | 'completed' | 'in_progress' | 'failed';
@@ -26,24 +58,20 @@ export function createFilesCommand(): Command {
     try {
       const mergedOptions = mergeCommandOptions(listCommand, options);
 
-      // Validate limit option
-      if (mergedOptions.limit <= 0) {
-        console.error(chalk.red('Error:'), '--limit must be a positive number');
-        process.exit(1);
-      }
+      const parsedOptions = parseOptions(ListFilesSchema, { ...mergedOptions, nameOrId });
 
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
       const response = await client.vectorStores.files.list(vectorStore.id, {
-        limit: mergedOptions.limit || 10,
+        limit: parsedOptions.limit || 10,
       });
 
       let files = response.data;
 
       // Apply status filter
-      if (mergedOptions.status && mergedOptions.status !== 'all') {
-        files = files.filter((file: any) => file.status === mergedOptions.status);
+      if (parsedOptions.status && parsedOptions.status !== 'all') {
+        files = files.filter((file: any) => file.status === parsedOptions.status);
       }
 
       if (files.length === 0) {
@@ -60,7 +88,7 @@ export function createFilesCommand(): Command {
         created: new Date(file.created_at).toLocaleDateString(),
       }));
 
-      formatOutput(formattedData, mergedOptions.format);
+      formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
@@ -80,10 +108,13 @@ export function createFilesCommand(): Command {
   getCommand.action(async (nameOrId: string, fileId: string, options: GlobalOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(getCommand, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
 
-      const file = await client.vectorStores.files.retrieve(fileId, {
+      const parsedOptions = parseOptions(GetFileSchema, { ...mergedOptions, nameOrId, fileId });
+
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
+
+      const file = await client.vectorStores.files.retrieve(parsedOptions.fileId, {
         vector_store_id: vectorStore.id,
       });
 
@@ -100,7 +131,7 @@ export function createFilesCommand(): Command {
         : {}),
       };
 
-      formatOutput(formattedData, mergedOptions.format);
+      formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
@@ -123,16 +154,19 @@ export function createFilesCommand(): Command {
     async (nameOrId: string, fileId: string, options: GlobalOptions & { force?: boolean }) => {
       try {
         const mergedOptions = mergeCommandOptions(deleteCommand, options);
-        const client = createClient(mergedOptions);
-        const vectorStore = await resolveVectorStore(client, nameOrId);
+
+        const parsedOptions = parseOptions(DeleteFileSchema, { ...mergedOptions, nameOrId, fileId });
+
+        const client = createClient(parsedOptions);
+        const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
         // Confirmation prompt unless --force is used
-        if (!mergedOptions.force) {
+        if (!parsedOptions.force) {
           const { confirmed } = await inquirer.prompt([
             {
               type: 'confirm',
               name: 'confirmed',
-              message: `Are you sure you want to delete file "${fileId}" from vector store "${vectorStore.name}" (${vectorStore.id})? This action cannot be undone.`,
+              message: `Are you sure you want to delete file "${parsedOptions.fileId}" from vector store "${vectorStore.name}" (${vectorStore.id})? This action cannot be undone.`,
               default: false,
             },
           ]);
@@ -143,11 +177,11 @@ export function createFilesCommand(): Command {
           }
         }
 
-        await client.vectorStores.files.delete(fileId, {
+        await client.vectorStores.files.delete(parsedOptions.fileId, {
           vector_store_id: vectorStore.id,
         });
 
-        console.log(chalk.green('✓'), `File ${fileId} deleted successfully`);
+        console.log(chalk.green('✓'), `File ${parsedOptions.fileId} deleted successfully`);
       } catch (error) {
         if (error instanceof Error) {
           console.error(chalk.red('Error:'), error.message);

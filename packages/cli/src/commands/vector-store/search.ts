@@ -2,9 +2,34 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
 import { formatOutput } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
+import { z } from 'zod';
+
+const SearchVectorStoreSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  query: z.string().min(1, { message: '"query" is required' }),
+  topK: z.coerce
+    .number({ message: '"top-k" must be a number' })
+    .int({ message: '"top-k" must be an integer' })
+    .positive({ message: '"top-k" must be positive' })
+    .max(100, { message: '"top-k" must be less than or equal to 100' })
+    .optional(),
+  threshold: z.coerce
+    .number({ message: '"threshold" must be a number' })
+    .min(0, { message: '"threshold" must be greater than or equal to 0' })
+    .max(1, { message: '"threshold" must be less than or equal to 1' })
+    .optional(),
+  filter: z.string().optional(),
+  rerank: z.boolean().optional(),
+  showChunks: z.boolean().optional(),
+});
 
 interface SearchOptions extends GlobalOptions {
   topK?: number;
@@ -19,8 +44,8 @@ export function createSearchCommand(): Command {
     .description('Search within a vector store')
     .argument('<name-or-id>', 'Name or ID of the vector store')
     .argument('<query>', 'Search query')
-    .option('--top-k <n>', 'Number of results to return', parseInt)
-    .option('--threshold <score>', 'Minimum score threshold', parseFloat)
+    .option('--top-k <n>', 'Number of results to return')
+    .option('--threshold <score>', 'Minimum score threshold')
     .option('--filter <json>', 'Metadata filters as JSON')
     .option('--rerank', 'Enable reranking')
     .option('--show-chunks', 'Display matching chunks', false);
@@ -28,19 +53,22 @@ export function createSearchCommand(): Command {
   command.action(async (nameOrId: string, query: string, options: SearchOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
+
+      const parsedOptions = parseOptions(SearchVectorStoreSchema, { ...mergedOptions, nameOrId, query });
+
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
       const config = loadConfig();
 
       // Get default values from config
-      const topK = mergedOptions.topK || config.defaults?.search?.top_k || 10;
-      const rerank = mergedOptions.rerank ?? config.defaults?.search?.rerank ?? false;
+      const topK = parsedOptions.topK || config.defaults?.search?.top_k || 10;
+      const rerank = parsedOptions.rerank ?? config.defaults?.search?.rerank ?? false;
 
       // Parse filter if provided
       let filter: Record<string, any> | undefined;
-      if (mergedOptions.filter) {
+      if (parsedOptions.filter) {
         try {
-          filter = JSON.parse(mergedOptions.filter);
+          filter = JSON.parse(parsedOptions.filter);
         } catch (error) {
           console.error(chalk.red('Error:'), 'Invalid JSON in filter option');
           process.exit(1);
@@ -48,9 +76,9 @@ export function createSearchCommand(): Command {
       }
 
       const searchParams: any = {
-        query,
+        query: parsedOptions.query,
         top_k: topK,
-        ...(mergedOptions.threshold && { threshold: mergedOptions.threshold }),
+        ...(parsedOptions.threshold && { threshold: parsedOptions.threshold }),
         ...(filter && { filter }),
         ...(rerank && { rerank }),
       };
@@ -62,8 +90,8 @@ export function createSearchCommand(): Command {
         return;
       }
 
-      if (mergedOptions.format === 'json') {
-        formatOutput(results, mergedOptions.format);
+      if (parsedOptions.format === 'json') {
+        formatOutput(results, parsedOptions.format);
       } else {
         console.log(chalk.bold(`Found ${results.data.length} results:\n`));
 
@@ -74,7 +102,7 @@ export function createSearchCommand(): Command {
             console.log(chalk.gray(`   File: ${result.metadata.file_path}`));
           }
 
-          if (mergedOptions.showChunks && result.chunk) {
+          if (parsedOptions.showChunks && result.chunk) {
             console.log(
               chalk.white(
                 `   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? '...' : ''}`,

@@ -8,10 +8,34 @@ import ora from 'ora';
 import { z } from 'zod';
 import { createClient } from '../../utils/client';
 import { formatBytes } from '../../utils/output';
-import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
+import {
+  GlobalOptions,
+  GlobalOptionsSchema,
+  mergeCommandOptions,
+  parseOptions,
+} from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
 import { Mixedbread } from '@mixedbread/sdk';
+
+const UploadVectorStoreSchema = GlobalOptionsSchema.extend({
+  nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
+  patterns: z.array(z.string()).optional(),
+  strategy: z
+    .enum(['fast', 'high_quality'], { message: '"strategy" must be either "fast" or "high_quality"' })
+    .optional(),
+  contextualization: z.boolean({ message: '"contextualization" must be a boolean' }).optional(),
+  metadata: z.string().optional(),
+  dryRun: z.boolean().optional(),
+  parallel: z.coerce
+    .number({ message: '"parallel" must be a number' })
+    .int({ message: '"parallel" must be an integer' })
+    .positive({ message: '"parallel" must be positive' })
+    .max(20, { message: '"parallel" must be less than or equal to 20' })
+    .optional(),
+  unique: z.boolean().optional(),
+  manifest: z.string().optional(),
+});
 
 interface UploadOptions extends GlobalOptions {
   strategy?: 'fast' | 'high_quality';
@@ -32,23 +56,26 @@ export function createUploadCommand(): Command {
     .option('--contextualization', 'Enable context preservation', false)
     .option('--metadata <json>', 'Additional metadata as JSON string')
     .option('--dry-run', 'Preview what would be uploaded', false)
-    .option('--parallel <n>', 'Number of concurrent uploads', parseInt)
+    .option('--parallel <n>', 'Number of concurrent uploads')
     .option('--unique', 'Update existing files instead of creating duplicates', false)
     .option('--manifest <file>', 'Upload using manifest file');
 
   command.action(async (nameOrId: string, patterns: string[], options: UploadOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      const client = createClient(mergedOptions);
-      const vectorStore = await resolveVectorStore(client, nameOrId);
+
+      const parsedOptions = parseOptions(UploadVectorStoreSchema, { ...mergedOptions, nameOrId, patterns });
+
+      const client = createClient(parsedOptions);
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
       const config = loadConfig();
 
       // Handle manifest file upload
-      if (mergedOptions.manifest) {
-        return await uploadFromManifest(client, vectorStore.id, mergedOptions.manifest, mergedOptions);
+      if (parsedOptions.manifest) {
+        return await uploadFromManifest(client, vectorStore.id, parsedOptions.manifest, parsedOptions);
       }
 
-      if (!patterns || patterns.length === 0) {
+      if (!parsedOptions.patterns || parsedOptions.patterns.length === 0) {
         console.error(
           chalk.red('Error:'),
           'No file patterns provided. Use --manifest for manifest-based uploads.',
@@ -56,25 +83,20 @@ export function createUploadCommand(): Command {
         process.exit(1);
       }
 
-      // Validate and get configuration values
-      const StrategySchema = z.enum(['fast', 'high_quality']);
-      const ParallelSchema = z.number().int().positive().max(20);
-
-      const strategy = StrategySchema.parse(
-        mergedOptions.strategy || config.defaults?.upload?.strategy || 'fast',
-      );
+      // Get configuration values with validation
+      const strategy = parsedOptions.strategy || config.defaults?.upload?.strategy || 'fast';
       const contextualization =
-        mergedOptions.contextualization !== undefined ?
-          mergedOptions.contextualization
+        parsedOptions.contextualization !== undefined ?
+          parsedOptions.contextualization
         : (config.defaults?.upload?.contextualization ?? false);
-      const parallel = ParallelSchema.parse(mergedOptions.parallel || config.defaults?.upload?.parallel || 5);
+      const parallel = parsedOptions.parallel || config.defaults?.upload?.parallel || 5;
 
       // Parse and validate additional metadata
       let additionalMetadata: Record<string, any> = {};
-      if (mergedOptions.metadata) {
+      if (parsedOptions.metadata) {
         try {
           const MetadataSchema = z.record(z.unknown());
-          const rawMetadata = JSON.parse(mergedOptions.metadata);
+          const rawMetadata = JSON.parse(parsedOptions.metadata);
           additionalMetadata = MetadataSchema.parse(rawMetadata);
         } catch (error) {
           if (error instanceof z.ZodError) {
@@ -92,7 +114,7 @@ export function createUploadCommand(): Command {
 
       // Collect all files matching patterns
       const files: string[] = [];
-      for (const pattern of patterns) {
+      for (const pattern of parsedOptions.patterns) {
         const matches = await glob(pattern, {
           nodir: true,
           absolute: false,
@@ -119,7 +141,7 @@ export function createUploadCommand(): Command {
 
       console.log(`Found ${uniqueFiles.length} files (${formatBytes(totalSize)})`);
 
-      if (mergedOptions.dryRun) {
+      if (parsedOptions.dryRun) {
         console.log(chalk.blue('Dry run - files that would be uploaded:'));
         uniqueFiles.forEach((file) => {
           const stats = statSync(file);
@@ -130,7 +152,7 @@ export function createUploadCommand(): Command {
 
       // Handle --unique flag: check for existing files
       let existingFiles: Map<string, string> = new Map();
-      if (mergedOptions.unique) {
+      if (parsedOptions.unique) {
         const spinner = ora('Checking for existing files...').start();
         try {
           const filesResponse = await client.vectorStores.files.list(vectorStore.id, { limit: 1000 });
@@ -152,7 +174,7 @@ export function createUploadCommand(): Command {
         contextualization,
         parallel,
         additionalMetadata,
-        unique: mergedOptions.unique || false,
+        unique: parsedOptions.unique || false,
         existingFiles,
       });
     } catch (error) {
