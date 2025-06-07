@@ -3,12 +3,15 @@ import chalk from 'chalk';
 import { glob } from 'glob';
 import { readFileSync, statSync } from 'fs';
 import { relative, basename } from 'path';
+import { lookup } from 'mime-types';
 import ora from 'ora';
+import { z } from 'zod';
 import { createClient } from '../../utils/client';
 import { formatBytes } from '../../utils/output';
 import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
+import { Mixedbread } from '@mixedbread/sdk';
 
 interface UploadOptions extends GlobalOptions {
   strategy?: 'fast' | 'high_quality';
@@ -53,21 +56,36 @@ export function createUploadCommand(): Command {
         process.exit(1);
       }
 
-      // Get default values from config
-      const strategy = mergedOptions.strategy || config.defaults?.upload?.strategy || 'fast';
+      // Validate and get configuration values
+      const StrategySchema = z.enum(['fast', 'high_quality']);
+      const ParallelSchema = z.number().int().positive().max(20);
+
+      const strategy = StrategySchema.parse(
+        mergedOptions.strategy || config.defaults?.upload?.strategy || 'fast',
+      );
       const contextualization =
         mergedOptions.contextualization !== undefined ?
           mergedOptions.contextualization
-        : config.defaults?.upload?.contextualization ?? false;
-      const parallel = mergedOptions.parallel || config.defaults?.upload?.parallel || 5;
+        : (config.defaults?.upload?.contextualization ?? false);
+      const parallel = ParallelSchema.parse(mergedOptions.parallel || config.defaults?.upload?.parallel || 5);
 
-      // Parse additional metadata
+      // Parse and validate additional metadata
       let additionalMetadata: Record<string, any> = {};
       if (mergedOptions.metadata) {
         try {
-          additionalMetadata = JSON.parse(mergedOptions.metadata);
+          const MetadataSchema = z.record(z.unknown());
+          const rawMetadata = JSON.parse(mergedOptions.metadata);
+          additionalMetadata = MetadataSchema.parse(rawMetadata);
         } catch (error) {
-          console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
+          if (error instanceof z.ZodError) {
+            console.error(
+              chalk.red('Error:'),
+              'Invalid metadata format:',
+              error.issues.map((i) => i.message).join(', '),
+            );
+          } else {
+            console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
+          }
           process.exit(1);
         }
       }
@@ -151,7 +169,7 @@ export function createUploadCommand(): Command {
 }
 
 async function uploadFiles(
-  client: any,
+  client: Mixedbread,
   vectorStoreId: string,
   files: string[],
   options: {
@@ -185,7 +203,7 @@ async function uploadFiles(
         const relativePath = relative(process.cwd(), filePath);
         if (unique && existingFiles.has(relativePath)) {
           const existingFileId = existingFiles.get(relativePath)!;
-          await client.vectorStores.files.del(vectorStoreId, existingFileId);
+          await client.vectorStores.files.delete(existingFileId, { vector_store_id: vectorStoreId });
           results.updated++;
         } else {
           results.uploaded++;
@@ -201,10 +219,11 @@ async function uploadFiles(
 
         // Upload the file
         const fileContent = readFileSync(filePath);
-        const file = new File([fileContent], basename(filePath));
+        const fileName = basename(filePath);
+        const mimeType = lookup(filePath) || 'application/octet-stream';
+        const file = new File([fileContent], fileName, { type: mimeType });
 
-        await client.vectorStores.files.create(vectorStoreId, {
-          file,
+        await client.vectorStores.files.upload(vectorStoreId, file, {
           metadata: fileMetadata,
           ...(strategy && { strategy }),
           ...(contextualization && { contextualization }),

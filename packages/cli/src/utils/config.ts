@@ -2,23 +2,33 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import chalk from 'chalk';
+import { z } from 'zod';
 
-export interface CliConfig {
-  version: string;
-  api_key?: string;
-  defaults?: {
-    upload?: {
-      strategy?: 'fast' | 'high_quality';
-      contextualization?: boolean;
-      parallel?: number;
-    };
-    search?: {
-      top_k?: number;
-      rerank?: boolean;
-    };
-  };
-  aliases?: Record<string, string>;
-}
+// Zod schemas for validation
+export const UploadDefaultsSchema = z.object({
+  strategy: z.enum(['fast', 'high_quality']).optional(),
+  contextualization: z.boolean().optional(),
+  parallel: z.number().int().positive().optional(),
+});
+
+export const SearchDefaultsSchema = z.object({
+  top_k: z.number().int().positive().optional(),
+  rerank: z.boolean().optional(),
+});
+
+export const DefaultsSchema = z.object({
+  upload: UploadDefaultsSchema.optional(),
+  search: SearchDefaultsSchema.optional(),
+});
+
+export const CliConfigSchema = z.object({
+  version: z.string(),
+  api_key: z.string().optional(),
+  defaults: DefaultsSchema.optional(),
+  aliases: z.record(z.string(), z.string()).optional(),
+});
+
+export type CliConfig = z.infer<typeof CliConfigSchema>;
 
 const CONFIG_DIR = process.env.MXBAI_CONFIG_PATH || join(homedir(), '.config', 'mixedbread');
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
@@ -46,8 +56,20 @@ export function loadConfig(): CliConfig {
 
   try {
     const content = readFileSync(CONFIG_FILE, 'utf-8');
-    const config = JSON.parse(content);
-    return { ...DEFAULT_CONFIG, ...config };
+    const rawConfig = JSON.parse(content);
+
+    // Validate with Zod
+    const parseResult = CliConfigSchema.safeParse(rawConfig);
+    if (parseResult.success) {
+      return { ...DEFAULT_CONFIG, ...parseResult.data };
+    } else {
+      console.warn(chalk.yellow('Warning:'), 'Invalid config file format, using defaults.');
+      console.warn(
+        chalk.gray('Validation errors:'),
+        parseResult.error.issues.map((i) => i.message).join(', '),
+      );
+      return DEFAULT_CONFIG;
+    }
   } catch (error) {
     console.warn(chalk.yellow('Warning:'), 'Failed to load config file, using defaults');
     return DEFAULT_CONFIG;
@@ -82,4 +104,81 @@ export function getApiKey(options?: { apiKey?: string }): string {
 export function resolveVectorStoreName(nameOrAlias: string): string {
   const config = loadConfig();
   return config.aliases?.[nameOrAlias] || nameOrAlias;
+}
+
+// Helper to resolve nested schema paths
+function resolveSchemaPath(schema: z.ZodSchema, path: string[]): z.ZodSchema | null {
+  if (path.length === 0) return schema;
+
+  const [head, ...tail] = path;
+
+  // Handle ZodObject
+  if (schema instanceof z.ZodObject) {
+    const shape = schema.shape;
+    if (head in shape) {
+      return resolveSchemaPath(shape[head], tail);
+    }
+  }
+
+  // Handle ZodOptional
+  if (schema instanceof z.ZodOptional) {
+    return resolveSchemaPath(schema._def.innerType, path);
+  }
+
+  return null;
+}
+
+// Enhanced value parsing using existing schemas
+export function parseConfigValue(key: string, value: string): unknown {
+  // Split the key into path segments
+  const pathSegments = key.split('.');
+
+  // Try to resolve the schema for this key path
+  const targetSchema = resolveSchemaPath(CliConfigSchema, pathSegments);
+
+  if (targetSchema) {
+    // Create a coercing version of the target schema
+    const coercedSchema = z.coerce
+      .string()
+      .pipe(
+        z.union([
+          z.literal('true').transform(() => true),
+          z.literal('false').transform(() => false),
+          z.coerce.number(),
+          targetSchema,
+        ]),
+      );
+
+    try {
+      return coercedSchema.parse(value);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const messages = error.issues.map((i) => i.message).join(', ');
+        throw new Error(`Invalid value for ${key}: ${messages}`);
+      }
+      throw error;
+    }
+  }
+
+  // Fallback to auto-parsing for unknown keys (like aliases)
+  const AutoValueSchema = z.coerce
+    .string()
+    .pipe(
+      z.union([
+        z.literal('true').transform(() => true),
+        z.literal('false').transform(() => false),
+        z.coerce.number(),
+        z.string(),
+      ]),
+    );
+
+  try {
+    return AutoValueSchema.parse(value);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const messages = error.issues.map((i) => i.message).join(', ');
+      throw new Error(`Invalid value for ${key}: ${messages}`);
+    }
+    throw error;
+  }
 }

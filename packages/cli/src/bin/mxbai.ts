@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 const { version } = require('../../package.json');
 import { createVectorStoreCommand } from '../commands/vector-store';
+import { createConfigCommand } from '../commands/config';
 import { setupGlobalOptions } from '../utils/global-options';
 
 const program = new Command();
@@ -17,8 +18,9 @@ program
 // Set up global options
 setupGlobalOptions(program);
 
-// Add vector store commands
+// Add commands
 program.addCommand(createVectorStoreCommand());
+program.addCommand(createConfigCommand());
 
 // Global error handling
 program.on('error', (error: Error) => {
