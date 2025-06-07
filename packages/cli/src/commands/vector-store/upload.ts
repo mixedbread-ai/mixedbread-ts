@@ -58,7 +58,7 @@ export function createUploadCommand(): Command {
       const contextualization =
         mergedOptions.contextualization !== undefined ?
           mergedOptions.contextualization
-        : (config.defaults?.upload?.contextualization ?? false);
+        : config.defaults?.upload?.contextualization ?? false;
       const parallel = mergedOptions.parallel || config.defaults?.upload?.parallel || 5;
 
       // Parse additional metadata

@@ -9,6 +9,7 @@ This is the official Mixedbread API TypeScript SDK - a generated client library 
 ## Common Development Commands
 
 ### Build and Development
+
 ```bash
 # Install dependencies (use yarn, not npm)
 yarn install
@@ -30,6 +31,7 @@ yarn format
 ```
 
 ### Testing with Mock Server
+
 ```bash
 # Start mock API server in background
 ./scripts/mock --daemon
@@ -44,19 +46,23 @@ yarn test --testNamePattern="embeddings"
 ## High-Level Architecture
 
 ### Core SDK Structure
+
 The SDK follows a resource-based architecture where each API feature is implemented as a resource class:
 
-1. **Client Entry Point** (`src/client.ts`): 
+1. **Client Entry Point** (`src/client.ts`):
+
    - Main `MixedbreadClient` class that initializes all resources
    - Handles authentication, retries, request building, and error handling
    - Configures HTTP client with proper headers and timeout settings
 
 2. **Resource Classes** (`src/resources/`):
+
    - Each API feature (embeddings, vector stores, chat, etc.) is a separate resource
    - Resources inherit from `APIResource` base class
    - Nested resources (e.g., `vector-stores/files.ts`) follow the API structure
 
 3. **Core Infrastructure** (`src/core/`):
+
    - `APIPromise`: Enhanced promises that support streaming and raw responses
    - `Page`: Auto-pagination support for list endpoints
    - `MixedbreadError`: Typed error hierarchy for different HTTP status codes
@@ -69,16 +75,19 @@ The SDK follows a resource-based architecture where each API feature is implemen
 ### Key Architectural Patterns
 
 1. **Request Flow**:
+
    ```
    Client Method → Resource Method → buildRequest → fetch → parseResponse → APIPromise
    ```
 
 2. **Error Handling**:
+
    - All API errors extend `MixedbreadError` with specific types for each status code
    - Automatic retry logic with exponential backoff (2 retries by default)
    - Detailed error messages include request ID and status information
 
 3. **Type Safety**:
+
    - All request parameters and responses have TypeScript interfaces
    - Strict null checks and type validation throughout
    - Generated types ensure API compatibility
@@ -91,15 +100,18 @@ The SDK follows a resource-based architecture where each API feature is implemen
 ### Important Implementation Notes
 
 1. **Generated Code**: Most files are auto-generated. Manual edits to generated files will be lost. Safe directories for custom code:
+
    - `src/lib/` - Custom utilities and helpers
    - `examples/` - Usage examples
 
 2. **Testing Strategy**:
+
    - Tests use a Prism mock server that validates against OpenAPI spec
    - Each resource has comprehensive test coverage
    - Tests verify both success and error scenarios
 
 3. **Build Process**:
+
    - TypeScript compilation targets both CommonJS and ESM
    - Multiple TypeScript configs for different build targets
    - Custom post-processing fixes module exports
