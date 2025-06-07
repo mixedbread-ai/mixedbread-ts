@@ -42,7 +42,6 @@ export function createDeleteCommand(): Command {
       await client.vectorStores.delete(vectorStore.id);
 
       console.log(chalk.green('✓'), `Vector store "${vectorStore.name}" deleted successfully`);
-
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

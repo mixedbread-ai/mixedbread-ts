@@ -29,7 +29,7 @@ export function mergeCommandOptions(command: Command, options: any): any {
   // Traverse up the command hierarchy to collect all options
   const allOptions: any[] = [];
   let currentCommand: Command | null = command;
-  
+
   // Collect options from all parent commands up to the root
   while (currentCommand) {
     if (currentCommand.parent) {
@@ -37,17 +37,17 @@ export function mergeCommandOptions(command: Command, options: any): any {
     }
     currentCommand = currentCommand.parent;
   }
-  
+
   // Add the current command's options last (highest priority)
   allOptions.push(options);
-  
+
   // Merge all options, with later options taking priority
   const merged = Object.assign({}, ...allOptions);
-  
+
   if (process.env.MXBAI_DEBUG === 'true') {
     console.log('Command hierarchy options:', allOptions);
     console.log('Merged options:', merged);
   }
-  
+
   return merged;
 }

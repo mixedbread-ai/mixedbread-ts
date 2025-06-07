@@ -11,13 +11,11 @@ import { createQACommand } from './qa';
 import { createSyncCommand } from './sync';
 
 export function createVectorStoreCommand(): Command {
-  const vsCommand = new Command('vs')
-    .alias('vector-store')
-    .description('Manage vector stores');
+  const vsCommand = new Command('vs').alias('vector-store').description('Manage vector stores');
 
   // // Add global options to the vs command itself
   // addGlobalOptions(vsCommand);
-  
+
   // // Enable passing options to subcommands
   // vsCommand.configureHelp({ helpWidth: 80 });
 

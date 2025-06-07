@@ -46,15 +46,19 @@ export function createUploadCommand(): Command {
       }
 
       if (!patterns || patterns.length === 0) {
-        console.error(chalk.red('Error:'), 'No file patterns provided. Use --manifest for manifest-based uploads.');
+        console.error(
+          chalk.red('Error:'),
+          'No file patterns provided. Use --manifest for manifest-based uploads.',
+        );
         process.exit(1);
       }
 
       // Get default values from config
       const strategy = mergedOptions.strategy || config.defaults?.upload?.strategy || 'fast';
-      const contextualization = mergedOptions.contextualization !== undefined 
-        ? mergedOptions.contextualization 
-        : config.defaults?.upload?.contextualization ?? false;
+      const contextualization =
+        mergedOptions.contextualization !== undefined ?
+          mergedOptions.contextualization
+        : (config.defaults?.upload?.contextualization ?? false);
       const parallel = mergedOptions.parallel || config.defaults?.upload?.parallel || 5;
 
       // Parse additional metadata
@@ -71,7 +75,7 @@ export function createUploadCommand(): Command {
       // Collect all files matching patterns
       const files: string[] = [];
       for (const pattern of patterns) {
-        const matches = await glob(pattern, { 
+        const matches = await glob(pattern, {
           nodir: true,
           absolute: false,
         });
@@ -99,7 +103,7 @@ export function createUploadCommand(): Command {
 
       if (mergedOptions.dryRun) {
         console.log(chalk.blue('Dry run - files that would be uploaded:'));
-        uniqueFiles.forEach(file => {
+        uniqueFiles.forEach((file) => {
           const stats = statSync(file);
           console.log(`  ${file} (${formatBytes(stats.size)})`);
         });
@@ -115,7 +119,7 @@ export function createUploadCommand(): Command {
           existingFiles = new Map(
             filesResponse.data
               .filter((f: any) => f.metadata?.file_path)
-              .map((f: any) => [f.metadata.file_path as string, f.id])
+              .map((f: any) => [f.metadata.file_path as string, f.id]),
           );
           spinner.succeed(`Found ${existingFiles.size} existing files`);
         } catch (error) {
@@ -133,7 +137,6 @@ export function createUploadCommand(): Command {
         unique: mergedOptions.unique || false,
         existingFiles,
       });
-
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
@@ -158,7 +161,7 @@ async function uploadFiles(
     additionalMetadata: Record<string, any>;
     unique: boolean;
     existingFiles: Map<string, string>;
-  }
+  },
 ) {
   const { strategy, contextualization, parallel, additionalMetadata, unique, existingFiles } = options;
 
@@ -176,7 +179,7 @@ async function uploadFiles(
     const batch = files.slice(i, i + parallel);
     const promises = batch.map(async (filePath) => {
       const spinner = ora(`Uploading ${basename(filePath)}...`).start();
-      
+
       try {
         // Delete existing file if using --unique
         const relativePath = relative(process.cwd(), filePath);
@@ -209,7 +212,6 @@ async function uploadFiles(
 
         const stats = statSync(filePath);
         spinner.succeed(`${basename(filePath)} (${formatBytes(stats.size)})`);
-
       } catch (error) {
         results.failed++;
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -233,7 +235,7 @@ async function uploadFiles(
     console.log(chalk.red(`✗ ${results.failed} files failed`));
     if (results.errors.length > 0) {
       console.log('\nErrors:');
-      results.errors.forEach(error => console.log(chalk.red(`  ${error}`)));
+      results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));
     }
   }
 }
@@ -242,7 +244,7 @@ async function uploadFromManifest(
   client: any,
   vectorStoreId: string,
   manifestPath: string,
-  options: UploadOptions
+  options: UploadOptions,
 ) {
   // TODO: Implement manifest-based upload
   console.error(chalk.red('Error:'), 'Manifest-based upload not yet implemented');

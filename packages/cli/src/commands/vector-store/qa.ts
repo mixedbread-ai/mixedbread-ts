@@ -1,7 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { createClient } from '../../utils/client';
-import { formatOutput } from '../../utils/output';
 import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 
@@ -42,7 +41,6 @@ export function createQACommand(): Command {
 
       // TODO: Implement actual QA once available in SDK
       // const response = await client.vectorStores.qa(vectorStore.id, qaParams);
-
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

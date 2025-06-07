@@ -9,7 +9,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 export async function resolveVectorStore(
   client: Mixedbread,
   nameOrId: string,
-  interactive = false
+  interactive = false,
 ): Promise<VectorStore> {
   // First check if it's an alias
   const resolved = resolveVectorStoreName(nameOrId);
@@ -29,13 +29,13 @@ export async function resolveVectorStore(
 
   if (matches.length === 0) {
     // No exact match, try fuzzy matching
-    const fuzzyMatches = vectorStores.data.filter((vs) => 
-      vs.name.toLowerCase().includes(resolved.toLowerCase())
+    const fuzzyMatches = vectorStores.data.filter((vs) =>
+      vs.name.toLowerCase().includes(resolved.toLowerCase()),
     );
 
     if (fuzzyMatches.length === 0) {
       console.error(chalk.red('Error:'), `Vector store "${nameOrId}" not found.\n`);
-      console.error('Run \'mxbai vs list\' to see all vector stores.');
+      console.error("Run 'mxbai vs list' to see all vector stores.");
       process.exit(1);
     }
 
@@ -63,7 +63,7 @@ export async function resolveVectorStore(
       fuzzyMatches.forEach((vs) => {
         console.error(`  • ${vs.name}`);
       });
-      console.error('\nRun \'mxbai vs list\' to see all vector stores.');
+      console.error("\nRun 'mxbai vs list' to see all vector stores.");
       process.exit(1);
     }
   }

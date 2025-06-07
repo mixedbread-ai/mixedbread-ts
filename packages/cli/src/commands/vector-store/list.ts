@@ -18,7 +18,7 @@ export function createListCommand(): Command {
   command.action(async (options: ListOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      
+
       const client = createClient(mergedOptions);
       const response = await client.vectorStores.list({
         limit: mergedOptions.limit || 10,
@@ -29,9 +29,7 @@ export function createListCommand(): Command {
       // Apply filter if provided
       if (mergedOptions.filter) {
         const filterPattern = mergedOptions.filter.toLowerCase();
-        vectorStores = vectorStores.filter((vs) =>
-          vs.name.toLowerCase().includes(filterPattern)
-        );
+        vectorStores = vectorStores.filter((vs) => vs.name.toLowerCase().includes(filterPattern));
       }
 
       if (vectorStores.length === 0) {

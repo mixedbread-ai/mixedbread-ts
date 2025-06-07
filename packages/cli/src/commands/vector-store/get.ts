@@ -22,23 +22,27 @@ export function createGetCommand(): Command {
         name: vectorStore.name,
         id: vectorStore.id,
         description: vectorStore.description || 'N/A',
-        status: vectorStore.expires_at && new Date(vectorStore.expires_at) < new Date() ? 'expired' : 'active',
+        status:
+          vectorStore.expires_at && new Date(vectorStore.expires_at) < new Date() ? 'expired' : 'active',
         'total files': vectorStore.file_counts?.total || 0,
         'completed files': vectorStore.file_counts?.completed || 0,
         'processing files': vectorStore.file_counts?.in_progress || 0,
         'failed files': vectorStore.file_counts?.failed || 0,
-        'usage': formatBytes(vectorStore.usage_bytes || 0),
+        usage: formatBytes(vectorStore.usage_bytes || 0),
         'created at': new Date(vectorStore.created_at).toLocaleString(),
-        ...(vectorStore.expires_at ? {
-          'expires at': new Date(vectorStore.expires_at).toLocaleString()
-        } : {}),
-        ...(vectorStore.metadata && Object.keys(vectorStore.metadata).length > 0 ? {
-          'metadata': JSON.stringify(vectorStore.metadata, null, 2)
-        } : {}),
+        ...(vectorStore.expires_at ?
+          {
+            'expires at': new Date(vectorStore.expires_at).toLocaleString(),
+          }
+        : {}),
+        ...(vectorStore.metadata && Object.keys(vectorStore.metadata).length > 0 ?
+          {
+            metadata: JSON.stringify(vectorStore.metadata, null, 2),
+          }
+        : {}),
       };
 
       formatOutput(formattedData, mergedOptions.format);
-
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

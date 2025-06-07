@@ -37,22 +37,28 @@ export function createCreateCommand(): Command {
       const vectorStore = await client.vectorStores.create({
         name,
         description: mergedOptions.description,
-        expires_after: mergedOptions.expiresAfter ? {
-          anchor: 'last_active_at',
-          days: mergedOptions.expiresAfter,
-        } : undefined,
+        expires_after:
+          mergedOptions.expiresAfter ?
+            {
+              anchor: 'last_active_at',
+              days: mergedOptions.expiresAfter,
+            }
+          : undefined,
         metadata: metadata,
       });
 
       console.log(chalk.green('✓'), `Vector store "${name}" created successfully`);
 
-      formatOutput({
-        id: vectorStore.id,
-        name: vectorStore.name,
-        description: vectorStore.description,
-        expires_after: vectorStore.expires_after,
-        metadata: vectorStore.metadata,
-      }, mergedOptions.format);
+      formatOutput(
+        {
+          id: vectorStore.id,
+          name: vectorStore.name,
+          description: vectorStore.description,
+          expires_after: vectorStore.expires_after,
+          metadata: vectorStore.metadata,
+        },
+        mergedOptions.format,
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

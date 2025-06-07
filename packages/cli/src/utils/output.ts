@@ -27,12 +27,12 @@ function formatTable(data: unknown): void {
 
     const headers = Object.keys(data[0]);
     const table = new Table({
-      head: headers.map(h => chalk.bold(h)),
+      head: headers.map((h) => chalk.bold(h)),
       style: { head: [], border: [] },
     });
 
-    data.forEach(item => {
-      table.push(headers.map(h => formatValue(item[h])));
+    data.forEach((item) => {
+      table.push(headers.map((h) => formatValue(item[h])));
     });
 
     console.log(table.toString());
@@ -60,8 +60,8 @@ function formatCsv(data: unknown): void {
     const headers = Object.keys(data[0]);
     console.log(headers.join(','));
 
-    data.forEach(item => {
-      console.log(headers.map(h => escapeCsv(formatValue(item[h]))).join(','));
+    data.forEach((item) => {
+      console.log(headers.map((h) => escapeCsv(formatValue(item[h]))).join(','));
     });
   } else if (typeof data === 'object' && data !== null) {
     console.log('key,value');

@@ -69,13 +69,17 @@ export function createSearchCommand(): Command {
 
         results.data.forEach((result: any, index: number) => {
           console.log(chalk.blue(`${index + 1}. Score: ${result.score?.toFixed(4) || 'N/A'}`));
-          
+
           if (result.metadata?.file_path) {
             console.log(chalk.gray(`   File: ${result.metadata.file_path}`));
           }
 
           if (mergedOptions.showChunks && result.chunk) {
-            console.log(chalk.white(`   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? '...' : ''}`));
+            console.log(
+              chalk.white(
+                `   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? '...' : ''}`,
+              ),
+            );
           }
 
           if (result.metadata && Object.keys(result.metadata).length > 0) {
@@ -89,7 +93,6 @@ export function createSearchCommand(): Command {
           console.log();
         });
       }
-
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

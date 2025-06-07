@@ -43,7 +43,10 @@ export function createUpdateCommand(): Command {
       if (metadata !== undefined) updateData.metadata = metadata;
 
       if (Object.keys(updateData).length === 0) {
-        console.error(chalk.red('Error:'), 'No update fields provided. Use --name, --description, or --metadata');
+        console.error(
+          chalk.red('Error:'),
+          'No update fields provided. Use --name, --description, or --metadata',
+        );
         process.exit(1);
       }
 
