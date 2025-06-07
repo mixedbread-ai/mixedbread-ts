@@ -1,11 +1,8 @@
-import { Command } from "commander";
-import chalk from "chalk";
-import { createClient } from "../../utils/client";
-import { formatOutput, formatBytes } from "../../utils/output";
-import {
-  type GlobalOptions,
-  mergeCommandOptions,
-} from "../../utils/global-options";
+import { Command } from 'commander';
+import chalk from 'chalk';
+import { createClient } from '../../utils/client';
+import { formatOutput, formatBytes } from '../../utils/output';
+import { GlobalOptions, mergeCommandOptions } from '../../utils/global-options';
 
 interface ListOptions extends GlobalOptions {
   filter?: string;
@@ -13,15 +10,15 @@ interface ListOptions extends GlobalOptions {
 }
 
 export function createListCommand(): Command {
-  const command = new Command("list")
-    .description("List vector stores")
-    .option("--filter <name>", "Filter by name pattern")
-    .option("--limit <n>", "Maximum number of results", "10");
+  const command = new Command('list')
+    .description('List vector stores')
+    .option('--filter <name>', 'Filter by name pattern')
+    .option('--limit <n>', 'Maximum number of results', '10');
 
   command.action(async (options: ListOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-
+      
       const client = createClient(mergedOptions);
       const response = await client.vectorStores.list({
         limit: mergedOptions.limit || 10,
@@ -38,7 +35,7 @@ export function createListCommand(): Command {
       }
 
       if (vectorStores.length === 0) {
-        console.log(chalk.gray("No vector stores found."));
+        console.log(chalk.gray('No vector stores found.'));
         return;
       }
 
@@ -46,10 +43,7 @@ export function createListCommand(): Command {
       const formattedData = vectorStores.map((vs) => ({
         name: vs.name,
         id: vs.id,
-        status:
-          vs.expires_at && new Date(vs.expires_at) < new Date()
-            ? "expired"
-            : "active",
+        status: vs.expires_at && new Date(vs.expires_at) < new Date() ? 'expired' : 'active',
         files: vs.file_counts?.total,
         usage: formatBytes(vs.usage_bytes),
         created: new Date(vs.created_at).toLocaleDateString(),
@@ -58,9 +52,9 @@ export function createListCommand(): Command {
       formatOutput(formattedData, mergedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
-        console.error(chalk.red("Error:"), error.message);
+        console.error(chalk.red('Error:'), error.message);
       } else {
-        console.error(chalk.red("Error:"), "Failed to list vector stores");
+        console.error(chalk.red('Error:'), 'Failed to list vector stores');
       }
       process.exit(1);
     }

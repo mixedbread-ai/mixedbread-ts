@@ -1,5 +1,5 @@
-import { Mixedbread } from "@mixedbread/sdk";
-import { getApiKey } from "./config";
+import { Mixedbread } from '@mixedbread/sdk';
+import { getApiKey } from './config';
 
 export function createClient(options?: { apiKey?: string }): Mixedbread {
   const apiKey = getApiKey(options);
