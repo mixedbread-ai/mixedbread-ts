@@ -37,31 +37,31 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Get a vector store by ID.
+   * Get a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to retrieve.
+   * Args: vector_store_identifier: The ID or name of the vector store to retrieve.
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStore> {
-    return this._client.get(path`/v1/vector_stores/${vectorStoreID}`, options);
+  retrieve(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStore> {
+    return this._client.get(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
-   * Update a vector store by ID.
+   * Update a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to update.
+   * Args: vector_store_identifier: The ID or name of the vector store to update.
    * vector_store_update: VectorStoreCreate object containing the name, description,
    * and metadata.
    *
    * Returns: VectorStore: The response containing the updated vector store details.
    */
   update(
-    vectorStoreID: string,
+    vectorStoreIdentifier: string,
     body: VectorStoreUpdateParams,
     options?: RequestOptions,
   ): APIPromise<VectorStore> {
-    return this._client.put(path`/v1/vector_stores/${vectorStoreID}`, { body, ...options });
+    return this._client.put(path`/v1/vector_stores/${vectorStoreIdentifier}`, { body, ...options });
   }
 
   /**
@@ -79,14 +79,14 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Delete a vector store by ID.
+   * Delete a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to delete.
+   * Args: vector_store_identifier: The ID or name of the vector store to delete.
    *
    * Returns: VectorStore: The response containing the deleted vector store details.
    */
-  delete(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
-    return this._client.delete(path`/v1/vector_stores/${vectorStoreID}`, options);
+  delete(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
+    return this._client.delete(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
@@ -107,7 +107,9 @@ export class VectorStores extends APIResource {
    * relevance-scored results.
    *
    * Args: search_params: Search configuration including: - query text or
-   * embeddings - metadata filters - pagination parameters - sorting preferences
+   * embeddings - vector_store_ids: List of vector stores to search - file_ids:
+   * Optional list of file IDs to filter chunks by (or tuple of list and condition
+   * operator) - metadata filters - pagination parameters - sorting preferences
    * \_state: API state dependency \_ctx: Service context dependency
    *
    * Returns: VectorStoreSearchChunkResponse containing: - List of matched chunks
@@ -283,6 +285,11 @@ export namespace ScoredImageURLInputChunk {
      * The image URL. Can be either a URL or a Data URI.
      */
     url: string;
+
+    /**
+     * The image format/mimetype
+     */
+    format?: string;
   }
 }
 
@@ -529,9 +536,37 @@ export interface VectorStoreChunkSearchOptions {
   rewrite_query?: boolean;
 
   /**
+   * Whether to rerank results and optional reranking configuration
+   */
+  rerank?: boolean | VectorStoreChunkSearchOptions.RerankConfig | null;
+
+  /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
+}
+
+export namespace VectorStoreChunkSearchOptions {
+  /**
+   * Represents a reranking configuration.
+   */
+  export interface RerankConfig {
+    /**
+     * The name of the reranking model
+     */
+    model?: string;
+
+    /**
+     * Whether to include metadata in the reranked results
+     */
+    with_metadata?: boolean | Array<string>;
+
+    /**
+     * Maximum number of results to return after reranking. If None, returns all
+     * reranked results.
+     */
+    top_k?: number | null;
+  }
 }
 
 /**
@@ -644,9 +679,14 @@ export interface VectorStoreQuestionAnsweringParams {
   query?: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -661,6 +701,11 @@ export interface VectorStoreQuestionAnsweringParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -702,9 +747,14 @@ export interface VectorStoreSearchParams {
   query: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -719,6 +769,11 @@ export interface VectorStoreSearchParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
