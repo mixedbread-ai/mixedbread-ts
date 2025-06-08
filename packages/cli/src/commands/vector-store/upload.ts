@@ -91,23 +91,12 @@ export function createUploadCommand(): Command {
         : (config.defaults?.upload?.contextualization ?? false);
       const parallel = parsedOptions.parallel || config.defaults?.upload?.parallel || 5;
 
-      // Parse and validate additional metadata
-      let additionalMetadata: Record<string, any> = {};
+      let metadata: Record<string, unknown> | undefined;
       if (parsedOptions.metadata) {
         try {
-          const MetadataSchema = z.record(z.unknown());
-          const rawMetadata = JSON.parse(parsedOptions.metadata);
-          additionalMetadata = MetadataSchema.parse(rawMetadata);
+          metadata = JSON.parse(parsedOptions.metadata);
         } catch (error) {
-          if (error instanceof z.ZodError) {
-            console.error(
-              chalk.red('Error:'),
-              'Invalid metadata format:',
-              error.issues.map((i) => i.message).join(', '),
-            );
-          } else {
-            console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
-          }
+          console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
           process.exit(1);
         }
       }
@@ -121,25 +110,28 @@ export function createUploadCommand(): Command {
         });
         files.push(...matches);
       }
-
       // Remove duplicates
       const uniqueFiles = [...new Set(files)];
 
-      if (uniqueFiles.length === 0) {
-        console.log(chalk.yellow('No files found matching the patterns.'));
-        return;
-      }
-
-      // Calculate total size
-      const totalSize = uniqueFiles.reduce((sum, file) => {
-        try {
-          return sum + statSync(file).size;
-        } catch {
-          return sum;
+      if (parsedOptions.patterns) {
+        if (uniqueFiles.length === 0) {
+          console.log(chalk.yellow('No files found matching the patterns.'));
+          return;
         }
-      }, 0);
 
-      console.log(`Found ${uniqueFiles.length} files (${formatBytes(totalSize)})`);
+        // Calculate total size
+        const totalSize = uniqueFiles.reduce((sum, file) => {
+          try {
+            return sum + statSync(file).size;
+          } catch {
+            return sum;
+          }
+        }, 0);
+
+        console.log(
+          `Found ${uniqueFiles.length} ${uniqueFiles.length === 1 ? 'file' : 'files'} matching the ${patterns.length === 1 ? 'pattern' : 'patterns'} (${formatBytes(totalSize)})`,
+        );
+      }
 
       if (parsedOptions.dryRun) {
         console.log(chalk.blue('Dry run - files that would be uploaded:'));
@@ -158,10 +150,12 @@ export function createUploadCommand(): Command {
           const filesResponse = await client.vectorStores.files.list(vectorStore.id, { limit: 1000 });
           existingFiles = new Map(
             filesResponse.data
-              .filter((f: any) => f.metadata?.file_path)
+              .filter((f: any) => files.includes(f.metadata?.file_path))
               .map((f: any) => [f.metadata.file_path as string, f.id]),
           );
-          spinner.succeed(`Found ${existingFiles.size} existing files`);
+          spinner.succeed(
+            `Found ${existingFiles.size} existing ${existingFiles.size === 1 ? 'file' : 'files'}`,
+          );
         } catch (error) {
           spinner.fail('Failed to check existing files');
           throw error;
@@ -173,7 +167,7 @@ export function createUploadCommand(): Command {
         strategy,
         contextualization,
         parallel,
-        additionalMetadata,
+        additionalMetadata: metadata,
         unique: parsedOptions.unique || false,
         existingFiles,
       });
@@ -205,7 +199,7 @@ async function uploadFiles(
 ) {
   const { strategy, contextualization, parallel, additionalMetadata, unique, existingFiles } = options;
 
-  console.log(`\nUploading ${files.length} files to vector store...`);
+  console.log(`\nUploading ${files.length} ${files.length === 1 ? 'file' : 'files'} to vector store...`);
 
   const results = {
     uploaded: 0,
@@ -267,13 +261,15 @@ async function uploadFiles(
   // Summary
   console.log('\n' + chalk.bold('Upload Summary:'));
   if (results.uploaded > 0) {
-    console.log(chalk.green(`✓ ${results.uploaded} files uploaded successfully`));
+    console.log(
+      chalk.green(`✓ ${results.uploaded} ${results.uploaded === 1 ? 'file' : 'files'} uploaded successfully`),
+    );
   }
   if (results.updated > 0) {
-    console.log(chalk.blue(`↻ ${results.updated} files updated`));
+    console.log(chalk.blue(`↻ ${results.updated} ${results.updated === 1 ? 'file' : 'files'} updated`));
   }
   if (results.failed > 0) {
-    console.log(chalk.red(`✗ ${results.failed} files failed`));
+    console.log(chalk.red(`✗ ${results.failed} ${results.failed === 1 ? 'file' : 'files'} failed`));
     if (results.errors.length > 0) {
       console.log('\nErrors:');
       results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));

@@ -93,7 +93,9 @@ export function createSearchCommand(): Command {
       if (parsedOptions.format === 'json') {
         formatOutput(results, parsedOptions.format);
       } else {
-        console.log(chalk.bold(`Found ${results.data.length} results:\n`));
+        console.log(
+          chalk.bold(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}:\n`),
+        );
 
         results.data.forEach((result: any, index: number) => {
           console.log(chalk.blue(`${index + 1}. Score: ${result.score?.toFixed(4) || 'N/A'}`));

@@ -15,12 +15,18 @@ const UpdateVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
   name: z.string().optional(),
   description: z.string().optional(),
+  expiresAfter: z.coerce
+    .number({ message: '"expires-after" must be a number' })
+    .int({ message: '"expires-after" must be an integer' })
+    .positive({ message: '"expires-after" must be positive' })
+    .optional(),
   metadata: z.string().optional(),
 });
 
 interface UpdateOptions extends GlobalOptions {
   name?: string;
   description?: string;
+  expiresAfter?: number;
   metadata?: string;
 }
 
@@ -30,6 +36,7 @@ export function createUpdateCommand(): Command {
     .argument('<name-or-id>', 'Name or ID of the vector store')
     .option('--name <name>', 'New name for the vector store')
     .option('--description <desc>', 'New description for the vector store')
+    .option('--expires-after <days>', 'Expire after number of days')
     .option('--metadata <json>', 'New metadata as JSON string (replaces existing)');
 
   command.action(async (nameOrId: string, options: UpdateOptions) => {
@@ -52,11 +59,15 @@ export function createUpdateCommand(): Command {
         }
       }
 
-      // Build update payload
       const updateData: Record<string, unknown> = {};
       if (parsedOptions.name) updateData.name = parsedOptions.name;
       if (parsedOptions.description !== undefined) updateData.description = parsedOptions.description;
       if (metadata !== undefined) updateData.metadata = metadata;
+      if (parsedOptions.expiresAfter !== undefined)
+        updateData.expires_after = {
+          anchor: 'last_active_at',
+          days: parsedOptions.expiresAfter,
+        };
 
       if (Object.keys(updateData).length === 0) {
         console.error(
@@ -70,7 +81,23 @@ export function createUpdateCommand(): Command {
 
       console.log(chalk.green('✓'), `Vector store "${vectorStore.name}" updated successfully`);
 
-      formatOutput(updatedVectorStore, parsedOptions.format);
+      formatOutput(
+        {
+          id: updatedVectorStore.id,
+          name: updatedVectorStore.name,
+          description: updatedVectorStore.description,
+          expires_after: updatedVectorStore.expires_after,
+          metadata: updatedVectorStore.metadata,
+          file_counts: updatedVectorStore.file_counts,
+          status: updatedVectorStore.status,
+          created_at: updatedVectorStore.created_at,
+          updated_at: updatedVectorStore.updated_at,
+          last_active_at: updatedVectorStore.last_active_at,
+          usage_bytes: updatedVectorStore.usage_bytes,
+          expires_at: updatedVectorStore.expires_at,
+        },
+        parsedOptions.format,
+      );
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
