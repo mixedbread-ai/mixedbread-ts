@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { resolveVectorStoreName } from './config';
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const ID_REGEX = /^(vs_[a-zA-Z0-9]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 
 export async function resolveVectorStore(
   client: Mixedbread,
@@ -14,8 +14,8 @@ export async function resolveVectorStore(
   // First check if it's an alias
   const resolved = resolveVectorStoreName(nameOrId);
 
-  // If it looks like a UUID, try to get it directly
-  if (UUID_REGEX.test(resolved)) {
+  // If it looks like a UUID or vector store ID, try to get it directly
+  if (ID_REGEX.test(resolved)) {
     try {
       return await client.vectorStores.retrieve(resolved);
     } catch (error) {

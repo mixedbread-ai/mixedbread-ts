@@ -170,6 +170,7 @@ export function parseConfigValue(key: string, value: string) {
       `Unknown config key: ${key}. Use 'mxbai config --help' to see available options.`,
     );
     process.exit(1);
+    return; // This won't be reached in normal execution, but helps with testing
   }
 
   const parsed = targetSchema.safeParse(value);
@@ -181,6 +182,7 @@ export function parseConfigValue(key: string, value: string) {
       parsed.error.issues.map((i) => i.message).join(', '),
     );
     process.exit(1);
+    return; // This won't be reached in normal execution, but helps with testing
   }
 
   return parsed.data;

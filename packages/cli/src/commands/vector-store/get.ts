@@ -5,6 +5,7 @@ import { formatOutput, formatBytes } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -18,9 +19,11 @@ const GetVectorStoreSchema = GlobalOptionsSchema.extend({
 interface GetOptions extends GlobalOptions {}
 
 export function createGetCommand(): Command {
-  const command = new Command('get')
-    .description('Get vector store details')
-    .argument('<name-or-id>', 'Name or ID of the vector store');
+  const command = addGlobalOptions(
+    new Command('get')
+      .description('Get vector store details')
+      .argument('<name-or-id>', 'Name or ID of the vector store'),
+  );
 
   command.action(async (nameOrId: string, options: GetOptions) => {
     try {

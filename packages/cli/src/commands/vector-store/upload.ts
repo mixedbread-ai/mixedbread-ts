@@ -11,6 +11,7 @@ import { formatBytes } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -48,17 +49,19 @@ interface UploadOptions extends GlobalOptions {
 }
 
 export function createUploadCommand(): Command {
-  const command = new Command('upload')
-    .description('Upload files to a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('[patterns...]', 'File patterns to upload (e.g., "*.md", "docs/**/*.pdf")')
-    .option('--strategy <strategy>', 'Processing strategy', 'fast')
-    .option('--contextualization', 'Enable context preservation', false)
-    .option('--metadata <json>', 'Additional metadata as JSON string')
-    .option('--dry-run', 'Preview what would be uploaded', false)
-    .option('--parallel <n>', 'Number of concurrent uploads')
-    .option('--unique', 'Update existing files instead of creating duplicates', false)
-    .option('--manifest <file>', 'Upload using manifest file');
+  const command = addGlobalOptions(
+    new Command('upload')
+      .description('Upload files to a vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .argument('[patterns...]', 'File patterns to upload (e.g., "*.md", "docs/**/*.pdf")')
+      .option('--strategy <strategy>', 'Processing strategy', 'fast')
+      .option('--contextualization', 'Enable context preservation', false)
+      .option('--metadata <json>', 'Additional metadata as JSON string')
+      .option('--dry-run', 'Preview what would be uploaded', false)
+      .option('--parallel <n>', 'Number of concurrent uploads')
+      .option('--unique', 'Update existing files instead of creating duplicates', false)
+      .option('--manifest <file>', 'Upload using manifest file'),
+  );
 
   command.action(async (nameOrId: string, patterns: string[], options: UploadOptions) => {
     try {

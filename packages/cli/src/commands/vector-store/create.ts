@@ -5,6 +5,7 @@ import { formatOutput } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -13,7 +14,7 @@ import { z } from 'zod';
 const CreateVectorStoreSchema = GlobalOptionsSchema.extend({
   name: z.string().min(1, { message: '"name" is required' }),
   description: z.string().optional(),
-  expiresAfter: z
+  expiresAfter: z.coerce
     .number({ message: '"expires-after" must be a number' })
     .int({ message: '"expires-after" must be an integer' })
     .positive({ message: '"expires-after" must be positive' })
@@ -28,18 +29,19 @@ interface CreateOptions extends GlobalOptions {
 }
 
 export function createCreateCommand(): Command {
-  const command = new Command('create')
-    .description('Create a new vector store')
-    .argument('<name>', 'Name of the vector store')
-    .option('--description <desc>', 'Description of the vector store')
-    .option('--expires-after <days>', 'Expire after number of days', parseInt)
-    .option('--metadata <json>', 'Additional metadata as JSON string');
+  const command = addGlobalOptions(
+    new Command('create')
+      .description('Create a new vector store')
+      .argument('<name>', 'Name of the vector store')
+      .option('--description <desc>', 'Description of the vector store')
+      .option('--expires-after <days>', 'Expire after number of days')
+      .option('--metadata <json>', 'Additional metadata as JSON string'),
+  );
 
   command.action(async (name: string, options: CreateOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const client = createClient(mergedOptions);
-      console.log(options, mergedOptions);
 
       const parsedOptions = parseOptions(CreateVectorStoreSchema, { ...mergedOptions, name });
 

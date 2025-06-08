@@ -5,6 +5,7 @@ import { formatOutput } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -31,13 +32,15 @@ interface UpdateOptions extends GlobalOptions {
 }
 
 export function createUpdateCommand(): Command {
-  const command = new Command('update')
-    .description('Update a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .option('--name <name>', 'New name for the vector store')
-    .option('--description <desc>', 'New description for the vector store')
-    .option('--expires-after <days>', 'Expire after number of days')
-    .option('--metadata <json>', 'New metadata as JSON string (replaces existing)');
+  const command = addGlobalOptions(
+    new Command('update')
+      .description('Update a vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .option('--name <name>', 'New name for the vector store')
+      .option('--description <desc>', 'New description for the vector store')
+      .option('--expires-after <days>', 'Expire after number of days')
+      .option('--metadata <json>', 'New metadata as JSON string (replaces existing)'),
+  );
 
   command.action(async (nameOrId: string, options: UpdateOptions) => {
     try {

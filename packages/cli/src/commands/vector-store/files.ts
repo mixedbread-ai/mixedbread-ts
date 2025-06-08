@@ -5,6 +5,7 @@ import { formatOutput, formatBytes } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -47,12 +48,14 @@ export function createFilesCommand(): Command {
   const filesCommand = new Command('files').description('Manage files in vector stores');
 
   // List files subcommand
-  const listCommand = new Command('list')
-    .alias('ls')
-    .description('List files in a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .option('--status <status>', 'Filter by status (pending|in_progress|cancelled|completed|failed)', 'all')
-    .option('--limit <n>', 'Maximum number of results', '10');
+  const listCommand = addGlobalOptions(
+    new Command('list')
+      .alias('ls')
+      .description('List files in a vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .option('--status <status>', 'Filter by status (pending|in_progress|cancelled|completed|failed)', 'all')
+      .option('--limit <n>', 'Maximum number of results', '10'),
+  );
 
   listCommand.action(async (nameOrId: string, options: FilesOptions) => {
     try {
@@ -100,10 +103,12 @@ export function createFilesCommand(): Command {
   });
 
   // Get file details subcommand
-  const getCommand = new Command('get')
-    .description('Get file details')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('<file-id>', 'ID of the file');
+  const getCommand = addGlobalOptions(
+    new Command('get')
+      .description('Get file details')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .argument('<file-id>', 'ID of the file'),
+  );
 
   getCommand.action(async (nameOrId: string, fileId: string, options: GlobalOptions) => {
     try {
@@ -143,12 +148,14 @@ export function createFilesCommand(): Command {
   });
 
   // Delete file subcommand
-  const deleteCommand = new Command('delete')
-    .alias('rm')
-    .description('Delete a file from vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('<file-id>', 'ID of the file')
-    .option('--force', 'Skip confirmation prompt', false);
+  const deleteCommand = addGlobalOptions(
+    new Command('delete')
+      .alias('rm')
+      .description('Delete a file from vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .argument('<file-id>', 'ID of the file')
+      .option('--force', 'Skip confirmation prompt', false),
+  );
 
   deleteCommand.action(
     async (nameOrId: string, fileId: string, options: GlobalOptions & { force?: boolean }) => {

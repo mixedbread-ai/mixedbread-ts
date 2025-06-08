@@ -5,6 +5,7 @@ import { createClient } from '../../utils/client';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -21,11 +22,13 @@ interface DeleteOptions extends GlobalOptions {
 }
 
 export function createDeleteCommand(): Command {
-  const command = new Command('delete')
-    .alias('rm')
-    .description('Delete a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .option('--force', 'Skip confirmation prompt', false);
+  const command = addGlobalOptions(
+    new Command('delete')
+      .alias('rm')
+      .description('Delete a vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .option('--force', 'Skip confirmation prompt', false),
+  );
 
   command.action(async (nameOrId: string, options: DeleteOptions) => {
     try {
