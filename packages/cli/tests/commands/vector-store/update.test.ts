@@ -45,7 +45,7 @@ describe('Vector Store Update Command', () => {
 
     (clientUtils.createClient as jest.Mock).mockReturnValue(mockClient);
     (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440060',
       name: 'test-store',
     });
     (outputUtils.formatOutput as jest.Mock).mockImplementation(() => {});
@@ -58,7 +58,7 @@ describe('Vector Store Update Command', () => {
   describe('Basic updates', () => {
     it('should update vector store name', async () => {
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'updated-store',
         description: null,
         expires_after: null,
@@ -70,7 +70,7 @@ describe('Vector Store Update Command', () => {
       await command.parseAsync(['node', 'update', 'test-store', '--name', 'updated-store']);
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         name: 'updated-store',
       });
       expect(console.log).toHaveBeenCalledWith(
@@ -82,7 +82,7 @@ describe('Vector Store Update Command', () => {
 
     it('should update vector store description', async () => {
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'test-store',
         description: 'Updated description',
         expires_after: null,
@@ -93,14 +93,14 @@ describe('Vector Store Update Command', () => {
 
       await command.parseAsync(['node', 'update', 'test-store', '--description', 'Updated description']);
 
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         description: 'Updated description',
       });
     });
 
     it('should update vector store expiration', async () => {
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'test-store',
         description: null,
         expires_after: { anchor: 'last_active_at', days: 30 },
@@ -111,7 +111,7 @@ describe('Vector Store Update Command', () => {
 
       await command.parseAsync(['node', 'update', 'test-store', '--expires-after', '30']);
 
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         expires_after: {
           anchor: 'last_active_at',
           days: 30,
@@ -122,7 +122,7 @@ describe('Vector Store Update Command', () => {
     it('should update vector store metadata', async () => {
       const metadata = { key: 'value', version: '2.0' };
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -139,7 +139,7 @@ describe('Vector Store Update Command', () => {
         JSON.stringify(metadata),
       ]);
 
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         metadata,
       });
     });
@@ -147,7 +147,7 @@ describe('Vector Store Update Command', () => {
     it('should update multiple fields at once', async () => {
       const metadata = { updated: true };
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'new-name',
         description: 'New description',
         expires_after: { anchor: 'last_active_at', days: 7 },
@@ -170,7 +170,7 @@ describe('Vector Store Update Command', () => {
         JSON.stringify(metadata),
       ]);
 
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         name: 'new-name',
         description: 'New description',
         expires_after: {
@@ -198,7 +198,7 @@ describe('Vector Store Update Command', () => {
       };
 
       const updatedVectorStore = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440060',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -215,7 +215,7 @@ describe('Vector Store Update Command', () => {
         JSON.stringify(complexMetadata),
       ]);
 
-      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('vs_123', {
+      expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         metadata: complexMetadata,
       });
     });
@@ -223,7 +223,7 @@ describe('Vector Store Update Command', () => {
 
   describe('Output formatting', () => {
     const updatedVectorStore = {
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440060',
       name: 'test-store',
       description: 'Updated',
       expires_after: null,
@@ -346,7 +346,7 @@ describe('Vector Store Update Command', () => {
 
   describe('Global options', () => {
     const updatedVectorStore = {
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440060',
       name: 'updated-store',
       description: null,
       expires_after: null,

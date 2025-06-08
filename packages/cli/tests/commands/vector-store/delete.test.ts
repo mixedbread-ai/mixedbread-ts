@@ -40,7 +40,7 @@ describe('Vector Store Delete Command', () => {
 
     (clientUtils.createClient as jest.Mock).mockReturnValue(mockClient);
     (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440040',
       name: 'test-store',
     });
   });
@@ -56,7 +56,7 @@ describe('Vector Store Delete Command', () => {
       await command.parseAsync(['node', 'delete', 'test-store', '--force']);
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
-      expect(mockClient.vectorStores.delete).toHaveBeenCalledWith('vs_123');
+      expect(mockClient.vectorStores.delete).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440040');
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),
         expect.stringContaining('Vector store "test-store" deleted successfully')
@@ -68,7 +68,7 @@ describe('Vector Store Delete Command', () => {
 
       await command.parseAsync(['node', 'delete', 'test-store', '--force']);
 
-      expect(mockClient.vectorStores.delete).toHaveBeenCalledWith('vs_123');
+      expect(mockClient.vectorStores.delete).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440040');
     });
   });
 

@@ -41,31 +41,31 @@ describe('Vector Store Utils', () => {
 
     it('should resolve vector store ID directly', async () => {
       const mockVectorStore = {
-        id: 'vs_abc123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
       };
 
       mockClient.vectorStores.retrieve.mockResolvedValue(mockVectorStore);
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
-      const result = await resolveVectorStore(mockClient, 'vs_abc123');
+      const result = await resolveVectorStore(mockClient, '550e8400-e29b-41d4-a716-446655440010');
 
       expect(result).toEqual(mockVectorStore);
-      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('vs_abc123');
+      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440010');
       expect(mockClient.vectorStores.list).not.toHaveBeenCalled();
     });
 
     it('should resolve vector store by name', async () => {
       const mockVectorStore = {
-        id: 'vs_found123',
+        id: '550e8400-e29b-41d4-a716-446655440011',
         name: 'my-store',
       };
 
       mockClient.vectorStores.list.mockResolvedValue({
         data: [
-          { id: 'vs_other', name: 'other-store' },
+          { id: '550e8400-e29b-41d4-a716-446655440012', name: 'other-store' },
           mockVectorStore,
-          { id: 'vs_another', name: 'another-store' },
+          { id: '550e8400-e29b-41d4-a716-446655440013', name: 'another-store' },
         ],
       });
 
@@ -78,11 +78,11 @@ describe('Vector Store Utils', () => {
 
     it('should resolve using alias', async () => {
       const mockVectorStore = {
-        id: 'vs_aliased123',
+        id: '550e8400-e29b-41d4-a716-446655440001',
         name: 'aliased-store',
       };
 
-      (configUtils.resolveVectorStoreName as jest.Mock).mockReturnValue('vs_aliased123');
+      (configUtils.resolveVectorStoreName as jest.Mock).mockReturnValue('550e8400-e29b-41d4-a716-446655440001');
       mockClient.vectorStores.retrieve.mockResolvedValue(mockVectorStore);
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
@@ -90,7 +90,7 @@ describe('Vector Store Utils', () => {
 
       expect(configUtils.resolveVectorStoreName).toHaveBeenCalledWith('myalias');
       expect(result).toEqual(mockVectorStore);
-      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('vs_aliased123');
+      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440001');
     });
 
     it('should handle vector store not found by ID', async () => {
@@ -99,11 +99,11 @@ describe('Vector Store Utils', () => {
       );
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
-      await resolveVectorStore(mockClient, 'vs_nonexistent');
+      await resolveVectorStore(mockClient, '550e8400-e29b-41d4-a716-446655440002');
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "vs_nonexistent" not found')
+        expect.stringContaining('Vector store "550e8400-e29b-41d4-a716-446655440002" not found')
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -111,8 +111,8 @@ describe('Vector Store Utils', () => {
     it('should handle vector store not found by name', async () => {
       mockClient.vectorStores.list.mockResolvedValue({
         data: [
-          { id: 'vs_other', name: 'other-store' },
-          { id: 'vs_another', name: 'another-store' },
+          { id: '550e8400-e29b-41d4-a716-446655440014', name: 'other-store' },
+          { id: '550e8400-e29b-41d4-a716-446655440015', name: 'another-store' },
         ],
       });
 
@@ -148,19 +148,19 @@ describe('Vector Store Utils', () => {
     it('should handle case-sensitive name matching', async () => {
       mockClient.vectorStores.list.mockResolvedValue({
         data: [
-          { id: 'vs_1', name: 'MyStore' },
-          { id: 'vs_2', name: 'mystore' },
+          { id: '550e8400-e29b-41d4-a716-446655440016', name: 'MyStore' },
+          { id: '550e8400-e29b-41d4-a716-446655440017', name: 'mystore' },
         ],
       });
 
       const result = await resolveVectorStore(mockClient, 'mystore');
 
-      expect(result).toEqual({ id: 'vs_2', name: 'mystore' });
+      expect(result).toEqual({ id: '550e8400-e29b-41d4-a716-446655440017', name: 'mystore' });
     });
 
     it('should handle special characters in names', async () => {
       const mockVectorStore = {
-        id: 'vs_special',
+        id: '550e8400-e29b-41d4-a716-446655440018',
         name: 'my-store_v2.0',
       };
 
@@ -173,20 +173,20 @@ describe('Vector Store Utils', () => {
       expect(result).toEqual(mockVectorStore);
     });
 
-    it('should check if input looks like ID before searching by name', async () => {
-      // Input that starts with vs_ should try retrieve first, then fall through to name search
+    it('should check if input looks like UUID before searching by name', async () => {
+      // Input that looks like UUID should try retrieve first, then fall through to name search
       mockClient.vectorStores.retrieve.mockRejectedValue(new Error('Not found'));
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
-      await resolveVectorStore(mockClient, 'vs_test');
+      await resolveVectorStore(mockClient, '550e8400-e29b-41d4-a716-446655440003');
 
-      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('vs_test');
+      expect(mockClient.vectorStores.retrieve).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440003');
       expect(mockClient.vectorStores.list).toHaveBeenCalled();
     });
 
     it('should search by name for non-ID inputs', async () => {
       mockClient.vectorStores.list.mockResolvedValue({
-        data: [{ id: 'vs_123', name: 'test' }],
+        data: [{ id: '550e8400-e29b-41d4-a716-446655440004', name: 'test' }],
       });
 
       await resolveVectorStore(mockClient, 'test');

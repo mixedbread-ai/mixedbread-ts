@@ -49,7 +49,7 @@ describe('Vector Store Files Command', () => {
 
     (clientUtils.createClient as jest.Mock).mockReturnValue(mockClient);
     (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440070',
       name: 'test-store',
     });
     (outputUtils.formatOutput as jest.Mock).mockImplementation(() => {});
@@ -83,7 +83,7 @@ describe('Vector Store Files Command', () => {
       await command.parseAsync(['node', 'files', 'list', 'test-store']);
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('vs_123', { limit: 10 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440070', { limit: 10 });
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
@@ -123,7 +123,7 @@ describe('Vector Store Files Command', () => {
 
       await command.parseAsync(['node', 'files', 'list', 'test-store', '--limit', '50']);
 
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('vs_123', { limit: 50 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440070', { limit: 50 });
     });
 
     it('should handle empty results', async () => {
@@ -181,7 +181,7 @@ describe('Vector Store Files Command', () => {
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
       expect(mockClient.vectorStores.files.retrieve).toHaveBeenCalledWith('file_123', {
-        vector_store_id: 'vs_123',
+        vector_store_id: '550e8400-e29b-41d4-a716-446655440070',
       });
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -233,7 +233,7 @@ describe('Vector Store Files Command', () => {
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
       expect(mockClient.vectorStores.files.delete).toHaveBeenCalledWith('file_123', {
-        vector_store_id: 'vs_123',
+        vector_store_id: '550e8400-e29b-41d4-a716-446655440070',
       });
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),

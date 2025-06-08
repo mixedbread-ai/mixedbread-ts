@@ -63,7 +63,7 @@ export function createListCommand(): Command {
         id: vs.id,
         status: vs.expires_at && new Date(vs.expires_at) < new Date() ? 'expired' : 'active',
         files: vs.file_counts?.total,
-        usage: formatBytes(vs.usage_bytes || 0),
+        usage: formatBytes(vs.usage_bytes),
         created: new Date(vs.created_at).toLocaleDateString(),
       }));
 

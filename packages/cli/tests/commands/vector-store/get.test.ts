@@ -45,7 +45,7 @@ describe('Vector Store Get Command', () => {
 
     (clientUtils.createClient as jest.Mock).mockReturnValue(mockClient);
     (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440050',
       name: 'test-store',
     });
     (outputUtils.formatOutput as jest.Mock).mockImplementation(() => {});
@@ -58,7 +58,7 @@ describe('Vector Store Get Command', () => {
   describe('Basic retrieval', () => {
     it('should get vector store details', async () => {
       (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440050',
         name: 'test-store',
         description: 'A test vector store',
         created_at: '2024-01-01T00:00:00Z',
@@ -73,7 +73,7 @@ describe('Vector Store Get Command', () => {
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: 'vs_123',
+          id: '550e8400-e29b-41d4-a716-446655440050',
           name: 'test-store',
           description: 'A test vector store',
           status: 'active',
@@ -94,7 +94,7 @@ describe('Vector Store Get Command', () => {
       expiredDate.setDate(expiredDate.getDate() - 1); // Yesterday
 
       (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440050',
         name: 'test-store',
         description: 'An expired vector store',
         created_at: '2024-01-01T00:00:00Z',
@@ -112,7 +112,7 @@ describe('Vector Store Get Command', () => {
 
     it('should handle missing optional fields', async () => {
       (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440050',
         name: 'test-store',
         created_at: '2024-01-01T00:00:00Z',
         // Missing description, file_counts, usage_bytes, expires_at, metadata
@@ -122,7 +122,7 @@ describe('Vector Store Get Command', () => {
 
       const formattedData = (outputUtils.formatOutput as jest.Mock).mock.calls[0][0];
       expect(formattedData).toMatchObject({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440050',
         name: 'test-store',
         description: 'N/A',
         status: 'active',
@@ -138,7 +138,7 @@ describe('Vector Store Get Command', () => {
 
   describe('Output formatting', () => {
     const mockVectorStore = {
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440050',
       name: 'test-store',
       description: 'A test vector store',
       created_at: '2024-01-01T00:00:00Z',
@@ -196,7 +196,7 @@ describe('Vector Store Get Command', () => {
 
   describe('Global options', () => {
     const mockVectorStore = {
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440050',
       name: 'test-store',
       description: 'A test vector store',
       created_at: '2024-01-01T00:00:00Z',

@@ -50,7 +50,7 @@ describe('Vector Store Upload Command', () => {
 
     (clientUtils.createClient as jest.Mock).mockReturnValue(mockClient);
     (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-      id: 'vs_123',
+      id: '550e8400-e29b-41d4-a716-446655440030',
       name: 'test-store',
     });
     (configUtils.loadConfig as jest.Mock).mockReturnValue({
@@ -153,7 +153,7 @@ describe('Vector Store Upload Command', () => {
       await command.parseAsync(['node', 'upload', 'test-store', 'test.md', '--strategy', 'high_quality']);
 
       expect(mockClient.vectorStores.files.upload).toHaveBeenCalledWith(
-        'vs_123',
+        '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
           strategy: 'high_quality',
@@ -165,7 +165,7 @@ describe('Vector Store Upload Command', () => {
       await command.parseAsync(['node', 'upload', 'test-store', 'test.md', '--contextualization']);
 
       expect(mockClient.vectorStores.files.upload).toHaveBeenCalledWith(
-        'vs_123',
+        '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
           contextualization: true,
@@ -184,7 +184,7 @@ describe('Vector Store Upload Command', () => {
       ]);
 
       expect(mockClient.vectorStores.files.upload).toHaveBeenCalledWith(
-        'vs_123',
+        '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
           metadata: expect.objectContaining({
@@ -255,9 +255,9 @@ describe('Vector Store Upload Command', () => {
 
       await command.parseAsync(['node', 'upload', 'test-store', 'test.md', '--unique']);
 
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('vs_123', { limit: 1000 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440030', { limit: 1000 });
       expect(mockClient.vectorStores.files.delete).toHaveBeenCalledWith('existing_file_id', {
-        vector_store_id: 'vs_123',
+        vector_store_id: '550e8400-e29b-41d4-a716-446655440030',
       });
     });
 
@@ -299,7 +299,7 @@ describe('Vector Store Upload Command', () => {
       // Test pdf
       jest.clearAllMocks();
       (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440030',
         name: 'test-store',
       });
       await command.parseAsync(['node', 'upload', 'test-store', 'doc.pdf']);
@@ -309,7 +309,7 @@ describe('Vector Store Upload Command', () => {
       // Test js
       jest.clearAllMocks();
       (vectorStoreUtils.resolveVectorStore as jest.Mock).mockResolvedValue({
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440030',
         name: 'test-store',
       });
       await command.parseAsync(['node', 'upload', 'test-store', 'script.js']);
@@ -328,7 +328,7 @@ describe('Vector Store Upload Command', () => {
       await command.parseAsync(['node', 'upload', 'test-store', 'test.md']);
 
       expect(mockClient.vectorStores.files.upload).toHaveBeenCalledWith(
-        'vs_123',
+        '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
           metadata: expect.objectContaining({

@@ -49,7 +49,7 @@ describe('Vector Store Create Command', () => {
   describe('Basic creation', () => {
     it('should create vector store with name only', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -74,7 +74,7 @@ describe('Vector Store Create Command', () => {
 
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         {
-          id: 'vs_123',
+          id: '550e8400-e29b-41d4-a716-446655440010',
           name: 'test-store',
           description: null,
           expires_after: null,
@@ -86,7 +86,7 @@ describe('Vector Store Create Command', () => {
 
     it('should create vector store with description', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: 'Test description',
         expires_after: null,
@@ -107,7 +107,7 @@ describe('Vector Store Create Command', () => {
 
     it('should create vector store with expiration', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'temp-store',
         description: null,
         expires_after: {
@@ -136,7 +136,7 @@ describe('Vector Store Create Command', () => {
   describe('Metadata handling', () => {
     it('should create vector store with metadata', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -185,7 +185,7 @@ describe('Vector Store Create Command', () => {
       };
 
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -214,7 +214,7 @@ describe('Vector Store Create Command', () => {
   describe('Output formatting', () => {
     it('should format output as JSON when specified', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: null,
         expires_after: null,
@@ -230,7 +230,7 @@ describe('Vector Store Create Command', () => {
 
     it('should format output as CSV when specified', async () => {
       const mockResponse = {
-        id: 'vs_123',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         name: 'test-store',
         description: null,
         expires_after: null,

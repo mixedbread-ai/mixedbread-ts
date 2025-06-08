@@ -53,7 +53,7 @@ describe('Vector Store List Command', () => {
     it('should list vector stores with default options', async () => {
       const mockData = [
         {
-          id: 'vs_1',
+          id: '550e8400-e29b-41d4-a716-446655440021',
           name: 'store1',
           created_at: '2024-01-01T00:00:00Z',
           file_counts: { total: 10 },
@@ -61,7 +61,7 @@ describe('Vector Store List Command', () => {
           expires_at: null,
         },
         {
-          id: 'vs_2',
+          id: '550e8400-e29b-41d4-a716-446655440022',
           name: 'store2',
           created_at: '2024-01-02T00:00:00Z',
           file_counts: { total: 5 },
@@ -96,7 +96,7 @@ describe('Vector Store List Command', () => {
     it('should format byte sizes correctly', async () => {
       const mockData = [
         {
-          id: 'vs_1',
+          id: '550e8400-e29b-41d4-a716-446655440021',
           name: 'small',
           created_at: '2024-01-01T00:00:00Z',
           file_counts: { total: 1 },
@@ -104,7 +104,7 @@ describe('Vector Store List Command', () => {
           expires_at: null,
         },
         {
-          id: 'vs_2',
+          id: '550e8400-e29b-41d4-a716-446655440022',
           name: 'medium',
           created_at: '2024-01-01T00:00:00Z',
           file_counts: { total: 1 },
@@ -112,7 +112,7 @@ describe('Vector Store List Command', () => {
           expires_at: null,
         },
         {
-          id: 'vs_3',
+          id: '550e8400-e29b-41d4-a716-446655440023',
           name: 'large',
           created_at: '2024-01-01T00:00:00Z',
           file_counts: { total: 1 },
@@ -167,7 +167,7 @@ describe('Vector Store List Command', () => {
   describe('Output formatting', () => {
     const mockData = [
       {
-        id: 'vs_1',
+        id: '550e8400-e29b-41d4-a716-446655440021',
         name: 'store1',
         created_at: '2024-01-01T00:00:00Z',
         file_counts: { total: 10 },
@@ -258,7 +258,7 @@ describe('Vector Store List Command', () => {
     it('should handle vector stores with missing fields', async () => {
       const mockData = [
         {
-          id: 'vs_1',
+          id: '550e8400-e29b-41d4-a716-446655440021',
           name: 'store1',
           created_at: '2024-01-01T00:00:00Z',
           expires_at: null,
@@ -273,7 +273,7 @@ describe('Vector Store List Command', () => {
       const formattedData = (outputUtils.formatOutput as jest.Mock).mock.calls[0][0];
 
       expect(formattedData[0]).toMatchObject({
-        id: 'vs_1',
+        id: '550e8400-e29b-41d4-a716-446655440021',
         name: 'store1',
         status: 'active',
         files: undefined,
@@ -285,7 +285,7 @@ describe('Vector Store List Command', () => {
     it('should handle very large file counts', async () => {
       const mockData = [
         {
-          id: 'vs_1',
+          id: '550e8400-e29b-41d4-a716-446655440021',
           name: 'huge-store',
           created_at: '2024-01-01T00:00:00Z',
           file_counts: { total: 1000000 },
