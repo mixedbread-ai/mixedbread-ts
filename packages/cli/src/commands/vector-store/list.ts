@@ -37,7 +37,7 @@ export function createListCommand(): Command {
   command.action(async (options: ListOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-      const parsedOptions = parseOptions(ListVectorStoreSchema, mergedOptions);
+      const parsedOptions = parseOptions(ListVectorStoreSchema, mergedOptions as Record<string, unknown>);
 
       const client = createClient(parsedOptions);
       const response = await client.vectorStores.list({

@@ -5,6 +5,7 @@ import { formatOutput } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -40,13 +41,15 @@ interface QAOptions extends GlobalOptions {
 }
 
 export function createQACommand(): Command {
-  const command = new Command('qa')
-    .description('Ask questions about vector store content')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('<question>', 'Question to ask')
-    .option('--top-k <n>', 'Number of sources to consider')
-    .option('--threshold <score>', 'Minimum score threshold for sources')
-    .option('--return-metadata', 'Return source metadata');
+  const command = addGlobalOptions(
+    new Command('qa')
+      .description('Ask questions about vector store content')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .argument('<question>', 'Question to ask')
+      .option('--top-k <n>', 'Number of sources to consider')
+      .option('--threshold <score>', 'Minimum score threshold for sources')
+      .option('--return-metadata', 'Return source metadata'),
+  );
 
   command.action(async (nameOrId: string, question: string, options: QAOptions) => {
     try {
@@ -80,7 +83,9 @@ export function createQACommand(): Command {
 
         const sources = response.sources.map((source) => {
           const metadata =
-            parsedOptions.format === 'table' ? JSON.stringify(source.metadata, null, 2) : source.metadata;
+            parsedOptions.format === 'table' || !parsedOptions.format ?
+              JSON.stringify(source.metadata, null, 2)
+            : source.metadata;
 
           const output: Record<string, unknown> = {
             filename: source.filename,

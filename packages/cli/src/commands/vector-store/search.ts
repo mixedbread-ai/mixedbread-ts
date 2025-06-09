@@ -5,6 +5,7 @@ import { formatOutput } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
+  addGlobalOptions,
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
@@ -71,15 +72,17 @@ interface SearchOptions extends GlobalOptions {
 }
 
 export function createSearchCommand(): Command {
-  const command = new Command('search')
-    .description('Search within a vector store')
-    .argument('<name-or-id>', 'Name or ID of the vector store')
-    .argument('<query>', 'Search query')
-    .option('--top-k <n>', 'Number of results to return')
-    .option('--threshold <score>', 'Minimum score threshold')
-    .option('--return-metadata', 'Return metadata')
-    .option('--rerank', 'Enable reranking')
-    .option('--show-chunks', 'Display matching chunks', false);
+  const command = addGlobalOptions(
+    new Command('search')
+      .description('Search within a vector store')
+      .argument('<name-or-id>', 'Name or ID of the vector store')
+      .argument('<query>', 'Search query')
+      .option('--top-k <n>', 'Number of results to return')
+      .option('--threshold <score>', 'Minimum score threshold')
+      .option('--return-metadata', 'Return metadata')
+      .option('--rerank', 'Enable reranking')
+      .option('--show-chunks', 'Display matching chunks', false),
+  );
 
   command.action(async (nameOrId: string, query: string, options: SearchOptions) => {
     try {
@@ -116,7 +119,9 @@ export function createSearchCommand(): Command {
 
       const output = results.data.map((result) => {
         const metadata =
-          parsedOptions.format === 'table' ? JSON.stringify(result.metadata, null, 2) : result.metadata;
+          parsedOptions.format === 'table' || !parsedOptions.format ?
+            JSON.stringify(result.metadata, null, 2)
+          : result.metadata;
 
         const output: Record<string, unknown> = {
           filename: result.filename,
