@@ -35,9 +35,9 @@ export function addGlobalOptions(command: Command): Command {
     .option('--format <format>', 'Output format (table|json|csv)');
 }
 
-export function mergeCommandOptions(command: Command, options: any): any {
+export function mergeCommandOptions<T>(command: Command, options: T): T {
   // Traverse up the command hierarchy to collect all options
-  const allOptions: any[] = [];
+  const allOptions: T[] = [];
   let currentCommand: Command | null = command;
 
   // Collect options from all parent commands up to the root

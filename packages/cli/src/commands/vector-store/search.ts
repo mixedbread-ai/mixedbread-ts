@@ -11,6 +11,7 @@ import {
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
 import { z } from 'zod';
+import Mixedbread from '@mixedbread/sdk';
 
 const SearchVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
@@ -26,15 +27,45 @@ const SearchVectorStoreSchema = GlobalOptionsSchema.extend({
     .min(0, { message: '"threshold" must be greater than or equal to 0' })
     .max(1, { message: '"threshold" must be less than or equal to 1' })
     .optional(),
-  filter: z.string().optional(),
+  returnMetadata: z.boolean().optional(),
   rerank: z.boolean().optional(),
   showChunks: z.boolean().optional(),
 });
 
+type ParsedSearchOptions = z.infer<typeof SearchVectorStoreSchema> & { vectorStoreId: string };
+
+async function searchVectorStoreFiles(client: Mixedbread, parsedOptions: ParsedSearchOptions) {
+  return await client.vectorStores.files.search({
+    query: parsedOptions.query,
+    vector_store_ids: [parsedOptions.vectorStoreId],
+    top_k: parsedOptions.topK,
+    search_options: {
+      return_metadata: parsedOptions.returnMetadata,
+      score_threshold: parsedOptions.threshold,
+      // @ts-expect-error
+      rerank: parsedOptions.rerank,
+    },
+  });
+}
+
+async function searchVectorStoreChunks(client: Mixedbread, parsedOptions: ParsedSearchOptions) {
+  return await client.vectorStores.search({
+    query: parsedOptions.query,
+    vector_store_ids: [parsedOptions.vectorStoreId],
+    top_k: parsedOptions.topK,
+    search_options: {
+      return_metadata: parsedOptions.returnMetadata,
+      score_threshold: parsedOptions.threshold,
+      // @ts-expect-error
+      rerank: parsedOptions.rerank,
+    },
+  });
+}
+
 interface SearchOptions extends GlobalOptions {
   topK?: number;
   threshold?: number;
-  filter?: string;
+  returnMetadata?: boolean;
   rerank?: boolean;
   showChunks?: boolean;
 }
@@ -46,14 +77,13 @@ export function createSearchCommand(): Command {
     .argument('<query>', 'Search query')
     .option('--top-k <n>', 'Number of results to return')
     .option('--threshold <score>', 'Minimum score threshold')
-    .option('--filter <json>', 'Metadata filters as JSON')
+    .option('--return-metadata', 'Return metadata')
     .option('--rerank', 'Enable reranking')
     .option('--show-chunks', 'Display matching chunks', false);
 
   command.action(async (nameOrId: string, query: string, options: SearchOptions) => {
     try {
       const mergedOptions = mergeCommandOptions(command, options);
-
       const parsedOptions = parseOptions(SearchVectorStoreSchema, { ...mergedOptions, nameOrId, query });
 
       const client = createClient(parsedOptions);
@@ -64,65 +94,53 @@ export function createSearchCommand(): Command {
       const topK = parsedOptions.topK || config.defaults?.search?.top_k || 10;
       const rerank = parsedOptions.rerank ?? config.defaults?.search?.rerank ?? false;
 
-      // Parse filter if provided
-      let filter: Record<string, any> | undefined;
-      if (parsedOptions.filter) {
-        try {
-          filter = JSON.parse(parsedOptions.filter);
-        } catch (error) {
-          console.error(chalk.red('Error:'), 'Invalid JSON in filter option');
-          process.exit(1);
-        }
-      }
-
-      const searchParams: any = {
-        query: parsedOptions.query,
-        top_k: topK,
-        ...(parsedOptions.threshold && { threshold: parsedOptions.threshold }),
-        ...(filter && { filter }),
-        ...(rerank && { rerank }),
-      };
-
-      const results = await (client.vectorStores.search as any)(vectorStore.id, searchParams);
+      const results =
+        parsedOptions.showChunks ?
+          await searchVectorStoreChunks(client, {
+            ...parsedOptions,
+            vectorStoreId: vectorStore.id,
+            topK,
+            rerank,
+          })
+        : await searchVectorStoreFiles(client, {
+            ...parsedOptions,
+            vectorStoreId: vectorStore.id,
+            topK,
+            rerank,
+          });
 
       if (!results.data || results.data.length === 0) {
         console.log(chalk.gray('No results found.'));
         return;
       }
 
-      if (parsedOptions.format === 'json') {
-        formatOutput(results, parsedOptions.format);
-      } else {
-        console.log(
-          chalk.bold(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}:\n`),
-        );
+      const output = results.data.map((result) => {
+        const metadata =
+          parsedOptions.format === 'table' ? JSON.stringify(result.metadata, null, 2) : result.metadata;
 
-        results.data.forEach((result: any, index: number) => {
-          console.log(chalk.blue(`${index + 1}. Score: ${result.score?.toFixed(4) || 'N/A'}`));
+        const output: Record<string, unknown> = {
+          filename: result.filename,
+          score: result.score.toFixed(2),
+          vector_store_id: result.vector_store_id,
+        };
 
-          if (result.metadata?.file_path) {
-            console.log(chalk.gray(`   File: ${result.metadata.file_path}`));
-          }
+        if (parsedOptions.showChunks) {
+          output.chunk_index = result.chunk_index;
+        }
 
-          if (parsedOptions.showChunks && result.chunk) {
-            console.log(
-              chalk.white(
-                `   Content: ${result.chunk.substring(0, 200)}${result.chunk.length > 200 ? '...' : ''}`,
-              ),
-            );
-          }
+        if (parsedOptions.returnMetadata) {
+          output.metadata = metadata;
+        }
 
-          if (result.metadata && Object.keys(result.metadata).length > 0) {
-            const filteredMetadata = { ...result.metadata };
-            delete filteredMetadata.file_path; // Already shown above
-            if (Object.keys(filteredMetadata).length > 0) {
-              console.log(chalk.gray(`   Metadata: ${JSON.stringify(filteredMetadata)}`));
-            }
-          }
+        return output;
+      });
 
-          console.log();
-        });
-      }
+      console.log(
+        chalk.bold(
+          chalk.blue(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}:`),
+        ),
+      );
+      formatOutput(output, parsedOptions.format);
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);

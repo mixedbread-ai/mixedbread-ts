@@ -255,7 +255,10 @@ describe('Vector Store Upload Command', () => {
 
       await command.parseAsync(['node', 'upload', 'test-store', 'test.md', '--unique']);
 
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440030', { limit: 1000 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith(
+        '550e8400-e29b-41d4-a716-446655440030',
+        { limit: 1000 },
+      );
       expect(mockClient.vectorStores.files.delete).toHaveBeenCalledWith('existing_file_id', {
         vector_store_id: '550e8400-e29b-41d4-a716-446655440030',
       });
