@@ -46,16 +46,11 @@ export function createGetCommand(): Command {
         'failed files': vectorStore.file_counts?.failed || 0,
         usage: formatBytes(vectorStore.usage_bytes || 0),
         'created at': new Date(vectorStore.created_at).toLocaleString(),
-        ...(vectorStore.expires_at ?
-          {
-            'expires at': new Date(vectorStore.expires_at).toLocaleString(),
-          }
-        : {}),
-        ...(vectorStore.metadata && Object.keys(vectorStore.metadata).length > 0 ?
-          {
-            metadata: JSON.stringify(vectorStore.metadata, null, 2),
-          }
-        : {}),
+        'expires at': vectorStore.expires_at ? new Date(vectorStore.expires_at).toLocaleString() : 'Never',
+        metadata:
+          parsedOptions.format === 'table' ?
+            JSON.stringify(vectorStore.metadata, null, 2)
+          : vectorStore.metadata,
       };
 
       formatOutput(formattedData, parsedOptions.format);

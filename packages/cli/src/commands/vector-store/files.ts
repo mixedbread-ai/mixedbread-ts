@@ -88,6 +88,7 @@ export function createFilesCommand(): Command {
         name: file.filename,
         status: file.status,
         size: formatBytes(file.usage_bytes),
+        metadata: parsedOptions.format === 'table' ? JSON.stringify(file.metadata, null, 2) : file.metadata,
         created: new Date(file.created_at).toLocaleDateString(),
       }));
 

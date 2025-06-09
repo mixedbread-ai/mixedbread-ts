@@ -1,0 +1,268 @@
+import { getChangedFiles, normalizeGitPatterns } from './git';
+import { buildFileSyncMetadata, FileSyncMetadata } from './sync-state';
+import { glob } from 'glob';
+import fs from 'fs/promises';
+import { calculateFileHash, hashesMatch } from './hash';
+import chalk from 'chalk';
+import { formatBytes } from './output';
+import Mixedbread from '@mixedbread/sdk';
+import { uploadFile } from './upload';
+import ora from 'ora';
+
+interface FileChange {
+  path: string;
+  type: 'added' | 'modified' | 'deleted';
+  size?: number;
+  localHash?: string;
+  remoteHash?: string;
+  fileId?: string;
+}
+
+interface SyncAnalysis {
+  added: FileChange[];
+  modified: FileChange[];
+  deleted: FileChange[];
+  unchanged: number;
+  totalSize: number;
+}
+
+export async function analyzeChanges(
+  patterns: string[],
+  syncedFiles: Map<string, { fileId: string; metadata: FileSyncMetadata }>,
+  gitInfo: { commit: string; branch: string; isRepo: boolean },
+  fromGit?: string,
+): Promise<SyncAnalysis> {
+  const analysis: SyncAnalysis = {
+    added: [],
+    modified: [],
+    deleted: [],
+    unchanged: 0,
+    totalSize: 0,
+  };
+
+  // Get all local files matching patterns
+  const localFiles = new Set<string>();
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, { nodir: true });
+    matches.forEach((file) => localFiles.add(file));
+  }
+
+  // If in git repo and fromGit is specified, use git to detect changes
+  let gitChanges: Map<string, 'added' | 'modified' | 'deleted'> | null = null;
+  if (gitInfo.isRepo && fromGit) {
+    const normalizedPatterns = await normalizeGitPatterns(patterns);
+    const changes = await getChangedFiles(fromGit, normalizedPatterns);
+    gitChanges = new Map(changes.map((c) => [c.path, c.status]));
+  }
+
+  // Process local files
+  for (const filePath of localFiles) {
+    const stats = await fs.stat(filePath);
+    const syncedFile = syncedFiles.get(filePath);
+
+    if (!syncedFile) {
+      // New file
+      analysis.added.push({
+        path: filePath,
+        type: 'added',
+        size: stats.size,
+      });
+      analysis.totalSize += stats.size;
+    } else {
+      // Existing file - check if modified
+      let isModified = false;
+      let localHash: string | undefined;
+
+      // When using git-based detection, prioritize git status over local changes
+      if (gitChanges && gitChanges.has(filePath)) {
+        const gitStatus = gitChanges.get(filePath);
+        if (gitStatus === 'modified' || gitStatus === 'added') {
+          // Git detected changes between commits - always mark as modified
+          // This ensures we sync the committed version, even if local file was reverted
+          isModified = true;
+        }
+      } else {
+        // Fall back to hash comparison when git detection is not available
+        localHash = await calculateFileHash(filePath);
+        isModified = !hashesMatch(localHash, syncedFile.metadata.file_hash);
+      }
+
+      if (isModified) {
+        analysis.modified.push({
+          path: filePath,
+          type: 'modified',
+          size: stats.size,
+          localHash,
+          remoteHash: syncedFile.metadata.file_hash,
+          fileId: syncedFile.fileId,
+        });
+        analysis.totalSize += stats.size;
+      } else {
+        analysis.unchanged++;
+      }
+    }
+  }
+
+  // Check for deleted files from git changes
+  if (gitChanges) {
+    for (const [filePath, gitStatus] of gitChanges) {
+      if (gitStatus === 'deleted') {
+        const syncedFile = syncedFiles.get(filePath);
+        if (syncedFile) {
+          // File was deleted in git and exists in vector store - mark for deletion
+          analysis.deleted.push({
+            path: filePath,
+            type: 'deleted',
+            fileId: syncedFile.fileId,
+          });
+        }
+      }
+    }
+  }
+
+  // Check for deleted files - includes files that were previously synced but no longer match patterns
+  for (const [filePath, syncedFile] of syncedFiles) {
+    if (!localFiles.has(filePath)) {
+      // Only add to deleted if not already added by git detection
+      const alreadyMarkedDeleted = analysis.deleted.some((d) => d.path === filePath);
+      if (!alreadyMarkedDeleted) {
+        analysis.deleted.push({
+          path: filePath,
+          type: 'deleted',
+          fileId: syncedFile.fileId,
+        });
+      }
+    }
+  }
+
+  return analysis;
+}
+
+function getFileText(fileCount: number) {
+  return fileCount === 1 ? 'file' : 'files';
+}
+
+export function formatChangeSummary(analysis: SyncAnalysis): string {
+  const lines: string[] = [];
+
+  lines.push(chalk.bold('Changes to apply:'));
+
+  if (analysis.modified.length > 0) {
+    lines.push(
+      `  ${chalk.yellow('Updated:')} (${analysis.modified.length} ${getFileText(analysis.modified.length)})`,
+    );
+    analysis.modified.forEach((file) => {
+      const size = file.size ? ` (${formatBytes(file.size)})` : '';
+      lines.push(`    • ${file.path}${size}`);
+    });
+    lines.push('');
+  }
+
+  if (analysis.added.length > 0) {
+    lines.push(`  ${chalk.green('New:')} (${analysis.added.length} ${getFileText(analysis.added.length)})`);
+    analysis.added.forEach((file) => {
+      const size = file.size ? ` (${formatBytes(file.size)})` : '';
+      lines.push(`    • ${file.path}${size}`);
+    });
+    lines.push('');
+  }
+
+  if (analysis.deleted.length > 0) {
+    lines.push(
+      `  ${chalk.red('Deleted:')} (${analysis.deleted.length} ${getFileText(analysis.deleted.length)})`,
+    );
+    analysis.deleted.forEach((file) => {
+      lines.push(`    • ${file.path}`);
+    });
+    lines.push('');
+  }
+
+  const totalChanges = analysis.added.length + analysis.modified.length * 2 + analysis.deleted.length;
+  const totalUploads = analysis.added.length + analysis.modified.length;
+  const totalDeletes = analysis.modified.length + analysis.deleted.length;
+
+  lines.push(
+    `Total: ${totalChanges} changes (${totalUploads} files to upload, ${totalDeletes} files to delete)`,
+  );
+  lines.push(`Upload size: ${formatBytes(analysis.totalSize)}`);
+
+  return lines.join('\n');
+}
+
+export async function executeSyncChanges(
+  client: Mixedbread,
+  vectorStoreId: string,
+  analysis: SyncAnalysis,
+  options: {
+    strategy?: 'fast' | 'high_quality';
+    metadata?: Record<string, unknown>;
+    gitInfo?: { commit: string; branch: string };
+  },
+): Promise<void> {
+  const totalOperations = analysis.added.length + analysis.modified.length * 2 + analysis.deleted.length;
+  let completed = 0;
+
+  console.log(chalk.bold('Syncing changes...'));
+
+  try {
+    // Delete modified and removed files
+    const filesToDelete = [...analysis.modified, ...analysis.deleted].filter((f) => f.fileId);
+
+    if (filesToDelete.length > 0) {
+      console.log(chalk.yellow(`\nDeleting ${filesToDelete.length} files...`));
+      for (const file of filesToDelete) {
+        const deleteSpinner = ora(`Deleting ${file.path}`).start();
+        try {
+          await client.vectorStores.files.delete(file.fileId!, {
+            vector_store_id: vectorStoreId,
+          });
+          completed++;
+          deleteSpinner.succeed(`[${completed}/${totalOperations}] Deleted ${file.path}`);
+        } catch (error) {
+          deleteSpinner.fail(`Failed to delete ${file.path}`);
+          throw error;
+        }
+      }
+    }
+
+    // Upload new and modified files
+    const filesToUpload = [...analysis.added, ...analysis.modified];
+
+    if (filesToUpload.length > 0) {
+      console.log(chalk.blue(`\nUploading ${filesToUpload.length} files...`));
+      for (const file of filesToUpload) {
+        const uploadSpinner = ora(`Uploading ${file.path}`).start();
+        try {
+          // Calculate hash if not already done
+          const fileHash = file.localHash || (await calculateFileHash(file.path));
+
+          // Build sync metadata
+          const syncMetadata = buildFileSyncMetadata(file.path, fileHash, options.gitInfo);
+
+          // Merge with user-provided metadata
+          const finalMetadata = {
+            ...options.metadata,
+            ...syncMetadata,
+          };
+
+          // Upload file
+          await uploadFile(client, vectorStoreId, file.path, {
+            metadata: finalMetadata,
+            strategy: options.strategy,
+          });
+
+          completed++;
+          uploadSpinner.succeed(`[${completed}/${totalOperations}] Uploaded ${file.path}`);
+        } catch (error) {
+          uploadSpinner.fail(`Failed to upload ${file.path}`);
+          throw error;
+        }
+      }
+    }
+
+    console.log(chalk.green('\n✓ Sync completed successfully'));
+  } catch (error) {
+    console.error(chalk.red('\n✗ Sync failed'));
+    throw error;
+  }
+}
