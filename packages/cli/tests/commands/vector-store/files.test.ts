@@ -83,7 +83,10 @@ describe('Vector Store Files Command', () => {
       await command.parseAsync(['node', 'files', 'list', 'test-store']);
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440070', { limit: 10 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith(
+        '550e8400-e29b-41d4-a716-446655440070',
+        { limit: 10 },
+      );
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
@@ -101,7 +104,7 @@ describe('Vector Store Files Command', () => {
             created: '1/2/2024',
           }),
         ]),
-        undefined
+        undefined,
       );
     });
 
@@ -123,7 +126,10 @@ describe('Vector Store Files Command', () => {
 
       await command.parseAsync(['node', 'files', 'list', 'test-store', '--limit', '50']);
 
-      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440070', { limit: 50 });
+      expect(mockClient.vectorStores.files.list).toHaveBeenCalledWith(
+        '550e8400-e29b-41d4-a716-446655440070',
+        { limit: 50 },
+      );
     });
 
     it('should handle empty results', async () => {
@@ -148,7 +154,7 @@ describe('Vector Store Files Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"limit" must be positive')
+        expect.stringContaining('"limit" must be positive'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -158,7 +164,7 @@ describe('Vector Store Files Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"status" must be one of: all, completed, in_progress, failed')
+        expect.stringContaining('"status" must be one of: all, completed, in_progress, failed'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -192,7 +198,7 @@ describe('Vector Store Files Command', () => {
           'created at': expect.any(String),
           metadata: JSON.stringify({ author: 'John Doe', version: '1.0' }, null, 2),
         }),
-        undefined
+        undefined,
       );
     });
 
@@ -237,7 +243,7 @@ describe('Vector Store Files Command', () => {
       });
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('File file_123 deleted successfully')
+        expect.stringContaining('File file_123 deleted successfully'),
       );
     });
 
@@ -267,7 +273,7 @@ describe('Vector Store Files Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"name-or-id" is required')
+        expect.stringContaining('"name-or-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -277,7 +283,7 @@ describe('Vector Store Files Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"file-id" is required')
+        expect.stringContaining('"file-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -287,7 +293,7 @@ describe('Vector Store Files Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"file-id" is required')
+        expect.stringContaining('"file-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -307,22 +313,14 @@ describe('Vector Store Files Command', () => {
     it('should support API key option', async () => {
       mockClient.vectorStores.files.list.mockResolvedValue({ data: mockFiles });
 
-      await command.parseAsync([
-        'node',
-        'files',
-        'list',
-        'test-store',
-        '--api-key',
-        'mxb_test123',
-      ]);
+      await command.parseAsync(['node', 'files', 'list', 'test-store', '--api-key', 'mxb_test123']);
 
       expect(clientUtils.createClient).toHaveBeenCalledWith(
         expect.objectContaining({
           apiKey: 'mxb_test123',
-        })
+        }),
       );
     });
-
   });
 
   describe('Error handling', () => {

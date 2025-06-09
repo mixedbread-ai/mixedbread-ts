@@ -59,7 +59,7 @@ describe('Vector Store Delete Command', () => {
       expect(mockClient.vectorStores.delete).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440040');
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "test-store" deleted successfully')
+        expect.stringContaining('Vector store "test-store" deleted successfully'),
       );
     });
 
@@ -112,10 +112,9 @@ describe('Vector Store Delete Command', () => {
       expect(clientUtils.createClient).toHaveBeenCalledWith(
         expect.objectContaining({
           apiKey: 'mxb_test123',
-        })
+        }),
       );
     });
-
   });
 
   describe('Command validation', () => {
@@ -124,7 +123,7 @@ describe('Vector Store Delete Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"name-or-id" is required')
+        expect.stringContaining('"name-or-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });

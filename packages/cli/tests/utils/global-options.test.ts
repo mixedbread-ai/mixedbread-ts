@@ -30,15 +30,9 @@ describe('Global Options', () => {
       setupGlobalOptions(command);
 
       const options = command.options;
-      expect(options).toContainEqual(
-        expect.objectContaining({ long: '--api-key' })
-      );
-      expect(options).toContainEqual(
-        expect.objectContaining({ long: '--format' })
-      );
-      expect(options).toContainEqual(
-        expect.objectContaining({ long: '--debug' })
-      );
+      expect(options).toContainEqual(expect.objectContaining({ long: '--api-key' }));
+      expect(options).toContainEqual(expect.objectContaining({ long: '--format' }));
+      expect(options).toContainEqual(expect.objectContaining({ long: '--debug' }));
     });
 
     it.skip('should set debug mode from flag', () => {
@@ -121,14 +115,8 @@ describe('Global Options', () => {
       const options = { debug: true };
       mergeCommandOptions(childCommand, options);
 
-      expect(console.log).toHaveBeenCalledWith(
-        'Command hierarchy options:',
-        expect.any(Array)
-      );
-      expect(console.log).toHaveBeenCalledWith(
-        'Merged options:',
-        expect.any(Object)
-      );
+      expect(console.log).toHaveBeenCalledWith('Command hierarchy options:', expect.any(Array));
+      expect(console.log).toHaveBeenCalledWith('Merged options:', expect.any(Object));
 
       // Cleanup
       if (originalDebug) {
@@ -168,7 +156,7 @@ describe('Global Options', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"api-key" must start with "mxb_"')
+        expect.stringContaining('"api-key" must start with "mxb_"'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -182,7 +170,7 @@ describe('Global Options', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"format" must be either "table", "json", or "csv"')
+        expect.stringContaining('"format" must be either "table", "json", or "csv"'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -197,7 +185,7 @@ describe('Global Options', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('must start with "mxb_"')
+        expect.stringContaining('must start with "mxb_"'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });

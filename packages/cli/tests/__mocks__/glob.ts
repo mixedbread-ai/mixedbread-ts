@@ -12,4 +12,5 @@ const mockGlob = {
 };
 
 export default mockGlob;
-export const { glob, globSync, globStream, globStreamSync, Glob, minimatch, hasMagic, escape, unescape } = mockGlob;
+export const { glob, globSync, globStream, globStreamSync, Glob, minimatch, hasMagic, escape, unescape } =
+  mockGlob;

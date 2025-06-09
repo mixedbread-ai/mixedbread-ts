@@ -30,9 +30,7 @@ describe('Vector Store Utils', () => {
         },
       };
 
-      (configUtils.resolveVectorStoreName as jest.Mock).mockImplementation(
-        (name) => name
-      );
+      (configUtils.resolveVectorStoreName as jest.Mock).mockImplementation((name) => name);
     });
 
     afterEach(() => {
@@ -82,7 +80,9 @@ describe('Vector Store Utils', () => {
         name: 'aliased-store',
       };
 
-      (configUtils.resolveVectorStoreName as jest.Mock).mockReturnValue('550e8400-e29b-41d4-a716-446655440001');
+      (configUtils.resolveVectorStoreName as jest.Mock).mockReturnValue(
+        '550e8400-e29b-41d4-a716-446655440001',
+      );
       mockClient.vectorStores.retrieve.mockResolvedValue(mockVectorStore);
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
@@ -94,16 +94,14 @@ describe('Vector Store Utils', () => {
     });
 
     it('should handle vector store not found by ID', async () => {
-      mockClient.vectorStores.retrieve.mockRejectedValue(
-        new Error('Vector store not found')
-      );
+      mockClient.vectorStores.retrieve.mockRejectedValue(new Error('Vector store not found'));
       mockClient.vectorStores.list.mockResolvedValue({ data: [] });
 
       await resolveVectorStore(mockClient, '550e8400-e29b-41d4-a716-446655440002');
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "550e8400-e29b-41d4-a716-446655440002" not found')
+        expect.stringContaining('Vector store "550e8400-e29b-41d4-a716-446655440002" not found'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -120,7 +118,7 @@ describe('Vector Store Utils', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "nonexistent-store" not found')
+        expect.stringContaining('Vector store "nonexistent-store" not found'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -132,15 +130,13 @@ describe('Vector Store Utils', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "any-store" not found')
+        expect.stringContaining('Vector store "any-store" not found'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
 
     it('should handle API errors when listing', async () => {
-      mockClient.vectorStores.list.mockRejectedValue(
-        new Error('API Error: Unauthorized')
-      );
+      mockClient.vectorStores.list.mockRejectedValue(new Error('API Error: Unauthorized'));
 
       await expect(resolveVectorStore(mockClient, 'some-store')).rejects.toThrow('API Error: Unauthorized');
     });

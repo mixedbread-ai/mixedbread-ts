@@ -3,7 +3,10 @@ import { Command } from 'commander';
 /**
  * Helper to parse command arguments and capture errors
  */
-export async function parseCommand(command: Command, args: string[]): Promise<{
+export async function parseCommand(
+  command: Command,
+  args: string[],
+): Promise<{
   error?: Error;
   exitCode?: number;
 }> {
@@ -111,22 +114,22 @@ export function createMockClient() {
  */
 export function createMockFiles(files: Record<string, string | Buffer>) {
   const mockFiles: Record<string, any> = {};
-  
+
   for (const [path, content] of Object.entries(files)) {
     const dirs = path.split('/').slice(0, -1);
     let current = mockFiles;
-    
+
     for (const dir of dirs) {
       if (!current[dir]) {
         current[dir] = {};
       }
       current = current[dir];
     }
-    
+
     const filename = path.split('/').pop()!;
     current[filename] = content;
   }
-  
+
   return mockFiles;
 }
 
@@ -140,14 +143,16 @@ export function expectExit(code: number) {
 /**
  * Assert console output contains specific text
  */
-export function expectOutput(mockConsoleOutput: ReturnType<typeof mockConsole>, type: 'log' | 'error' | 'warn', text: string) {
+export function expectOutput(
+  mockConsoleOutput: ReturnType<typeof mockConsole>,
+  type: 'log' | 'error' | 'warn',
+  text: string,
+) {
   const output = mockConsoleOutput[`${type}s`];
-  const found = output.some(line => line.includes(text));
-  
+  const found = output.some((line) => line.includes(text));
+
   if (!found) {
-    throw new Error(
-      `Expected ${type} output to contain "${text}" but got:\n${output.join('\n')}`
-    );
+    throw new Error(`Expected ${type} output to contain "${text}" but got:\n${output.join('\n')}`);
   }
 }
 

@@ -107,11 +107,11 @@ describe('Output Utils', () => {
         formatOutput(data, 'table');
 
         expect(mockTableInstance.push).toHaveBeenCalledWith({ id: 'vs_123' });
-        expect(mockTableInstance.push).toHaveBeenCalledWith({ 
-          metadata: JSON.stringify({ key: 'value', nested: { deep: true } })
+        expect(mockTableInstance.push).toHaveBeenCalledWith({
+          metadata: JSON.stringify({ key: 'value', nested: { deep: true } }),
         });
         expect(mockTableInstance.push).toHaveBeenCalledWith({
-          tags: JSON.stringify(['tag1', 'tag2'])
+          tags: JSON.stringify(['tag1', 'tag2']),
         });
       });
 
@@ -181,9 +181,7 @@ describe('Output Utils', () => {
 
         formatOutput(data, 'json');
 
-        expect(console.log).toHaveBeenCalledWith(
-          JSON.stringify(data, null, 2)
-        );
+        expect(console.log).toHaveBeenCalledWith(JSON.stringify(data, null, 2));
       });
 
       it('should handle arrays', () => {
@@ -194,9 +192,7 @@ describe('Output Utils', () => {
 
         formatOutput(data, 'json');
 
-        expect(console.log).toHaveBeenCalledWith(
-          JSON.stringify(data, null, 2)
-        );
+        expect(console.log).toHaveBeenCalledWith(JSON.stringify(data, null, 2));
       });
     });
 

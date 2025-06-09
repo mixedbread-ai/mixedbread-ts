@@ -91,7 +91,7 @@ export function createUploadCommand(): Command {
       const contextualization =
         parsedOptions.contextualization !== undefined ?
           parsedOptions.contextualization
-        : (config.defaults?.upload?.contextualization ?? false);
+        : config.defaults?.upload?.contextualization || false;
       const parallel = parsedOptions.parallel || config.defaults?.upload?.parallel || 5;
 
       let metadata: Record<string, unknown> | undefined;

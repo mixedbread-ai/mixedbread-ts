@@ -75,7 +75,7 @@ describe('Vector Store Update Command', () => {
       });
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Vector store "test-store" updated successfully')
+        expect.stringContaining('Vector store "test-store" updated successfully'),
       );
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(updatedVectorStore, undefined);
     });
@@ -131,13 +131,7 @@ describe('Vector Store Update Command', () => {
 
       mockClient.vectorStores.update.mockResolvedValue(updatedVectorStore);
 
-      await command.parseAsync([
-        'node',
-        'update',
-        'test-store',
-        '--metadata',
-        JSON.stringify(metadata),
-      ]);
+      await command.parseAsync(['node', 'update', 'test-store', '--metadata', JSON.stringify(metadata)]);
 
       expect(mockClient.vectorStores.update).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440060', {
         metadata,
@@ -277,7 +271,7 @@ describe('Vector Store Update Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"expires-after" must be positive')
+        expect.stringContaining('"expires-after" must be positive'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -287,7 +281,7 @@ describe('Vector Store Update Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"expires-after" must be an integer')
+        expect.stringContaining('"expires-after" must be an integer'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -297,7 +291,7 @@ describe('Vector Store Update Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('No update fields provided. Use --name, --description, or --metadata')
+        expect.stringContaining('No update fields provided. Use --name, --description, or --metadata'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -307,7 +301,7 @@ describe('Vector Store Update Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"name-or-id" is required')
+        expect.stringContaining('"name-or-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -369,9 +363,8 @@ describe('Vector Store Update Command', () => {
       expect(clientUtils.createClient).toHaveBeenCalledWith(
         expect.objectContaining({
           apiKey: 'mxb_test123',
-        })
+        }),
       );
     });
-
   });
 });

@@ -11,7 +11,6 @@ import {
   CliConfig,
 } from '../../src/utils/config';
 
-
 describe('Config Utils', () => {
   const configDir = join(homedir(), '.config', 'mixedbread');
   const configFile = join(configDir, 'config.json');
@@ -24,9 +23,9 @@ describe('Config Utils', () => {
   describe('loadConfig', () => {
     it('should return default config when config file does not exist', () => {
       mockFs({});
-      
+
       const config = loadConfig();
-      
+
       expect(config).toMatchObject({
         version: '1.0',
         defaults: {
@@ -64,7 +63,7 @@ describe('Config Utils', () => {
       });
 
       const config = loadConfig();
-      
+
       expect(config.api_key).toBe('mxb_test123');
       expect(config.defaults?.upload?.strategy).toBe('high_quality');
       expect(config.aliases?.docs).toBe('vs_abc123');
@@ -76,10 +75,10 @@ describe('Config Utils', () => {
       });
 
       const config = loadConfig();
-      
+
       expect(console.warn).toHaveBeenCalledWith(
         expect.any(String),
-        'Failed to load config file, using defaults'
+        'Failed to load config file, using defaults',
       );
       expect(config.version).toBe('1.0');
     });
@@ -93,7 +92,7 @@ describe('Config Utils', () => {
       });
 
       const config = loadConfig();
-      
+
       expect(console.warn).toHaveBeenCalled();
       expect(config.api_key).toBeUndefined();
     });
@@ -147,7 +146,7 @@ describe('Config Utils', () => {
       });
 
       const apiKey = getApiKey({ apiKey: 'mxb_cli123' });
-      
+
       expect(apiKey).toBe('mxb_cli123');
     });
 
@@ -158,7 +157,7 @@ describe('Config Utils', () => {
       });
 
       const apiKey = getApiKey();
-      
+
       expect(apiKey).toBe('mxb_env123');
     });
 
@@ -169,7 +168,7 @@ describe('Config Utils', () => {
       });
 
       const apiKey = getApiKey();
-      
+
       expect(apiKey).toBe('mxb_config123');
     });
 
@@ -178,11 +177,8 @@ describe('Config Utils', () => {
       mockFs({});
 
       getApiKey();
-      
-      expect(console.error).toHaveBeenCalledWith(
-        expect.any(String),
-        'No API key found.\n'
-      );
+
+      expect(console.error).toHaveBeenCalledWith(expect.any(String), 'No API key found.\n');
       expect(process.exit).toHaveBeenCalledWith(1);
     });
   });
@@ -197,7 +193,7 @@ describe('Config Utils', () => {
       });
 
       const resolved = resolveVectorStoreName('docs');
-      
+
       expect(resolved).toBe('vs_abc123');
     });
 
@@ -210,7 +206,7 @@ describe('Config Utils', () => {
       });
 
       const resolved = resolveVectorStoreName('vs_direct123');
-      
+
       expect(resolved).toBe('vs_direct123');
     });
 
@@ -220,7 +216,7 @@ describe('Config Utils', () => {
       });
 
       const resolved = resolveVectorStoreName('test');
-      
+
       expect(resolved).toBe('test');
     });
   });
@@ -248,43 +244,43 @@ describe('Config Utils', () => {
 
     it('should validate api_key format', () => {
       parseConfigValue('api_key', 'invalid_key');
-      
+
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
         expect.stringContaining('Invalid value for api_key:'),
-        expect.any(String)
+        expect.any(String),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
 
     it('should validate enum constraints', () => {
       parseConfigValue('defaults.upload.strategy', 'invalid_strategy');
-      
+
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
         expect.stringContaining('Invalid value for defaults.upload.strategy:'),
-        expect.any(String)
+        expect.any(String),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
 
     it('should validate number constraints', () => {
       parseConfigValue('defaults.upload.parallel', '-5');
-      
+
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
         expect.stringContaining('Invalid value for defaults.upload.parallel:'),
-        expect.stringContaining('positive')
+        expect.stringContaining('positive'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
 
     it('should handle unknown config keys', () => {
       parseConfigValue('unknown.key', 'value');
-      
+
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('Unknown config key: unknown.key')
+        expect.stringContaining('Unknown config key: unknown.key'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });

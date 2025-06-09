@@ -85,7 +85,7 @@ describe('Vector Store Get Command', () => {
           'created at': expect.any(String),
           metadata: JSON.stringify({ key: 'value' }, null, 2),
         }),
-        undefined
+        undefined,
       );
     });
 
@@ -214,10 +214,9 @@ describe('Vector Store Get Command', () => {
       expect(clientUtils.createClient).toHaveBeenCalledWith(
         expect.objectContaining({
           apiKey: 'mxb_test123',
-        })
+        }),
       );
     });
-
   });
 
   describe('Command validation', () => {
@@ -226,7 +225,7 @@ describe('Vector Store Get Command', () => {
 
       expect(console.error).toHaveBeenCalledWith(
         expect.any(String),
-        expect.stringContaining('"name-or-id" is required')
+        expect.stringContaining('"name-or-id" is required'),
       );
       expect(process.exit).toHaveBeenCalledWith(1);
     });
