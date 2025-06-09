@@ -244,8 +244,10 @@ async function uploadFiles(
 
         await client.vectorStores.files.upload(vectorStoreId, file, {
           metadata: fileMetadata,
-          ...(strategy && { strategy }),
-          ...(contextualization && { contextualization }),
+          experimental: {
+            parsing_strategy: strategy as 'fast' | 'high_quality',
+            contextualization,
+          },
         });
 
         const stats = statSync(filePath);

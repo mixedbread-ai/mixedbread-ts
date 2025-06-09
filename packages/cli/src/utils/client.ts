@@ -7,6 +7,6 @@ export function createClient(options?: { apiKey?: string }): Mixedbread {
 
   return new Mixedbread({
     apiKey,
-    ...(baseURL && { baseURL }),
+    baseURL,
   });
 }

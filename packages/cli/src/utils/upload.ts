@@ -29,7 +29,9 @@ export async function uploadFile(
   // Upload the file
   await client.vectorStores.files.upload(vectorStoreId, file, {
     metadata,
-    ...(strategy && { strategy }),
-    ...(contextualization && { contextualization }),
+    experimental: {
+      parsing_strategy: strategy,
+      contextualization,
+    },
   });
 }

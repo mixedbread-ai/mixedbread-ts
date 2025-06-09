@@ -156,7 +156,9 @@ describe('Vector Store Upload Command', () => {
         '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
-          strategy: 'high_quality',
+          experimental: expect.objectContaining({
+            parsing_strategy: 'high_quality',
+          }),
         }),
       );
     });
@@ -168,7 +170,9 @@ describe('Vector Store Upload Command', () => {
         '550e8400-e29b-41d4-a716-446655440030',
         expect.any(File),
         expect.objectContaining({
-          contextualization: true,
+          experimental: expect.objectContaining({
+            contextualization: true,
+          }),
         }),
       );
     });
