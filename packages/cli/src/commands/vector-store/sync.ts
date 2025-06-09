@@ -42,7 +42,7 @@ export function createSyncCommand(): Command {
       .argument('<name-or-id>', 'Name or ID of the vector store')
       .argument('<patterns...>', 'File patterns to sync')
       .option('--strategy <strategy>', 'Upload strategy (fast|high_quality)', 'fast')
-      .option('--from-git <ref>', 'Compare against git ref (default: last sync)')
+      .option('--from-git <ref>', 'Only sync files changed since git ref (default: last sync)')
       .option('--dry-run', 'Show what would change without making changes')
       .option('--force', 'Skip confirmation prompt')
       .option('--metadata <json>', 'Additional metadata for files')
@@ -62,7 +62,7 @@ export function createSyncCommand(): Command {
       const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
       console.log(chalk.bold(`Syncing "${vectorStore.name}" vector store...`));
-      console.log(`Matched files: ${patterns.join(', ')}\n`);
+      console.log(`Patterns: ${patterns.join(', ')}\n`);
 
       // Parse metadata if provided
       let additionalMetadata: Record<string, unknown> = {};
@@ -89,14 +89,16 @@ export function createSyncCommand(): Command {
       spinner.stop();
       console.log(chalk.gray(`Found ${syncedFiles.size} existing files in vector store`));
 
-      // Determine the git ref to compare against
-      let fromGit = parsedOptions.fromGit;
-      if (!fromGit && gitInfo.isRepo && syncState?.git_commit) {
-        fromGit = syncState.git_commit;
-      }
+      // Only use git if --from-git is explicitly provided
+      const fromGit = parsedOptions.fromGit;
 
-      if (gitInfo.isRepo && fromGit) {
-        console.log(chalk.gray(`Detected changes using git (from commit ${fromGit.substring(0, 7)})`));
+      if (fromGit && gitInfo.isRepo) {
+        console.log(chalk.gray(`Using git-based detection (from commit ${fromGit.substring(0, 7)})`));
+      } else if (fromGit && !gitInfo.isRepo) {
+        console.error(chalk.red('Error:'), '--from-git specified but not in a git repository');
+        process.exit(1);
+      } else {
+        console.log(chalk.gray('Using local file comparison (hash-based detection)'));
       }
 
       // Analyze changes
@@ -150,8 +152,8 @@ export function createSyncCommand(): Command {
       // Update sync state
       const newSyncState = {
         last_sync: new Date().toISOString(),
-        git_commit: gitInfo.isRepo ? gitInfo.commit : undefined,
-        git_branch: gitInfo.isRepo ? gitInfo.branch : undefined,
+        git_commit: fromGit && gitInfo.isRepo ? gitInfo.commit : undefined,
+        git_branch: fromGit && gitInfo.isRepo ? gitInfo.branch : undefined,
         file_count: syncedFiles.size + analysis.added.length - analysis.deleted.length,
         patterns,
       };
@@ -171,7 +173,7 @@ export function createSyncCommand(): Command {
       );
       console.log(chalk.green('✓'), 'Vector store is now in sync');
 
-      if (gitInfo.isRepo) {
+      if (fromGit && gitInfo.isRepo) {
         console.log(
           chalk.green('✓'),
           `Sync state saved (commit: ${gitInfo.commit.substring(0, 7)}, patterns: ${patterns.join(', ')})`,

@@ -47,21 +47,35 @@ export async function analyzeChanges(
     matches.forEach((file) => localFiles.add(file));
   }
 
-  // If in git repo and fromGit is specified, use git to detect changes
+  // Only use git detection if --from-git is explicitly provided
   let gitChanges: Map<string, 'added' | 'modified' | 'deleted'> | null = null;
-  if (gitInfo.isRepo && fromGit) {
+  if (fromGit && gitInfo.isRepo) {
     const normalizedPatterns = await normalizeGitPatterns(patterns);
     const changes = await getChangedFiles(fromGit, normalizedPatterns);
     gitChanges = new Map(changes.map((c) => [c.path, c.status]));
   }
 
-  // Process local files
-  for (const filePath of localFiles) {
-    const stats = await fs.stat(filePath);
+  // When using --from-git, only process files that git detected as changed
+  // Otherwise, process all local files matching patterns (default behavior)
+  const filesToProcess = fromGit ? new Set(gitChanges?.keys() || []) : localFiles;
+
+  // Process files
+  for (const filePath of filesToProcess) {
     const syncedFile = syncedFiles.get(filePath);
 
+    // Check if file exists locally
+    let stats: { size: number } | null = null;
+    try {
+      stats = await fs.stat(filePath);
+    } catch {
+      // File doesn't exist locally (might be deleted)
+      stats = null;
+    }
+
+    if (!stats) continue;
+
     if (!syncedFile) {
-      // New file
+      // New file - only add if it exists locally
       analysis.added.push({
         path: filePath,
         type: 'added',
@@ -69,20 +83,16 @@ export async function analyzeChanges(
       });
       analysis.totalSize += stats.size;
     } else {
-      // Existing file - check if modified
+      // Check if modified
       let isModified = false;
       let localHash: string | undefined;
 
-      // When using git-based detection, prioritize git status over local changes
-      if (gitChanges && gitChanges.has(filePath)) {
+      if (fromGit && gitChanges && gitChanges.has(filePath)) {
+        // When using --from-git, trust git detection
         const gitStatus = gitChanges.get(filePath);
-        if (gitStatus === 'modified' || gitStatus === 'added') {
-          // Git detected changes between commits - always mark as modified
-          // This ensures we sync the committed version, even if local file was reverted
-          isModified = true;
-        }
+        isModified = gitStatus === 'modified' || gitStatus === 'added';
       } else {
-        // Fall back to hash comparison when git detection is not available
+        // Default behavior: use hash comparison
         localHash = await calculateFileHash(filePath);
         isModified = !hashesMatch(localHash, syncedFile.metadata.file_hash);
       }
@@ -103,8 +113,9 @@ export async function analyzeChanges(
     }
   }
 
-  // Check for deleted files from git changes
-  if (gitChanges) {
+  // Check for deleted files
+  if (fromGit && gitChanges) {
+    // When using --from-git, only process git-detected deletions
     for (const [filePath, gitStatus] of gitChanges) {
       if (gitStatus === 'deleted') {
         const syncedFile = syncedFiles.get(filePath);
@@ -118,14 +129,10 @@ export async function analyzeChanges(
         }
       }
     }
-  }
-
-  // Check for deleted files - includes files that were previously synced but no longer match patterns
-  for (const [filePath, syncedFile] of syncedFiles) {
-    if (!localFiles.has(filePath)) {
-      // Only add to deleted if not already added by git detection
-      const alreadyMarkedDeleted = analysis.deleted.some((d) => d.path === filePath);
-      if (!alreadyMarkedDeleted) {
+  } else {
+    // Default behavior: check for files that were previously synced but no longer exist locally
+    for (const [filePath, syncedFile] of syncedFiles) {
+      if (!localFiles.has(filePath)) {
         analysis.deleted.push({
           path: filePath,
           type: 'deleted',

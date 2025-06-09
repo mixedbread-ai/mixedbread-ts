@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
+import minimatch from 'minimatch';
 
 const execAsync = promisify(exec);
 
@@ -129,7 +130,16 @@ export async function getChangedFiles(
       return allChanges;
     }
 
-    return allChanges;
+    // Normalize patterns to work with git paths (remove leading ./ if present)
+    const normalizedPatterns = patterns.map((pattern) => {
+      return pattern.startsWith('./') ? pattern.slice(2) : pattern;
+    });
+
+    const filteredChanges = allChanges.filter((change) => {
+      return normalizedPatterns.some((pattern) => minimatch(change.path, pattern));
+    });
+
+    return filteredChanges;
   } catch (error) {
     // If the commit doesn't exist or other git errors, return empty array
     return [];
