@@ -196,7 +196,7 @@ describe('Vector Store Files Command', () => {
           status: 'completed',
           size: '2 MB',
           'created at': expect.any(String),
-          metadata: JSON.stringify({ author: 'John Doe', version: '1.0' }, null, 2),
+          metadata: { author: 'John Doe', version: '1.0' },
         }),
         undefined,
       );
@@ -209,7 +209,7 @@ describe('Vector Store Files Command', () => {
       await command.parseAsync(['node', 'files', 'get', 'test-store', 'file_123']);
 
       const formattedData = (outputUtils.formatOutput as jest.Mock).mock.calls[0][0];
-      expect(formattedData).not.toHaveProperty('metadata');
+      expect(formattedData.metadata).toEqual({});
     });
 
     it('should support output formatting', async () => {

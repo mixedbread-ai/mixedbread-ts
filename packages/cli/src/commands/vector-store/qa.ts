@@ -83,9 +83,7 @@ export function createQACommand(): Command {
 
         const sources = response.sources.map((source) => {
           const metadata =
-            parsedOptions.format === 'table' || !parsedOptions.format ?
-              JSON.stringify(source.metadata, null, 2)
-            : source.metadata;
+            parsedOptions.format === 'table' ? JSON.stringify(source.metadata, null, 2) : source.metadata;
 
           const output: Record<string, unknown> = {
             filename: source.filename,

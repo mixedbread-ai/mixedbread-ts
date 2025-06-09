@@ -304,8 +304,8 @@ describe('Vector Store Search Command', () => {
       await command.parseAsync(['node', 'search', 'test-store', 'query', '--return-metadata']);
 
       const formattedData = (outputUtils.formatOutput as jest.Mock).mock.calls[0][0];
-      expect(typeof formattedData[0].metadata).toBe('string');
-      expect(formattedData[0].metadata).toContain('{\n  "key": "value"\n}');
+      expect(typeof formattedData[0].metadata).toBe('object');
+      expect(formattedData[0].metadata).toEqual({ key: 'value' });
     });
 
     it('should format metadata as object for non-table output', async () => {

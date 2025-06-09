@@ -76,7 +76,10 @@ export function createCreateCommand(): Command {
           name: vectorStore.name,
           description: vectorStore.description,
           expires_after: vectorStore.expires_after,
-          metadata: vectorStore.metadata,
+          metadata:
+            parsedOptions.format === 'table' ?
+              JSON.stringify(vectorStore.metadata, null, 2)
+            : vectorStore.metadata,
         },
         parsedOptions.format,
       );

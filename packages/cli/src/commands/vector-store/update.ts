@@ -90,7 +90,10 @@ export function createUpdateCommand(): Command {
           name: updatedVectorStore.name,
           description: updatedVectorStore.description,
           expires_after: updatedVectorStore.expires_after,
-          metadata: updatedVectorStore.metadata,
+          metadata:
+            parsedOptions.format === 'table' ?
+              JSON.stringify(updatedVectorStore.metadata, null, 2)
+            : updatedVectorStore.metadata,
           file_counts: updatedVectorStore.file_counts,
           status: updatedVectorStore.status,
           created_at: updatedVectorStore.created_at,

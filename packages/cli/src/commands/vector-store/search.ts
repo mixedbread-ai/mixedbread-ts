@@ -119,9 +119,7 @@ export function createSearchCommand(): Command {
 
       const output = results.data.map((result) => {
         const metadata =
-          parsedOptions.format === 'table' || !parsedOptions.format ?
-            JSON.stringify(result.metadata, null, 2)
-          : result.metadata;
+          parsedOptions.format === 'table' ? JSON.stringify(result.metadata, null, 2) : result.metadata;
 
         const output: Record<string, unknown> = {
           filename: result.filename,

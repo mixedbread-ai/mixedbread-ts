@@ -83,7 +83,7 @@ describe('Vector Store Get Command', () => {
           'failed files': 0,
           usage: '1 MB',
           'created at': expect.any(String),
-          metadata: JSON.stringify({ key: 'value' }, null, 2),
+          metadata: { key: 'value' },
         }),
         undefined,
       );
