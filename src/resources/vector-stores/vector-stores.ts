@@ -495,6 +495,11 @@ export namespace VectorStore {
    */
   export interface FileCounts {
     /**
+     * Number of files waiting to be processed
+     */
+    pending?: number;
+
+    /**
      * Number of files currently being processed
      */
     in_progress?: number;
