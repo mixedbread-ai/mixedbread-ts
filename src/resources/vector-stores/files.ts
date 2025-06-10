@@ -225,7 +225,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: string;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -295,7 +295,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: string;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
