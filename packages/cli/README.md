@@ -168,7 +168,7 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
    ```bash
    export MXBAI_API_KEY=mxb_xxxxx
    # Or create a config file
-   cd packages/cli && yarn build && ./dist/bin/mxbai config set api_key mxb_xxxxx
+   cd packages/cli && yarn build && yarn mxbai config set api_key mxb_xxxxx
    ```
 
 #### Development Workflow
@@ -180,12 +180,8 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
 
 2. **In another terminal, test your changes:**
    ```bash
-   # Build once for testing
-   cd packages/cli && yarn build
-   
-   # Test commands
-   ./dist/bin/mxbai vs list
-   ./dist/bin/mxbai vs --help
+   yarn mxbai vs --help
+   yarn mxbai vs list
    ```
 
 3. **Run tests:**
@@ -269,6 +265,6 @@ tests/
 
 #### Debugging
 
-- Use `--debug` flag for verbose output: `./dist/bin/mxbai --debug vs list`
+- Use `--debug` flag for verbose output: `yarn mxbai --debug vs list`
 - Set `DEBUG=*` environment variable for detailed logs
 - Tests include detailed error messages and mock setups

@@ -34,7 +34,8 @@
     "clean": "rm -rf dist",
     "test": "jest",
     "lint": "eslint src",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
+    "mxbai": "node dist/bin/mxbai"
   },
   "dependencies": {
     "@mixedbread/sdk": "^0.6.0",
