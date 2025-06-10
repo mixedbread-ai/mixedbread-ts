@@ -18,6 +18,7 @@ import {
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
 import { Mixedbread } from '@mixedbread/sdk';
+import { uploadFromManifest } from '../../utils/manifest';
 
 const UploadVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
@@ -38,7 +39,7 @@ const UploadVectorStoreSchema = GlobalOptionsSchema.extend({
   manifest: z.string().optional(),
 });
 
-interface UploadOptions extends GlobalOptions {
+export interface UploadOptions extends GlobalOptions {
   strategy?: 'fast' | 'high_quality';
   contextualization?: boolean;
   metadata?: string;
@@ -86,13 +87,11 @@ export function createUploadCommand(): Command {
         process.exit(1);
       }
 
-      // Get configuration values with validation
-      const strategy = parsedOptions.strategy || config.defaults?.upload?.strategy || 'fast';
+      // Get configuration values with precedence: command-line > config defaults > built-in defaults
+      const strategy = parsedOptions.strategy ?? config.defaults?.upload?.strategy ?? 'fast';
       const contextualization =
-        parsedOptions.contextualization !== undefined ?
-          parsedOptions.contextualization
-        : config.defaults?.upload?.contextualization || false;
-      const parallel = parsedOptions.parallel || config.defaults?.upload?.parallel || 5;
+        parsedOptions.contextualization ?? config.defaults?.upload?.contextualization ?? false;
+      const parallel = parsedOptions.parallel ?? config.defaults?.upload?.parallel ?? 5;
 
       let metadata: Record<string, unknown> | undefined;
       if (parsedOptions.metadata) {
@@ -280,15 +279,4 @@ async function uploadFiles(
       results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));
     }
   }
-}
-
-async function uploadFromManifest(
-  client: any,
-  vectorStoreId: string,
-  manifestPath: string,
-  options: UploadOptions,
-) {
-  // TODO: Implement manifest-based upload
-  console.error(chalk.red('Error:'), 'Manifest-based upload not yet implemented');
-  process.exit(1);
 }
