@@ -11,6 +11,7 @@ import {
 } from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import { z } from 'zod';
+import ora from 'ora';
 
 const UpdateVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
@@ -43,6 +44,8 @@ export function createUpdateCommand(): Command {
   );
 
   command.action(async (nameOrId: string, options: UpdateOptions) => {
+    let spinner;
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
 
@@ -80,9 +83,11 @@ export function createUpdateCommand(): Command {
         process.exit(1);
       }
 
+      spinner = ora('Updating vector store...').start();
+
       const updatedVectorStore = await client.vectorStores.update(vectorStore.id, updateData);
 
-      console.log(chalk.green('✓'), `Vector store "${vectorStore.name}" updated successfully`);
+      spinner.succeed(`Vector store "${vectorStore.name}" updated successfully`);
 
       formatOutput(
         {
@@ -105,6 +110,9 @@ export function createUpdateCommand(): Command {
         parsedOptions.format,
       );
     } catch (error) {
+      if (spinner) {
+        spinner.fail('Failed to update vector store');
+      }
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

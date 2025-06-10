@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
 import {
@@ -26,6 +27,8 @@ export function createGetCommand(): Command {
   );
 
   command.action(async (nameOrId: string, options: GetOptions) => {
+    const spinner = ora('Loading vector store details...').start();
+    
     try {
       const mergedOptions = mergeCommandOptions(command, options);
 
@@ -33,6 +36,8 @@ export function createGetCommand(): Command {
 
       const client = createClient(parsedOptions);
       const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
+
+      spinner.succeed('Vector store details loaded');
 
       const formattedData = {
         name: vectorStore.name,
@@ -55,6 +60,7 @@ export function createGetCommand(): Command {
 
       formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
+      spinner.fail('Failed to load vector store details');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

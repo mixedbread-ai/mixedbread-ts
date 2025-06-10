@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
 import {
@@ -58,6 +59,8 @@ export function createFilesCommand(): Command {
   );
 
   listCommand.action(async (nameOrId: string, options: FilesOptions) => {
+    const spinner = ora('Loading files...').start();
+
     try {
       const mergedOptions = mergeCommandOptions(listCommand, options);
 
@@ -78,9 +81,11 @@ export function createFilesCommand(): Command {
       }
 
       if (files.length === 0) {
-        console.log(chalk.gray('No files found.'));
+        spinner.info('No files found.');
         return;
       }
+
+      spinner.succeed(`Found ${files.length} file${files.length === 1 ? '' : 's'}`);
 
       // Format data for output
       const formattedData = files.map((file) => ({
@@ -94,6 +99,7 @@ export function createFilesCommand(): Command {
 
       formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
+      spinner.fail('Failed to load files');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {
@@ -112,6 +118,8 @@ export function createFilesCommand(): Command {
   );
 
   getCommand.action(async (nameOrId: string, fileId: string, options: GlobalOptions) => {
+    const spinner = ora('Loading file details...').start();
+
     try {
       const mergedOptions = mergeCommandOptions(getCommand, options);
 
@@ -124,6 +132,8 @@ export function createFilesCommand(): Command {
         vector_store_id: vectorStore.id,
       });
 
+      spinner.succeed('File details loaded');
+
       const formattedData = {
         id: file.id,
         name: file.filename,
@@ -135,6 +145,7 @@ export function createFilesCommand(): Command {
 
       formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
+      spinner.fail('Failed to load file details');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {
@@ -181,11 +192,13 @@ export function createFilesCommand(): Command {
           }
         }
 
+        const spinner = ora('Deleting file...').start();
+
         await client.vectorStores.files.delete(parsedOptions.fileId, {
           vector_store_id: vectorStore.id,
         });
 
-        console.log(chalk.green('✓'), `File ${parsedOptions.fileId} deleted successfully`);
+        spinner.succeed(`File ${parsedOptions.fileId} deleted successfully`);
       } catch (error) {
         if (error instanceof Error) {
           console.error(chalk.red('Error:'), error.message);

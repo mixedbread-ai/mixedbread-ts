@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput, formatBytes } from '../../utils/output';
 import {
@@ -35,6 +36,8 @@ export function createListCommand(): Command {
   );
 
   command.action(async (options: ListOptions) => {
+    const spinner = ora('Loading vector stores...').start();
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const parsedOptions = parseOptions(ListVectorStoreSchema, mergedOptions as Record<string, unknown>);
@@ -53,7 +56,7 @@ export function createListCommand(): Command {
       }
 
       if (vectorStores.length === 0) {
-        console.log(chalk.gray('No vector stores found.'));
+        spinner.info('No vector stores found.');
         return;
       }
 
@@ -67,8 +70,10 @@ export function createListCommand(): Command {
         created: new Date(vs.created_at).toLocaleDateString(),
       }));
 
+      spinner.succeed(`Found ${vectorStores.length} vector store${vectorStores.length === 1 ? '' : 's'}`);
       formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
+      spinner.fail('Failed to load vector stores');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

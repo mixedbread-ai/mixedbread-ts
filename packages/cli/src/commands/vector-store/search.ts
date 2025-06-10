@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput } from '../../utils/output';
 import {
@@ -85,6 +86,8 @@ export function createSearchCommand(): Command {
   );
 
   command.action(async (nameOrId: string, query: string, options: SearchOptions) => {
+    const spinner = ora('Searching vector store...').start();
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const parsedOptions = parseOptions(SearchVectorStoreSchema, { ...mergedOptions, nameOrId, query });
@@ -113,9 +116,11 @@ export function createSearchCommand(): Command {
           });
 
       if (!results.data || results.data.length === 0) {
-        console.log(chalk.gray('No results found.'));
+        spinner.info('No results found.');
         return;
       }
+
+      spinner.succeed(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}`);
 
       const output = results.data.map((result) => {
         const metadata =
@@ -138,13 +143,9 @@ export function createSearchCommand(): Command {
         return output;
       });
 
-      console.log(
-        chalk.bold(
-          chalk.blue(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}:`),
-        ),
-      );
       formatOutput(output, parsedOptions.format);
     } catch (error) {
+      spinner.fail('Search failed');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

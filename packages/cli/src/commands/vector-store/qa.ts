@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput } from '../../utils/output';
 import {
@@ -52,6 +53,8 @@ export function createQACommand(): Command {
   );
 
   command.action(async (nameOrId: string, question: string, options: QAOptions) => {
+    const spinner = ora('Processing question...').start();
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const parsedOptions = parseOptions(QAVectorStoreSchema, { ...mergedOptions, nameOrId, question });
@@ -72,6 +75,8 @@ export function createQACommand(): Command {
           return_metadata: parsedOptions.returnMetadata ? parsedOptions.returnMetadata : undefined,
         },
       });
+
+      spinner.succeed('Question processed');
 
       // Display the answer
       console.log(chalk.bold(chalk.blue('Answer:')));
@@ -101,6 +106,7 @@ export function createQACommand(): Command {
         formatOutput(sources, parsedOptions.format);
       }
     } catch (error) {
+      spinner.fail('Failed to process question');
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import { createClient } from '../../utils/client';
 import { formatOutput } from '../../utils/output';
 import {
@@ -39,6 +40,8 @@ export function createCreateCommand(): Command {
   );
 
   command.action(async (name: string, options: CreateOptions) => {
+    let spinner;
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
       const client = createClient(mergedOptions);
@@ -55,6 +58,8 @@ export function createCreateCommand(): Command {
         }
       }
 
+      spinner = ora('Creating vector store...').start();
+
       const vectorStore = await client.vectorStores.create({
         name: parsedOptions.name,
         description: parsedOptions.description,
@@ -68,7 +73,7 @@ export function createCreateCommand(): Command {
         metadata,
       });
 
-      console.log(chalk.green('✓'), `Vector store "${name}" created successfully`);
+      spinner.succeed(`Vector store "${name}" created successfully`);
 
       formatOutput(
         {
@@ -84,6 +89,9 @@ export function createCreateCommand(): Command {
         parsedOptions.format,
       );
     } catch (error) {
+      if (spinner) {
+        spinner.fail('Failed to create vector store');
+      }
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {

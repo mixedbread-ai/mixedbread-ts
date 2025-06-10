@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import ora from 'ora';
 import inquirer from 'inquirer';
 import { createClient } from '../../utils/client';
 import {
@@ -31,6 +32,8 @@ export function createDeleteCommand(): Command {
   );
 
   command.action(async (nameOrId: string, options: DeleteOptions) => {
+    let spinner;
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
 
@@ -56,10 +59,15 @@ export function createDeleteCommand(): Command {
         }
       }
 
+      spinner = ora('Deleting vector store...').start();
+
       await client.vectorStores.delete(vectorStore.id);
 
-      console.log(chalk.green('✓'), `Vector store "${vectorStore.name}" deleted successfully`);
+      spinner.succeed(`Vector store "${vectorStore.name}" deleted successfully`);
     } catch (error) {
+      if (spinner) {
+        spinner.fail('Failed to delete vector store');
+      }
       if (error instanceof Error) {
         console.error(chalk.red('Error:'), error.message);
       } else {
