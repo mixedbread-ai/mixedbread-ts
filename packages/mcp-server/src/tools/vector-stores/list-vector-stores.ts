@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export const tool: Tool = {
   name: 'list_vector_stores',
   description:
-    'List all vector stores.\n\nArgs:\n    pagination: The pagination options.\n\nReturns:\n    VectorStoreListResponse: The list of vector stores.',
+    'List all vector stores with optional search.\n\nArgs:\n    pagination: The pagination options.\n    q: Optional search query to filter vector stores.\n\nReturns:\n    VectorStoreListResponse: The list of vector stores.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -31,6 +31,11 @@ export const tool: Tool = {
         type: 'integer',
         title: 'Offset',
         description: 'Offset of the first item to return',
+      },
+      q: {
+        type: 'string',
+        title: 'Q',
+        description: 'Search query for fuzzy matching over name and description fields',
       },
     },
   },

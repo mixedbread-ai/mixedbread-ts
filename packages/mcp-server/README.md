@@ -177,10 +177,11 @@ The following tools are available in this MCP server.
   Returns:
   VectorStore: The response containing the vector store details.
 
-- `list_vector_stores` (`read`): List all vector stores.
+- `list_vector_stores` (`read`): List all vector stores with optional search.
 
   Args:
   pagination: The pagination options.
+  q: Optional search query to filter vector stores.
 
   Returns:
   VectorStoreListResponse: The list of vector stores.

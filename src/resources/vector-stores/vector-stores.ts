@@ -65,9 +65,10 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * List all vector stores.
+   * List all vector stores with optional search.
    *
-   * Args: pagination: The pagination options.
+   * Args: pagination: The pagination options. q: Optional search query to filter
+   * vector stores.
    *
    * Returns: VectorStoreListResponse: The list of vector stores.
    */
@@ -674,7 +675,12 @@ export interface VectorStoreUpdateParams {
   metadata?: unknown;
 }
 
-export interface VectorStoreListParams extends LimitOffsetParams {}
+export interface VectorStoreListParams extends LimitOffsetParams {
+  /**
+   * Search query for fuzzy matching over name and description fields
+   */
+  q?: string | null;
+}
 
 export interface VectorStoreQuestionAnsweringParams {
   /**
