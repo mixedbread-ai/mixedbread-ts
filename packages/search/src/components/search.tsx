@@ -245,7 +245,7 @@ export function SearchDialogListItem({
         },
         [active],
       )}
-      aria-selected={active}
+      aria-current={active ? 'true' : undefined}
       className={cn(
         'flex min-h-10 w-full flex-col justify-center select-none border border-border/50 gap-2.5 px-4 py-2 rounded-lg text-start text-sm',
         active && 'bg-accent/50 text-accent-foreground',
@@ -264,10 +264,12 @@ export function SearchDialogListItem({
           </Fragment>
         ))}
       </div>
+
       <div className="flex items-center gap-2">
         <FileText className="size-4 text-muted-foreground" />
         <span className="flex-1 truncate">{item.title}</span>
       </div>
+
       <span className="text-xs text-muted-foreground truncate flex-1">{item.preview}</span>
     </a>
   );
