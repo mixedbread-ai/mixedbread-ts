@@ -1,6 +1,5 @@
 'use client';
 
-import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ChevronRightIcon, FileTextIcon, LoaderCircleIcon, SearchIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
@@ -24,12 +23,10 @@ import { Result } from '../lib/types';
 interface SearchContextProps {
   search: string;
   onSearchChange: (value: string) => void;
+  results: Result[];
   isLoading: boolean;
-}
-
-interface DialogContextProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  tag?: string;
+  onTagChange?: (value: string | undefined) => void;
 }
 
 interface ListContextProps {
@@ -38,14 +35,10 @@ interface ListContextProps {
 }
 
 interface TagsListContextProps {
-  value?: string;
-  onValueChange: (value: string | undefined) => void;
   allowClear: boolean;
 }
 
 const SearchContext = createContext<SearchContextProps | null>(null);
-
-const DialogContext = createContext<DialogContextProps | null>(null);
 
 const ListContext = createContext<ListContextProps | null>(null);
 
@@ -55,11 +48,15 @@ export interface SearchProps extends SearchContextProps {
   children: ReactNode;
 }
 
-export interface SearchDialogProps extends DialogContextProps {
-  children: ReactNode;
-}
-
-export function Search({ search, onSearchChange, isLoading = false, children }: SearchProps) {
+export function Search({
+  search,
+  onSearchChange,
+  results,
+  isLoading = false,
+  children,
+  tag,
+  onTagChange,
+}: SearchProps) {
   const [active, setActive] = useState<string | null>(null);
 
   const memoizedValue = useMemo(
@@ -69,23 +66,14 @@ export function Search({ search, onSearchChange, isLoading = false, children }: 
       active,
       setActive,
       isLoading,
+      results,
+      tag,
+      onTagChange,
     }),
-    [search, onSearchChange, active, setActive, isLoading],
+    [search, onSearchChange, active, setActive, isLoading, results, tag, onTagChange],
   );
 
   return <SearchContext.Provider value={memoizedValue}>{children}</SearchContext.Provider>;
-}
-
-export function SearchDialog({ children, open, onOpenChange }: SearchDialogProps) {
-  return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-      {children}
-    </DialogPrimitive.Root>
-  );
-}
-
-export function SearchDialogHeader({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('flex flex-row items-center gap-2 px-4', className)} {...props} />;
 }
 
 export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
@@ -98,10 +86,7 @@ export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
       autoComplete="off"
       autoCorrect="off"
       spellCheck="false"
-      className={cn(
-        'w-0 flex-1 bg-transparent py-3 text-base placeholder:text-muted-foreground focus-visible:outline-none',
-        className,
-      )}
+      className={cn('w-0 flex-1 bg-transparent py-2 text-base placeholder:text-muted-foreground', className)}
       {...props}
       value={search}
       onChange={(e) => onSearchChange(e.target.value)}
@@ -109,47 +94,11 @@ export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
   );
 }
 
-export function SearchDialogFooter({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('mt-auto border-t border-border/60 p-4', className)} {...props} />;
-}
-
-export function SearchDialogOverlay(props: ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return (
-    <DialogPrimitive.Overlay
-      {...props}
-      className={cn(
-        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in supports-[backdrop-filter]:bg-black/20',
-        props.className,
-      )}
-    />
-  );
-}
-
-export function SearchDialogContent({
-  children,
-  className,
-  ...props
-}: ComponentProps<typeof DialogPrimitive.Content>) {
-  return (
-    <DialogPrimitive.Content
-      className={cn(
-        '-translate-x-1/2 fixed top-[10vh] left-1/2 z-50 w-[98vw] max-w-screen-sm rounded-lg border bg-popover shadow-lg',
-        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in',
-        className,
-      )}
-      aria-describedby={undefined}
-      {...props}
-    >
-      <DialogPrimitive.Title className="sr-only">Search</DialogPrimitive.Title>
-      {children}
-    </DialogPrimitive.Content>
-  );
-}
-
 export function SearchList({
   items,
   Empty = () => <div className="py-12 text-center text-sm">No results found</div>,
   Item = (props) => <SearchListItem {...props} />,
+  className,
   ...props
 }: React.ComponentProps<typeof ScrollArea> & {
   items: Result[];
@@ -163,7 +112,7 @@ export function SearchList({
   Item?: (props: { item: Result; onClick: () => void }) => ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
-  const { search } = useSearchRuntime();
+  const { search, tag: selectedTag } = useSearchRuntime();
   const router = useRouter();
   const [ref, bounds] = useMeasure<HTMLDivElement>();
 
@@ -215,20 +164,18 @@ export function SearchList({
     [active],
   );
 
+  const filteredItems = selectedTag ? items.filter((item) => item.tag === selectedTag) : items;
+
   if (items.length === 0) return null;
 
   return (
     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: bounds.height, opacity: 1 }}>
-      <ScrollArea
-        ref={ref}
-        className={cn('flex max-h-[450px] flex-col p-4 border-t border-border/60', props.className)}
-        {...props}
-      >
+      <ScrollArea ref={ref} className={cn('flex max-h-[450px] flex-col p-4', className)} {...props}>
         <div className="flex flex-col gap-3">
           <ListContext.Provider value={memoizedValue}>
             {items.length === 0 && search.length > 0 && Empty()}
 
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <Fragment key={item.id}>{Item({ item, onClick: () => onOpen(item) })}</Fragment>
             ))}
           </ListContext.Provider>
@@ -263,9 +210,9 @@ export function SearchListItem({
       )}
       aria-current={active ? 'true' : undefined}
       className={cn(
-        'flex min-h-10 w-full flex-col justify-center select-none border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-start text-sm',
-        active && 'bg-accent/50 text-accent-foreground',
+        'flex min-h-10 w-full flex-col justify-center border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-sm',
         className,
+        active && 'bg-accent/50 text-accent-foreground',
       )}
       onPointerMove={() => setActive(item.id)}
       {...props}
@@ -311,8 +258,6 @@ export function SearchIndicatorIcon({ className, ...props }: ComponentProps<'div
 }
 
 export interface TagsListProps extends ComponentProps<'div'> {
-  tag?: string;
-  onTagChange: (tag: string | undefined) => void;
   allowClear?: boolean;
 }
 
@@ -327,22 +272,22 @@ const itemVariants = cva(
   },
 );
 
-export function TagsList({ tag, onTagChange, allowClear = false, className, ...props }: TagsListProps) {
-  const memoizedValue = useMemo(
-    () => ({
-      value: tag,
-      onValueChange: onTagChange,
-      allowClear,
-    }),
-    [tag, onTagChange, allowClear],
-  );
+export function TagsList({ allowClear = false, className, children, ...props }: TagsListProps) {
+  const { results } = useSearchRuntime();
+  const availableTags = Array.from(new Set(results.map((result) => result.tag)));
+
+  if (availableTags.length === 0) return null;
 
   return (
-    <div
-      className={cn('flex flex-wrap items-center border-t border-border/60 gap-1 px-4 py-3', className)}
-      {...props}
-    >
-      <TagsListContext.Provider value={memoizedValue}>{props.children}</TagsListContext.Provider>
+    <div className={cn('flex flex-wrap items-center gap-1 px-4 py-3', className)} {...props}>
+      <TagsListContext.Provider value={{ allowClear }}>
+        {children ||
+          availableTags.map((tag) => (
+            <TagsListItem key={tag} value={tag}>
+              {tag}
+            </TagsListItem>
+          ))}
+      </TagsListContext.Provider>
     </div>
   );
 }
@@ -354,8 +299,9 @@ export function TagsListItem({
 }: ComponentProps<'button'> & {
   value: string;
 }) {
-  const { onValueChange, value: selectedValue, allowClear } = useTagsList();
-  const selected = value === selectedValue;
+  const { tag: selectedTag, onTagChange } = useSearchRuntime();
+  const { allowClear } = useTagsList();
+  const selected = value === selectedTag;
 
   return (
     <button
@@ -363,7 +309,7 @@ export function TagsListItem({
       data-active={selected}
       className={cn(itemVariants({ active: selected, className }))}
       onClick={() => {
-        onValueChange(selected && allowClear ? undefined : value);
+        onTagChange?.(selected && allowClear ? undefined : value);
       }}
       tabIndex={-1}
       {...props}
@@ -375,12 +321,6 @@ export function TagsListItem({
 export function useSearchRuntime() {
   const ctx = useContext(SearchContext);
   if (!ctx) throw new Error('useSearchRuntime must be used within a Search');
-  return ctx;
-}
-
-export function useSearchDialog() {
-  const ctx = useContext(DialogContext);
-  if (!ctx) throw new Error('useSearchDialog must be used within a SearchDialog');
   return ctx;
 }
 

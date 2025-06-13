@@ -16,7 +16,7 @@ export const GET = adapters.nextAppHandler({
         id: result.id,
         url: metadata.source_url || '#',
         title: metadata.title || 'Untitled',
-        tag: metadata.tag || 'all',
+        tag: metadata.tag || '',
         breadcrumb: metadata.breadcrumb || [],
       };
     });
