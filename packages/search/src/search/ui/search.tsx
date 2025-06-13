@@ -21,12 +21,15 @@ import { motion } from 'motion/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Result } from '../lib/types';
 
-interface SearchDialogContextProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+interface SearchContextProps {
   search: string;
   onSearchChange: (value: string) => void;
   isLoading: boolean;
+}
+
+interface DialogContextProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface ListContextProps {
@@ -40,42 +43,43 @@ interface TagsListContextProps {
   allowClear: boolean;
 }
 
-const Context = createContext<SearchDialogContextProps | null>(null);
+const SearchContext = createContext<SearchContextProps | null>(null);
+
+const DialogContext = createContext<DialogContextProps | null>(null);
 
 const ListContext = createContext<ListContextProps | null>(null);
 
 const TagsListContext = createContext<TagsListContextProps | null>(null);
 
-export interface SearchDialogProps extends SearchDialogContextProps {
+export interface SearchProps extends SearchContextProps {
   children: ReactNode;
 }
 
-export function SearchDialog({
-  open,
-  onOpenChange,
-  search,
-  onSearchChange,
-  isLoading = false,
-  children,
-}: SearchDialogProps) {
+export interface SearchDialogProps extends DialogContextProps {
+  children: ReactNode;
+}
+
+export function Search({ search, onSearchChange, isLoading = false, children }: SearchProps) {
   const [active, setActive] = useState<string | null>(null);
 
   const memoizedValue = useMemo(
     () => ({
-      open,
-      onOpenChange,
       search,
       onSearchChange,
       active,
       setActive,
       isLoading,
     }),
-    [open, onOpenChange, search, onSearchChange, active, setActive, isLoading],
+    [search, onSearchChange, active, setActive, isLoading],
   );
 
+  return <SearchContext.Provider value={memoizedValue}>{children}</SearchContext.Provider>;
+}
+
+export function SearchDialog({ children, open, onOpenChange }: SearchDialogProps) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-      <Context.Provider value={memoizedValue}>{children}</Context.Provider>
+      {children}
     </DialogPrimitive.Root>
   );
 }
@@ -84,8 +88,8 @@ export function SearchDialogHeader({ className, ...props }: ComponentProps<'div'
   return <div className={cn('flex flex-row items-center gap-2 px-4', className)} {...props} />;
 }
 
-export function SearchDialogInput({ className, ...props }: ComponentProps<'input'>) {
-  const { search, onSearchChange } = useSearchDialog();
+export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
+  const { search, onSearchChange } = useSearchRuntime();
 
   return (
     <input
@@ -142,10 +146,10 @@ export function SearchDialogContent({
   );
 }
 
-export function SearchDialogList({
+export function SearchList({
   items,
   Empty = () => <div className="py-12 text-center text-sm">No results found</div>,
-  Item = (props) => <SearchDialogListItem {...props} />,
+  Item = (props) => <SearchListItem {...props} />,
   ...props
 }: React.ComponentProps<typeof ScrollArea> & {
   items: Result[];
@@ -159,16 +163,15 @@ export function SearchDialogList({
   Item?: (props: { item: Result; onClick: () => void }) => ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
-  const { onOpenChange, search } = useSearchDialog();
+  const { search } = useSearchRuntime();
   const router = useRouter();
   const [ref, bounds] = useMeasure<HTMLDivElement>();
 
   const onOpen = useCallback(
     ({ url }: Result) => {
       router.push(url);
-      onOpenChange(false);
     },
-    [router, onOpenChange],
+    [router],
   );
 
   const onKey = useCallback(
@@ -215,12 +218,12 @@ export function SearchDialogList({
   if (items.length === 0) return null;
 
   return (
-    <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: bounds.height, opacity: 1 }}
-      className="border-t border-border/60"
-    >
-      <ScrollArea ref={ref} className={cn('flex max-h-[450px] flex-col p-4', props.className)} {...props}>
+    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: bounds.height, opacity: 1 }}>
+      <ScrollArea
+        ref={ref}
+        className={cn('flex max-h-[450px] flex-col p-4 border-t border-border/60', props.className)}
+        {...props}
+      >
         <div className="flex flex-col gap-3">
           <ListContext.Provider value={memoizedValue}>
             {items.length === 0 && search.length > 0 && Empty()}
@@ -235,7 +238,7 @@ export function SearchDialogList({
   );
 }
 
-export function SearchDialogListItem({
+export function SearchListItem({
   item,
   className,
   ...props
@@ -286,8 +289,8 @@ export function SearchDialogListItem({
   );
 }
 
-export function SearchDialogIcon({ className, ...props }: ComponentProps<'div'>) {
-  const { isLoading } = useSearchDialog();
+export function SearchIndicatorIcon({ className, ...props }: ComponentProps<'div'>) {
+  const { isLoading } = useSearchRuntime();
 
   return (
     <div className={cn('relative size-4', className)} {...props}>
@@ -336,7 +339,7 @@ export function TagsList({ tag, onTagChange, allowClear = false, className, ...p
 
   return (
     <div
-      className={cn('flex flex-wrap items-center border-t border-border/60 gap-1 p-3', className)}
+      className={cn('flex flex-wrap items-center border-t border-border/60 gap-1 px-4 py-3', className)}
       {...props}
     >
       <TagsListContext.Provider value={memoizedValue}>{props.children}</TagsListContext.Provider>
@@ -369,9 +372,14 @@ export function TagsListItem({
     </button>
   );
 }
+export function useSearchRuntime() {
+  const ctx = useContext(SearchContext);
+  if (!ctx) throw new Error('useSearchRuntime must be used within a Search');
+  return ctx;
+}
 
 export function useSearchDialog() {
-  const ctx = useContext(Context);
+  const ctx = useContext(DialogContext);
   if (!ctx) throw new Error('useSearchDialog must be used within a SearchDialog');
   return ctx;
 }

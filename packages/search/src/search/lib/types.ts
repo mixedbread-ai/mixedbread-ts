@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { SearchQuerySchema } from './vaildations';
+import { FileSearchResponse } from '@mixedbread/sdk/resources/vector-stores.mjs';
 
 export interface SearchMetadata {
   title?: string;
@@ -19,3 +20,5 @@ export interface Result {
 }
 
 export type SearchQuery = z.infer<typeof SearchQuerySchema>;
+
+export type TransformFunc = (results: FileSearchResponse['data']) => Result[];

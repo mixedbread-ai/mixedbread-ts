@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { search } from '../lib/search';
 import { BadRequestError, InternalServerError } from '../lib/errors';
+import { TransformFunc } from '../lib/types';
 
-export function nextAppHandler() {
+export function nextAppHandler({ transform }: { transform?: TransformFunc } = {}) {
   return async function GET(request: NextRequest) {
     try {
       const { searchParams } = new URL(request.url);
       const params = Object.fromEntries(searchParams);
 
-      const results = await search(params);
+      const results = await search(params, transform);
 
       return NextResponse.json(results);
     } catch (error) {
@@ -26,7 +27,7 @@ export function nextAppHandler() {
   };
 }
 
-export function nextPagesHandler() {
+export function nextPagesHandler({ transform }: { transform?: TransformFunc } = {}) {
   return async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
       return response.status(405).json({ error: 'Method not allowed' });
@@ -35,7 +36,7 @@ export function nextPagesHandler() {
     try {
       const params = request.query;
 
-      const results = await search(params);
+      const results = await search(params, transform);
 
       return response.json(results);
     } catch (error) {

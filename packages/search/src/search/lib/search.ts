@@ -1,9 +1,12 @@
 import { mxbai } from './mxbai';
-import { Result, SearchMetadata } from './types';
+import { Result, SearchMetadata, TransformFunc } from './types';
 import { SearchQuerySchema } from './vaildations';
 import { BadRequestError, InternalServerError } from './errors';
 
-export async function search(rawParams: Record<string, unknown>): Promise<Result[]> {
+export async function search(
+  rawParams: Record<string, unknown>,
+  transform?: TransformFunc,
+): Promise<Result[]> {
   if (!process.env.MXBAI_API_KEY || !process.env.VECTOR_STORE_ID) {
     throw new InternalServerError('Environment setup failed');
   }
@@ -29,6 +32,10 @@ export async function search(rawParams: Record<string, unknown>): Promise<Result
       chunks_per_file: 2,
     },
   });
+
+  if (transform) {
+    return transform(res.data);
+  }
 
   const results = res.data.map((item) => {
     const metadata = item.metadata as SearchMetadata;

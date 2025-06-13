@@ -1,3 +1,24 @@
 import { adapters } from '@/search/adapters';
 
-export const GET = adapters.nextAppHandler();
+interface SearchMetadata {
+  title?: string;
+  path?: string;
+  source_url?: string;
+  tag?: string;
+  breadcrumb?: string[];
+}
+
+export const GET = adapters.nextAppHandler({
+  transform: (results) => {
+    return results.map((result) => {
+      const metadata = result.metadata as SearchMetadata;
+      return {
+        id: result.id,
+        url: metadata.source_url || '#',
+        title: metadata.title || 'Untitled',
+        tag: metadata.tag || 'all',
+        breadcrumb: metadata.breadcrumb || [],
+      };
+    });
+  },
+});
