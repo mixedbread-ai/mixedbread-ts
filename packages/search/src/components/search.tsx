@@ -18,6 +18,8 @@ import {
 } from 'react';
 import { ScrollArea } from './ui/scroll-area';
 import { Result } from '@/hooks/use-search';
+import { useMeasure } from '@/hooks/use-measure';
+import { motion } from 'motion/react';
 
 interface SearchDialogContextProps {
   open: boolean;
@@ -79,7 +81,7 @@ export function SearchDialog({
 }
 
 export function SearchDialogHeader({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('flex flex-row items-center gap-2 px-3', className)} {...props} />;
+  return <div className={cn('flex flex-row items-center gap-2 px-4', className)} {...props} />;
 }
 
 export function SearchDialogInput({ className, ...props }: ComponentProps<'input'>) {
@@ -104,7 +106,7 @@ export function SearchDialogInput({ className, ...props }: ComponentProps<'input
 }
 
 export function SearchDialogFooter({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('mt-auto border-t p-3', className)} {...props} />;
+  return <div className={cn('mt-auto border-t p-4', className)} {...props} />;
 }
 
 export function SearchDialogOverlay(props: ComponentProps<typeof DialogPrimitive.Overlay>) {
@@ -159,6 +161,7 @@ export function SearchDialogList({
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
   const { onOpenChange, search } = useSearchDialog();
   const router = useRouter();
+  const [ref, bounds] = useMeasure<HTMLDivElement>();
 
   const onOpen = useCallback(
     ({ url }: Result) => {
@@ -212,17 +215,23 @@ export function SearchDialogList({
   if (items.length === 0) return null;
 
   return (
-    <ScrollArea className={cn('flex max-h-[460px] flex-col border-t p-4', props.className)} {...props}>
-      <div className="flex flex-col gap-3">
-        <ListContext.Provider value={memoizedValue}>
-          {items.length === 0 && search.length > 0 && Empty()}
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: bounds.height, opacity: 1 }}
+      className="border-t"
+    >
+      <ScrollArea ref={ref} className={cn('flex max-h-[460px] flex-col p-4', props.className)} {...props}>
+        <div className="flex flex-col gap-3">
+          <ListContext.Provider value={memoizedValue}>
+            {items.length === 0 && search.length > 0 && Empty()}
 
-          {items.map((item) => (
-            <Fragment key={item.id}>{Item({ item, onClick: () => onOpen(item) })}</Fragment>
-          ))}
-        </ListContext.Provider>
-      </div>
-    </ScrollArea>
+            {items.map((item) => (
+              <Fragment key={item.id}>{Item({ item, onClick: () => onOpen(item) })}</Fragment>
+            ))}
+          </ListContext.Provider>
+        </div>
+      </ScrollArea>
+    </motion.div>
   );
 }
 
