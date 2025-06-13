@@ -16,10 +16,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { ScrollArea } from './ui/scroll-area';
-import { Result } from '@/hooks/use-search';
-import { useMeasure } from '@/hooks/use-measure';
+import { useMeasure } from '@/search/hooks/use-measure';
 import { motion } from 'motion/react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Result } from '../lib/types';
 
 interface SearchDialogContextProps {
   open: boolean;
@@ -282,8 +282,6 @@ export function SearchDialogListItem({
         <FileTextIcon className="size-4 text-muted-foreground" />
         <span className="flex-1 truncate">{item.title}</span>
       </div>
-
-      <span className="text-xs text-muted-foreground truncate flex-1">{item.preview}</span>
     </a>
   );
 }

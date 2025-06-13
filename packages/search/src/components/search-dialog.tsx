@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearch } from '@/hooks/use-search';
+import { useSearch } from '@/search/hooks/use-search';
 import {
   SearchDialog,
   SearchDialogContent,
@@ -10,11 +10,15 @@ import {
   SearchDialogInput,
   SearchDialogList,
   SearchDialogOverlay,
-} from './search';
+} from '@/search/ui/search';
 import { MxbaiLogoIcon } from './mxbai-logo-icon';
 
 export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { search, setSearch, results, isLoading } = useSearch();
+  const mockResults = results.map((result) => ({
+    ...result,
+    breadcrumb: ['App', 'Documentation', 'API Reference'],
+  }));
 
   return (
     <SearchDialog search={search} onSearchChange={setSearch} isLoading={isLoading} {...props}>
@@ -25,7 +29,7 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
           <SearchDialogInput />
         </SearchDialogHeader>
 
-        <SearchDialogList items={results} />
+        <SearchDialogList items={mockResults} />
 
         <SearchDialogFooter className="justify-end flex">
           <p className="text-xs text-muted-foreground flex items-center gap-2">

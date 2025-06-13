@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-export interface Result {
-  id: string;
-  url: string;
-  title: string;
-  tag: string;
-  breadcrumb: string[];
-  preview: string;
-  external?: boolean;
-}
+import { Result } from '../lib/types';
 
 export interface UseSearchConfig {
   /**
