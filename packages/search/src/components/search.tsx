@@ -88,6 +88,10 @@ export function SearchDialogInput({ className, ...props }: ComponentProps<'input
   return (
     <input
       placeholder="Search"
+      aria-label="Search"
+      autoComplete="off"
+      autoCorrect="off"
+      spellCheck="false"
       className={cn(
         'w-0 flex-1 bg-transparent py-3 text-base placeholder:text-muted-foreground focus-visible:outline-none',
         className,

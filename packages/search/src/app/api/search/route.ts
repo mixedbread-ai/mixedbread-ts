@@ -3,6 +3,7 @@ import { mxbai } from '@/lib/mxbai';
 import matter from 'gray-matter';
 import removeMd from 'remove-markdown';
 import { ScoredTextInputChunk } from '@mixedbread/sdk/resources';
+import { z } from 'zod';
 
 interface SearchMetadata {
   title?: string;
@@ -76,51 +77,64 @@ function createPreviewSnippet(text: string, query: string, maxLength: number = 2
   return snippet;
 }
 
+// Zod schema for query validation
+const searchQuerySchema = z.object({
+  query: z.string().min(1, 'Query is required').trim(),
+  top_k: z.coerce.number().int().min(1).max(50).default(10),
+});
+
 export async function GET(request: NextRequest) {
-  if (!process.env.MXBAI_API_KEY || !process.env.VECTOR_STORE_ID) {
-    return NextResponse.json({ error: 'Environment setup failed' }, { status: 500 });
+  try {
+    if (!process.env.MXBAI_API_KEY || !process.env.VECTOR_STORE_ID) {
+      return NextResponse.json({ error: 'Environment setup failed' }, { status: 500 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const params = Object.fromEntries(searchParams);
+
+    // Validate and parse query parameters
+    const validation = searchQuerySchema.safeParse(params);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          error: 'Invalid request parameters',
+          details: validation.error.format(),
+        },
+        { status: 400 },
+      );
+    }
+
+    const { query, top_k: topK } = validation.data;
+
+    const res = await mxbai.vectorStores.files.search({
+      query,
+      vector_store_ids: [process.env.VECTOR_STORE_ID],
+      top_k: topK,
+      search_options: {
+        return_metadata: true,
+        return_chunks: true,
+        chunks_per_file: 2,
+      },
+    });
+
+    const results = res.data.map((item) => {
+      const firstChunk = item.chunks?.[0] as ScoredTextInputChunk;
+      const preview = firstChunk?.text ? createPreviewSnippet(firstChunk.text, query) : '';
+
+      return {
+        id: item.id,
+        url: (item.metadata as SearchMetadata)?.source_url || '#',
+        title: (item.metadata as SearchMetadata)?.title || 'Untitled',
+        tag: (item.metadata as SearchMetadata)?.tag || 'all',
+        breadcrumb: ['App', 'Documentation', 'API Reference'],
+        preview,
+      };
+    });
+
+    return NextResponse.json(results);
+  } catch (error) {
+    // Don't expose internal error details
+    return NextResponse.json({ error: 'Search failed. Please try again later.' }, { status: 500 });
   }
-
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get('query');
-  const topKParam = searchParams.get('top_k');
-
-  if (!query) {
-    return NextResponse.json({ error: 'Query is required' }, { status: 400 });
-  }
-
-  // Parse top_k with fallback to default value
-  const topK = topKParam ? parseInt(topKParam, 10) : 10;
-
-  // Validate top_k is a reasonable number
-  if (isNaN(topK) || topK < 1 || topK > 100) {
-    return NextResponse.json({ error: 'Invalid top_k value' }, { status: 400 });
-  }
-
-  const res = await mxbai.vectorStores.files.search({
-    query,
-    vector_store_ids: [process.env.VECTOR_STORE_ID],
-    top_k: topK,
-    search_options: {
-      return_metadata: true,
-      return_chunks: true,
-      chunks_per_file: 2,
-    },
-  });
-
-  const results = res.data.map((item) => {
-    const firstChunk = item.chunks?.[0] as ScoredTextInputChunk;
-    const preview = firstChunk?.text ? createPreviewSnippet(firstChunk.text, query) : '';
-
-    return {
-      id: item.id,
-      url: (item.metadata as SearchMetadata)?.source_url || '#',
-      title: (item.metadata as SearchMetadata)?.title || 'Untitled',
-      tag: (item.metadata as SearchMetadata)?.tag || 'all',
-      breadcrumb: ['App', 'Documentation', 'API Reference'],
-      preview,
-    };
-  });
-
-  return NextResponse.json(results);
 }
