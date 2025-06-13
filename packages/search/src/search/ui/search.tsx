@@ -106,7 +106,7 @@ export function SearchDialogInput({ className, ...props }: ComponentProps<'input
 }
 
 export function SearchDialogFooter({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('mt-auto border-t p-4', className)} {...props} />;
+  return <div className={cn('mt-auto border-t border-border/60 p-4', className)} {...props} />;
 }
 
 export function SearchDialogOverlay(props: ComponentProps<typeof DialogPrimitive.Overlay>) {
@@ -218,9 +218,9 @@ export function SearchDialogList({
     <motion.div
       initial={{ height: 0, opacity: 0 }}
       animate={{ height: bounds.height, opacity: 1 }}
-      className="border-t"
+      className="border-t border-border/60"
     >
-      <ScrollArea ref={ref} className={cn('flex max-h-[460px] flex-col p-4', props.className)} {...props}>
+      <ScrollArea ref={ref} className={cn('flex max-h-[450px] flex-col p-4', props.className)} {...props}>
         <div className="flex flex-col gap-3">
           <ListContext.Provider value={memoizedValue}>
             {items.length === 0 && search.length > 0 && Empty()}
@@ -260,7 +260,7 @@ export function SearchDialogListItem({
       )}
       aria-current={active ? 'true' : undefined}
       className={cn(
-        'flex min-h-10 w-full flex-col justify-center select-none border border-border/50 gap-2.5 px-4 py-2 rounded-lg text-start text-sm',
+        'flex min-h-10 w-full flex-col justify-center select-none border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-start text-sm',
         active && 'bg-accent/50 text-accent-foreground',
         className,
       )}
@@ -335,7 +335,10 @@ export function TagsList({ tag, onTagChange, allowClear = false, className, ...p
   );
 
   return (
-    <div className={cn('flex flex-wrap items-center border-t gap-1 p-3', className)} {...props}>
+    <div
+      className={cn('flex flex-wrap items-center border-t border-border/60 gap-1 p-3', className)}
+      {...props}
+    >
       <TagsListContext.Provider value={memoizedValue}>{props.children}</TagsListContext.Provider>
     </div>
   );
