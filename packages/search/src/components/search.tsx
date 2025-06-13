@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { ChevronRightIcon, FileText, LoaderCircle, Search as SearchIcon } from 'lucide-react';
+import { ChevronRightIcon, FileTextIcon, LoaderCircleIcon, SearchIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useRouter } from 'next/navigation';
@@ -279,7 +279,7 @@ export function SearchDialogListItem({
       </div>
 
       <div className="flex items-center gap-2">
-        <FileText className="size-4 text-muted-foreground" />
+        <FileTextIcon className="size-4 text-muted-foreground" />
         <span className="flex-1 truncate">{item.title}</span>
       </div>
 
@@ -293,7 +293,7 @@ export function SearchDialogIcon({ className, ...props }: ComponentProps<'div'>)
 
   return (
     <div className={cn('relative size-4', className)} {...props}>
-      <LoaderCircle
+      <LoaderCircleIcon
         className={cn(
           'absolute size-full animate-spin text-primary transition-opacity',
           !isLoading && 'opacity-0',

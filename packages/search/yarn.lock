@@ -1890,7 +1890,7 @@ for-each@^0.3.3, for-each@^0.3.5:
 
 framer-motion@^12.17.3:
   version "12.17.3"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.17.3.tgz#9f39d051d6d1d57d93dee991047b6ddf537f42d9"
+  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-12.17.3.tgz"
   integrity sha512-+1GMxQvZGUu20clzYdUWQY+iUWGBFc6UmpxvZBJjWu++rPdj7imXcQITzVs+QLKyjOpLoPOOar2KAOeYL88YQg==
   dependencies:
     motion-dom "^12.17.3"
@@ -2556,19 +2556,19 @@ mkdirp@^3.0.1:
 
 motion-dom@^12.17.3:
   version "12.17.3"
-  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.17.3.tgz#4d56225a6a9ef51c40a329f5a9174a511b2dafee"
+  resolved "https://registry.npmjs.org/motion-dom/-/motion-dom-12.17.3.tgz"
   integrity sha512-nJrH4O9Z6lBSgllD5t+2lF1O8LkBxOq9QSUUmygHJVzHiTLaYpZRgd+U70919IL0CMbFBaFGEJ8hDSwnrmcyZw==
   dependencies:
     motion-utils "^12.12.1"
 
 motion-utils@^12.12.1:
   version "12.12.1"
-  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.12.1.tgz#63e28751325cb9d1cd684f3c273a570022b0010e"
+  resolved "https://registry.npmjs.org/motion-utils/-/motion-utils-12.12.1.tgz"
   integrity sha512-f9qiqUHm7hWSLlNW8gS9pisnsN7CRFRD58vNjptKdsqFLpkVnX00TNeD6Q0d27V9KzT7ySFyK1TZ/DShfVOv6w==
 
 motion@^12.17.3:
   version "12.17.3"
-  resolved "https://registry.yarnpkg.com/motion/-/motion-12.17.3.tgz#c7afdbbf2e1be0f4eb486e13c1a9184897de7752"
+  resolved "https://registry.npmjs.org/motion/-/motion-12.17.3.tgz"
   integrity sha512-zf4+ppV5HE2bvaGZDWK6oySvS7uig/9eniq0JX/JuM0G9LqrLGxtFUF7b8CUMJ/0bo2ReID6yGWbS0LUxKzYZQ==
   dependencies:
     framer-motion "^12.17.3"
@@ -2593,6 +2593,11 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
+
+next-themes@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.npmjs.org/next-themes/-/next-themes-0.4.6.tgz"
+  integrity sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==
 
 next@15.3.3:
   version "15.3.3"

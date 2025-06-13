@@ -1,13 +1,19 @@
-'use client';
-
 import { SearchTrigger } from '@/components/search-trigger';
+import { SiteHeader } from '@/components/site-header';
 
 export default function Home() {
   return (
-    <main className="flex items-center justify-center h-screen">
-      <div className="w-full max-w-md">
-        <SearchTrigger />
-      </div>
-    </main>
+    <div className="relative flex min-h-svh flex-col">
+      <SiteHeader />
+      <main className="h-[calc(85svh-var(--spacing)*14)] mx-auto px-4">
+        <div className="container flex max-w-screen-2xl gap-8 h-full flex-1 flex-col items-center justify-center">
+          <h1 className="text-center font-bold leading-tight tracking-tighter text-4xl md:text-5xl lg:text-6xl">
+            Search Anything...
+          </h1>
+
+          <SearchTrigger />
+        </div>
+      </main>
+    </div>
   );
 }
