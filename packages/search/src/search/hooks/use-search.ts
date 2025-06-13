@@ -97,7 +97,7 @@ export function useSearch(config: UseSearchConfig = {}): UseSearchReturn {
       try {
         const searchParams = new URLSearchParams({
           query,
-          top_k: topK.toString(),
+          topK: topK.toString(),
         });
 
         const response = await fetch(`${apiPath}?${searchParams}`, {

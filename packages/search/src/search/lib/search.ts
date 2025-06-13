@@ -1,5 +1,5 @@
 import { mxbai } from './mxbai';
-import { Result, SearchMetadata, SearchQuery } from './types';
+import { Result, SearchMetadata } from './types';
 import { SearchQuerySchema } from './vaildations';
 import { BadRequestError, InternalServerError } from './errors';
 
@@ -15,9 +15,9 @@ export async function search(rawParams: Record<string, unknown>): Promise<Result
     throw new BadRequestError('Invalid request parameters');
   }
 
-  const data: SearchQuery = validation.data;
+  const data = validation.data;
 
-  const { query, top_k: topK } = data;
+  const { query, topK } = data;
 
   const res = await mxbai.vectorStores.files.search({
     query,
