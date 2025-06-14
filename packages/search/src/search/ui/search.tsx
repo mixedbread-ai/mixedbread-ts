@@ -3,7 +3,6 @@
 import { ChevronRightIcon, FileTextIcon, LoaderCircleIcon, SearchIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { useRouter } from 'next/navigation';
 import {
   type ComponentProps,
   Fragment,
@@ -99,6 +98,7 @@ export function SearchList({
   Empty = () => <div className="py-12 text-center text-sm">No results found</div>,
   Item = (props) => <SearchListItem {...props} />,
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof ScrollArea> & {
   items: Result[];
@@ -109,19 +109,11 @@ export function SearchList({
   /**
    * Renderer for items
    */
-  Item?: (props: { item: Result; onClick: () => void }) => ReactNode;
+  Item?: (props: { item: Result; onClick?: () => void }) => ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
   const { search, tag: selectedTag } = useSearchRuntime();
-  const router = useRouter();
   const [ref, bounds] = useMeasure<HTMLDivElement>();
-
-  const onOpen = useCallback(
-    ({ url }: Result) => {
-      router.push(url);
-    },
-    [router],
-  );
 
   const onKey = useCallback(
     (e: KeyboardEvent) => {
@@ -138,11 +130,19 @@ export function SearchList({
       if (e.key === 'Enter') {
         const selected = items.find((item) => item.id === active);
 
-        if (selected) onOpen(selected);
+        if (selected) {
+          // Trigger click on the active item element to respect any custom onClick
+          const activeElement = document.querySelector(
+            `[data-search-item-id="${selected.id}"]`,
+          ) as HTMLButtonElement;
+          if (activeElement) {
+            activeElement.click();
+          }
+        }
         e.preventDefault();
       }
     },
-    [items, active, onOpen, setActive],
+    [items, active, setActive],
   );
 
   useEffect(() => {
@@ -170,14 +170,12 @@ export function SearchList({
 
   return (
     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: bounds.height, opacity: 1 }}>
-      <ScrollArea ref={ref} className={cn('flex max-h-[450px] flex-col p-4', className)} {...props}>
+      <ScrollArea ref={ref} className={cn('flex flex-col p-4', className)} {...props}>
         <div className="flex flex-col gap-3">
           <ListContext.Provider value={memoizedValue}>
             {items.length === 0 && search.length > 0 && Empty()}
 
-            {filteredItems.map((item) => (
-              <Fragment key={item.id}>{Item({ item, onClick: () => onOpen(item) })}</Fragment>
-            ))}
+            {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
           </ListContext.Provider>
         </div>
       </ScrollArea>
@@ -188,18 +186,25 @@ export function SearchList({
 export function SearchListItem({
   item,
   className,
+  onClick,
   ...props
-}: ComponentProps<'a'> & {
+}: ComponentProps<'button'> & {
   item: Result;
+  onClick?: () => void;
 }) {
   const { active: activeId, setActive } = useSearchList();
   const active = item.id === activeId;
 
+  const handleClick =
+    onClick ||
+    (() => {
+      window.location.href = item.url;
+    });
+
   return (
-    <a
-      href={item.url}
+    <button
       ref={useCallback(
-        (element: HTMLAnchorElement | null) => {
+        (element: HTMLButtonElement | null) => {
           if (active && element) {
             element.scrollIntoView({
               block: 'nearest',
@@ -208,6 +213,7 @@ export function SearchListItem({
         },
         [active],
       )}
+      data-search-item-id={item.id}
       aria-current={active ? 'true' : undefined}
       className={cn(
         'flex min-h-10 w-full flex-col justify-center border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-sm',
@@ -215,6 +221,7 @@ export function SearchListItem({
         active && 'bg-accent/50 text-accent-foreground',
       )}
       onPointerMove={() => setActive(item.id)}
+      onClick={handleClick}
       {...props}
     >
       <div className="flex items-center gap-1">
@@ -229,10 +236,10 @@ export function SearchListItem({
       </div>
 
       <div className="flex items-center gap-2">
-        <FileTextIcon className="size-4 text-muted-foreground" />
-        <span className="flex-1 truncate">{item.title}</span>
+        <FileTextIcon className="size-4 shrink-0 text-muted-foreground" />
+        <span className="line-clamp-1 text-left">{item.title}</span>
       </div>
-    </a>
+    </button>
   );
 }
 
@@ -318,6 +325,7 @@ export function TagsListItem({
     </button>
   );
 }
+
 export function useSearchRuntime() {
   const ctx = useContext(SearchContext);
   if (!ctx) throw new Error('useSearchRuntime must be used within a Search');

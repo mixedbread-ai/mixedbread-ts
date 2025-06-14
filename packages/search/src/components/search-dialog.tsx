@@ -38,7 +38,7 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
 
           <TagsList allowClear={true} className="border-t border-border/60" />
 
-          <SearchList items={mockedResults} className="border-t border-border/60" />
+          <SearchList items={mockedResults} className="border-t border-border/60 max-h-[400px]" />
 
           <SearchDialogFooter className="justify-end flex">
             <p className="text-xs text-muted-foreground flex items-center gap-2">
