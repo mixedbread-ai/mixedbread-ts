@@ -4,7 +4,6 @@ import { FileSearchResponse } from '@mixedbread/sdk/resources/vector-stores.mjs'
 
 export interface SearchMetadata {
   title?: string;
-  path?: string;
   url?: string;
   tag?: string;
   breadcrumb?: string[];

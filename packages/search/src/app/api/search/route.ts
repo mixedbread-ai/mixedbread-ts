@@ -2,7 +2,6 @@ import { adapters } from '@/search/adapters';
 
 interface SearchMetadata {
   title?: string;
-  path?: string;
   source_url?: string;
   tag?: string;
   breadcrumb?: string[];

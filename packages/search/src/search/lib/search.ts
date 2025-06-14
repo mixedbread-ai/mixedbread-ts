@@ -28,8 +28,6 @@ export async function search(
     top_k: topK,
     search_options: {
       return_metadata: true,
-      return_chunks: true,
-      chunks_per_file: 2,
     },
   });
 
