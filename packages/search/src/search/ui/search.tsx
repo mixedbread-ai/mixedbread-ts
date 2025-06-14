@@ -225,22 +225,26 @@ export function SearchListItem({
       onClick={handleClick}
       {...props}
     >
-      <div className="flex items-center gap-1">
-        {item.breadcrumb.map((breadcrumb, index) => (
-          <Fragment key={breadcrumb}>
-            <span className="text-xs text-muted-foreground">{breadcrumb}</span>
-            {index !== item.breadcrumb.length - 1 && (
-              <ChevronRightIcon className="size-3 text-muted-foreground" />
-            )}
-          </Fragment>
-        ))}
-      </div>
+      <SearchListItemBreadcrumb breadcrumb={item.breadcrumb} />
 
       <div className="flex items-center gap-2">
         <FileTextIcon className="size-4 shrink-0 text-muted-foreground" />
         <span className="line-clamp-1 text-left">{item.title}</span>
       </div>
     </button>
+  );
+}
+
+export function SearchListItemBreadcrumb({ breadcrumb }: { breadcrumb: string[] }) {
+  return (
+    <div className="flex items-center gap-1">
+      {breadcrumb.map((breadcrumb, index) => (
+        <Fragment key={breadcrumb}>
+          <span className="text-xs text-muted-foreground">{breadcrumb}</span>
+          {index !== breadcrumb.length - 1 && <ChevronRightIcon className="size-3 text-muted-foreground" />}
+        </Fragment>
+      ))}
+    </div>
   );
 }
 
