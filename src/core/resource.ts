@@ -2,7 +2,7 @@
 
 import type { Mixedbread } from '../client';
 
-export class APIResource {
+export abstract class APIResource {
   protected _client: Mixedbread;
 
   constructor(client: Mixedbread) {
