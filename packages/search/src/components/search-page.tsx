@@ -2,14 +2,21 @@
 
 import { useSearch } from '@/search/hooks/use-search';
 import { SearchList, SearchIndicatorIcon, TagsList, SearchInput, Search } from '@/search/ui/search';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { mockResults, mockTags } from '@/lib/utils';
 
 export function CustomSearchPage() {
   const { search, setSearch, results, isLoading } = useSearch();
   const [selectedTag, setSelectedTag] = useState<string | undefined>(mockTags[0]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const mockedResults = mockResults(results);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   return (
     <Search
@@ -23,7 +30,11 @@ export function CustomSearchPage() {
       <div className="flex items-center justify-between">
         <div className="relative w-full">
           <SearchIndicatorIcon className="absolute left-4 top-1/2 -translate-y-1/2" />
-          <SearchInput placeholder="Search..." className="w-full border rounded-md text-sm pl-10" />
+          <SearchInput
+            ref={inputRef}
+            placeholder="Search..."
+            className="w-full border rounded-md text-sm pl-10"
+          />
         </div>
       </div>
 

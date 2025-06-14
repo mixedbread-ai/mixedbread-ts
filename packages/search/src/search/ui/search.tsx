@@ -13,8 +13,8 @@ import {
   useEffect,
   useMemo,
   useState,
+  type PropsWithChildren,
 } from 'react';
-import { useMeasure } from '@/search/hooks/use-measure';
 import { motion } from 'motion/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Result } from '../lib/types';
@@ -112,8 +112,7 @@ export function SearchList({
   Item?: (props: { item: Result; onClick?: () => void }) => ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
-  const { search, tag: selectedTag } = useSearchRuntime();
-  const [ref, bounds] = useMeasure<HTMLDivElement>();
+  const { tag: selectedTag } = useSearchRuntime();
 
   const onKey = useCallback(
     (e: KeyboardEvent) => {
@@ -166,20 +165,22 @@ export function SearchList({
 
   const filteredItems = selectedTag ? items.filter((item) => item.tag === selectedTag) : items;
 
-  if (items.length === 0) return null;
-
   return (
-    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: bounds.height, opacity: 1 }}>
-      <ScrollArea ref={ref} className={cn('flex flex-col p-4', className)} {...props}>
-        <div className="flex flex-col gap-3">
-          <ListContext.Provider value={memoizedValue}>
-            {items.length === 0 && search.length > 0 && Empty()}
+    <SearchIf hasResults>
+      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}>
+        <ScrollArea className={cn('flex flex-col p-4', className)} {...props}>
+          <div className="flex flex-col gap-3">
+            <ListContext.Provider value={memoizedValue}>
+              <SearchIf isEmpty={true}>
+                <Empty />
+              </SearchIf>
 
-            {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
-          </ListContext.Provider>
-        </div>
-      </ScrollArea>
-    </motion.div>
+              {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
+            </ListContext.Provider>
+          </div>
+        </ScrollArea>
+      </motion.div>
+    </SearchIf>
   );
 }
 
@@ -243,23 +244,61 @@ export function SearchListItem({
   );
 }
 
-export function SearchIndicatorIcon({ className, ...props }: ComponentProps<'div'>) {
-  const { isLoading } = useSearchRuntime();
+type SearchIfFilters = {
+  isLoading?: boolean;
+  hasResults?: boolean;
+  isEmpty?: boolean;
+  hasQuery?: boolean;
+  hasTag?: boolean;
+  hasMultipleTags?: boolean;
+  hasAvailableTags?: boolean;
+};
 
+type UseSearchIfProps = SearchIfFilters;
+
+const useSearchIf = (props: UseSearchIfProps) => {
+  const { search, results, isLoading, tag } = useSearchRuntime();
+
+  if (props.isLoading !== undefined && props.isLoading !== isLoading) return false;
+
+  if (props.hasResults === true && results.length === 0) return false;
+  if (props.hasResults === false && results.length > 0) return false;
+
+  if (props.isEmpty === true && (search.length === 0 || results.length > 0)) return false;
+  if (props.isEmpty === false && results.length === 0) return false;
+
+  if (props.hasQuery === true && search.length === 0) return false;
+  if (props.hasQuery === false && search.length > 0) return false;
+
+  if (props.hasTag === true && !tag) return false;
+  if (props.hasTag === false && tag) return false;
+
+  const availableTags = Array.from(new Set(results.map((result) => result.tag)));
+  if (props.hasMultipleTags === true && availableTags.length <= 1) return false;
+  if (props.hasMultipleTags === false && availableTags.length > 1) return false;
+
+  if (props.hasAvailableTags === true && availableTags.length === 0) return false;
+  if (props.hasAvailableTags === false && availableTags.length > 0) return false;
+
+  return true;
+};
+
+export type SearchIfProps = PropsWithChildren<UseSearchIfProps>;
+
+export function SearchIf({ children, ...query }: SearchIfProps) {
+  const result = useSearchIf(query);
+  return result ? children : null;
+}
+
+export function SearchIndicatorIcon({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div className={cn('relative size-4', className)} {...props}>
-      <LoaderCircleIcon
-        className={cn(
-          'absolute size-full animate-spin text-primary transition-opacity',
-          !isLoading && 'opacity-0',
-        )}
-      />
-      <SearchIcon
-        className={cn(
-          'absolute size-full text-muted-foreground transition-opacity',
-          isLoading && 'opacity-0',
-        )}
-      />
+      <SearchIf isLoading>
+        <LoaderCircleIcon className="absolute size-full animate-spin text-primary transition-opacity" />
+      </SearchIf>
+      <SearchIf isLoading={false}>
+        <SearchIcon className="absolute size-full text-muted-foreground transition-opacity" />
+      </SearchIf>
     </div>
   );
 }
@@ -283,19 +322,19 @@ export function TagsList({ allowClear = false, className, children, ...props }: 
   const { results } = useSearchRuntime();
   const availableTags = Array.from(new Set(results.map((result) => result.tag)));
 
-  if (availableTags.length === 0) return null;
-
   return (
-    <div className={cn('flex flex-wrap items-center gap-1 px-4 py-3', className)} {...props}>
-      <TagsListContext.Provider value={{ allowClear }}>
-        {children ||
-          availableTags.map((tag) => (
-            <TagsListItem key={tag} value={tag}>
-              {tag}
-            </TagsListItem>
-          ))}
-      </TagsListContext.Provider>
-    </div>
+    <SearchIf hasAvailableTags>
+      <div className={cn('flex flex-wrap items-center gap-1 px-4 py-3', className)} {...props}>
+        <TagsListContext.Provider value={{ allowClear }}>
+          {children ||
+            availableTags.map((tag) => (
+              <TagsListItem key={tag} value={tag}>
+                {tag}
+              </TagsListItem>
+            ))}
+        </TagsListContext.Provider>
+      </div>
+    </SearchIf>
   );
 }
 
