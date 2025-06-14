@@ -1,27 +1,28 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread from '@mixedbread/sdk';
-import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import { Metadata, Endpoint, HandlerFunction } from './types';
 
-export type HandlerFunction = (client: Mixedbread, args: Record<string, unknown> | undefined) => Promise<any>;
+export { Metadata, Endpoint, HandlerFunction };
 
-export type Metadata = {
-  resource: string;
-  operation: 'read' | 'write';
-  tags: string[];
-};
-
-export type Endpoint = {
-  metadata: Metadata;
-  tool: Tool;
-  handler: HandlerFunction;
-};
+import retrieve_vector_stores from './vector-stores/retrieve-vector-stores';
+import list_vector_stores from './vector-stores/list-vector-stores';
+import question_answering_vector_stores from './vector-stores/question-answering-vector-stores';
+import search_vector_stores from './vector-stores/search-vector-stores';
+import retrieve_vector_stores_files from './vector-stores/files/retrieve-vector-stores-files';
+import list_vector_stores_files from './vector-stores/files/list-vector-stores-files';
 
 export const endpoints: Endpoint[] = [];
 
 function addEndpoint(endpoint: Endpoint) {
   endpoints.push(endpoint);
 }
+
+addEndpoint(retrieve_vector_stores);
+addEndpoint(list_vector_stores);
+addEndpoint(question_answering_vector_stores);
+addEndpoint(search_vector_stores);
+addEndpoint(retrieve_vector_stores_files);
+addEndpoint(list_vector_stores_files);
 
 export type Filter = {
   type: 'resource' | 'operation' | 'tag' | 'tool';
@@ -47,9 +48,10 @@ export function query(filters: Filter[], endpoints: Endpoint[]): Endpoint[] {
   });
 
   // Check if any filters didn't match
-  if (unmatchedFilters.size > 0) {
+  const unmatched = Array.from(unmatchedFilters).filter((f) => f.type === 'tool' || f.type === 'resource');
+  if (unmatched.length > 0) {
     throw new Error(
-      `The following filters did not match any endpoints: ${[...unmatchedFilters]
+      `The following filters did not match any endpoints: ${unmatched
         .map((f) => `${f.type}=${f.value}`)
         .join(', ')}`,
     );

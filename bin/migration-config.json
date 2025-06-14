@@ -23,7 +23,7 @@
       "oldParams": [
         {
           "type": "param",
-          "key": "vector_store_id",
+          "key": "vector_store_identifier",
           "location": "path"
         },
         {
@@ -56,7 +56,7 @@
       "oldParams": [
         {
           "type": "param",
-          "key": "vector_store_id",
+          "key": "vector_store_identifier",
           "location": "path"
         },
         {

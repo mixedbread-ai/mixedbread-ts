@@ -218,9 +218,14 @@ export interface ConnectorCreateParams {
   metadata?: unknown;
 
   /**
-   * The polling interval of the connector
+   * Polling interval for the connector. Defaults to 30 minutes if not specified. Can
+   * be provided as:
+   *
+   * - int: Number of seconds (e.g., 1800 for 30 minutes)
+   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
+   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
    */
-  polling_interval?: string | null;
+  polling_interval?: number | string | null;
 }
 
 export interface ConnectorRetrieveParams {
@@ -252,9 +257,14 @@ export interface ConnectorUpdateParams {
   trigger_sync?: boolean | null;
 
   /**
-   * Body param: The polling interval of the connector
+   * Body param: Polling interval for the connector. Defaults to 30 minutes if not
+   * specified. Can be provided as:
+   *
+   * - int: Number of seconds (e.g., 1800 for 30 minutes)
+   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
+   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
    */
-  polling_interval?: string | null;
+  polling_interval?: number | string | null;
 }
 
 export interface ConnectorListParams extends LimitOffsetParams {}

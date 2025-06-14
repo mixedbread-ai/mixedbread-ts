@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.7.0 (2025-06-14)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** api update ([d9376d3](https://github.com/mixedbread-ai/mixedbread-ts/commit/d9376d30769cdb5019ba6c3553a5ff95890a6dee))
+* **api:** api update ([1561d2f](https://github.com/mixedbread-ai/mixedbread-ts/commit/1561d2f597cdd152d851e797daaace847267f625))
+* **api:** api update ([0f9b94b](https://github.com/mixedbread-ai/mixedbread-ts/commit/0f9b94be529790be8e7176599c7cea6980672eee))
+* **api:** api update ([6fc614c](https://github.com/mixedbread-ai/mixedbread-ts/commit/6fc614ce58406b9bd49a1dd138b09d7f5f6ef3da))
+* **api:** update via SDK Studio ([87c97c3](https://github.com/mixedbread-ai/mixedbread-ts/commit/87c97c3162e6d653ef2a0652cf753c4edd585d9f))
+* **api:** update via SDK Studio ([3e527e4](https://github.com/mixedbread-ai/mixedbread-ts/commit/3e527e47c2efe3cc160b83e895f1bc0d92291138))
+* **mcp:** implement support for binary responses ([64a9c65](https://github.com/mixedbread-ai/mixedbread-ts/commit/64a9c65a618e52f49a9f7c92342c35463ce66937))
+* **mcp:** include http information in tools ([3138d3c](https://github.com/mixedbread-ai/mixedbread-ts/commit/3138d3c3399f24fd32f97c2023a1e47dc959969d))
+* **mcp:** set X-Stainless-MCP header ([6b5bdbc](https://github.com/mixedbread-ai/mixedbread-ts/commit/6b5bdbc2cdf382b94a01738084c242c4c969d381))
+
+
+### Bug Fixes
+
+* compat with more runtimes ([101e76f](https://github.com/mixedbread-ai/mixedbread-ts/commit/101e76f065b1a6e9d3b220dac3b0dfc8ee91aa73))
+* **mcp:** include description in dynamic tool search ([69a15a4](https://github.com/mixedbread-ai/mixedbread-ts/commit/69a15a4c84f3393695dc3c45df7af0111927b3a5))
+* publish script — handle NPM errors correctly ([b27592b](https://github.com/mixedbread-ai/mixedbread-ts/commit/b27592ba009a84288b90ddb32c2847122e617cf1))
+
+
+### Chores
+
+* adjust eslint.config.mjs ignore pattern ([fba075c](https://github.com/mixedbread-ai/mixedbread-ts/commit/fba075cbd0b395c7f7cbd9506bdf879de76a7358))
+* avoid type error in certain environments ([a445536](https://github.com/mixedbread-ai/mixedbread-ts/commit/a445536ecf9344b665940c6c19b9547c7a533cda))
+* **deps:** bump eslint-plugin-prettier ([be8bfd9](https://github.com/mixedbread-ai/mixedbread-ts/commit/be8bfd978d71bf2f25dd594ac4872abd93e50f05))
+* **docs:** use top-level-await in example snippets ([aa74b0e](https://github.com/mixedbread-ai/mixedbread-ts/commit/aa74b0ea186751d325daf95b13a4af53a6db1986))
+* improve publish-npm script --latest tag logic ([e6276e1](https://github.com/mixedbread-ai/mixedbread-ts/commit/e6276e1065586031d8c02582ee20131f36083116))
+* **internal:** add pure annotations, make base APIResource abstract ([aff3299](https://github.com/mixedbread-ai/mixedbread-ts/commit/aff3299dcd6d00c739ac8c93435f43ad2fdf7368))
+* **internal:** codegen related update ([a57e92b](https://github.com/mixedbread-ai/mixedbread-ts/commit/a57e92b751a5a7371e1bceca085582477832ecef))
+* **internal:** fix readablestream types in node 20 ([33ce546](https://github.com/mixedbread-ai/mixedbread-ts/commit/33ce546ee0e96b8377f644577bdc1c3a161cc2c4))
+* **internal:** update jest config ([212166e](https://github.com/mixedbread-ai/mixedbread-ts/commit/212166e14882f5ac23155c1a08fbac0feecdecc0))
+* **mcp:** provides high-level initMcpServer function and exports known clients ([e12f795](https://github.com/mixedbread-ai/mixedbread-ts/commit/e12f7952a7afc20c85cb881485b62b6e4b55d76f))
+* **mcp:** remove duplicate assignment ([12ad006](https://github.com/mixedbread-ai/mixedbread-ts/commit/12ad0064f641916d697cc9cde9905c7409b8bdec))
+
 ## 0.6.0 (2025-05-26)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.5.0...v0.6.0)

@@ -41,7 +41,6 @@ import {
   APIKeys,
   APIKeysLimitOffset,
 } from './resources/api-keys';
-import { Chat, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings, EncodingFormat, ObjectType } from './resources/embeddings';
 import {
   FileCreateParams,
@@ -838,7 +837,6 @@ export class Mixedbread {
   files: API.Files = new API.Files(this);
   extractions: API.Extractions = new API.Extractions(this);
   embeddings: API.Embeddings = new API.Embeddings(this);
-  chat: API.Chat = new API.Chat(this);
   dataSources: API.DataSources = new API.DataSources(this);
   apiKeys: API.APIKeys = new API.APIKeys(this);
 }
@@ -847,7 +845,6 @@ Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
-Mixedbread.Chat = Chat;
 Mixedbread.DataSources = DataSources;
 Mixedbread.APIKeys = APIKeys;
 export declare namespace Mixedbread {
@@ -907,8 +904,6 @@ export declare namespace Mixedbread {
     type ObjectType as ObjectType,
     type EmbeddingCreateParams as EmbeddingCreateParams,
   };
-
-  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
 
   export {
     DataSources as DataSources,
