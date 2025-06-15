@@ -11,7 +11,6 @@ export function createGetCommand(): Command {
         const config = loadConfig();
 
         if (!key) {
-          // Show all configuration
           console.log(chalk.cyan('Current configuration:'));
           console.log(JSON.stringify(config, null, 2));
           return;
