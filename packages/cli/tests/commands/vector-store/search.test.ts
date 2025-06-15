@@ -104,7 +104,8 @@ describe('Vector Store Search Command', () => {
       });
 
       expect(console.log).toHaveBeenCalledWith(
-        expect.any(String), // Found 2 results message
+        expect.any(String), // checkmark symbol
+        expect.stringContaining('Found 2 results'), // Found 2 results message
       );
 
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(

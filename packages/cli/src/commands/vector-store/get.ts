@@ -28,7 +28,7 @@ export function createGetCommand(): Command {
 
   command.action(async (nameOrId: string, options: GetOptions) => {
     const spinner = ora('Loading vector store details...').start();
-    
+
     try {
       const mergedOptions = mergeCommandOptions(command, options);
 
