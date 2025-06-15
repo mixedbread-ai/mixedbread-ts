@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { getGitInfo } from '../../utils/git';
 import { getSyncState, updateSyncState, getSyncedFiles } from '../../utils/sync-state';
 import { analyzeChanges, executeSyncChanges, formatChangeSummary } from '../../utils/sync';
+import { formatCountWithSuffix } from '../../utils/output';
 
 const SyncVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
@@ -87,7 +88,9 @@ export function createSyncCommand(): Command {
       ]);
 
       spinner.stop();
-      console.log(chalk.gray(`Found ${syncedFiles.size} existing files in vector store`));
+      console.log(
+        chalk.gray(`Found ${formatCountWithSuffix(syncedFiles.size, 'existing file')} in vector store`),
+      );
 
       // Only use git if --from-git is explicitly provided
       const fromGit = parsedOptions.fromGit;
@@ -165,11 +168,11 @@ export function createSyncCommand(): Command {
       console.log(chalk.bold('Summary:'));
       console.log(
         chalk.green('✓'),
-        `${analysis.added.length + analysis.modified.length} files uploaded successfully`,
+        `${formatCountWithSuffix(analysis.added.length + analysis.modified.length, 'file')} uploaded successfully`,
       );
       console.log(
         chalk.green('✓'),
-        `${analysis.modified.length + analysis.deleted.length} files deleted (${analysis.modified.length} ${analysis.modified.length === 1 ? 'update' : 'updates'} + ${analysis.deleted.length} ${analysis.deleted.length === 1 ? 'removal' : 'removals'})`,
+        `${formatCountWithSuffix(analysis.modified.length + analysis.deleted.length, 'file')} deleted (${formatCountWithSuffix(analysis.modified.length, 'update')} + ${formatCountWithSuffix(analysis.deleted.length, 'removal')})`,
       );
       console.log(chalk.green('✓'), 'Vector store is now in sync');
 

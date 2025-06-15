@@ -7,7 +7,7 @@ import { lookup } from 'mime-types';
 import ora from 'ora';
 import { z } from 'zod';
 import { createClient } from '../../utils/client';
-import { formatBytes } from '../../utils/output';
+import { formatBytes, formatCountWithSuffix } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
@@ -135,7 +135,7 @@ export function createUploadCommand(): Command {
         }, 0);
 
         console.log(
-          `Found ${uniqueFiles.length} ${uniqueFiles.length === 1 ? 'file' : 'files'} matching the ${patterns.length === 1 ? 'pattern' : 'patterns'} (${formatBytes(totalSize)})`,
+          `Found ${formatCountWithSuffix(uniqueFiles.length, 'file')} matching the ${formatCountWithSuffix(patterns.length, 'pattern')} (${formatBytes(totalSize)})`,
         );
       }
 
@@ -159,9 +159,7 @@ export function createUploadCommand(): Command {
               .filter((f: any) => files.includes(f.metadata?.file_path))
               .map((f: any) => [f.metadata.file_path as string, f.id]),
           );
-          spinner.succeed(
-            `Found ${existingFiles.size} existing ${existingFiles.size === 1 ? 'file' : 'files'}`,
-          );
+          spinner.succeed(`Found ${formatCountWithSuffix(existingFiles.size, 'existing file')}`);
         } catch (error) {
           spinner.fail('Failed to check existing files');
           throw error;
@@ -205,7 +203,7 @@ async function uploadFiles(
 ) {
   const { strategy, contextualization, parallel, additionalMetadata, unique, existingFiles } = options;
 
-  console.log(`\nUploading ${files.length} ${files.length === 1 ? 'file' : 'files'} to vector store...`);
+  console.log(`\nUploading ${formatCountWithSuffix(files.length, 'file')} to vector store...`);
 
   const results = {
     uploaded: 0,
@@ -269,15 +267,13 @@ async function uploadFiles(
   // Summary
   console.log('\n' + chalk.bold('Upload Summary:'));
   if (results.uploaded > 0) {
-    console.log(
-      chalk.green(`✓ ${results.uploaded} ${results.uploaded === 1 ? 'file' : 'files'} uploaded successfully`),
-    );
+    console.log(chalk.green(`✓ ${formatCountWithSuffix(results.uploaded, 'file')} uploaded successfully`));
   }
   if (results.updated > 0) {
-    console.log(chalk.blue(`↻ ${results.updated} ${results.updated === 1 ? 'file' : 'files'} updated`));
+    console.log(chalk.blue(`↻ ${formatCountWithSuffix(results.updated, 'file')} updated`));
   }
   if (results.failed > 0) {
-    console.log(chalk.red(`✗ ${results.failed} ${results.failed === 1 ? 'file' : 'files'} failed`));
+    console.log(chalk.red(`✗ ${formatCountWithSuffix(results.failed, 'file')} failed`));
     if (results.errors.length > 0) {
       console.log('\nErrors:');
       results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));

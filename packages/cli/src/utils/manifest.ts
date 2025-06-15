@@ -6,7 +6,7 @@ import { glob } from 'glob';
 import { relative, basename } from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
-import { formatBytes } from './output';
+import { formatBytes, formatCountWithSuffix } from './output';
 import { lookup } from 'mime-types';
 import { UploadOptions } from '../commands/vector-store/upload';
 import { loadConfig } from './config';
@@ -69,7 +69,9 @@ export async function uploadFromManifest(
     // Validate manifest structure
     const manifest = ManifestSchema.parse(manifestData);
     console.log(chalk.gray(`Manifest version: ${manifest.version}`));
-    console.log(chalk.gray(`Found ${manifest.files.length} file entries`));
+    console.log(
+      chalk.gray(`Found ${manifest.files.length} file ${manifest.files.length === 1 ? 'entry' : 'entries'}`),
+    );
 
     // Resolve all files from manifest entries
     const resolvedFiles: ResolvedFile[] = [];
@@ -135,7 +137,7 @@ export async function uploadFromManifest(
     }
 
     const finalFiles = Array.from(uniqueFiles.values());
-    console.log(chalk.green(`✓ Resolved ${finalFiles.length} unique files for upload`));
+    console.log(chalk.green('✓'), `Resolved ${formatCountWithSuffix(finalFiles.length, 'file')} for upload`);
 
     // Calculate total size
     const totalSize = finalFiles.reduce((sum, file) => {
@@ -186,9 +188,7 @@ export async function uploadFromManifest(
             )
             .map((f) => [(f.metadata as { file_path: string }).file_path, f.id]),
         );
-        spinner.succeed(
-          `Found ${existingFiles.size} existing ${existingFiles.size === 1 ? 'file' : 'files'}`,
-        );
+        spinner.succeed(`Found ${formatCountWithSuffix(existingFiles.size, 'existing file')}`);
       } catch (error) {
         spinner.fail('Failed to check existing files');
         throw error;
@@ -233,7 +233,7 @@ async function uploadManifestFiles(
 ) {
   const { unique, existingFiles, parallel } = options;
 
-  console.log(`\nUploading ${files.length} ${files.length === 1 ? 'file' : 'files'} from manifest...`);
+  console.log(`\nUploading ${formatCountWithSuffix(files.length, 'file')} from manifest...`);
 
   const results = {
     uploaded: 0,
@@ -244,7 +244,9 @@ async function uploadManifestFiles(
 
   const batch = Math.ceil(files.length / parallel);
 
-  console.log(chalk.gray(`Processing batch ${batch} (${parallel} files per batch)...`));
+  console.log(
+    chalk.gray(`Processing batch ${batch} (${formatCountWithSuffix(parallel, 'file')} per batch)...`),
+  );
 
   // Process files in batches
   for (let i = 0; i < files.length; i += parallel) {
@@ -305,15 +307,13 @@ async function uploadManifestFiles(
   // Summary
   console.log('\n' + chalk.bold('Manifest Upload Summary:'));
   if (results.uploaded > 0) {
-    console.log(
-      chalk.green(`✓ ${results.uploaded} ${results.uploaded === 1 ? 'file' : 'files'} uploaded successfully`),
-    );
+    console.log(chalk.green(`✓ ${formatCountWithSuffix(results.uploaded, 'file')} uploaded successfully`));
   }
   if (results.updated > 0) {
-    console.log(chalk.blue(`↻ ${results.updated} ${results.updated === 1 ? 'file' : 'files'} updated`));
+    console.log(chalk.blue(`↻ ${formatCountWithSuffix(results.updated, 'file')} updated`));
   }
   if (results.failed > 0) {
-    console.log(chalk.red(`✗ ${results.failed} ${results.failed === 1 ? 'file' : 'files'} failed`));
+    console.log(chalk.red(`✗ ${formatCountWithSuffix(results.failed, 'file')} failed`));
     if (results.errors.length > 0) {
       console.log('\nErrors:');
       results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));

@@ -9,7 +9,7 @@ import { FilesOptions } from '.';
 import ora from 'ora';
 import { resolveVectorStore } from '../../../utils/vector-store';
 import { createClient } from '../../../utils/client';
-import { formatBytes, formatOutput } from '../../../utils/output';
+import { formatBytes, formatOutput, formatCountWithSuffix } from '../../../utils/output';
 import chalk from 'chalk';
 import { z } from 'zod';
 
@@ -65,7 +65,7 @@ export function createListCommand(): Command {
         return;
       }
 
-      spinner.succeed(`Found ${files.length} file${files.length === 1 ? '' : 's'}`);
+      spinner.succeed(`Found ${formatCountWithSuffix(files.length, 'file')}`);
 
       // Format data for output
       const formattedData = files.map((file) => ({

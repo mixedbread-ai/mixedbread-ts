@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { createClient } from '../../utils/client';
-import { formatOutput } from '../../utils/output';
+import { formatOutput, formatCountWithSuffix } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
@@ -120,7 +120,7 @@ export function createSearchCommand(): Command {
         return;
       }
 
-      spinner.succeed(`Found ${results.data.length} ${results.data.length === 1 ? 'result' : 'results'}`);
+      spinner.succeed(`Found ${formatCountWithSuffix(results.data.length, 'result')}`);
 
       const output = results.data.map((result) => {
         const metadata =

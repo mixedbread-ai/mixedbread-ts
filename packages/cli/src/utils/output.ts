@@ -105,3 +105,8 @@ export function formatDuration(ms: number): string {
   if (ms < 3600000) return `${Math.floor(ms / 60000)}m ${Math.floor((ms % 60000) / 1000)}s`;
   return `${Math.floor(ms / 3600000)}h ${Math.floor((ms % 3600000) / 60000)}m`;
 }
+
+export function formatCountWithSuffix(count: number, suffix: string): string {
+  if (count === 1) return `1 ${suffix}`;
+  return `${count} ${suffix}s`;
+}

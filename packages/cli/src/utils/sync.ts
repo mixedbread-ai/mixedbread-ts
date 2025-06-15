@@ -4,7 +4,7 @@ import { glob } from 'glob';
 import fs from 'fs/promises';
 import { calculateFileHash, hashesMatch } from './hash';
 import chalk from 'chalk';
-import { formatBytes } from './output';
+import { formatBytes, formatCountWithSuffix } from './output';
 import Mixedbread from '@mixedbread/sdk';
 import { uploadFile } from './upload';
 import ora from 'ora';
@@ -145,19 +145,13 @@ export async function analyzeChanges(
   return analysis;
 }
 
-function getFileText(fileCount: number) {
-  return fileCount === 1 ? 'file' : 'files';
-}
-
 export function formatChangeSummary(analysis: SyncAnalysis): string {
   const lines: string[] = [];
 
   lines.push(chalk.bold('Changes to apply:'));
 
   if (analysis.modified.length > 0) {
-    lines.push(
-      `  ${chalk.yellow('Updated:')} (${analysis.modified.length} ${getFileText(analysis.modified.length)})`,
-    );
+    lines.push(`  ${chalk.yellow('Updated:')} (${formatCountWithSuffix(analysis.modified.length, 'file')})`);
     analysis.modified.forEach((file) => {
       const size = file.size ? ` (${formatBytes(file.size)})` : '';
       lines.push(`    • ${file.path}${size}`);
@@ -166,7 +160,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
   }
 
   if (analysis.added.length > 0) {
-    lines.push(`  ${chalk.green('New:')} (${analysis.added.length} ${getFileText(analysis.added.length)})`);
+    lines.push(`  ${chalk.green('New:')} (${formatCountWithSuffix(analysis.added.length, 'file')})`);
     analysis.added.forEach((file) => {
       const size = file.size ? ` (${formatBytes(file.size)})` : '';
       lines.push(`    • ${file.path}${size}`);
@@ -175,9 +169,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
   }
 
   if (analysis.deleted.length > 0) {
-    lines.push(
-      `  ${chalk.red('Deleted:')} (${analysis.deleted.length} ${getFileText(analysis.deleted.length)})`,
-    );
+    lines.push(`  ${chalk.red('Deleted:')} (${formatCountWithSuffix(analysis.deleted.length, 'file')})`);
     analysis.deleted.forEach((file) => {
       lines.push(`    • ${file.path}`);
     });
@@ -189,7 +181,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
   const totalDeletes = analysis.modified.length + analysis.deleted.length;
 
   lines.push(
-    `Total: ${totalChanges} changes (${totalUploads} files to upload, ${totalDeletes} files to delete)`,
+    `Total: ${formatCountWithSuffix(totalChanges, 'change')} (${formatCountWithSuffix(totalUploads, 'file')} to upload, ${formatCountWithSuffix(totalDeletes, 'file')} to delete)`,
   );
   lines.push(`Upload size: ${formatBytes(analysis.totalSize)}`);
 
@@ -216,7 +208,7 @@ export async function executeSyncChanges(
     const filesToDelete = [...analysis.modified, ...analysis.deleted].filter((f) => f.fileId);
 
     if (filesToDelete.length > 0) {
-      console.log(chalk.yellow(`\nDeleting ${filesToDelete.length} files...`));
+      console.log(chalk.yellow(`\nDeleting ${formatCountWithSuffix(filesToDelete.length, 'file')}...`));
       for (const file of filesToDelete) {
         const deleteSpinner = ora(`Deleting ${file.path}`).start();
         try {
@@ -236,7 +228,7 @@ export async function executeSyncChanges(
     const filesToUpload = [...analysis.added, ...analysis.modified];
 
     if (filesToUpload.length > 0) {
-      console.log(chalk.blue(`\nUploading ${filesToUpload.length} files...`));
+      console.log(chalk.blue(`\nUploading ${formatCountWithSuffix(filesToUpload.length, 'file')}...`));
       for (const file of filesToUpload) {
         const uploadSpinner = ora(`Uploading ${file.path}`).start();
         try {

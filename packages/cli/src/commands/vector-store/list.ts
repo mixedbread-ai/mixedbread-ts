@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { createClient } from '../../utils/client';
-import { formatOutput, formatBytes } from '../../utils/output';
+import { formatOutput, formatBytes, formatCountWithSuffix } from '../../utils/output';
 import {
   GlobalOptions,
   GlobalOptionsSchema,
@@ -70,7 +70,7 @@ export function createListCommand(): Command {
         created: new Date(vs.created_at).toLocaleDateString(),
       }));
 
-      spinner.succeed(`Found ${vectorStores.length} vector store${vectorStores.length === 1 ? '' : 's'}`);
+      spinner.succeed(`Found ${formatCountWithSuffix(vectorStores.length, 'vector store')}`);
       formatOutput(formattedData, parsedOptions.format);
     } catch (error) {
       spinner.fail('Failed to load vector stores');
