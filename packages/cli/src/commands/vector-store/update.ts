@@ -12,6 +12,7 @@ import {
 import { resolveVectorStore } from '../../utils/vector-store';
 import { z } from 'zod';
 import ora from 'ora';
+import { VectorStoreUpdateParams } from '@mixedbread/sdk/resources/index';
 
 const UpdateVectorStoreSchema = GlobalOptionsSchema.extend({
   nameOrId: z.string().min(1, { message: '"name-or-id" is required' }),
@@ -65,7 +66,7 @@ export function createUpdateCommand(): Command {
         }
       }
 
-      const updateData: Record<string, unknown> = {};
+      const updateData: VectorStoreUpdateParams = {};
       if (parsedOptions.name) updateData.name = parsedOptions.name;
       if (parsedOptions.description !== undefined) updateData.description = parsedOptions.description;
       if (metadata !== undefined) updateData.metadata = metadata;

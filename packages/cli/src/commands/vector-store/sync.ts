@@ -12,7 +12,7 @@ import {
 import { resolveVectorStore } from '../../utils/vector-store';
 import { z } from 'zod';
 import { getGitInfo } from '../../utils/git';
-import { getSyncState, updateSyncState, getSyncedFiles } from '../../utils/sync-state';
+import { getSyncedFiles } from '../../utils/sync-state';
 import { analyzeChanges, executeSyncChanges, formatChangeSummary } from '../../utils/sync';
 import { formatCountWithSuffix } from '../../utils/output';
 
@@ -82,10 +82,7 @@ export function createSyncCommand(): Command {
       // Get sync state and synced files
       const spinner = ora('Analyzing changes...').start();
 
-      const [syncState, syncedFiles] = await Promise.all([
-        getSyncState(client, vectorStore.id),
-        getSyncedFiles(client, vectorStore.id),
-      ]);
+      const syncedFiles = await getSyncedFiles(client, vectorStore.id);
 
       spinner.stop();
       console.log(
@@ -160,8 +157,6 @@ export function createSyncCommand(): Command {
         file_count: syncedFiles.size + analysis.added.length - analysis.deleted.length,
         patterns,
       };
-
-      await updateSyncState(client, vectorStore.id, newSyncState);
 
       // Summary
       console.log('');

@@ -17,50 +17,6 @@ export interface FileSyncMetadata {
   synced: boolean;
 }
 
-const SYNC_STATE_KEY = '_sync_state';
-
-/**
- * Get sync state from vector store metadata
- */
-export async function getSyncState(client: Mixedbread, vectorStoreId: string): Promise<SyncState | null> {
-  try {
-    const vectorStore = await client.vectorStores.retrieve(vectorStoreId);
-
-    if (vectorStore.metadata?.[SYNC_STATE_KEY]) {
-      return vectorStore.metadata[SYNC_STATE_KEY] as SyncState;
-    }
-
-    return null;
-  } catch (error) {
-    return null;
-  }
-}
-
-/**
- * Update sync state in vector store metadata
- */
-export async function updateSyncState(
-  client: Mixedbread,
-  vectorStoreId: string,
-  syncState: SyncState,
-): Promise<void> {
-  try {
-    const vectorStore = await client.vectorStores.retrieve(vectorStoreId);
-    const currentMetadata = (vectorStore.metadata || {}) as Record<string, unknown>;
-
-    const updatedMetadata = {
-      ...currentMetadata,
-      [SYNC_STATE_KEY]: syncState,
-    };
-
-    await client.vectorStores.update(vectorStoreId, {
-      metadata: updatedMetadata,
-    });
-  } catch (error) {
-    throw new Error(`Failed to update sync state: ${error}`);
-  }
-}
-
 /**
  * Get all synced files from vector store
  */

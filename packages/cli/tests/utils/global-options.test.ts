@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { z } from 'zod';
 import {
   setupGlobalOptions,
   mergeCommandOptions,
@@ -192,7 +193,7 @@ describe('Global Options', () => {
 
     it('should parse custom schemas', () => {
       const customSchema = GlobalOptionsSchema.extend({
-        customField: require('zod').z.string(),
+        customField: z.string(),
       });
 
       const options = {

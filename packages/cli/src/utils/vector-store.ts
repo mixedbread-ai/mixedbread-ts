@@ -71,27 +71,4 @@ export async function resolveVectorStore(
   if (matches.length === 1) {
     return matches[0];
   }
-
-  // Multiple exact matches (shouldn't happen once names are unique)
-  // if (interactive) {
-  //   const { selected } = await inquirer.prompt([
-  //     {
-  //       type: 'list',
-  //       name: 'selected',
-  //       message: 'Multiple vector stores with the same name found. Select one:',
-  //       choices: matches.map((vs) => ({
-  //         name: `${vs.name} (${vs.id})`,
-  //         value: vs,
-  //       })),
-  //     },
-  //   ]);
-  //   return selected;
-  // } else {
-  //   console.error(chalk.red('Error:'), `Multiple vector stores named "${resolved}" found.`);
-  //   console.error('Please use the ID instead:');
-  //   matches.forEach((vs) => {
-  //     console.error(`  • ${vs.id}`);
-  //   });
-  //   process.exit(1);
-  // }
 }

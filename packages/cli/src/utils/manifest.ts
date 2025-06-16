@@ -288,11 +288,7 @@ async function uploadManifestFiles(
         });
 
         const stats = statSync(file.path);
-        const strategyLabel = file.strategy === 'high_quality' ? '🎯' : '⚡';
-        const contextLabel = file.contextualization ? '🔗' : '';
-        spinner.succeed(
-          `${basename(file.path)} (${formatBytes(stats.size)}) ${strategyLabel}${contextLabel}`,
-        );
+        spinner.succeed(`${basename(file.path)} (${formatBytes(stats.size)})`);
       } catch (error) {
         results.failed++;
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -318,12 +314,5 @@ async function uploadManifestFiles(
       console.log('\nErrors:');
       results.errors.forEach((error) => console.log(chalk.red(`  ${error}`)));
     }
-  }
-
-  // Legend
-  if (results.uploaded > 0 || results.updated > 0) {
-    console.log(
-      chalk.gray('\nLegend: ⚡ = fast strategy, 🎯 = high_quality strategy, 🔗 = contextualization enabled'),
-    );
   }
 }
