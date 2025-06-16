@@ -1,4 +1,4 @@
-import { ComponentProps, createContext, ReactNode, useContext, useState } from 'react';
+import { ComponentProps, createContext, useContext, useState } from 'react';
 import { type Message as MessageType } from '../lib/types';
 import { UserIcon, BotIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -48,8 +48,8 @@ export function UserMessage({ content }: { content: string }) {
 }
 
 export type MessageProps = MessageType & {
-  UserMessage: (props: { content: string }) => ReactNode;
-  AssistantMessage: (props: { content: string }) => ReactNode;
+  UserMessage: typeof UserMessage;
+  AssistantMessage: typeof AssistantMessage;
 };
 
 export function Message({ role, content, UserMessage, AssistantMessage }: MessageProps) {

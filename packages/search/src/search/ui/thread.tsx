@@ -16,8 +16,9 @@ import {
 } from 'react';
 import { motion } from 'motion/react';
 import { type Thread as ThreadType } from '../lib/types';
-import { LoaderCircleIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, BotIcon } from 'lucide-react';
 import { AssistantMessage, Message, MessageContext, UserMessage } from './message';
+import { TextShimmer } from './text-shimmer';
 
 interface ThreadContextProps {
   thread: ThreadType;
@@ -70,6 +71,7 @@ export interface ThreadMessagesProps extends ComponentProps<'div'> {
     Empty?: () => ReactNode;
     AssistantMessage?: typeof AssistantMessage;
     UserMessage?: typeof UserMessage;
+    ThreadLoading?: typeof ThreadLoading;
   };
 }
 
@@ -79,6 +81,7 @@ export function ThreadMessages({
     Empty = () => <div className="text-center text-sm text-muted-foreground">No messages yet</div>,
     AssistantMessage: AssistantMessageComponent = AssistantMessage,
     UserMessage: UserMessageComponent = UserMessage,
+    ThreadLoading: ThreadLoadingComponent = ThreadLoading,
   } = {},
   className,
   ...props
@@ -110,6 +113,8 @@ export function ThreadMessages({
           </motion.div>
         </MessageContext.Provider>
       ))}
+
+      <ThreadLoadingComponent />
     </div>
   );
 }
@@ -164,22 +169,19 @@ export function ThreadScrollToBottom({ offset = 100, className, ...props }: Thre
   );
 }
 
-export interface ThreadLoadingProps extends ComponentProps<typeof motion.div> {
-  text?: string;
-}
+export type ThreadLoadingProps = ComponentProps<'div'>;
 
-export function ThreadLoading({ text = 'Assistant is typing...', className, ...props }: ThreadLoadingProps) {
+export function ThreadLoading({ className, ...props }: ThreadLoadingProps) {
   return (
     <ThreadIf loading>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={cn('flex items-center gap-2 text-sm text-muted-foreground', className)}
-        {...props}
-      >
-        <LoaderCircleIcon className="size-4 animate-spin" />
-        <span>{text}</span>
-      </motion.div>
+      <div className={cn('flex gap-3', className)} {...props}>
+        <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
+          <BotIcon className="size-4" />
+        </div>
+        <div className="pb-10">
+          <TextShimmer className="text-sm">Thinking...</TextShimmer>
+        </div>
+      </div>
     </ThreadIf>
   );
 }

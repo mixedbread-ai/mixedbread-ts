@@ -2,13 +2,7 @@
 
 import { useChatDemo } from '@/search/hooks/use-chat-demo';
 import { Composer, ComposerInput, ComposerFooter, ComposerSubmit } from '@/search/ui/composer';
-import {
-  Thread,
-  ThreadViewport,
-  ThreadMessages,
-  ThreadLoading,
-  ThreadScrollToBottom,
-} from '@/search/ui/thread';
+import { Thread, ThreadViewport, ThreadMessages, ThreadScrollToBottom } from '@/search/ui/thread';
 
 export default function ChatDemoPage() {
   const { thread, sendMessage, isLoading } = useChatDemo();
@@ -19,7 +13,6 @@ export default function ChatDemoPage() {
         <Thread thread={thread} isLoading={isLoading}>
           <ThreadViewport className="h-[600px]">
             <ThreadMessages />
-            <ThreadLoading />
 
             <ThreadScrollToBottom />
           </ThreadViewport>
