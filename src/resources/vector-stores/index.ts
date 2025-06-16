@@ -2,7 +2,9 @@
 
 export {
   Files,
+  type RerankConfig,
   type ScoredVectorStoreFile,
+  type VectorStoreFileStatus,
   type VectorStoreFile,
   type FileDeleteResponse,
   type FileSearchResponse,

@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as FilesAPI from './files';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { APIPromise } from '../../core/api-promise';
@@ -204,6 +205,27 @@ export class Files extends APIResource {
 export type VectorStoreFilesLimitOffset = LimitOffset<VectorStoreFile>;
 
 /**
+ * Represents a reranking configuration.
+ */
+export interface RerankConfig {
+  /**
+   * The name of the reranking model
+   */
+  model?: string;
+
+  /**
+   * Whether to include metadata in the reranked results
+   */
+  with_metadata?: boolean | Array<string>;
+
+  /**
+   * Maximum number of results to return after reranking. If None, returns all
+   * reranked results.
+   */
+  top_k?: number | null;
+}
+
+/**
  * Represents a scored file stored in a vector store.
  */
 export interface ScoredVectorStoreFile {
@@ -225,7 +247,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status?: VectorStoreFileStatus;
 
   /**
    * Last error message if processing failed
@@ -273,6 +295,8 @@ export interface ScoredVectorStoreFile {
   > | null;
 }
 
+export type VectorStoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
 /**
  * Represents a file stored in a vector store.
  */
@@ -295,7 +319,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status?: VectorStoreFileStatus;
 
   /**
    * Last error message if processing failed
@@ -469,7 +493,7 @@ export namespace FileSearchParams {
     /**
      * Whether to rerank results and optional reranking configuration
      */
-    rerank?: boolean | SearchOptions.RerankConfig | null;
+    rerank?: boolean | FilesAPI.RerankConfig | null;
 
     /**
      * Whether to return file metadata
@@ -486,34 +510,13 @@ export namespace FileSearchParams {
      */
     chunks_per_file?: number;
   }
-
-  export namespace SearchOptions {
-    /**
-     * Represents a reranking configuration.
-     */
-    export interface RerankConfig {
-      /**
-       * The name of the reranking model
-       */
-      model?: string;
-
-      /**
-       * Whether to include metadata in the reranked results
-       */
-      with_metadata?: boolean | Array<string>;
-
-      /**
-       * Maximum number of results to return after reranking. If None, returns all
-       * reranked results.
-       */
-      top_k?: number | null;
-    }
-  }
 }
 
 export declare namespace Files {
   export {
+    type RerankConfig as RerankConfig,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
+    type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
