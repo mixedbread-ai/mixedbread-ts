@@ -102,7 +102,7 @@ export class Files extends APIResource {
   /**
    * Poll for a file's processing status until it reaches a terminal state.
    *
-   * @param vectorStoreId - The ID of the vector store
+   * @param vectorStoreIdentifier - The identifier of the vector store
    * @param fileId - The ID of the file to poll
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
    * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
@@ -110,7 +110,7 @@ export class Files extends APIResource {
    * @returns The file object once it reaches a terminal state
    */
   async poll(
-    vectorStoreId: string,
+    vectorStoreIdentifier: string,
     fileId: string,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
@@ -120,7 +120,7 @@ export class Files extends APIResource {
     const pollingTimeoutMs = pollTimeoutMs;
 
     return polling.poll({
-      fn: () => this.retrieve(fileId, { vector_store_identifier: vectorStoreId, ...options }),
+      fn: () => this.retrieve(fileId, { vector_store_identifier: vectorStoreIdentifier, ...options }),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
@@ -131,7 +131,7 @@ export class Files extends APIResource {
   /**
    * Create a file in a vector store and wait for it to be processed.
    *
-   * @param vectorStoreId - The ID of the vector store to upload to
+   * @param vectorStoreIdentifier - The identifier of the vector store to upload to
    * @param body - The file creation parameters
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
    * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
@@ -139,28 +139,28 @@ export class Files extends APIResource {
    * @returns The file object once it reaches a terminal state
    */
   async createAndPoll(
-    vectorStoreId: string,
+    vectorStoreIdentifier: string,
     body: FileCreateParams,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
   ): Promise<VectorStoreFile> {
-    const file = await this.create(vectorStoreId, body, options);
-    return this.poll(vectorStoreId, file.id, pollIntervalMs, pollTimeoutMs, options);
+    const file = await this.create(vectorStoreIdentifier, body, options);
+    return this.poll(vectorStoreIdentifier, file.id, pollIntervalMs, pollTimeoutMs, options);
   }
 
   /**
    * Upload a file to the files API and then create a file in a vector store.
    * Note the file will be asynchronously processed.
    *
-   * @param vectorStoreId - The ID of the vector store to add the file to
+   * @param vectorStoreIdentifier - The identifier of the vector store to add the file to
    * @param file - The file to upload
    * @param body - Additional parameters for the vector store file
    * @param options - Additional request options
    * @returns The created vector store file
    */
   async upload(
-    vectorStoreId: string,
+    vectorStoreIdentifier: string,
     file: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
     options?: RequestOptions,
@@ -168,7 +168,7 @@ export class Files extends APIResource {
     const fileUploadResponse = await this._client.files.create({ file }, options);
 
     return this.create(
-      vectorStoreId,
+      vectorStoreIdentifier,
       {
         file_id: fileUploadResponse.id,
         ...body,
@@ -180,7 +180,7 @@ export class Files extends APIResource {
   /**
    * Upload a file to files API, create a file in a vector store, and poll until processing is complete.
    *
-   * @param vectorStoreId - The ID of the vector store to add the file to
+   * @param vectorStoreIdentifier - The identifier of the vector store to add the file to
    * @param file - The file to upload
    * @param body - Additional parameters for the vector store file
    * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
@@ -189,15 +189,15 @@ export class Files extends APIResource {
    * @returns The vector store file object once it reaches a terminal state
    */
   async uploadAndPoll(
-    vectorStoreId: string,
+    vectorStoreIdentifier: string,
     file: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
   ): Promise<VectorStoreFile> {
-    const vectorStoreFile = await this.upload(vectorStoreId, file, body, options);
-    return this.poll(vectorStoreId, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
+    const vectorStoreFile = await this.upload(vectorStoreIdentifier, file, body, options);
+    return this.poll(vectorStoreIdentifier, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
 
