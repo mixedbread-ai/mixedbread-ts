@@ -50,6 +50,11 @@ export namespace ImageURLInput {
      * The image URL. Can be either a URL or a Data URI.
      */
     url: string;
+
+    /**
+     * The image format/mimetype
+     */
+    format?: string;
   }
 }
 

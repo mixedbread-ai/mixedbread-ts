@@ -118,14 +118,28 @@ export interface DataSource {
   metadata: unknown;
 
   /**
-   * Authentication parameters for a OAuth data source.
+   * Authentication parameters
    */
-  auth_params: DataSourceOauth2Params | null;
+  auth_params: DataSourceOauth2Params | DataSource.DataSourceAPIKeyParams | null;
 
   /**
    * The type of the object
    */
   object?: 'data_source';
+}
+
+export namespace DataSource {
+  /**
+   * Authentication parameters for a API key data source.
+   */
+  export interface DataSourceAPIKeyParams {
+    type?: 'api_key';
+
+    /**
+     * The API key
+     */
+    api_key: string;
+  }
 }
 
 /**
@@ -140,24 +154,9 @@ export interface DataSourceOauth2Params {
   created_at?: string;
 
   /**
-   * The OAuth2 client ID
-   */
-  client_id: string;
-
-  /**
-   * The OAuth2 client secret
-   */
-  client_secret: string;
-
-  /**
-   * The OAuth2 redirect URI
-   */
-  redirect_uri: string;
-
-  /**
    * The OAuth2 scope
    */
-  scope: string;
+  scope?: string;
 
   /**
    * The OAuth2 access token
@@ -178,6 +177,11 @@ export interface DataSourceOauth2Params {
    * The OAuth2 token expiration timestamp
    */
   expires_on?: string | null;
+
+  /**
+   * Additional parameters for the OAuth2 flow
+   */
+  additional_params?: Record<string, unknown> | null;
 }
 
 export type DataSourceType = 'notion' | 'linear';
@@ -202,43 +206,172 @@ export interface DataSourceDeleteResponse {
   object?: 'data_source';
 }
 
-export interface DataSourceCreateParams {
-  /**
-   * The type of data source to create
-   */
-  type: DataSourceType;
+export type DataSourceCreateParams =
+  | DataSourceCreateParams.NotionDataSourceCreateOrUpdateParams
+  | DataSourceCreateParams.LinearDataSourceCreateOrUpdateParams;
 
-  /**
-   * The name of the data source
-   */
-  name: string;
+export declare namespace DataSourceCreateParams {
+  export interface NotionDataSourceCreateOrUpdateParams {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
 
-  /**
-   * The metadata of the data source
-   */
-  metadata?: unknown;
+    /**
+     * The name of the data source
+     */
+    name: string;
 
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params?: DataSourceOauth2Params | null;
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * The authentication parameters of the data source. Notion supports OAuth2 and API
+     * key.
+     */
+    auth_params?:
+      | NotionDataSourceCreateOrUpdateParams.OAuth2CreateOrUpdateParams
+      | NotionDataSourceCreateOrUpdateParams.APIKeyCreateOrUpdateParams
+      | null;
+  }
+
+  export namespace NotionDataSourceCreateOrUpdateParams {
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    export interface OAuth2CreateOrUpdateParams {
+      type?: 'oauth2';
+    }
+
+    /**
+     * Base class for API key create or update parameters.
+     */
+    export interface APIKeyCreateOrUpdateParams {
+      type?: 'api_key';
+
+      /**
+       * The API key
+       */
+      api_key: string;
+    }
+  }
+
+  export interface LinearDataSourceCreateOrUpdateParams {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
+
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    auth_params?: LinearDataSourceCreateOrUpdateParams.AuthParams | null;
+  }
+
+  export namespace LinearDataSourceCreateOrUpdateParams {
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    export interface AuthParams {
+      type?: 'oauth2';
+    }
+  }
 }
 
-export interface DataSourceUpdateParams {
-  /**
-   * The name of the data source
-   */
-  name?: string | null;
+export type DataSourceUpdateParams =
+  | DataSourceUpdateParams.NotionDataSourceCreateOrUpdateParams
+  | DataSourceUpdateParams.LinearDataSourceCreateOrUpdateParams;
 
-  /**
-   * The metadata of the data source
-   */
-  metadata?: unknown;
+export declare namespace DataSourceUpdateParams {
+  export interface NotionDataSourceCreateOrUpdateParams {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
 
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params?: DataSourceOauth2Params | null;
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * The authentication parameters of the data source. Notion supports OAuth2 and API
+     * key.
+     */
+    auth_params?:
+      | NotionDataSourceCreateOrUpdateParams.OAuth2CreateOrUpdateParams
+      | NotionDataSourceCreateOrUpdateParams.APIKeyCreateOrUpdateParams
+      | null;
+  }
+
+  export namespace NotionDataSourceCreateOrUpdateParams {
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    export interface OAuth2CreateOrUpdateParams {
+      type?: 'oauth2';
+    }
+
+    /**
+     * Base class for API key create or update parameters.
+     */
+    export interface APIKeyCreateOrUpdateParams {
+      type?: 'api_key';
+
+      /**
+       * The API key
+       */
+      api_key: string;
+    }
+  }
+
+  export interface LinearDataSourceCreateOrUpdateParams {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
+
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    auth_params?: LinearDataSourceCreateOrUpdateParams.AuthParams | null;
+  }
+
+  export namespace LinearDataSourceCreateOrUpdateParams {
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    export interface AuthParams {
+      type?: 'oauth2';
+    }
+  }
 }
 
 export interface DataSourceListParams extends LimitOffsetParams {}

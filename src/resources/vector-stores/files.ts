@@ -6,31 +6,32 @@ import * as VectorStoresAPI from './vector-stores';
 import { APIPromise } from '../../core/api-promise';
 import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
 import * as polling from '../../lib/polling';
 import { Uploadable } from '../../uploads';
+import { path } from '../../internal/utils/path';
 
 export class Files extends APIResource {
   /**
    * Upload a new file to a vector store for indexing.
    *
-   * Args: vector_store_id: The ID of the vector store to upload to file: The file to
-   * upload and index
+   * Args: vector_store_identifier: The ID or name of the vector store to upload to
+   * file: The file to upload and index
    *
    * Returns: VectorStoreFile: Details of the uploaded and indexed file
    */
   create(
-    vectorStoreID: string,
+    vectorStoreIdentifier: string,
     body: FileCreateParams,
     options?: RequestOptions,
   ): APIPromise<VectorStoreFile> {
-    return this._client.post(path`/v1/vector_stores/${vectorStoreID}/files`, { body, ...options });
+    return this._client.post(path`/v1/vector_stores/${vectorStoreIdentifier}/files`, { body, ...options });
   }
 
   /**
    * Get details of a specific file in a vector store.
    *
-   * Args: vector_store_id: The ID of the vector store file_id: The ID of the file
+   * Args: vector_store_identifier: The ID or name of the vector store file_id: The
+   * ID of the file
    *
    * Returns: VectorStoreFile: Details of the vector store file
    */
@@ -39,25 +40,25 @@ export class Files extends APIResource {
     params: FileRetrieveParams,
     options?: RequestOptions,
   ): APIPromise<VectorStoreFile> {
-    const { vector_store_id } = params;
-    return this._client.get(path`/v1/vector_stores/${vector_store_id}/files/${fileID}`, options);
+    const { vector_store_identifier } = params;
+    return this._client.get(path`/v1/vector_stores/${vector_store_identifier}/files/${fileID}`, options);
   }
 
   /**
    * List files indexed in a vector store with pagination.
    *
-   * Args: vector_store_id: The ID of the vector store pagination: Pagination
-   * parameters
+   * Args: vector_store_identifier: The ID or name of the vector store pagination:
+   * Pagination parameters
    *
    * Returns: VectorStoreFileListResponse: Paginated list of vector store files
    */
   list(
-    vectorStoreID: string,
+    vectorStoreIdentifier: string,
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
   ): PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
     return this._client.getAPIList(
-      path`/v1/vector_stores/${vectorStoreID}/files`,
+      path`/v1/vector_stores/${vectorStoreIdentifier}/files`,
       LimitOffset<VectorStoreFile>,
       { query, ...options },
     );
@@ -66,14 +67,14 @@ export class Files extends APIResource {
   /**
    * Delete a file from a vector store.
    *
-   * Args: vector_store_id: The ID of the vector store file_id: The ID of the file to
-   * delete
+   * Args: vector_store_identifier: The ID or name of the vector store file_id: The
+   * ID of the file to delete
    *
    * Returns: VectorStoreFileDeleted: The deleted file
    */
   delete(fileID: string, params: FileDeleteParams, options?: RequestOptions): APIPromise<FileDeleteResponse> {
-    const { vector_store_id } = params;
-    return this._client.delete(path`/v1/vector_stores/${vector_store_id}/files/${fileID}`, options);
+    const { vector_store_identifier } = params;
+    return this._client.delete(path`/v1/vector_stores/${vector_store_identifier}/files/${fileID}`, options);
   }
 
   /**
@@ -224,7 +225,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: string;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -294,7 +295,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: string;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -395,18 +396,18 @@ export namespace FileCreateParams {
 
 export interface FileRetrieveParams {
   /**
-   * The ID of the vector store
+   * The ID or name of the vector store
    */
-  vector_store_id: string;
+  vector_store_identifier: string;
 }
 
 export interface FileListParams extends LimitOffsetParams {}
 
 export interface FileDeleteParams {
   /**
-   * The ID of the vector store
+   * The ID or name of the vector store
    */
-  vector_store_id: string;
+  vector_store_identifier: string;
 }
 
 export interface FileSearchParams {
@@ -416,9 +417,14 @@ export interface FileSearchParams {
   query: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -433,6 +439,11 @@ export interface FileSearchParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -456,6 +467,11 @@ export namespace FileSearchParams {
     rewrite_query?: boolean;
 
     /**
+     * Whether to rerank results and optional reranking configuration
+     */
+    rerank?: boolean | SearchOptions.RerankConfig | null;
+
+    /**
      * Whether to return file metadata
      */
     return_metadata?: boolean;
@@ -469,6 +485,29 @@ export namespace FileSearchParams {
      * Number of chunks to return for each file
      */
     chunks_per_file?: number;
+  }
+
+  export namespace SearchOptions {
+    /**
+     * Represents a reranking configuration.
+     */
+    export interface RerankConfig {
+      /**
+       * The name of the reranking model
+       */
+      model?: string;
+
+      /**
+       * Whether to include metadata in the reranked results
+       */
+      with_metadata?: boolean | Array<string>;
+
+      /**
+       * Maximum number of results to return after reranking. If None, returns all
+       * reranked results.
+       */
+      top_k?: number | null;
+    }
   }
 }
 
