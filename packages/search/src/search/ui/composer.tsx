@@ -127,7 +127,7 @@ export function ComposerSubmit({ className, children, ...props }: ComposerSubmit
         'bg-muted text-muted-foreground',
         'hover:bg-accent hover:text-foreground',
         'disabled:opacity-50 disabled:pointer-events-none',
-        'transition-all focus:outline-none focus:ring-2 focus:ring-ring',
+        'transition-all focus:outline-none focus:ring-1 focus:ring-ring',
         canSubmit && 'bg-foreground text-background hover:bg-foreground/90',
         className,
       )}
