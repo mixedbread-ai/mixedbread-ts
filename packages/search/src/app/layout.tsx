@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SiteHeader } from '@/components/site-header';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,7 +31,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative flex min-h-svh flex-col">
             <SiteHeader />
-            <main className="h-[calc(85svh-var(--spacing)*14)] px-4">{children}</main>
+            <main>
+              <ScrollArea className="h-[calc(100svh-var(--spacing)*14-1px)] [&>div>div]:h-full px-4">
+                {children}
+              </ScrollArea>
+            </main>
           </div>
         </ThemeProvider>
       </body>

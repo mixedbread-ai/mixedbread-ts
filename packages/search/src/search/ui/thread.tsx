@@ -25,6 +25,7 @@ import {
   UserMessage,
   WelcomeMessage,
 } from './message';
+import { getThreadScrollArea } from '../lib/utils';
 
 interface ThreadContextProps {
   thread: ThreadType;
@@ -51,13 +52,13 @@ export interface ThreadViewportProps extends ComponentProps<typeof ScrollArea> {
   autoScroll?: boolean;
 }
 
-export function ThreadViewport({ autoScroll = true, children, ...props }: ThreadViewportProps) {
+export function ThreadViewport({ autoScroll = true, className, children, ...props }: ThreadViewportProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { thread } = useThread();
 
   useEffect(() => {
     if (autoScroll && scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const scrollContainer = getThreadScrollArea();
       if (scrollContainer) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
@@ -65,7 +66,12 @@ export function ThreadViewport({ autoScroll = true, children, ...props }: Thread
   }, [thread.messages, autoScroll]);
 
   return (
-    <ScrollArea ref={scrollAreaRef} {...props}>
+    <ScrollArea
+      data-thread-viewport
+      ref={scrollAreaRef}
+      className={cn('overflow-hidden', className)}
+      {...props}
+    >
       {children}
     </ScrollArea>
   );
@@ -135,7 +141,7 @@ export function ThreadScrollToBottom({ offset = 100, className, ...props }: Thre
       setIsAtBottom(isBottom);
     };
 
-    const scrollViewport = document.querySelector('[data-radix-scroll-area-viewport]');
+    const scrollViewport = getThreadScrollArea();
     if (scrollViewport) {
       scrollViewport.addEventListener('scroll', handleScroll);
       return () => scrollViewport.removeEventListener('scroll', handleScroll);
@@ -143,7 +149,7 @@ export function ThreadScrollToBottom({ offset = 100, className, ...props }: Thre
   }, [offset]);
 
   const scrollToBottom = useCallback(() => {
-    const scrollViewport = document.querySelector('[data-radix-scroll-area-viewport]');
+    const scrollViewport = getThreadScrollArea();
     if (scrollViewport) {
       scrollViewport.scrollTo({
         top: scrollViewport.scrollHeight,

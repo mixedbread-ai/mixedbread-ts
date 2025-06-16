@@ -6,15 +6,15 @@ import { cn } from '@/lib/utils';
 interface ComposerContextProps {
   state: ComposerState;
   setState: (value: string) => void;
-  submit: () => Promise<void>;
+  submit: (value?: string) => Promise<void>;
   canSubmit: boolean;
 }
 
 const ComposerContext = createContext<ComposerContextProps | null>(null);
 
-export interface ComposerProps extends Omit<ComponentProps<'div'>, 'onSubmit'> {
+export type ComposerProps = Omit<ComponentProps<'div'>, 'onSubmit'> & {
   onSubmit: SendMessageFunc;
-}
+};
 
 export function Composer({ onSubmit, className, children, ...props }: ComposerProps) {
   const [state, setState] = useState<ComposerState>({
@@ -26,17 +26,21 @@ export function Composer({ onSubmit, className, children, ...props }: ComposerPr
     setState((prev) => ({ ...prev, value }));
   }, []);
 
-  const submit = useCallback(async () => {
-    if (!state.value.trim() || state.isSubmitting) return;
+  const submit = useCallback(
+    async (value?: string) => {
+      const submittedValue = value || state.value;
+      if (!submittedValue.trim() || state.isSubmitting) return;
 
-    setState((prev) => ({ ...prev, isSubmitting: true }));
-    try {
-      await onSubmit(state.value);
-      setState({ value: '', isSubmitting: false });
-    } catch {
-      setState((prev) => ({ ...prev, isSubmitting: false }));
-    }
-  }, [state.value, state.isSubmitting, onSubmit]);
+      setState((prev) => ({ ...prev, isSubmitting: true }));
+      try {
+        await onSubmit(submittedValue);
+        setState({ value: '', isSubmitting: false });
+      } catch {
+        setState((prev) => ({ ...prev, isSubmitting: false }));
+      }
+    },
+    [state.value, state.isSubmitting, onSubmit],
+  );
 
   const canSubmit = state.value.trim().length > 0 && !state.isSubmitting;
 
@@ -47,17 +51,30 @@ export function Composer({ onSubmit, className, children, ...props }: ComposerPr
 
   return (
     <ComposerContext.Provider value={memoizedValue}>
-      <div
-        className={cn(
-          'relative rounded-lg border bg-background p-3',
-          'focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1 focus-within:ring-offset-background',
-          className,
-        )}
-        {...props}
-      >
+      <div className={cn('relative', className)} {...props}>
         {children}
       </div>
     </ComposerContext.Provider>
+  );
+}
+
+export type ComposerFormProps = ComponentProps<'form'>;
+
+export function ComposerForm({ className, children, ...props }: ComposerFormProps) {
+  const { submit } = useComposer();
+
+  return (
+    <form
+      className={cn(
+        'relative rounded-lg border bg-background p-3',
+        'focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1 focus-within:ring-offset-background',
+        className,
+      )}
+      onSubmit={() => submit()}
+      {...props}
+    >
+      {children}
+    </form>
   );
 }
 
@@ -66,7 +83,7 @@ export type ComposerSuggestionsProps = ComponentProps<'div'>;
 export function ComposerSuggestions({ className, children, ...props }: ComposerSuggestionsProps) {
   return (
     <div
-      className={cn('absolute bottom-3 grid grid-cols-1 sm:grid-cols-2 inset-x-4 gap-2', className)}
+      className={cn('absolute bottom-36 grid grid-cols-1 inset-x-0 sm:grid-cols-2 gap-2', className)}
       {...props}
     >
       {children}
@@ -74,9 +91,18 @@ export function ComposerSuggestions({ className, children, ...props }: ComposerS
   );
 }
 
-export type ComposerSuggestionItemProps = ComponentProps<'button'>;
+export type ComposerSuggestionItemProps = ComponentProps<'button'> & {
+  value: string;
+};
 
-export function ComposerSuggestionItem({ className, children, ...props }: ComposerSuggestionItemProps) {
+export function ComposerSuggestionItem({
+  className,
+  value,
+  children,
+  ...props
+}: ComposerSuggestionItemProps) {
+  const { submit } = useComposer();
+
   return (
     <button
       type="button"
@@ -85,6 +111,7 @@ export function ComposerSuggestionItem({ className, children, ...props }: Compos
         'focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background',
         className,
       )}
+      onClick={() => submit(value)}
       {...props}
     >
       {children}
@@ -154,7 +181,7 @@ export function ComposerSubmit({ className, children, ...props }: ComposerSubmit
   return (
     <button
       type="button"
-      onClick={submit}
+      onClick={() => submit()}
       disabled={!canSubmit}
       className={cn(
         'inline-flex items-center justify-center rounded-md p-2 bg-foreground text-background hover:bg-foreground/90',
