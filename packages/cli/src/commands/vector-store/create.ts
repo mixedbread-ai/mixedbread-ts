@@ -10,6 +10,7 @@ import {
   mergeCommandOptions,
   parseOptions,
 } from '../../utils/global-options';
+import { validateMetadata } from '../../utils/metadata';
 import { z } from 'zod';
 
 const CreateVectorStoreSchema = GlobalOptionsSchema.extend({
@@ -48,15 +49,7 @@ export function createCreateCommand(): Command {
 
       const parsedOptions = parseOptions(CreateVectorStoreSchema, { ...mergedOptions, name });
 
-      let metadata: Record<string, unknown> | undefined;
-      if (parsedOptions.metadata) {
-        try {
-          metadata = JSON.parse(parsedOptions.metadata);
-        } catch (error) {
-          console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
-          process.exit(1);
-        }
-      }
+      const metadata = validateMetadata(parsedOptions.metadata);
 
       spinner = ora('Creating vector store...').start();
 

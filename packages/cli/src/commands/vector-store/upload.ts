@@ -17,6 +17,7 @@ import {
 } from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
 import { loadConfig } from '../../utils/config';
+import { validateMetadata } from '../../utils/metadata';
 import { Mixedbread } from '@mixedbread/sdk';
 import { uploadFromManifest } from '../../utils/manifest';
 
@@ -97,15 +98,7 @@ export function createUploadCommand(): Command {
         parsedOptions.contextualization ?? config.defaults?.upload?.contextualization ?? false;
       const parallel = parsedOptions.parallel ?? config.defaults?.upload?.parallel ?? 5;
 
-      let metadata: Record<string, unknown> | undefined;
-      if (parsedOptions.metadata) {
-        try {
-          metadata = JSON.parse(parsedOptions.metadata);
-        } catch (error) {
-          console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
-          process.exit(1);
-        }
-      }
+      const metadata = validateMetadata(parsedOptions.metadata);
 
       // Collect all files matching patterns
       const files: string[] = [];

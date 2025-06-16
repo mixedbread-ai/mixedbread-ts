@@ -10,6 +10,7 @@ import { formatBytes, formatCountWithSuffix } from './output';
 import { lookup } from 'mime-types';
 import { UploadOptions } from '../commands/vector-store/upload';
 import { loadConfig } from './config';
+import { validateMetadata } from './metadata';
 
 // Manifest file schema
 const ManifestFileEntrySchema = z.object({
@@ -77,7 +78,7 @@ export async function uploadFromManifest(
     const resolvedFiles: ResolvedFile[] = [];
 
     const defaults = manifest.defaults || {};
-    const optionsMetadata = options.metadata ? JSON.parse(options.metadata) : {};
+    const optionsMetadata = validateMetadata(options.metadata);
 
     for (const entry of manifest.files) {
       console.log(chalk.gray(`Resolving: ${entry.path}`));

@@ -10,6 +10,7 @@ import {
   parseOptions,
 } from '../../utils/global-options';
 import { resolveVectorStore } from '../../utils/vector-store';
+import { validateMetadata } from '../../utils/metadata';
 import { z } from 'zod';
 import { getGitInfo } from '../../utils/git';
 import { getSyncedFiles } from '../../utils/sync-state';
@@ -66,15 +67,7 @@ export function createSyncCommand(): Command {
       console.log(`Patterns: ${patterns.join(', ')}\n`);
 
       // Parse metadata if provided
-      let additionalMetadata: Record<string, unknown> = {};
-      if (parsedOptions.metadata) {
-        try {
-          additionalMetadata = JSON.parse(parsedOptions.metadata);
-        } catch {
-          console.error(chalk.red('Error:'), 'Invalid JSON in metadata option');
-          process.exit(1);
-        }
-      }
+      const additionalMetadata = validateMetadata(parsedOptions.metadata);
 
       // Get git info
       const gitInfo = await getGitInfo();
