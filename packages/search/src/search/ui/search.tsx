@@ -28,9 +28,13 @@ interface SearchContextProps {
   onTagChange?: (value: string | undefined) => void;
 }
 
-interface ListContextProps {
+interface SearchListContextProps {
   active: string | null;
   setActive: (value: string | null) => void;
+}
+
+interface SearchListItemContextProps {
+  item: Result;
 }
 
 interface TagsListContextProps {
@@ -39,13 +43,13 @@ interface TagsListContextProps {
 
 const SearchContext = createContext<SearchContextProps | null>(null);
 
-const ListContext = createContext<ListContextProps | null>(null);
+const SearchListContext = createContext<SearchListContextProps | null>(null);
+
+const SearchListItemContext = createContext<SearchListItemContextProps | null>(null);
 
 const TagsListContext = createContext<TagsListContextProps | null>(null);
 
-export interface SearchProps extends SearchContextProps {
-  children: ReactNode;
-}
+export type SearchProps = PropsWithChildren<SearchContextProps>;
 
 export function Search({
   search,
@@ -75,7 +79,9 @@ export function Search({
   return <SearchContext.Provider value={memoizedValue}>{children}</SearchContext.Provider>;
 }
 
-export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
+export type SearchInputProps = ComponentProps<'input'>;
+
+export function SearchInput({ className, ...props }: SearchInputProps) {
   const { search, onSearchChange } = useSearchRuntime();
 
   return (
@@ -93,24 +99,25 @@ export function SearchInput({ className, ...props }: ComponentProps<'input'>) {
   );
 }
 
+export interface SearchListProps extends ComponentProps<typeof ScrollArea> {
+  items: Result[];
+  Empty?: () => ReactNode;
+  Item?: typeof SearchListItem;
+}
+
 export function SearchList({
   items,
-  Empty = () => <div className="py-12 text-center text-sm">No results found</div>,
-  Item = (props) => <SearchListItem {...props} />,
+  Empty = () => <div className="py-12 text-center text-sm text-muted-foreground">No results found</div>,
+  Item = (props) => (
+    <SearchListItem {...props}>
+      <SearchListItemBreadcrumb />
+      <SearchListItemTitle />
+    </SearchListItem>
+  ),
   className,
   children,
   ...props
-}: React.ComponentProps<typeof ScrollArea> & {
-  items: Result[];
-  /**
-   * Renderer for empty list UI
-   */
-  Empty?: () => ReactNode;
-  /**
-   * Renderer for items
-   */
-  Item?: (props: { item: Result; onClick?: () => void }) => ReactNode;
-}) {
+}: SearchListProps) {
   const [active, setActive] = useState<string | null>(items.at(0)?.id ?? null);
   const { tag: selectedTag } = useSearchRuntime();
 
@@ -170,13 +177,13 @@ export function SearchList({
       <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}>
         <ScrollArea className={cn('flex flex-col p-4', className)} {...props}>
           <div className="flex flex-col gap-3">
-            <ListContext.Provider value={memoizedValue}>
-              <SearchIf isEmpty={true}>
+            <SearchListContext.Provider value={memoizedValue}>
+              <SearchIf isEmpty>
                 <Empty />
               </SearchIf>
 
               {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
-            </ListContext.Provider>
+            </SearchListContext.Provider>
           </div>
         </ScrollArea>
       </motion.div>
@@ -184,15 +191,11 @@ export function SearchList({
   );
 }
 
-export function SearchListItem({
-  item,
-  className,
-  onClick,
-  ...props
-}: ComponentProps<'button'> & {
+export interface SearchListItemProps extends ComponentProps<'button'> {
   item: Result;
-  onClick?: () => void;
-}) {
+}
+
+export function SearchListItem({ item, className, onClick, children, ...props }: SearchListItemProps) {
   const { active: activeId, setActive } = useSearchList();
   const active = item.id === activeId;
 
@@ -203,42 +206,52 @@ export function SearchListItem({
     });
 
   return (
-    <button
-      ref={useCallback(
-        (element: HTMLButtonElement | null) => {
-          if (active && element) {
-            element.scrollIntoView({
-              block: 'nearest',
-            });
-          }
-        },
-        [active],
-      )}
-      data-search-item-id={item.id}
-      aria-current={active ? 'true' : undefined}
-      className={cn(
-        'flex min-h-10 w-full flex-col justify-center border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-sm',
-        className,
-        active && 'bg-accent/50 text-accent-foreground',
-      )}
-      onPointerMove={() => setActive(item.id)}
-      onClick={handleClick}
-      {...props}
-    >
-      <SearchListItemBreadcrumb breadcrumb={item.breadcrumb} />
-
-      <div className="flex items-center gap-2">
-        <FileTextIcon className="size-4 shrink-0 text-muted-foreground" />
-        <span className="line-clamp-1 text-left">{item.title}</span>
-      </div>
-    </button>
+    <SearchListItemContext.Provider value={{ item }}>
+      <button
+        ref={useCallback(
+          (element: HTMLButtonElement | null) => {
+            if (active && element) {
+              element.scrollIntoView({
+                block: 'nearest',
+              });
+            }
+          },
+          [active],
+        )}
+        data-search-item-id={item.id}
+        aria-current={active ? 'true' : undefined}
+        className={cn(
+          'flex min-h-10 w-full flex-col justify-center border border-border/60 gap-2.5 px-4 py-2 rounded-lg text-sm',
+          className,
+          active && 'bg-accent/50 text-accent-foreground',
+        )}
+        onPointerMove={() => setActive(item.id)}
+        onClick={handleClick}
+        {...props}
+      >
+        {children}
+      </button>
+    </SearchListItemContext.Provider>
   );
 }
 
-export function SearchListItemBreadcrumb({ breadcrumb }: { breadcrumb: string[] }) {
+export function SearchListItemTitle() {
+  const { item } = useSearchListItem();
+
+  return (
+    <div className="flex items-center gap-2">
+      <FileTextIcon className="size-4 shrink-0 text-muted-foreground" />
+      <span className="line-clamp-1 text-left">{item.title}</span>
+    </div>
+  );
+}
+
+export function SearchListItemBreadcrumb() {
+  const { item } = useSearchListItem();
+
   return (
     <div className="flex items-center gap-1">
-      {breadcrumb.map((breadcrumb, index) => (
+      {item.breadcrumb.map((breadcrumb, index) => (
         <Fragment key={breadcrumb}>
           <span className="text-xs text-muted-foreground">{breadcrumb}</span>
           {index !== breadcrumb.length - 1 && <ChevronRightIcon className="size-3 text-muted-foreground" />}
@@ -294,7 +307,9 @@ export function SearchIf({ children, ...query }: SearchIfProps) {
   return result ? children : null;
 }
 
-export function SearchIndicatorIcon({ className, ...props }: ComponentProps<'div'>) {
+export type SearchIndicatorIconProps = ComponentProps<'div'>;
+
+export function SearchIndicatorIcon({ className, ...props }: SearchIndicatorIconProps) {
   return (
     <div className={cn('relative size-4', className)} {...props}>
       <SearchIf isLoading>
@@ -342,13 +357,11 @@ export function TagsList({ allowClear = false, className, children, ...props }: 
   );
 }
 
-export function TagsListItem({
-  value,
-  className,
-  ...props
-}: ComponentProps<'button'> & {
+export type TagsListItemProps = ComponentProps<'button'> & {
   value: string;
-}) {
+};
+
+export function TagsListItem({ value, className, ...props }: TagsListItemProps) {
   const { tag: selectedTag, onTagChange } = useSearchRuntime();
   const { allowClear } = useTagsList();
   const selected = value === selectedTag;
@@ -382,7 +395,13 @@ export function useTagsList() {
 }
 
 export function useSearchList() {
-  const ctx = useContext(ListContext);
-  if (!ctx) throw new Error('useSearchList must be used within a SearchDialogList');
+  const ctx = useContext(SearchListContext);
+  if (!ctx) throw new Error('useSearchList must be used within a SearchList');
+  return ctx;
+}
+
+export function useSearchListItem() {
+  const ctx = useContext(SearchListItemContext);
+  if (!ctx) throw new Error('useSearchListItem must be used within a SearchListItem');
   return ctx;
 }

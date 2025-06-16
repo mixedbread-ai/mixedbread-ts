@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearch } from '@/search/hooks/use-search';
-import { SearchList, SearchIndicatorIcon, TagsList, SearchInput, Search } from '@/search/ui/search';
+import { SearchList, SearchIndicatorIcon, TagsList, SearchInput, Search, SearchIf } from '@/search/ui/search';
 import { useEffect, useRef, useState } from 'react';
 import { mockResults, mockTags } from '@/lib/utils';
 
@@ -47,6 +47,12 @@ export function CustomSearchPage() {
           </span>
         </div>
       )}
+
+      <SearchIf hasQuery={false} hasResults={false}>
+        <div className="py-12 text-center text-sm text-muted-foreground">
+          Search for something to see the results...
+        </div>
+      </SearchIf>
 
       <SearchList items={mockedResults} className="p-0" />
     </Search>
