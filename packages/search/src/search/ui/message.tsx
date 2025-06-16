@@ -11,15 +11,19 @@ interface MessageContextProps {
 
 export const MessageContext = createContext<MessageContextProps | null>(null);
 
-export function AssistantMessage({ content }: { content: string }) {
+type AssistantMessageProps = ComponentProps<'div'>;
+
+export function AssistantMessage({ className, ...props }: AssistantMessageProps) {
+  const { message } = useMessage();
+
   return (
-    <div className="flex gap-3">
+    <div className={cn('flex gap-3', className)} {...props}>
       <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
         <BotIcon className="size-4" />
       </div>
       <div className="flex grow flex-col">
         <div className="rounded-md px-3 py-2 bg-muted self-start">
-          <p className="text-sm">{content}</p>
+          <p className="text-sm">{message.content}</p>
         </div>
         <MessageFooter>
           <MessageCopy />
@@ -29,9 +33,13 @@ export function AssistantMessage({ content }: { content: string }) {
   );
 }
 
-export function UserMessage({ content }: { content: string }) {
+type UserMessageProps = ComponentProps<'div'>;
+
+export function UserMessage({ className, ...props }: UserMessageProps) {
+  const { message } = useMessage();
+
   return (
-    <div className="flex gap-3">
+    <div className={cn('flex gap-3', className)} {...props}>
       <div
         className={cn(
           'flex size-8 shrink-0 items-center justify-center rounded-full bg-foreground text-background',
@@ -41,7 +49,7 @@ export function UserMessage({ content }: { content: string }) {
       </div>
       <div className="flex flex-col gap-2">
         <div className="rounded-md px-3 py-2 bg-foreground text-background">
-          <p className="text-sm">{content}</p>
+          <p className="text-sm">{message.content}</p>
         </div>
       </div>
     </div>
@@ -69,7 +77,7 @@ export type MessageProps = MessageType & {
   PendingMessage: typeof PendingMessage;
 };
 
-export function Message({ role, content, status, UserMessage, AssistantMessage }: MessageProps) {
+export function Message({ role, status, UserMessage, AssistantMessage, PendingMessage }: MessageProps) {
   const isUser = role === 'user';
 
   if (status === 'pending') {
@@ -77,28 +85,22 @@ export function Message({ role, content, status, UserMessage, AssistantMessage }
   }
 
   if (isUser) {
-    return <UserMessage content={content} />;
+    return <UserMessage />;
   }
 
-  return <AssistantMessage content={content} />;
+  return <AssistantMessage />;
 }
 
-export interface MessageContentProps extends ComponentProps<'div'> {
-  content: string;
-}
+export type MessageContentProps = ComponentProps<'div'>;
 
-export function MessageContent({ content, className, ...props }: MessageContentProps) {
+export function MessageContent({ className, ...props }: MessageContentProps) {
+  const { message } = useMessage();
+
   return (
     <div className={cn('prose prose-sm dark:prose-invert max-w-none', className)} {...props}>
-      <p className="text-sm">{content}</p>
+      <p className="text-sm">{message.content}</p>
     </div>
   );
-}
-
-export function useMessage() {
-  const ctx = useContext(MessageContext);
-  if (!ctx) throw new Error('useMessage must be used within a Message');
-  return ctx;
 }
 
 export type MessageFooterProps = ComponentProps<'div'>;
@@ -111,17 +113,14 @@ export function MessageFooter({ className, children, ...props }: MessageFooterPr
   );
 }
 
-export type MessageCopyProps = Omit<ComponentProps<'button'>, 'onClick'> & {
-  content?: string;
-};
+export type MessageCopyProps = ComponentProps<'button'>;
 
-export function MessageCopy({ content, className, ...props }: MessageCopyProps) {
+export function MessageCopy({ className, ...props }: MessageCopyProps) {
   const [copied, setCopied] = useState(false);
   const { message } = useMessage();
-  const textToCopy = content || message.content;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(textToCopy);
+    await navigator.clipboard.writeText(message.content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -145,4 +144,10 @@ export function MessageCopy({ content, className, ...props }: MessageCopyProps) 
       <span className="sr-only">{copied ? 'Copied' : 'Copy'}</span>
     </button>
   );
+}
+
+export function useMessage() {
+  const ctx = useContext(MessageContext);
+  if (!ctx) throw new Error('useMessage must be used within a Message');
+  return ctx;
 }

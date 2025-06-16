@@ -29,7 +29,6 @@ export type Message =
       role: 'user' | 'assistant' | 'system';
       content: string;
       createdAt: Date;
-      error?: Error;
     }
   | {
       status: 'pending';

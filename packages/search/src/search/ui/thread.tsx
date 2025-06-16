@@ -44,7 +44,7 @@ export interface ThreadViewportProps extends ComponentProps<typeof ScrollArea> {
   autoScroll?: boolean;
 }
 
-export function ThreadViewport({ autoScroll = true, className, children, ...props }: ThreadViewportProps) {
+export function ThreadViewport({ autoScroll = true, children, ...props }: ThreadViewportProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { thread } = useThread();
 
@@ -58,7 +58,7 @@ export function ThreadViewport({ autoScroll = true, className, children, ...prop
   }, [thread.messages, autoScroll]);
 
   return (
-    <ScrollArea ref={scrollAreaRef} className={cn(className)} {...props}>
+    <ScrollArea ref={scrollAreaRef} {...props}>
       {children}
     </ScrollArea>
   );
