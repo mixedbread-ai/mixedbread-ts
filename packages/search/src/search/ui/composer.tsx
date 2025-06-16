@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 interface ComposerContextProps {
   state: ComposerState;
-  setValue: (value: string) => void;
+  setState: (value: string) => void;
   submit: () => void;
   canSubmit: boolean;
   addAttachment?: (file: File) => void;
@@ -43,7 +43,7 @@ export function Composer({ onSubmit, className, children, ...props }: ComposerPr
   const canSubmit = state.value.trim().length > 0 && !state.isSubmitting;
 
   const memoizedValue = useMemo(
-    () => ({ state, setValue, submit, canSubmit }),
+    () => ({ state, setState: setValue, submit, canSubmit }),
     [state, setValue, submit, canSubmit],
   );
 
@@ -71,7 +71,7 @@ export function ComposerInput({
   placeholder = 'Ask something...',
   ...props
 }: ComposerInputProps) {
-  const { state, setValue, submit, canSubmit } = useComposer();
+  const { state, setState, submit, canSubmit } = useComposer();
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -87,13 +87,13 @@ export function ComposerInput({
   return (
     <textarea
       className={cn(
-        'min-h-10 w-full resize-none bg-transparent px-1 text-sm',
+        'min-h-10 field-sizing-content w-full resize-none bg-transparent px-1 text-sm',
         'placeholder:text-muted-foreground focus:outline-none',
         'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
         className,
       )}
       value={state.value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => setState(e.target.value)}
       onKeyDown={handleKeyDown}
       disabled={state.isSubmitting}
       placeholder={placeholder}

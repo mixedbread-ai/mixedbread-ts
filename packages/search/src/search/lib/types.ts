@@ -22,13 +22,21 @@ export type SearchQuery = z.infer<typeof SearchQuerySchema>;
 
 export type TransformFunc = (results: FileSearchResponse['data']) => Result[];
 
-export interface Message {
-  id: string;
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  createdAt: Date;
-  error?: Error;
-}
+export type Message =
+  | {
+      status: 'completed';
+      id: string;
+      role: 'user' | 'assistant' | 'system';
+      content: string;
+      createdAt: Date;
+      error?: Error;
+    }
+  | {
+      status: 'pending';
+      id: string;
+      role: 'assistant';
+      content: string;
+    };
 
 export interface Thread {
   id: string;

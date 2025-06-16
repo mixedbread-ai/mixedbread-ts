@@ -2,6 +2,7 @@ import { ComponentProps, createContext, useContext, useState } from 'react';
 import { type Message as MessageType } from '../lib/types';
 import { UserIcon, BotIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TextShimmer } from './text-shimmer';
 
 interface MessageContextProps {
   message: MessageType;
@@ -47,13 +48,33 @@ export function UserMessage({ content }: { content: string }) {
   );
 }
 
+export type PendingMessageProps = ComponentProps<'div'>;
+
+export function PendingMessage({ className, ...props }: PendingMessageProps) {
+  return (
+    <div className={cn('flex gap-3', className)} {...props}>
+      <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
+        <BotIcon className="size-4" />
+      </div>
+      <div className="pb-10 pt-0.5">
+        <TextShimmer className="text-sm">Thinking...</TextShimmer>
+      </div>
+    </div>
+  );
+}
+
 export type MessageProps = MessageType & {
   UserMessage: typeof UserMessage;
   AssistantMessage: typeof AssistantMessage;
+  PendingMessage: typeof PendingMessage;
 };
 
-export function Message({ role, content, UserMessage, AssistantMessage }: MessageProps) {
+export function Message({ role, content, status, UserMessage, AssistantMessage }: MessageProps) {
   const isUser = role === 'user';
+
+  if (status === 'pending') {
+    return <PendingMessage />;
+  }
 
   if (isUser) {
     return <UserMessage content={content} />;

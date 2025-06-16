@@ -16,9 +16,8 @@ import {
 } from 'react';
 import { motion } from 'motion/react';
 import { type Thread as ThreadType } from '../lib/types';
-import { ChevronDownIcon, BotIcon } from 'lucide-react';
-import { AssistantMessage, Message, MessageContext, UserMessage } from './message';
-import { TextShimmer } from './text-shimmer';
+import { ChevronDownIcon } from 'lucide-react';
+import { AssistantMessage, Message, MessageContext, PendingMessage, UserMessage } from './message';
 
 interface ThreadContextProps {
   thread: ThreadType;
@@ -71,7 +70,7 @@ export interface ThreadMessagesProps extends ComponentProps<'div'> {
     Empty?: () => ReactNode;
     AssistantMessage?: typeof AssistantMessage;
     UserMessage?: typeof UserMessage;
-    ThreadLoading?: typeof ThreadLoading;
+    PendingMessage?: typeof PendingMessage;
   };
 }
 
@@ -81,7 +80,7 @@ export function ThreadMessages({
     Empty = () => <div className="text-center text-sm text-muted-foreground">No messages yet</div>,
     AssistantMessage: AssistantMessageComponent = AssistantMessage,
     UserMessage: UserMessageComponent = UserMessage,
-    ThreadLoading: ThreadLoadingComponent = ThreadLoading,
+    PendingMessage: PendingMessageComponent = PendingMessage,
   } = {},
   className,
   ...props
@@ -93,7 +92,7 @@ export function ThreadMessages({
   }
 
   return (
-    <div className={cn('flex flex-col gap-6 p-4', className)} {...props}>
+    <div className={cn('flex flex-col gap-7 px-4 py-6', className)} {...props}>
       {thread.messages.map((message, index) => (
         <MessageContext.Provider
           key={message.id}
@@ -109,17 +108,16 @@ export function ThreadMessages({
               {...message}
               UserMessage={UserMessageComponent}
               AssistantMessage={AssistantMessageComponent}
+              PendingMessage={PendingMessageComponent}
             />
           </motion.div>
         </MessageContext.Provider>
       ))}
-
-      <ThreadLoadingComponent />
     </div>
   );
 }
 
-export interface ThreadScrollToBottomProps extends ComponentProps<typeof motion.button> {
+export interface ThreadScrollToBottomProps extends ComponentProps<'button'> {
   offset?: number;
 }
 
@@ -153,36 +151,23 @@ export function ThreadScrollToBottom({ offset = 100, className, ...props }: Thre
   if (isAtBottom) return null;
 
   return (
-    <motion.button
+    <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      onClick={scrollToBottom}
-      className={cn(
-        'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background shadow-lg border p-2 transition-colors hover:bg-accent',
-        className,
-      )}
-      {...props}
     >
-      <ChevronDownIcon className="size-4" />
-    </motion.button>
-  );
-}
-
-export type ThreadLoadingProps = ComponentProps<'div'>;
-
-export function ThreadLoading({ className, ...props }: ThreadLoadingProps) {
-  return (
-    <ThreadIf loading>
-      <div className={cn('flex gap-3', className)} {...props}>
-        <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
-          <BotIcon className="size-4" />
-        </div>
-        <div className="pb-10">
-          <TextShimmer className="text-sm">Thinking...</TextShimmer>
-        </div>
-      </div>
-    </ThreadIf>
+      <button
+        onClick={scrollToBottom}
+        className={cn(
+          'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background shadow-lg border p-2 transition-colors hover:bg-accent',
+          className,
+        )}
+        {...props}
+      >
+        <ChevronDownIcon className="size-4" />
+        <span className="sr-only">Scroll to bottom</span>
+      </button>
+    </motion.div>
   );
 }
 

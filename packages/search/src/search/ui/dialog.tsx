@@ -1,4 +1,4 @@
-import { ComponentProps, createContext, ReactNode, useContext } from 'react';
+import { ComponentProps, createContext, PropsWithChildren, useContext } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 
@@ -7,9 +7,7 @@ interface DialogContextProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export interface SearchDialogProps extends DialogContextProps {
-  children: ReactNode;
-}
+export type SearchDialogProps = PropsWithChildren<DialogContextProps>;
 
 const DialogContext = createContext<DialogContextProps | null>(null);
 

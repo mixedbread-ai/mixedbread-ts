@@ -36,15 +36,25 @@ export function useChatDemo() {
 
   const sendMessage = useCallback(async (content: string) => {
     const userMessage: Message = {
+      status: 'completed',
       id: `user-${Date.now()}`,
       role: 'user',
       content,
       createdAt: new Date(),
     };
 
+    const pendingMessageId = `assistant-${Date.now()}`;
+
+    const pendingAssistantMessage: Message = {
+      status: 'pending',
+      id: pendingMessageId,
+      role: 'assistant',
+      content: '',
+    };
+
     setThread((prev) => ({
       ...prev,
-      messages: [...prev.messages, userMessage],
+      messages: [...prev.messages, userMessage, pendingAssistantMessage],
     }));
 
     setIsLoading(true);
@@ -52,16 +62,23 @@ export function useChatDemo() {
     setTimeout(
       () => {
         const assistantMessage: Message = {
-          id: `assistant-${Date.now()}`,
+          status: 'completed',
+          id: pendingMessageId,
           role: 'assistant',
           content: getResponse(content),
           createdAt: new Date(),
         };
 
-        setThread((prev) => ({
-          ...prev,
-          messages: [...prev.messages, assistantMessage],
-        }));
+        setThread((prev) => {
+          const updatedMessages = prev.messages.map((message) =>
+            message.id === pendingMessageId ? assistantMessage : message,
+          );
+
+          return {
+            ...prev,
+            messages: updatedMessages,
+          };
+        });
 
         setIsLoading(false);
       },
