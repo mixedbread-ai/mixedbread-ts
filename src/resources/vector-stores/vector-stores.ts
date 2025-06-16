@@ -12,8 +12,10 @@ import {
   FileSearchParams,
   FileSearchResponse,
   Files,
+  RerankConfig,
   ScoredVectorStoreFile,
   VectorStoreFile,
+  VectorStoreFileStatus,
   VectorStoreFilesLimitOffset,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
@@ -544,35 +546,12 @@ export interface VectorStoreChunkSearchOptions {
   /**
    * Whether to rerank results and optional reranking configuration
    */
-  rerank?: boolean | VectorStoreChunkSearchOptions.RerankConfig | null;
+  rerank?: boolean | FilesAPI.RerankConfig | null;
 
   /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
-}
-
-export namespace VectorStoreChunkSearchOptions {
-  /**
-   * Represents a reranking configuration.
-   */
-  export interface RerankConfig {
-    /**
-     * The name of the reranking model
-     */
-    model?: string;
-
-    /**
-     * Whether to include metadata in the reranked results
-     */
-    with_metadata?: boolean | Array<string>;
-
-    /**
-     * Maximum number of results to return after reranking. If None, returns all
-     * reranked results.
-     */
-    top_k?: number | null;
-  }
 }
 
 /**
@@ -816,7 +795,9 @@ export declare namespace VectorStores {
 
   export {
     Files as Files,
+    type RerankConfig as RerankConfig,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
+    type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,

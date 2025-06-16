@@ -10,11 +10,15 @@ export {
   type APIKeyListParams,
   type APIKeysLimitOffset,
 } from './api-keys';
+export { Chat, type ChatCreateCompletionResponse } from './chat';
 export {
   DataSources,
   type DataSource,
   type DataSourceOauth2Params,
   type DataSourceType,
+  type LinearDataSource,
+  type NotionDataSource,
+  type Oauth2Params,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,

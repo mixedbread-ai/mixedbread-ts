@@ -220,38 +220,7 @@ export const tool: Tool = {
                 type: 'boolean',
               },
               {
-                type: 'object',
-                title: 'RerankConfig',
-                description: 'Represents a reranking configuration.',
-                properties: {
-                  model: {
-                    type: 'string',
-                    title: 'Model',
-                    description: 'The name of the reranking model',
-                  },
-                  with_metadata: {
-                    anyOf: [
-                      {
-                        type: 'boolean',
-                      },
-                      {
-                        type: 'array',
-                        items: {
-                          type: 'string',
-                        },
-                      },
-                    ],
-                    title: 'With Metadata',
-                    description: 'Whether to include metadata in the reranked results',
-                  },
-                  top_k: {
-                    type: 'integer',
-                    title: 'Top K',
-                    description:
-                      'Maximum number of results to return after reranking. If None, returns all reranked results.',
-                  },
-                },
-                required: [],
+                $ref: '#/$defs/rerank_config',
               },
             ],
             title: 'Rerank',
@@ -261,6 +230,40 @@ export const tool: Tool = {
             type: 'boolean',
             title: 'Return Metadata',
             description: 'Whether to return file metadata',
+          },
+        },
+        required: [],
+      },
+      rerank_config: {
+        type: 'object',
+        title: 'RerankConfig',
+        description: 'Represents a reranking configuration.',
+        properties: {
+          model: {
+            type: 'string',
+            title: 'Model',
+            description: 'The name of the reranking model',
+          },
+          with_metadata: {
+            anyOf: [
+              {
+                type: 'boolean',
+              },
+              {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+              },
+            ],
+            title: 'With Metadata',
+            description: 'Whether to include metadata in the reranked results',
+          },
+          top_k: {
+            type: 'integer',
+            title: 'Top K',
+            description:
+              'Maximum number of results to return after reranking. If None, returns all reranked results.',
           },
         },
         required: [],

@@ -187,6 +187,78 @@ export interface DataSourceOauth2Params {
 export type DataSourceType = 'notion' | 'linear';
 
 /**
+ * Parameters for creating or updating a Linear data source.
+ */
+export interface LinearDataSource {
+  /**
+   * The type of data source to create
+   */
+  type?: DataSourceType;
+
+  /**
+   * The name of the data source
+   */
+  name: string;
+
+  /**
+   * The metadata of the data source
+   */
+  metadata?: unknown;
+
+  /**
+   * Base class for OAuth2 create or update parameters.
+   */
+  auth_params?: Oauth2Params | null;
+}
+
+/**
+ * Parameters for creating or updating a Notion data source.
+ */
+export interface NotionDataSource {
+  /**
+   * The type of data source to create
+   */
+  type?: DataSourceType;
+
+  /**
+   * The name of the data source
+   */
+  name: string;
+
+  /**
+   * The metadata of the data source
+   */
+  metadata?: unknown;
+
+  /**
+   * The authentication parameters of the data source. Notion supports OAuth2 and API
+   * key.
+   */
+  auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
+}
+
+export namespace NotionDataSource {
+  /**
+   * Base class for API key create or update parameters.
+   */
+  export interface APIKeyCreateOrUpdateParams {
+    type?: 'api_key';
+
+    /**
+     * The API key
+     */
+    api_key: string;
+  }
+}
+
+/**
+ * Base class for OAuth2 create or update parameters.
+ */
+export interface Oauth2Params {
+  type?: 'oauth2';
+}
+
+/**
  * Deleted data source.
  */
 export interface DataSourceDeleteResponse {
@@ -207,11 +279,11 @@ export interface DataSourceDeleteResponse {
 }
 
 export type DataSourceCreateParams =
-  | DataSourceCreateParams.NotionDataSourceCreateOrUpdateParams
-  | DataSourceCreateParams.LinearDataSourceCreateOrUpdateParams;
+  | DataSourceCreateParams.NotionDataSource
+  | DataSourceCreateParams.LinearDataSource;
 
 export declare namespace DataSourceCreateParams {
-  export interface NotionDataSourceCreateOrUpdateParams {
+  export interface NotionDataSource {
     /**
      * The type of data source to create
      */
@@ -231,20 +303,10 @@ export declare namespace DataSourceCreateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?:
-      | NotionDataSourceCreateOrUpdateParams.OAuth2CreateOrUpdateParams
-      | NotionDataSourceCreateOrUpdateParams.APIKeyCreateOrUpdateParams
-      | null;
+    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
   }
 
-  export namespace NotionDataSourceCreateOrUpdateParams {
-    /**
-     * Base class for OAuth2 create or update parameters.
-     */
-    export interface OAuth2CreateOrUpdateParams {
-      type?: 'oauth2';
-    }
-
+  export namespace NotionDataSource {
     /**
      * Base class for API key create or update parameters.
      */
@@ -258,7 +320,7 @@ export declare namespace DataSourceCreateParams {
     }
   }
 
-  export interface LinearDataSourceCreateOrUpdateParams {
+  export interface LinearDataSource {
     /**
      * The type of data source to create
      */
@@ -277,25 +339,16 @@ export declare namespace DataSourceCreateParams {
     /**
      * Base class for OAuth2 create or update parameters.
      */
-    auth_params?: LinearDataSourceCreateOrUpdateParams.AuthParams | null;
-  }
-
-  export namespace LinearDataSourceCreateOrUpdateParams {
-    /**
-     * Base class for OAuth2 create or update parameters.
-     */
-    export interface AuthParams {
-      type?: 'oauth2';
-    }
+    auth_params?: Oauth2Params | null;
   }
 }
 
 export type DataSourceUpdateParams =
-  | DataSourceUpdateParams.NotionDataSourceCreateOrUpdateParams
-  | DataSourceUpdateParams.LinearDataSourceCreateOrUpdateParams;
+  | DataSourceUpdateParams.NotionDataSource
+  | DataSourceUpdateParams.LinearDataSource;
 
 export declare namespace DataSourceUpdateParams {
-  export interface NotionDataSourceCreateOrUpdateParams {
+  export interface NotionDataSource {
     /**
      * The type of data source to create
      */
@@ -315,20 +368,10 @@ export declare namespace DataSourceUpdateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?:
-      | NotionDataSourceCreateOrUpdateParams.OAuth2CreateOrUpdateParams
-      | NotionDataSourceCreateOrUpdateParams.APIKeyCreateOrUpdateParams
-      | null;
+    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
   }
 
-  export namespace NotionDataSourceCreateOrUpdateParams {
-    /**
-     * Base class for OAuth2 create or update parameters.
-     */
-    export interface OAuth2CreateOrUpdateParams {
-      type?: 'oauth2';
-    }
-
+  export namespace NotionDataSource {
     /**
      * Base class for API key create or update parameters.
      */
@@ -342,7 +385,7 @@ export declare namespace DataSourceUpdateParams {
     }
   }
 
-  export interface LinearDataSourceCreateOrUpdateParams {
+  export interface LinearDataSource {
     /**
      * The type of data source to create
      */
@@ -361,16 +404,7 @@ export declare namespace DataSourceUpdateParams {
     /**
      * Base class for OAuth2 create or update parameters.
      */
-    auth_params?: LinearDataSourceCreateOrUpdateParams.AuthParams | null;
-  }
-
-  export namespace LinearDataSourceCreateOrUpdateParams {
-    /**
-     * Base class for OAuth2 create or update parameters.
-     */
-    export interface AuthParams {
-      type?: 'oauth2';
-    }
+    auth_params?: Oauth2Params | null;
   }
 }
 
@@ -383,6 +417,9 @@ export declare namespace DataSources {
     type DataSource as DataSource,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
+    type LinearDataSource as LinearDataSource,
+    type NotionDataSource as NotionDataSource,
+    type Oauth2Params as Oauth2Params,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
     type DataSourcesLimitOffset as DataSourcesLimitOffset,
     type DataSourceCreateParams as DataSourceCreateParams,
