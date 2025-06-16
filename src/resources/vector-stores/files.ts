@@ -120,9 +120,9 @@ export class Files extends APIResource {
     const pollingTimeoutMs = pollTimeoutMs;
 
     return polling.poll({
-      fn: () => this.retrieve(fileId, { vector_store_id: vectorStoreId, ...options }),
+      fn: () => this.retrieve(fileId, { vector_store_identifier: vectorStoreId, ...options }),
       condition: (result) =>
-        result.status === 'completed' || result.status === 'failed' || result.status === 'error',
+        result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
       ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
     });
