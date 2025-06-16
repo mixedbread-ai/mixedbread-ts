@@ -41,6 +41,7 @@ import {
   APIKeys,
   APIKeysLimitOffset,
 } from './resources/api-keys';
+import { Chat, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings, EncodingFormat, ObjectType } from './resources/embeddings';
 import {
   FileCreateParams,
@@ -65,6 +66,9 @@ import {
   DataSourceUpdateParams,
   DataSources,
   DataSourcesLimitOffset,
+  LinearDataSource,
+  NotionDataSource,
+  Oauth2Params,
 } from './resources/data-sources/data-sources';
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
@@ -839,6 +843,7 @@ export class Mixedbread {
   embeddings: API.Embeddings = new API.Embeddings(this);
   dataSources: API.DataSources = new API.DataSources(this);
   apiKeys: API.APIKeys = new API.APIKeys(this);
+  chat: API.Chat = new API.Chat(this);
 }
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
@@ -847,6 +852,7 @@ Mixedbread.Extractions = Extractions;
 Mixedbread.Embeddings = Embeddings;
 Mixedbread.DataSources = DataSources;
 Mixedbread.APIKeys = APIKeys;
+Mixedbread.Chat = Chat;
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
@@ -910,6 +916,9 @@ export declare namespace Mixedbread {
     type DataSource as DataSource,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
+    type LinearDataSource as LinearDataSource,
+    type NotionDataSource as NotionDataSource,
+    type Oauth2Params as Oauth2Params,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
     type DataSourcesLimitOffset as DataSourcesLimitOffset,
     type DataSourceCreateParams as DataSourceCreateParams,
@@ -926,6 +935,8 @@ export declare namespace Mixedbread {
     type APIKeyCreateParams as APIKeyCreateParams,
     type APIKeyListParams as APIKeyListParams,
   };
+
+  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;

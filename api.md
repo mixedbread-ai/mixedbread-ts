@@ -51,7 +51,9 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/vector-stores/files.ts">RerankConfig</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">ScoredVectorStoreFile</a></code>
+- <code><a href="./src/resources/vector-stores/files.ts">VectorStoreFileStatus</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">VectorStoreFile</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">FileDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">FileSearchResponse</a></code>
@@ -160,6 +162,9 @@ Types:
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSource</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceOauth2Params</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceType</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">LinearDataSource</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">NotionDataSource</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">Oauth2Params</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceDeleteResponse</a></code>
 
 Methods:
@@ -201,3 +206,13 @@ Methods:
 - <code title="delete /v1/api-keys/{api_key_id}">client.apiKeys.<a href="./src/resources/api-keys.ts">delete</a>(apiKeyID) -> APIKeyDeleteResponse</code>
 - <code title="post /v1/api-keys/{api_key_id}/reroll">client.apiKeys.<a href="./src/resources/api-keys.ts">reroll</a>(apiKeyID) -> APIKeyCreated</code>
 - <code title="post /v1/api-keys/{api_key_id}/revoke">client.apiKeys.<a href="./src/resources/api-keys.ts">revoke</a>(apiKeyID) -> APIKey</code>
+
+# Chat
+
+Types:
+
+- <code><a href="./src/resources/chat.ts">ChatCreateCompletionResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>() -> unknown</code>
