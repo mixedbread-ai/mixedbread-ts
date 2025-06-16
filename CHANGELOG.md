@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2 (2025-06-16)
+
+Full Changelog: [v0.7.1...v0.7.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.1...v0.7.2)
+
+### Chores
+
+* update the vs_id ([a488377](https://github.com/mixedbread-ai/mixedbread-ts/commit/a48837750d4e703839c4006bbbc34ab9d9044418))
+
 ## 0.7.1 (2025-06-16)
 
 Full Changelog: [v0.7.0...v0.7.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.0...v0.7.1)
