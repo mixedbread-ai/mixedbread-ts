@@ -1,4 +1,4 @@
-import { ComponentProps, createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { ComponentProps, createContext, useCallback, useContext, useMemo, useState, useRef } from 'react';
 import { ComposerState, SendMessageFunc } from '../lib/types';
 import { LoaderCircleIcon, ArrowUpIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -6,10 +6,8 @@ import { cn } from '@/lib/utils';
 interface ComposerContextProps {
   state: ComposerState;
   setState: (value: string) => void;
-  submit: () => void;
+  submit: () => Promise<void>;
   canSubmit: boolean;
-  addAttachment?: (file: File) => void;
-  removeAttachment?: (id: string) => void;
 }
 
 const ComposerContext = createContext<ComposerContextProps | null>(null);
@@ -51,7 +49,7 @@ export function Composer({ onSubmit, className, children, ...props }: ComposerPr
     <ComposerContext.Provider value={memoizedValue}>
       <div
         className={cn(
-          'relative rounded-2xl border bg-background p-3',
+          'relative rounded-lg border bg-background p-3',
           'focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1 focus-within:ring-offset-background',
           className,
         )}
@@ -60,6 +58,37 @@ export function Composer({ onSubmit, className, children, ...props }: ComposerPr
         {children}
       </div>
     </ComposerContext.Provider>
+  );
+}
+
+export type ComposerSuggestionsProps = ComponentProps<'div'>;
+
+export function ComposerSuggestions({ className, children, ...props }: ComposerSuggestionsProps) {
+  return (
+    <div
+      className={cn('absolute bottom-3 grid grid-cols-1 sm:grid-cols-2 inset-x-4 gap-2', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+export type ComposerSuggestionItemProps = ComponentProps<'button'>;
+
+export function ComposerSuggestionItem({ className, children, ...props }: ComposerSuggestionItemProps) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        'w-full text-left rounded-lg border bg-background p-3 text-sm text-muted-foreground hover:bg-accent/40 hover:text-accent-foreground',
+        'focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -72,12 +101,17 @@ export function ComposerInput({
   ...props
 }: ComposerInputProps) {
   const { state, setState, submit, canSubmit } = useComposer();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (canSubmit) submit();
+        if (canSubmit) {
+          submit().then(() => {
+            textareaRef.current?.focus();
+          });
+        }
       }
       onKeyDown?.(e);
     },
@@ -86,10 +120,10 @@ export function ComposerInput({
 
   return (
     <textarea
+      ref={textareaRef}
       className={cn(
         'min-h-10 field-sizing-content w-full resize-none bg-transparent px-1 text-sm',
         'placeholder:text-muted-foreground focus:outline-none',
-        'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
         className,
       )}
       value={state.value}
@@ -123,12 +157,9 @@ export function ComposerSubmit({ className, children, ...props }: ComposerSubmit
       onClick={submit}
       disabled={!canSubmit}
       className={cn(
-        'inline-flex items-center justify-center rounded-md p-2',
-        'bg-muted text-muted-foreground',
-        'hover:bg-accent hover:text-foreground',
+        'inline-flex items-center justify-center rounded-md p-2 bg-foreground text-background hover:bg-foreground/90',
+        'transition-all focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background',
         'disabled:opacity-50 disabled:pointer-events-none',
-        'transition-all focus:outline-none focus:ring-1 focus:ring-ring',
-        canSubmit && 'bg-foreground text-background hover:bg-foreground/90',
         className,
       )}
       {...props}

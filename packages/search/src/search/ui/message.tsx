@@ -1,6 +1,6 @@
 import { ComponentProps, createContext, useContext, useState } from 'react';
 import { type Message as MessageType } from '../lib/types';
-import { UserIcon, BotIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { UserIcon, SparklesIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TextShimmer } from './text-shimmer';
 
@@ -19,7 +19,7 @@ export function AssistantMessage({ className, ...props }: AssistantMessageProps)
   return (
     <div className={cn('flex gap-3', className)} {...props}>
       <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
-        <BotIcon className="size-4" />
+        <SparklesIcon className="size-4" />
       </div>
       <div className="flex grow flex-col">
         <div className="rounded-md px-3 py-2 bg-muted self-start">
@@ -62,10 +62,30 @@ export function PendingMessage({ className, ...props }: PendingMessageProps) {
   return (
     <div className={cn('flex gap-3', className)} {...props}>
       <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
-        <BotIcon className="size-4" />
+        <SparklesIcon className="size-4" />
       </div>
       <div className="pb-10 pt-0.5">
         <TextShimmer className="text-sm">Thinking...</TextShimmer>
+      </div>
+    </div>
+  );
+}
+
+export type WelcomeMessageProps = ComponentProps<'div'>;
+
+export function WelcomeMessage({ className, ...props }: WelcomeMessageProps) {
+  return (
+    <div className={cn('flex gap-3', className)} {...props}>
+      <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
+        <SparklesIcon className="size-4" />
+      </div>
+      <div className="flex grow flex-col">
+        <div className="rounded-md px-3 py-2 bg-muted self-start">
+          <p className="text-sm">
+            Hi! I&apos;m an AI assistant trained to answer questions about the documentation. How can I help
+            you today?
+          </p>
+        </div>
       </div>
     </div>
   );

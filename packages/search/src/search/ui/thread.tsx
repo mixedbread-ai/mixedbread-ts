@@ -17,7 +17,14 @@ import {
 import { motion } from 'motion/react';
 import { type Thread as ThreadType } from '../lib/types';
 import { ChevronDownIcon } from 'lucide-react';
-import { AssistantMessage, Message, MessageContext, PendingMessage, UserMessage } from './message';
+import {
+  AssistantMessage,
+  Message,
+  MessageContext,
+  PendingMessage,
+  UserMessage,
+  WelcomeMessage,
+} from './message';
 
 interface ThreadContextProps {
   thread: ThreadType;
@@ -67,32 +74,29 @@ export function ThreadViewport({ autoScroll = true, children, ...props }: Thread
 export interface ThreadMessagesProps extends ComponentProps<'div'> {
   components?: {
     Message?: typeof Message;
-    Empty?: () => ReactNode;
     AssistantMessage?: typeof AssistantMessage;
     UserMessage?: typeof UserMessage;
     PendingMessage?: typeof PendingMessage;
+    WelcomeMessage?: typeof WelcomeMessage;
   };
 }
 
 export function ThreadMessages({
   components: {
     Message: MessageComponent = Message,
-    Empty = () => <div className="text-center text-sm text-muted-foreground">No messages yet</div>,
     AssistantMessage: AssistantMessageComponent = AssistantMessage,
     UserMessage: UserMessageComponent = UserMessage,
     PendingMessage: PendingMessageComponent = PendingMessage,
+    WelcomeMessage: WelcomeMessageComponent = WelcomeMessage,
   } = {},
   className,
   ...props
 }: ThreadMessagesProps) {
   const { thread } = useThread();
 
-  if (thread.messages.length === 0) {
-    return <Empty />;
-  }
-
   return (
     <div className={cn('flex flex-col gap-7 px-4 py-6', className)} {...props}>
+      <WelcomeMessageComponent />
       {thread.messages.map((message, index) => (
         <MessageContext.Provider
           key={message.id}
