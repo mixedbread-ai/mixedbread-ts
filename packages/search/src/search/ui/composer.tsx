@@ -66,7 +66,7 @@ export function ComposerForm({ className, children, ...props }: ComposerFormProp
   return (
     <form
       className={cn(
-        'relative rounded-lg border bg-background p-3',
+        'relative rounded-lg border p-3',
         'focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1 focus-within:ring-offset-background',
         className,
       )}
@@ -124,7 +124,7 @@ export type ComposerInputProps = Omit<ComponentProps<'textarea'>, 'value' | 'onC
 export function ComposerInput({
   className,
   onKeyDown,
-  placeholder = 'Ask something...',
+  placeholder = 'Ask a question...',
   ...props
 }: ComposerInputProps) {
   const { state, setState, submit, canSubmit } = useComposer();
