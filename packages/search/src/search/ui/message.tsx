@@ -3,6 +3,7 @@ import { type Message as MessageType } from '../lib/types';
 import { UserIcon, SparklesIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TextShimmer } from './text-shimmer';
+import { Markdown } from './markdown';
 
 interface MessageContextProps {
   message: MessageType;
@@ -14,8 +15,6 @@ export const MessageContext = createContext<MessageContextProps | null>(null);
 type AssistantMessageProps = ComponentProps<'div'>;
 
 export function AssistantMessage({ className, ...props }: AssistantMessageProps) {
-  const { message } = useMessage();
-
   return (
     <div className={cn('flex gap-3', className)} {...props}>
       <div className={cn('flex size-8 shrink-0 items-center justify-center rounded-full bg-muted')}>
@@ -23,7 +22,7 @@ export function AssistantMessage({ className, ...props }: AssistantMessageProps)
       </div>
       <div className="flex grow flex-col">
         <div className="rounded-md px-3 py-2 bg-muted self-start">
-          <p className="text-sm">{message.content}</p>
+          <MessageContent />
         </div>
         <MessageFooter>
           <MessageCopy />
@@ -36,8 +35,6 @@ export function AssistantMessage({ className, ...props }: AssistantMessageProps)
 type UserMessageProps = ComponentProps<'div'>;
 
 export function UserMessage({ className, ...props }: UserMessageProps) {
-  const { message } = useMessage();
-
   return (
     <div className={cn('flex gap-3', className)} {...props}>
       <div
@@ -49,7 +46,7 @@ export function UserMessage({ className, ...props }: UserMessageProps) {
       </div>
       <div className="flex flex-col gap-2">
         <div className="rounded-md px-3 py-2 bg-foreground text-background">
-          <p className="text-sm">{message.content}</p>
+          <MessageContent />
         </div>
       </div>
     </div>
@@ -81,10 +78,10 @@ export function WelcomeMessage({ className, ...props }: WelcomeMessageProps) {
       </div>
       <div className="flex grow flex-col">
         <div className="rounded-md px-3 py-2 bg-muted self-start">
-          <p className="text-sm">
+          <Markdown>
             Hi! I&apos;m an AI assistant trained to answer questions about the documentation. How can I help
             you today?
-          </p>
+          </Markdown>
         </div>
       </div>
     </div>
@@ -113,12 +110,12 @@ export function Message({ role, status, UserMessage, AssistantMessage, PendingMe
 
 export type MessageContentProps = ComponentProps<'div'>;
 
-export function MessageContent({ className, ...props }: MessageContentProps) {
+export function MessageContent(props: MessageContentProps) {
   const { message } = useMessage();
 
   return (
-    <div className={cn('prose prose-sm dark:prose-invert max-w-none', className)} {...props}>
-      <p className="text-sm">{message.content}</p>
+    <div {...props}>
+      <Markdown>{message.content}</Markdown>
     </div>
   );
 }

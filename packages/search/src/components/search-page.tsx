@@ -42,7 +42,7 @@ export function CustomSearchPage() {
         <div className="flex items-center justify-between">
           <TagsList allowClear={true} className="gap-2 px-0" />
 
-          <span className="text-xs font-medium text-muted-foreground ml-auto bg-muted px-2 py-1 rounded-md">
+          <span className="text-xs hidden sm:block font-medium text-muted-foreground ml-auto bg-muted px-2 py-1 rounded-md">
             {mockedResults.length} Result{mockedResults.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -50,7 +50,7 @@ export function CustomSearchPage() {
 
       <SearchIf hasQuery={false} hasResults={false}>
         <div className="py-12 text-center text-sm text-muted-foreground">
-          Search for something to see the results...
+          Search for something to see the results.
         </div>
       </SearchIf>
 

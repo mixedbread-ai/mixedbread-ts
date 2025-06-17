@@ -120,10 +120,10 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
                       </ComposerSuggestionItem>
 
                       <ComposerSuggestionItem
-                        value="Show me TypeScript best practices"
+                        value="Show me code examples"
                         className="bg-background/10"
                       >
-                        <span className="line-clamp-1">Show me TypeScript best practices</span>
+                        <span className="line-clamp-1">Show me code examples</span>
                       </ComposerSuggestionItem>
                     </ComposerSuggestions>
                   </ThreadIf>
