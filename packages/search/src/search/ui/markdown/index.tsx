@@ -1,6 +1,5 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypePrismPlus from 'rehype-prism-plus';
 import { Table, Td, Th, THead, Tr } from './table';
 import { CodeBlock } from './code-block';
 import { ComponentProps, memo } from 'react';
@@ -11,7 +10,6 @@ function MarkdownComponent({ children, ...props }: MarkdownProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[[rehypePrismPlus, { ignoreMissing: true }]]}
       components={{
         p: ({ children }) => <p className="text-sm leading-relaxed mb-2 last:mb-0">{children}</p>,
         h1: ({ children }) => <h1 className="text-2xl font-bold mb-2 mt-4 first:mt-0">{children}</h1>,

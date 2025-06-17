@@ -1,11 +1,9 @@
 'use client';
 
 import { ComponentProps, memo, ReactNode, isValidElement } from 'react';
-import { Highlight, themes } from 'prism-react-renderer';
-import { cn } from '@/lib/utils';
 import { CopyIcon, CheckIcon } from 'lucide-react';
 import { useState } from 'react';
-import { useTheme } from 'next-themes';
+import { SyntaxHighlighter } from './syntsx-highlighter';
 
 interface CodeBlockProps extends ComponentProps<'pre'> {
   children?: ReactNode;
@@ -16,45 +14,40 @@ interface ReactElementProps {
   children?: ReactNode;
 }
 
+const getCodeInfo = (children: ReactNode): { language: string; code: string } => {
+  if (isValidElement(children) && children.props && typeof children.props === 'object') {
+    const props = children.props as ReactElementProps;
+    const className = props.className;
+    const match = className?.match(/language-(\w+)/);
+    const language = match ? match[1] : 'text';
+
+    // Extract text content recursively
+    const extractText = (node: ReactNode): string => {
+      if (typeof node === 'string') return node;
+      if (typeof node === 'number') return String(node);
+      if (Array.isArray(node)) return node.map(extractText).join('');
+      if (isValidElement(node) && node.props && typeof node.props === 'object') {
+        const nodeProps = node.props as ReactElementProps;
+        if (nodeProps.children) {
+          return extractText(nodeProps.children);
+        }
+      }
+      return '';
+    };
+
+    const code = extractText(props.children || '').replace(/\n$/, '');
+    return { language, code };
+  }
+
+  // Fallback: treat the entire children as plain text
+  return {
+    language: 'text',
+    code: typeof children === 'string' ? children : '',
+  };
+};
+
 function CodeBlockComponent({ children, className, ...props }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const { theme } = useTheme();
-
-  const codeTheme = theme === 'dark' ? themes.vsDark : themes.vsLight;
-
-  // Extract language and code content
-  const getCodeInfo = (children: ReactNode): { language: string; code: string } => {
-    // If children is a valid React element (typically a <code> element from react-markdown)
-    if (isValidElement(children) && children.props && typeof children.props === 'object') {
-      const props = children.props as ReactElementProps;
-      const className = props.className;
-      const match = className?.match(/language-(\w+)/);
-      const language = match ? match[1] : 'text';
-
-      // Extract text content recursively
-      const extractText = (node: ReactNode): string => {
-        if (typeof node === 'string') return node;
-        if (typeof node === 'number') return String(node);
-        if (Array.isArray(node)) return node.map(extractText).join('');
-        if (isValidElement(node) && node.props && typeof node.props === 'object') {
-          const nodeProps = node.props as ReactElementProps;
-          if (nodeProps.children) {
-            return extractText(nodeProps.children);
-          }
-        }
-        return '';
-      };
-
-      const code = extractText(props.children || '').replace(/\n$/, '');
-      return { language, code };
-    }
-
-    // Fallback: treat the entire children as plain text
-    return {
-      language: 'text',
-      code: typeof children === 'string' ? children : '',
-    };
-  };
 
   const { language, code } = getCodeInfo(children);
 
@@ -79,7 +72,7 @@ function CodeBlockComponent({ children, className, ...props }: CodeBlockProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center justify-center rounded-md size-8 text-muted-foreground hover:text-foreground hover:bg-accent/80 backdrop-blur-sm transition-all"
+          className="inline-flex items-center justify-center rounded-md size-8 border border-transparent text-muted-foreground hover:text-foreground hover:bg-accent/80 hover:border-border/60 backdrop-blur-sm transition-all"
           aria-label={copied ? 'Copied' : 'Copy code'}
         >
           {copied ?
@@ -89,34 +82,9 @@ function CodeBlockComponent({ children, className, ...props }: CodeBlockProps) {
         </button>
       </div>
 
-      <Highlight theme={codeTheme} code={code} language={language}>
-        {({ style, tokens, getLineProps, getTokenProps }) => (
-          <pre
-            style={{
-              ...style,
-              margin: 0,
-              padding: '1rem',
-              paddingRight: '3rem',
-              borderRadius: '0.375rem',
-              overflow: 'auto',
-              border: '1px solid',
-              borderColor: 'var(--border)',
-            }}
-            className={cn('text-sm font-mono', className)}
-            {...props}
-          >
-            <code>
-              {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line })}>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token })} />
-                  ))}
-                </div>
-              ))}
-            </code>
-          </pre>
-        )}
-      </Highlight>
+      <SyntaxHighlighter language={language} showLanguage={false}>
+        {code}
+      </SyntaxHighlighter>
     </div>
   );
 }
