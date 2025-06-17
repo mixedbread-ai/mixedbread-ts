@@ -9,12 +9,7 @@ export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableEle
 }
 
 export function Tr({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
-  return (
-    <tr
-      className={cn('m-0 rounded-sm p-0 odd:bg-background/90 even:bg-background/40', className)}
-      {...props}
-    />
-  );
+  return <tr className={cn('m-0 rounded-sm p-0 bg-background/40', className)} {...props} />;
 }
 
 export function THead({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {

@@ -119,10 +119,7 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
                         <span className="line-clamp-1">Explain RAG architecture patterns</span>
                       </ComposerSuggestionItem>
 
-                      <ComposerSuggestionItem
-                        value="Show me code examples"
-                        className="bg-background/10"
-                      >
+                      <ComposerSuggestionItem value="Show me code examples" className="bg-background/10">
                         <span className="line-clamp-1">Show me code examples</span>
                       </ComposerSuggestionItem>
                     </ComposerSuggestions>

@@ -39,22 +39,91 @@ Which endpoint would you like to learn more about?`,
   code: `Here's a simple example of how to implement semantic search:
 
 \`\`\`typescript
+import { MixedbreadClient } from '@mixedbread/sdk';
+
 // Initialize the client
 const client = new MixedbreadClient({
   apiKey: process.env.MIXEDBREAD_API_KEY
 });
 
-// Generate embeddings
-const response = await client.embeddings({
-  model: 'mxbai-embed-large-v1',
-  input: 'What is semantic search?'
-});
+// Function to generate embeddings for text
+async function generateEmbedding(text: string) {
+  try {
+    const response = await client.embeddings({
+      model: 'mxbai-embed-large-v1',
+      input: text,
+    });
+    
+    return response.data[0].embedding;
+  } catch (error) {
+    console.error('Error generating embedding:', error);
+    throw error;
+  }
+}
 
 // Use the embeddings for similarity search
-const results = await searchVector(response.data[0].embedding);
+const query = 'What is semantic search?';
+const embedding = await generateEmbedding(query);
+const results = await searchVector(embedding);
+\`\`\`
+
+You can also work with multiple texts at once:
+
+\`\`\`javascript
+const texts = [
+  "Semantic search understands meaning",
+  "Traditional search matches keywords",
+  "Vector embeddings capture context"
+];
+
+const embeddings = await client.embeddings({
+  model: 'mxbai-embed-large-v1',
+  input: texts
+});
 \`\`\`
 
 > **Note:** Make sure to handle errors and implement proper rate limiting in production.`,
+  python: `Here's how to use the Mixedbread API with Python:
+
+\`\`\`python
+from mixedbread import MixedbreadClient
+import numpy as np
+
+# Initialize the client
+client = MixedbreadClient(api_key="your-api-key")
+
+# Generate embeddings
+response = client.embeddings(
+    model="mxbai-embed-large-v1",
+    input="What is semantic search?"
+)
+
+# Extract the embedding vector
+embedding = response.data[0].embedding
+print(f"Embedding dimension: {len(embedding)}")
+
+# Calculate cosine similarity between embeddings
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+\`\`\`
+
+The API supports batch processing for efficiency:
+
+\`\`\`python
+texts = [
+    "Semantic search uses meaning",
+    "Keyword search uses exact matches",
+    "Vector search uses embeddings"
+]
+
+# Generate embeddings for multiple texts
+response = client.embeddings(
+    model="mxbai-embed-large-v1", 
+    input=texts
+)
+
+embeddings = [item.embedding for item in response.data]
+\`\`\``,
   markdown: `## Markdown Support
 
 This chat interface supports **full markdown** rendering including:
@@ -63,10 +132,22 @@ This chat interface supports **full markdown** rendering including:
 - \`inline code\` snippets
 - Lists (ordered and unordered)
 - [Links](https://mixedbread.com)
-- Code blocks with syntax highlighting
+- Code blocks with **syntax highlighting**
 - Tables and more!
 
-> Blockquotes
+> Blockquotes with *nested* formatting
+
+### Syntax Highlighting Examples
+
+We support many languages including TypeScript, Python, JavaScript, JSON, and more:
+
+\`\`\`json
+{
+  "name": "mixedbread-sdk",
+  "version": "1.0.0",
+  "features": ["embeddings", "search", "chat"]
+}
+\`\`\`
 
 Feel free to ask questions and I'll format my responses for better readability.`,
   default: `I understand you're asking about the documentation. Could you be more specific about what you'd like to know? 
@@ -89,11 +170,19 @@ function getResponse(input: string) {
   }
 
   // Additional keyword checks for better matching
-  if (lowerInput.includes('example') || lowerInput.includes('how to')) {
+  if (
+    lowerInput.includes('typescript') ||
+    lowerInput.includes('javascript') ||
+    lowerInput.includes('example')
+  ) {
     return demoResponses.code;
   }
 
-  if (lowerInput.includes('format') || lowerInput.includes('style')) {
+  if (lowerInput.includes('python')) {
+    return demoResponses.python;
+  }
+
+  if (lowerInput.includes('format') || lowerInput.includes('style') || lowerInput.includes('syntax')) {
     return demoResponses.markdown;
   }
 
