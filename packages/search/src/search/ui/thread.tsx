@@ -7,7 +7,6 @@ import {
   createContext,
   useContext,
   useMemo,
-  type ReactNode,
   useRef,
   useEffect,
   useCallback,
@@ -31,19 +30,18 @@ interface ThreadContextProps {
   thread: ThreadType;
   isLoading: boolean;
   error?: Error;
+  sendMessage: (message: string) => Promise<void>;
 }
 
 const ThreadContext = createContext<ThreadContextProps | null>(null);
 
-export interface ThreadProps {
-  thread: ThreadType;
-  isLoading?: boolean;
-  error?: Error;
-  children: ReactNode;
-}
+export type ThreadProps = PropsWithChildren<ThreadContextProps>;
 
-export function Thread({ thread, isLoading = false, error, children }: ThreadProps) {
-  const memoizedValue = useMemo(() => ({ thread, isLoading, error }), [thread, isLoading, error]);
+export function Thread({ thread, isLoading = false, sendMessage, error, children }: ThreadProps) {
+  const memoizedValue = useMemo(
+    () => ({ thread, isLoading, error, sendMessage }),
+    [thread, isLoading, error, sendMessage],
+  );
 
   return <ThreadContext.Provider value={memoizedValue}>{children}</ThreadContext.Provider>;
 }

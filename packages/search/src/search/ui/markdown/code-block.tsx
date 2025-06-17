@@ -72,7 +72,7 @@ function CodeBlockComponent({ children, className, ...props }: CodeBlockProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center justify-center rounded-md size-8 border border-transparent text-muted-foreground hover:text-foreground hover:bg-accent/80 hover:border-border/60 backdrop-blur-sm transition-all"
+          className="inline-flex items-center justify-center rounded-md size-8 border border-transparent text-muted-foreground hover:text-foreground hover:bg-accent/80 hover:border-border/60 backdrop-blur-sm"
           aria-label={copied ? 'Copied' : 'Copy code'}
         >
           {copied ?

@@ -2,6 +2,7 @@ import { ComponentProps, createContext, useCallback, useContext, useMemo, useSta
 import { ComposerState, SendMessageFunc } from '../lib/types';
 import { LoaderCircleIcon, ArrowUpIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useThread } from './thread';
 
 interface ComposerContextProps {
   state: ComposerState;
@@ -83,7 +84,7 @@ export type ComposerSuggestionsProps = ComponentProps<'div'>;
 export function ComposerSuggestions({ className, children, ...props }: ComposerSuggestionsProps) {
   return (
     <div
-      className={cn('absolute bottom-36 grid grid-cols-1 inset-x-0 sm:grid-cols-2 gap-2', className)}
+      className={cn('absolute bottom-3 grid grid-cols-1 inset-x-4 sm:grid-cols-2 gap-2', className)}
       {...props}
     >
       {children}
@@ -101,7 +102,7 @@ export function ComposerSuggestionItem({
   children,
   ...props
 }: ComposerSuggestionItemProps) {
-  const { submit } = useComposer();
+  const { sendMessage } = useThread();
 
   return (
     <button
@@ -111,7 +112,7 @@ export function ComposerSuggestionItem({
         'focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background',
         className,
       )}
-      onClick={() => submit(value)}
+      onClick={() => sendMessage(value)}
       {...props}
     >
       {children}

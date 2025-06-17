@@ -88,43 +88,43 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
           </Search>
 
           <TabsContent value="chat" className="mt-0">
-            <Thread thread={thread} isLoading={isChatLoading}>
+            <Thread thread={thread} isLoading={isChatLoading} sendMessage={sendMessage}>
               <ThreadViewport className="h-[400px]">
                 <ThreadMessages />
                 <ThreadScrollToBottom />
+
+                <ThreadIf empty>
+                  <ComposerSuggestions>
+                    <ComposerSuggestionItem
+                      value="How do I implement semantic search?"
+                      className="bg-background/10"
+                    >
+                      <span className="line-clamp-1">How do I implement semantic search?</span>
+                    </ComposerSuggestionItem>
+
+                    <ComposerSuggestionItem
+                      value="What are the benefits of vector databases?"
+                      className="bg-background/10"
+                    >
+                      <span className="line-clamp-1">What are the benefits of vector databases?</span>
+                    </ComposerSuggestionItem>
+
+                    <ComposerSuggestionItem
+                      value="Explain RAG architecture patterns"
+                      className="bg-background/10"
+                    >
+                      <span className="line-clamp-1">Explain RAG architecture patterns</span>
+                    </ComposerSuggestionItem>
+
+                    <ComposerSuggestionItem value="Show me code examples" className="bg-background/10">
+                      <span className="line-clamp-1">Show me code examples</span>
+                    </ComposerSuggestionItem>
+                  </ComposerSuggestions>
+                </ThreadIf>
               </ThreadViewport>
 
               <div className="border-t border-border/60 p-4">
                 <Composer onSubmit={sendMessage}>
-                  <ThreadIf empty>
-                    <ComposerSuggestions>
-                      <ComposerSuggestionItem
-                        value="How do I implement semantic search?"
-                        className="bg-background/10"
-                      >
-                        <span className="line-clamp-1">How do I implement semantic search?</span>
-                      </ComposerSuggestionItem>
-
-                      <ComposerSuggestionItem
-                        value="What are the benefits of vector databases?"
-                        className="bg-background/10"
-                      >
-                        <span className="line-clamp-1">What are the benefits of vector databases?</span>
-                      </ComposerSuggestionItem>
-
-                      <ComposerSuggestionItem
-                        value="Explain RAG architecture patterns"
-                        className="bg-background/10"
-                      >
-                        <span className="line-clamp-1">Explain RAG architecture patterns</span>
-                      </ComposerSuggestionItem>
-
-                      <ComposerSuggestionItem value="Show me code examples" className="bg-background/10">
-                        <span className="line-clamp-1">Show me code examples</span>
-                      </ComposerSuggestionItem>
-                    </ComposerSuggestions>
-                  </ThreadIf>
-
                   <ComposerForm>
                     <ComposerInput ref={chatInputRef} />
                     <ComposerFooter className="justify-end">
