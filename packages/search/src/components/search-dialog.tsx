@@ -38,11 +38,15 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
   const mockedResults = mockResults(results);
 
   useEffect(() => {
-    if (activeTab === 'search') {
-      searchInputRef.current?.focus();
-    } else {
-      chatInputRef.current?.focus();
-    }
+    const timer = setTimeout(() => {
+      if (activeTab === 'search') {
+        searchInputRef.current?.focus();
+      } else {
+        chatInputRef.current?.focus();
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [activeTab]);
 
   return (
