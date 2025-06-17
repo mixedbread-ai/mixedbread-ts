@@ -442,6 +442,11 @@ export interface VectorStore {
   description?: string | null;
 
   /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean;
+
+  /**
    * Additional metadata associated with the vector store
    */
   metadata?: unknown;
@@ -617,6 +622,11 @@ export interface VectorStoreCreateParams {
   description?: string | null;
 
   /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean;
+
+  /**
    * Represents an expiration policy for a vector store.
    */
   expires_after?: ExpiresAfter | null;
@@ -642,6 +652,11 @@ export interface VectorStoreUpdateParams {
    * New description
    */
   description?: string | null;
+
+  /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean | null;
 
   /**
    * Represents an expiration policy for a vector store.

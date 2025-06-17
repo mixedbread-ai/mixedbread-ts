@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.0 (2025-06-17)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** api update ([e7cb592](https://github.com/mixedbread-ai/mixedbread-ts/commit/e7cb5922826dc2f28afd393271819991ae81ae63))
+* **client:** add support for endpoint-specific base URLs ([01cb55b](https://github.com/mixedbread-ai/mixedbread-ts/commit/01cb55bed909db63b728125dd617bc836706a62e))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([34fda06](https://github.com/mixedbread-ai/mixedbread-ts/commit/34fda06e668dfd45f4e8d9a6c2f2e5e746e26465))
+* **client:** refactor imports ([e1b0cbb](https://github.com/mixedbread-ai/mixedbread-ts/commit/e1b0cbb80535d2f3d0854a17642be7acf502f97e))
+
 ## 0.8.0 (2025-06-16)
 
 Full Changelog: [v0.7.2...v0.8.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.2...v0.8.0)
