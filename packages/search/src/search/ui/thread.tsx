@@ -156,26 +156,19 @@ export function ThreadScrollToBottom({ offset = 100, className, ...props }: Thre
     }
   }, []);
 
-  if (isAtBottom) return null;
-
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
+    <button
+      onClick={scrollToBottom}
+      data-is-at-bottom={isAtBottom}
+      className={cn(
+        'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background shadow-lg border p-2 transition-all hover:bg-accent data-[is-at-bottom=true]:opacity-0 data-[is-at-bottom=true]:-translate-y-2',
+        className,
+      )}
+      {...props}
     >
-      <button
-        onClick={scrollToBottom}
-        className={cn(
-          'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background shadow-lg border p-2 transition-colors hover:bg-accent',
-          className,
-        )}
-        {...props}
-      >
-        <ChevronDownIcon className="size-4" />
-        <span className="sr-only">Scroll to bottom</span>
-      </button>
-    </motion.div>
+      <ChevronDownIcon className="size-4" />
+      <span className="sr-only">Scroll to bottom</span>
+    </button>
   );
 }
 

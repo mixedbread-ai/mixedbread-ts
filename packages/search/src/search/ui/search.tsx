@@ -15,7 +15,6 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
-import { motion } from 'motion/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Result } from '../lib/types';
 
@@ -174,19 +173,17 @@ export function SearchList({
 
   return (
     <SearchIf hasResults>
-      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}>
-        <ScrollArea className={cn('flex flex-col p-4', className)} {...props}>
-          <div className="flex flex-col gap-3">
-            <SearchListContext.Provider value={memoizedValue}>
-              <SearchIf isEmpty>
-                <Empty />
-              </SearchIf>
+      <ScrollArea className={cn('flex flex-col p-4', className)} {...props}>
+        <div className="flex flex-col gap-3">
+          <SearchListContext.Provider value={memoizedValue}>
+            <SearchIf isEmpty>
+              <Empty />
+            </SearchIf>
 
-              {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
-            </SearchListContext.Provider>
-          </div>
-        </ScrollArea>
-      </motion.div>
+            {children || filteredItems.map((item) => <Fragment key={item.id}>{Item({ item })}</Fragment>)}
+          </SearchListContext.Provider>
+        </div>
+      </ScrollArea>
     </SearchIf>
   );
 }

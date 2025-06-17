@@ -22,7 +22,13 @@ export function useMeasure<T extends HTMLElement>() {
         if (entry?.borderBoxSize?.[0]) {
           const { inlineSize: width, blockSize: height } = entry.borderBoxSize[0];
 
-          setDimensions({ width, height });
+          // Only update dimensions if they have actually changed
+          setDimensions((prev) => {
+            if (prev.width === width && prev.height === height) {
+              return prev;
+            }
+            return { width, height };
+          });
         }
       });
 
