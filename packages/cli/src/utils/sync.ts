@@ -181,7 +181,10 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
   const totalDeletes = analysis.modified.length + analysis.deleted.length;
 
   lines.push(
-    `Total: ${formatCountWithSuffix(totalChanges, 'change')} (${formatCountWithSuffix(totalUploads, 'file')} to upload, ${formatCountWithSuffix(totalDeletes, 'file')} to delete)`,
+    `Total: ${formatCountWithSuffix(totalChanges, 'change')} (${formatCountWithSuffix(
+      totalUploads,
+      'file',
+    )} to upload, ${formatCountWithSuffix(totalDeletes, 'file')} to delete)`,
   );
   lines.push(`Upload size: ${formatBytes(analysis.totalSize)}`);
 

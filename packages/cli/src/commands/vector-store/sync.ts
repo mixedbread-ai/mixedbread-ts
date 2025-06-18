@@ -156,11 +156,20 @@ export function createSyncCommand(): Command {
       console.log(chalk.bold('Summary:'));
       console.log(
         chalk.green('✓'),
-        `${formatCountWithSuffix(analysis.added.length + analysis.modified.length, 'file')} uploaded successfully`,
+        `${formatCountWithSuffix(
+          analysis.added.length + analysis.modified.length,
+          'file',
+        )} uploaded successfully`,
       );
       console.log(
         chalk.green('✓'),
-        `${formatCountWithSuffix(analysis.modified.length + analysis.deleted.length, 'file')} deleted (${formatCountWithSuffix(analysis.modified.length, 'update')} + ${formatCountWithSuffix(analysis.deleted.length, 'removal')})`,
+        `${formatCountWithSuffix(
+          analysis.modified.length + analysis.deleted.length,
+          'file',
+        )} deleted (${formatCountWithSuffix(analysis.modified.length, 'update')} + ${formatCountWithSuffix(
+          analysis.deleted.length,
+          'removal',
+        )})`,
       );
       console.log(chalk.green('✓'), 'Vector store is now in sync');
 

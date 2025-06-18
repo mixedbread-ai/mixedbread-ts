@@ -128,7 +128,9 @@ export function createUploadCommand(): Command {
         }, 0);
 
         console.log(
-          `Found ${formatCountWithSuffix(uniqueFiles.length, 'file')} matching the ${patterns.length > 1 ? 'patterns' : 'pattern'} (${formatBytes(totalSize)})`,
+          `Found ${formatCountWithSuffix(uniqueFiles.length, 'file')} matching the ${
+            patterns.length > 1 ? 'patterns' : 'pattern'
+          } (${formatBytes(totalSize)})`,
         );
       }
 

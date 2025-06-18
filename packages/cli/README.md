@@ -114,6 +114,7 @@ You can upload files using a manifest file that defines file patterns, processin
 ### Intelligent Sync
 
 The sync command provides three levels of change detection:
+
 1. **Git-based** (fastest): Uses `git diff` to detect changes
 2. **Hash-based** (accurate): Compares file hashes with stored metadata
 3. **Missing file detection**: Finds files that exist locally but not in vector store
@@ -147,19 +148,21 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
 
 #### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - Yarn package manager
 - Git
 
 #### Setup
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/mixedbread-ai/mixedbread-ts.git
    cd mixedbread-ts/packages/cli
    ```
 
 2. **Install dependencies:**
+
    ```bash
    yarn install
    ```
@@ -174,24 +177,27 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
 #### Development Workflow
 
 1. **Start development mode** (auto-rebuild on changes):
+
    ```bash
    cd packages/cli && yarn dev
    ```
 
 2. **In another terminal, test your changes:**
+
    ```bash
    yarn mxbai vs --help
    yarn mxbai vs list
    ```
 
 3. **Run tests:**
+
    ```bash
    # Run all tests
    yarn test
-   
+
    # Run specific test file
    yarn test tests/commands/vector-store/upload.test.ts
-   
+
    # Run tests in watch mode
    yarn test --watch
    ```
@@ -227,17 +233,18 @@ tests/
 #### Adding New Commands
 
 1. **Create command file** in `src/commands/vector-store/`:
+
    ```typescript
    // src/commands/vector-store/my-command.ts
    import { Command } from 'commander';
    import { addGlobalOptions } from '../../utils/global-options';
-   
+
    export function createMyCommand(): Command {
      return addGlobalOptions(
        new Command('my-command')
          .description('My new command')
          .argument('<arg>', 'Required argument')
-         .option('--flag', 'Optional flag')
+         .option('--flag', 'Optional flag'),
      ).action(async (arg, options) => {
        // Implementation
      });
@@ -245,17 +252,19 @@ tests/
    ```
 
 2. **Register command** in `src/commands/vector-store/index.ts`:
+
    ```typescript
    import { createMyCommand } from './my-command';
-   
+
    // Add to vectorStoreCommand
    vectorStoreCommand.addCommand(createMyCommand());
    ```
 
 3. **Add tests** in `tests/commands/vector-store/my-command.test.ts`:
+
    ```typescript
    import { createMyCommand } from '../../../src/commands/vector-store/my-command';
-   
+
    describe('My Command', () => {
      it('should work correctly', async () => {
        // Test implementation
