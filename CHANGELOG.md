@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.3 (2025-06-19)
+
+Full Changelog: [v0.9.2...v0.9.3](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.2...v0.9.3)
+
+### Chores
+
+* format code ([2fc6118](https://github.com/mixedbread-ai/mixedbread-ts/commit/2fc6118e1d9dbff0b9ff28e83b68edb8e36cb189))
+* lint ([630f13e](https://github.com/mixedbread-ai/mixedbread-ts/commit/630f13edf1d2a96b2c0e36c981db1079837b9846))
+* update cli ([9844c6f](https://github.com/mixedbread-ai/mixedbread-ts/commit/9844c6fd5dcb983254784c633f18364328668b32))
+* update github cli ([ec0a676](https://github.com/mixedbread-ai/mixedbread-ts/commit/ec0a676d7d32928255dc5d3b0903945cf2c12534))
+
 ## 0.9.2 (2025-06-19)
 
 Full Changelog: [v0.9.1...v0.9.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.1...v0.9.2)
