@@ -34,7 +34,7 @@ jobs:
           if [ -n "${{ github.event.inputs.path }}" ]; then
             PATHS_RELEASED='[\"${{ github.event.inputs.path }}\"]'
           else
-            PATHS_RELEASED='[\".\", \"packages/mcp-server\"]'
+            PATHS_RELEASED='[\".\", \"packages/mcp-server\", \"packages/cli\"]'
           fi
           yarn tsn scripts/publish-packages.ts "{ \"paths_released\": \"$PATHS_RELEASED\" }"
         env:
