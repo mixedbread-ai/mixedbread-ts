@@ -125,12 +125,31 @@ The sync command provides three levels of change detection:
 Set defaults for common options:
 
 ```bash
-# Set default upload strategy
-mxbai config set defaults.upload.strategy high_quality
+# Upload defaults
+mxbai config set defaults.upload.strategy high_quality  # or 'fast' (default: fast)
+mxbai config set defaults.upload.contextualization true  # Enable context preservation (default: false)
+mxbai config set defaults.upload.parallel 10             # Concurrent uploads (default: 5)
 
-# Set default search settings
-mxbai config set defaults.search.top_k 20
-mxbai config set defaults.search.rerank true
+# Search defaults
+mxbai config set defaults.search.top_k 20                # Number of results (default: 10)
+mxbai config set defaults.search.rerank true             # Enable reranking (default: true)
+
+# API key (alternative to environment variable)
+mxbai config set api_key mxb_xxxxx
+
+# Create aliases for frequently used vector stores
+mxbai config set aliases.docs "My Documentation"
+mxbai config set aliases.kb "Knowledge Base"
+
+# Then use aliases instead of full names
+mxbai vs upload docs "*.md"              # Instead of: mxbai vs upload "My Documentation" "*.md"
+mxbai vs search kb "how to get started"  # Instead of: mxbai vs search "Knowledge Base" "how to get started"
+
+# View all configuration
+mxbai config get
+
+# View specific configuration
+mxbai config get defaults.upload
 ```
 
 ## Authentication
