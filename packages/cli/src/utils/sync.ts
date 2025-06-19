@@ -220,7 +220,9 @@ export async function executeSyncChanges(
             vector_store_identifier: vectorStoreId,
           });
           completed++;
-          deleteSpinner.succeed(`[${completed}/${totalOperations}] Deleted ${path.relative(process.cwd(), file.path)}`);
+          deleteSpinner.succeed(
+            `[${completed}/${totalOperations}] Deleted ${path.relative(process.cwd(), file.path)}`,
+          );
         } catch (error) {
           deleteSpinner.fail(`Failed to delete ${path.relative(process.cwd(), file.path)}`);
           throw error;
@@ -255,7 +257,9 @@ export async function executeSyncChanges(
           });
 
           completed++;
-          uploadSpinner.succeed(`[${completed}/${totalOperations}] Uploaded ${path.relative(process.cwd(), file.path)}`);
+          uploadSpinner.succeed(
+            `[${completed}/${totalOperations}] Uploaded ${path.relative(process.cwd(), file.path)}`,
+          );
         } catch (error) {
           uploadSpinner.fail(`Failed to upload ${path.relative(process.cwd(), file.path)}`);
           throw error;
