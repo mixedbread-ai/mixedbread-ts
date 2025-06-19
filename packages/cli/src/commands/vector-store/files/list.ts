@@ -43,7 +43,6 @@ export function createListCommand(): Command {
 
     try {
       const mergedOptions = mergeCommandOptions(listCommand, options);
-
       const parsedOptions = parseOptions(ListFilesSchema, { ...mergedOptions, nameOrId });
 
       const client = createClient(parsedOptions);

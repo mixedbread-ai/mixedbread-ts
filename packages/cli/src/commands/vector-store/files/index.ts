@@ -12,18 +12,13 @@ export interface FilesOptions extends GlobalOptions {
 export function createFilesCommand(): Command {
   const filesCommand = new Command('files').description('Manage files in vector stores');
 
-  const listCommand = createListCommand();
-  const getCommand = createGetCommand();
-  const deleteCommand = createDeleteCommand();
-
   // Add subcommands
-  filesCommand.addCommand(listCommand);
-  filesCommand.addCommand(getCommand);
-  filesCommand.addCommand(deleteCommand);
+  filesCommand.addCommand(createListCommand());
+  filesCommand.addCommand(createGetCommand());
+  filesCommand.addCommand(createDeleteCommand());
 
-  // Default action (same as list)
-  filesCommand.action(async (nameOrId: string) => {
-    await listCommand.parseAsync([nameOrId], { from: 'user' });
+  filesCommand.action(() => {
+    filesCommand.help();
   });
 
   return filesCommand;

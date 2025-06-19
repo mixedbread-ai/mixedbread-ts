@@ -22,6 +22,11 @@ setupGlobalOptions(program);
 program.addCommand(createVectorStoreCommand());
 program.addCommand(createConfigCommand());
 
+// Show help without error exit code when no command provided
+program.action(() => {
+  program.help();
+});
+
 // Global error handling
 program.on('error', (error: Error) => {
   console.error(chalk.red('Error:'), error.message);

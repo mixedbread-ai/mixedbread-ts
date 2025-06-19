@@ -8,5 +8,10 @@ export function createConfigCommand(): Command {
   configCommand.addCommand(createSetCommand());
   configCommand.addCommand(createGetCommand());
 
+  // Show help without error exit code when no subcommand provided
+  configCommand.action(() => {
+    configCommand.help();
+  });
+
   return configCommand;
 }

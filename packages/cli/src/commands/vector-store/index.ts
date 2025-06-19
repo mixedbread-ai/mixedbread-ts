@@ -25,5 +25,10 @@ export function createVectorStoreCommand(): Command {
   vsCommand.addCommand(createQACommand());
   vsCommand.addCommand(createSyncCommand());
 
+  // Show help without error exit code when no subcommand provided
+  vsCommand.action(() => {
+    vsCommand.help();
+  });
+
   return vsCommand;
 }
