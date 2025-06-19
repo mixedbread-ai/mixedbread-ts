@@ -27,7 +27,7 @@ describe('resource connectors', () => {
       name: 'name',
       trigger_sync: true,
       metadata: {},
-      polling_interval: 'polling_interval',
+      polling_interval: 1800,
     });
   });
 
@@ -69,7 +69,7 @@ describe('resource connectors', () => {
       name: 'name',
       metadata: { foo: 'bar' },
       trigger_sync: true,
-      polling_interval: 'polling_interval',
+      polling_interval: 1800,
     });
   });
 
