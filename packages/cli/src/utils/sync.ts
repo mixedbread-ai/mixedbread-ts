@@ -216,7 +216,7 @@ export async function executeSyncChanges(
         const deleteSpinner = ora(`Deleting ${file.path}`).start();
         try {
           await client.vectorStores.files.delete(file.fileId!, {
-            vector_store_id: vectorStoreId,
+            vector_store_identifier: vectorStoreId,
           });
           completed++;
           deleteSpinner.succeed(`[${completed}/${totalOperations}] Deleted ${file.path}`);

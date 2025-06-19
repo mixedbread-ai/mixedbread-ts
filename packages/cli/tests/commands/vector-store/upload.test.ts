@@ -264,7 +264,7 @@ describe('Vector Store Upload Command', () => {
         { limit: 1000 },
       );
       expect(mockClient.vectorStores.files.delete).toHaveBeenCalledWith('existing_file_id', {
-        vector_store_id: '550e8400-e29b-41d4-a716-446655440030',
+        vector_store_identifier: '550e8400-e29b-41d4-a716-446655440030',
       });
     });
 

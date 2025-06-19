@@ -44,7 +44,6 @@ async function searchVectorStoreFiles(client: Mixedbread, parsedOptions: ParsedS
     search_options: {
       return_metadata: parsedOptions.returnMetadata,
       score_threshold: parsedOptions.threshold,
-      // @ts-expect-error
       rerank: parsedOptions.rerank,
     },
   });
@@ -58,7 +57,6 @@ async function searchVectorStoreChunks(client: Mixedbread, parsedOptions: Parsed
     search_options: {
       return_metadata: parsedOptions.returnMetadata,
       score_threshold: parsedOptions.threshold,
-      // @ts-expect-error
       rerank: parsedOptions.rerank,
     },
   });

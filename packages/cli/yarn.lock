@@ -629,10 +629,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mixedbread/sdk@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@mixedbread/sdk/-/sdk-0.6.0.tgz#1a4e2dcde19b596dcf37b78dde8ac2da2f718e1d"
-  integrity sha512-ophlWaCop/fxUPQhrpTi+2LL3K+6Qdzc4b6XMOucrVFNuCwPouBPyIGaR9ZW+qtp0uwy7SfOi9fBub/YahlVWw==
+"@mixedbread/sdk@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@mixedbread/sdk/-/sdk-0.9.1.tgz#9a4d1daf19605703482c9c774fe7c35d049e59a9"
+  integrity sha512-05UoFF9b9Iqf21CNoG54DdPfgtg4HlVIN44LP/IpydsTa10O9kzLhZcPNa9S/rOcY6NOu37xMDFndEfWJm6ZSw==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

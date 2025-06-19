@@ -260,7 +260,7 @@ async function uploadManifestFiles(
         const relativePath = relative(process.cwd(), file.path);
         if (unique && existingFiles.has(relativePath)) {
           const existingFileId = existingFiles.get(relativePath);
-          await client.vectorStores.files.delete(existingFileId, { vector_store_id: vectorStoreId });
+          await client.vectorStores.files.delete(existingFileId, { vector_store_identifier: vectorStoreId });
           results.updated++;
         } else {
           results.uploaded++;

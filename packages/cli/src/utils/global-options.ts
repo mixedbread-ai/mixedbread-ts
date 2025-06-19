@@ -55,7 +55,7 @@ export function mergeCommandOptions<T>(command: Command, options: T): T {
   const merged = Object.assign({}, ...allOptions);
 
   if (process.env.MXBAI_DEBUG === 'true') {
-    console.log('Command hierarchy options:', allOptions);
+    console.log('\nCommand hierarchy options:', allOptions);
     console.log('Merged options:', merged);
   }
 

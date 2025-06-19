@@ -164,7 +164,7 @@ The CLI looks for your API key in this order:
 
 All commands support these global options:
 
-- `--api-key <key>` - API key for authentication (must start with "mxb_")
+- `--api-key <key>` - API key for authentication (must start with "mxb\_")
 - `--format <format>` - Output format: table, json, or csv (default: table)
 - `--debug` - Enable debug output (can also set `MXBAI_DEBUG=true`)
 

@@ -59,7 +59,7 @@ export function createDeleteCommand(): Command {
         const spinner = ora('Deleting file...').start();
 
         await client.vectorStores.files.delete(parsedOptions.fileId, {
-          vector_store_id: vectorStore.id,
+          vector_store_identifier: vectorStore.id,
         });
 
         spinner.succeed(`File ${parsedOptions.fileId} deleted successfully`);

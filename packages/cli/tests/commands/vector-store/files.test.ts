@@ -187,7 +187,7 @@ describe('Vector Store Files Command', () => {
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
       expect(mockClient.vectorStores.files.retrieve).toHaveBeenCalledWith('file_123', {
-        vector_store_id: '550e8400-e29b-41d4-a716-446655440070',
+        vector_store_identifier: '550e8400-e29b-41d4-a716-446655440070',
       });
       expect(outputUtils.formatOutput).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -239,7 +239,7 @@ describe('Vector Store Files Command', () => {
 
       expect(vectorStoreUtils.resolveVectorStore).toHaveBeenCalledWith(mockClient, 'test-store');
       expect(mockClient.vectorStores.files.delete).toHaveBeenCalledWith('file_123', {
-        vector_store_id: '550e8400-e29b-41d4-a716-446655440070',
+        vector_store_identifier: '550e8400-e29b-41d4-a716-446655440070',
       });
       expect(console.log).toHaveBeenCalledWith(
         expect.any(String),

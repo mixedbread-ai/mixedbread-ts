@@ -38,7 +38,7 @@ export function createGetCommand(): Command {
       const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
       const file = await client.vectorStores.files.retrieve(parsedOptions.fileId, {
-        vector_store_id: vectorStore.id,
+        vector_store_identifier: vectorStore.id,
       });
 
       spinner.succeed('File details loaded');

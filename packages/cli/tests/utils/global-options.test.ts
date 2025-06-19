@@ -116,7 +116,7 @@ describe('Global Options', () => {
       const options = { debug: true };
       mergeCommandOptions(childCommand, options);
 
-      expect(console.log).toHaveBeenCalledWith('Command hierarchy options:', expect.any(Array));
+      expect(console.log).toHaveBeenCalledWith('\nCommand hierarchy options:', expect.any(Array));
       expect(console.log).toHaveBeenCalledWith('Merged options:', expect.any(Object));
 
       // Cleanup
