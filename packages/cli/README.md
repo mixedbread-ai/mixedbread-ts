@@ -41,22 +41,23 @@ mxbai vs upload "My Documents" --manifest upload-manifest.json
 ### Vector Store Management
 
 - `mxbai vs list` - List all vector stores
+  - Options: `--filter <name>`, `--limit <n>`
 - `mxbai vs create <name>` - Create a new vector store
   - Options: `--description <desc>`, `--expires-after <days>`, `--metadata <json>`
 - `mxbai vs get <name-or-id>` - Get vector store details
 - `mxbai vs update <name-or-id>` - Update vector store
   - Options: `--name <name>`, `--description <desc>`, `--expires-after <days>`, `--metadata <json>`
-- `mxbai vs delete <name-or-id>` - Delete vector store
+- `mxbai vs delete <name-or-id>` - Delete vector store (alias: `rm`)
   - Options: `--force` (skip confirmation)
 
 ### File Management
 
 - `mxbai vs upload <name-or-id> <patterns...>` - Upload files to vector store
   - Options: `--strategy fast|high_quality`, `--contextualization`, `--metadata <json>`, `--dry-run`, `--parallel <n>`, `--unique`, `--manifest <file>`
-- `mxbai vs files list <name-or-id>` - List files in vector store
-  - Options: `--status <status>`, `--limit <n>`
+- `mxbai vs files list <name-or-id>` - List files in vector store (alias: `ls`)
+  - Options: `--status <status>` (pending|in_progress|cancelled|completed|failed), `--limit <n>`
 - `mxbai vs files get <name-or-id> <file-id>` - Get file details
-- `mxbai vs files delete <name-or-id> <file-id>` - Delete file
+- `mxbai vs files delete <name-or-id> <file-id>` - Delete file (alias: `rm`)
   - Options: `--force` (skip confirmation)
 
 ### Search & Query
@@ -140,6 +141,14 @@ The CLI looks for your API key in this order:
 2. `MXBAI_API_KEY` environment variable
 3. Config file (`~/.config/mixedbread/config.json`)
 
+## Global Options
+
+All commands support these global options:
+
+- `--api-key <key>` - API key for authentication (must start with "mxb_")
+- `--format <format>` - Output format: table, json, or csv (default: table)
+- `--debug` - Enable debug output (can also set `MXBAI_DEBUG=true`)
+
 ## Development
 
 This CLI is built on top of the `@mixedbread/sdk` and provides a convenient command-line interface for common operations.
@@ -216,12 +225,38 @@ src/
 ├── bin/mxbai.ts              # CLI entry point
 ├── commands/                 # All CLI commands
 │   ├── config/              # Configuration commands
+│   │   ├── get.ts          # Get config values
+│   │   ├── set.ts          # Set config values
+│   │   └── index.ts
 │   └── vector-store/        # Vector store commands
+│       ├── files/           # File management subcommands
+│       │   ├── delete.ts
+│       │   ├── get.ts
+│       │   ├── list.ts
+│       │   └── index.ts
+│       ├── create.ts        # Create vector store
+│       ├── delete.ts        # Delete vector store
+│       ├── get.ts           # Get vector store details
+│       ├── list.ts          # List vector stores
+│       ├── qa.ts            # Q&A functionality
+│       ├── search.ts        # Search functionality
+│       ├── sync.ts          # Sync files
+│       ├── update.ts        # Update vector store
+│       ├── upload.ts        # Upload files
+│       └── index.ts
 ├── utils/                   # Shared utilities
 │   ├── client.ts           # API client setup
 │   ├── config.ts           # Configuration management
+│   ├── git.ts              # Git integration utilities
 │   ├── global-options.ts   # Common CLI options
-│   └── output.ts           # Output formatting
+│   ├── hash.ts             # File hashing utilities
+│   ├── manifest.ts         # Manifest file handling
+│   ├── metadata.ts         # Metadata validation
+│   ├── output.ts           # Output formatting
+│   ├── sync-state.ts       # Sync state management
+│   ├── sync.ts             # Sync logic
+│   ├── upload.ts           # Upload utilities
+│   └── vector-store.ts     # Vector store helpers
 └── index.ts                # Package exports
 
 tests/
@@ -275,5 +310,6 @@ tests/
 #### Debugging
 
 - Use `--debug` flag for verbose output: `yarn mxbai --debug vs list`
-- Set `DEBUG=*` environment variable for detailed logs
+- Set `MXBAI_DEBUG=true` environment variable for debug output
+- Debug output includes command hierarchy options and merged options
 - Tests include detailed error messages and mock setups
