@@ -2,6 +2,7 @@ import { getChangedFiles, normalizeGitPatterns } from './git';
 import { buildFileSyncMetadata, FileSyncMetadata } from './sync-state';
 import { glob } from 'glob';
 import fs from 'fs/promises';
+import path from 'path';
 import { calculateFileHash, hashesMatch } from './hash';
 import chalk from 'chalk';
 import { formatBytes, formatCountWithSuffix } from './output';
@@ -44,7 +45,7 @@ export async function analyzeChanges(
   const localFiles = new Set<string>();
   for (const pattern of patterns) {
     const matches = await glob(pattern, { nodir: true });
-    matches.forEach((file) => localFiles.add(file));
+    matches.forEach((file) => localFiles.add(path.resolve(file)));
   }
 
   // Only use git detection if --from-git is explicitly provided
@@ -52,7 +53,7 @@ export async function analyzeChanges(
   if (fromGit && gitInfo.isRepo) {
     const normalizedPatterns = await normalizeGitPatterns(patterns);
     const changes = await getChangedFiles(fromGit, normalizedPatterns);
-    gitChanges = new Map(changes.map((c) => [c.path, c.status]));
+    gitChanges = new Map(changes.map((c) => [path.resolve(c.path), c.status]));
   }
 
   // When using --from-git, only process files that git detected as changed
@@ -154,7 +155,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
     lines.push(`  ${chalk.yellow('Updated:')} (${formatCountWithSuffix(analysis.modified.length, 'file')})`);
     analysis.modified.forEach((file) => {
       const size = file.size ? ` (${formatBytes(file.size)})` : '';
-      lines.push(`    • ${file.path}${size}`);
+      lines.push(`    • ${path.relative(process.cwd(), file.path)}${size}`);
     });
     lines.push('');
   }
@@ -163,7 +164,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
     lines.push(`  ${chalk.green('New:')} (${formatCountWithSuffix(analysis.added.length, 'file')})`);
     analysis.added.forEach((file) => {
       const size = file.size ? ` (${formatBytes(file.size)})` : '';
-      lines.push(`    • ${file.path}${size}`);
+      lines.push(`    • ${path.relative(process.cwd(), file.path)}${size}`);
     });
     lines.push('');
   }
@@ -171,7 +172,7 @@ export function formatChangeSummary(analysis: SyncAnalysis): string {
   if (analysis.deleted.length > 0) {
     lines.push(`  ${chalk.red('Deleted:')} (${formatCountWithSuffix(analysis.deleted.length, 'file')})`);
     analysis.deleted.forEach((file) => {
-      lines.push(`    • ${file.path}`);
+      lines.push(`    • ${path.relative(process.cwd(), file.path)}`);
     });
     lines.push('');
   }
@@ -213,15 +214,15 @@ export async function executeSyncChanges(
     if (filesToDelete.length > 0) {
       console.log(chalk.yellow(`\nDeleting ${formatCountWithSuffix(filesToDelete.length, 'file')}...`));
       for (const file of filesToDelete) {
-        const deleteSpinner = ora(`Deleting ${file.path}`).start();
+        const deleteSpinner = ora(`Deleting ${path.relative(process.cwd(), file.path)}`).start();
         try {
           await client.vectorStores.files.delete(file.fileId!, {
             vector_store_identifier: vectorStoreId,
           });
           completed++;
-          deleteSpinner.succeed(`[${completed}/${totalOperations}] Deleted ${file.path}`);
+          deleteSpinner.succeed(`[${completed}/${totalOperations}] Deleted ${path.relative(process.cwd(), file.path)}`);
         } catch (error) {
-          deleteSpinner.fail(`Failed to delete ${file.path}`);
+          deleteSpinner.fail(`Failed to delete ${path.relative(process.cwd(), file.path)}`);
           throw error;
         }
       }
@@ -233,7 +234,7 @@ export async function executeSyncChanges(
     if (filesToUpload.length > 0) {
       console.log(chalk.blue(`\nUploading ${formatCountWithSuffix(filesToUpload.length, 'file')}...`));
       for (const file of filesToUpload) {
-        const uploadSpinner = ora(`Uploading ${file.path}`).start();
+        const uploadSpinner = ora(`Uploading ${path.relative(process.cwd(), file.path)}`).start();
         try {
           // Calculate hash if not already done
           const fileHash = file.localHash || (await calculateFileHash(file.path));
@@ -254,9 +255,9 @@ export async function executeSyncChanges(
           });
 
           completed++;
-          uploadSpinner.succeed(`[${completed}/${totalOperations}] Uploaded ${file.path}`);
+          uploadSpinner.succeed(`[${completed}/${totalOperations}] Uploaded ${path.relative(process.cwd(), file.path)}`);
         } catch (error) {
-          uploadSpinner.fail(`Failed to upload ${file.path}`);
+          uploadSpinner.fail(`Failed to upload ${path.relative(process.cwd(), file.path)}`);
           throw error;
         }
       }

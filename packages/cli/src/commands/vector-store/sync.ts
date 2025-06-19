@@ -42,7 +42,7 @@ export function createSyncCommand(): Command {
     new Command('sync')
       .description('Sync files with vector store (intelligent change detection)')
       .argument('<name-or-id>', 'Name or ID of the vector store')
-      .argument('<patterns...>', 'File patterns to sync')
+      .argument('<patterns...>', 'File patterns, folders, or paths to sync (supports ./** and folder names)')
       .option('--strategy <strategy>', 'Upload strategy (fast|high_quality)', 'fast')
       .option('--from-git <ref>', 'Only sync files changed since git ref (default: last sync)')
       .option('--dry-run', 'Show what would change without making changes')

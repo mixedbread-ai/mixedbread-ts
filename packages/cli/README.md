@@ -196,6 +196,7 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
    ```
 
 3. **Set up your API key:**
+
    ```bash
    export MXBAI_API_KEY=mxb_xxxxx
    # Or create a config file
@@ -231,6 +232,7 @@ This CLI is built on top of the `@mixedbread/sdk` and provides a convenient comm
    ```
 
 4. **Lint and format:**
+
    ```bash
    yarn lint          # Check for issues
    yarn lint --fix    # Auto-fix issues

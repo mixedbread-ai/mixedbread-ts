@@ -1,7 +1,7 @@
 {
   "name": "@mixedbread/cli",
   "version": "0.1.0",
-  "description": "CLI tool for managing Mixedbread vector stores and files",
+  "description": "CLI tool for managing the Mixedbread platform.",
   "author": "Mixedbread <support@mixedbread.com>",
   "license": "Apache-2.0",
   "repository": {
@@ -27,6 +27,9 @@
   ],
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",

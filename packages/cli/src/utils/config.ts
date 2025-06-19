@@ -49,6 +49,7 @@ export const DefaultsSchema = z.object({
 export const CliConfigSchema = z.object({
   version: z.string(),
   api_key: z.string().startsWith('mxb_', 'API key must start with "mxb_"').optional(),
+  base_url: z.string().url('Base URL must be a valid URL').optional(),
   defaults: DefaultsSchema.optional(),
   aliases: z.record(z.string(), z.string()).optional(),
 });
@@ -124,6 +125,10 @@ export function getApiKey(options?: { apiKey?: string }): string {
   }
 
   return apiKey;
+}
+
+export function getBaseURL(options?: { baseURL?: string }): string {
+  return options?.baseURL || process.env.MXBAI_BASE_URL || loadConfig().base_url;
 }
 
 export function resolveVectorStoreName(nameOrAlias: string): string {

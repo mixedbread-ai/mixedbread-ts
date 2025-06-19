@@ -1,9 +1,9 @@
 import { Mixedbread } from '@mixedbread/sdk';
-import { getApiKey } from './config';
+import { getApiKey, getBaseURL } from './config';
 
-export function createClient(options?: { apiKey?: string }): Mixedbread {
+export function createClient(options?: { apiKey?: string; baseURL?: string }): Mixedbread {
   const apiKey = getApiKey(options);
-  const baseURL = process.env.MXBAI_BASE_URL;
+  const baseURL = getBaseURL(options);
 
   return new Mixedbread({
     apiKey,

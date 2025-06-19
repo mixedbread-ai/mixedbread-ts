@@ -11,11 +11,10 @@ const program = new Command();
 
 program
   .name('mxbai')
-  .description('CLI tool for managing Mixedbread vector stores and files')
+  .description('CLI tool for managing the Mixedbread platform.')
   .version(version)
   .allowExcessArguments(false);
 
-// Set up global options
 setupGlobalOptions(program);
 
 // Add commands
