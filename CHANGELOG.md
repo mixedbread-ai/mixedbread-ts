@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.2 (2025-06-19)
+
+Full Changelog: [v0.9.1...v0.9.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.1...v0.9.2)
+
+### Chores
+
+* **readme:** use better example snippet for undocumented params ([766ab54](https://github.com/mixedbread-ai/mixedbread-ts/commit/766ab54cf36119da605d6bd196632b7342af2d73))
+
 ## 0.9.1 (2025-06-18)
 
 Full Changelog: [v0.9.0...v0.9.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.0...v0.9.1)
