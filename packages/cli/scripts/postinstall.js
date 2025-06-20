@@ -29,11 +29,11 @@ try {
   } catch (error) {
     // mxbai is not installed, install it
     console.log('Installing mxbai CLI globally...');
-    
+
     // Detect package manager
     const userAgent = process.env.npm_config_user_agent || '';
     let installCommand;
-    
+
     if (userAgent.includes('yarn')) {
       installCommand = 'yarn global add @mixedbread/cli';
     } else if (userAgent.includes('pnpm')) {
@@ -43,10 +43,10 @@ try {
     } else {
       installCommand = 'npm install -g @mixedbread/cli';
     }
-    
+
     console.log(`Running: ${installCommand}`);
     execSync(installCommand, { stdio: 'inherit' });
-    
+
     console.log('\n✅ mxbai CLI has been installed successfully!');
     console.log('\nGet started with:');
     console.log('  export MXBAI_API_KEY=your_api_key');
