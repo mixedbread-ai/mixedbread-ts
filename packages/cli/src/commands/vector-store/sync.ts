@@ -186,12 +186,7 @@ export function createSyncCommand(): Command {
       console.log(chalk.green('✓'), 'Vector store is now in sync');
 
       if (fromGit && gitInfo.isRepo) {
-        console.log(
-          chalk.green('✓'),
-          `Sync state saved (commit: ${gitInfo.commit.substring(0, 7)}, patterns: ${patterns.join(', ')})`,
-        );
-      } else {
-        console.log(chalk.green('✓'), `Sync state saved (patterns: ${patterns.join(', ')})`);
+        console.log(chalk.green('✓'), `Sync state saved (commit: ${gitInfo.commit.substring(0, 7)})`);
       }
     } catch (error) {
       if (error instanceof Error) {
