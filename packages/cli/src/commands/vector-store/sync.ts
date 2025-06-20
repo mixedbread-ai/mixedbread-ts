@@ -26,6 +26,13 @@ const SyncVectorStoreSchema = GlobalOptionsSchema.extend({
   force: z.boolean().optional(),
   metadata: z.string().optional(),
   ci: z.boolean().optional(),
+  concurrency: z.coerce
+    .number({ message: '"concurrency" must be a number' })
+    .int({ message: '"concurrency" must be an integer' })
+    .min(1, { message: '"concurrency" must be at least 1' })
+    .max(50, { message: '"concurrency" must be at most 50' })
+    .optional()
+    .default(5),
 });
 
 interface SyncOptions extends GlobalOptions {
@@ -35,6 +42,7 @@ interface SyncOptions extends GlobalOptions {
   force?: boolean;
   metadata?: string;
   ci?: boolean;
+  concurrency?: number;
 }
 
 export function createSyncCommand(): Command {
@@ -48,7 +56,8 @@ export function createSyncCommand(): Command {
       .option('--dry-run', 'Show what would change without making changes')
       .option('--force', 'Skip confirmation prompt')
       .option('--metadata <json>', 'Additional metadata for files')
-      .option('--ci', 'Non-interactive mode for CI/CD'),
+      .option('--ci', 'Non-interactive mode for CI/CD')
+      .option('-c, --concurrency <number>', 'Number of concurrent operations (1-50)', '5'),
   );
 
   command.action(async (nameOrId: string, patterns: string[], options: SyncOptions) => {
@@ -61,10 +70,13 @@ export function createSyncCommand(): Command {
       });
 
       const client = createClient(parsedOptions);
-      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
 
-      console.log(chalk.bold(`Syncing "${vectorStore.name}" vector store...`));
-      console.log(`Patterns: ${patterns.join(', ')}\n`);
+      console.log(chalk.bold.blue('🔄 Starting Vector Store Sync\n'));
+
+      // Step 0: Resolve vector store
+      const resolveSpinner = ora(`Looking up vector store "${parsedOptions.nameOrId}"...`).start();
+      const vectorStore = await resolveVectorStore(client, parsedOptions.nameOrId);
+      resolveSpinner.succeed(`Found vector store: ${vectorStore.name}`);
 
       // Parse metadata if provided
       const additionalMetadata = validateMetadata(parsedOptions.metadata);
@@ -72,39 +84,33 @@ export function createSyncCommand(): Command {
       // Get git info
       const gitInfo = await getGitInfo();
 
-      // Get sync state and synced files
-      const spinner = ora('Analyzing changes...').start();
+      const spinner = ora('Loading existing files from vector store...').start();
 
       const syncedFiles = await getSyncedFiles(client, vectorStore.id);
 
-      spinner.stop();
-      console.log(
-        chalk.gray(`Found ${formatCountWithSuffix(syncedFiles.size, 'existing file')} in vector store`),
-      );
+      spinner.succeed(`Found ${formatCountWithSuffix(syncedFiles.size, 'existing file')} in vector store`);
 
-      // Only use git if --from-git is explicitly provided
       const fromGit = parsedOptions.fromGit;
 
       if (fromGit && gitInfo.isRepo) {
-        console.log(chalk.gray(`Using git-based detection (from commit ${fromGit.substring(0, 7)})`));
+        console.log(chalk.green(`✓ Git-based detection enabled (from commit ${fromGit.substring(0, 7)})`));
       } else if (fromGit && !gitInfo.isRepo) {
-        console.error(chalk.red('Error:'), '--from-git specified but not in a git repository');
+        console.error(chalk.red('✗ Error:'), '--from-git specified but not in a git repository');
         process.exit(1);
       } else {
-        console.log(chalk.gray('Using local file comparison (hash-based detection)'));
+        console.log(chalk.green('✓ Hash-based detection enabled (comparing file contents)'));
       }
 
-      // Analyze changes
-      const analyzeSpinner = ora('Analyzing file changes...').start();
+      const analyzeSpinner = ora('Scanning files and detecting changes...').start();
       const analysis = await analyzeChanges(patterns, syncedFiles, gitInfo, fromGit);
 
-      analyzeSpinner.succeed('Analysis complete');
+      analyzeSpinner.succeed('Change analysis complete');
 
-      // Check if there are any changes
+      console.log(chalk.bold('\nChange Summary'));
       const totalChanges = analysis.added.length + analysis.modified.length + analysis.deleted.length;
 
       if (totalChanges === 0) {
-        console.log(chalk.green('✓'), 'Vector store is already in sync');
+        console.log(chalk.green('🎉 Vector store is already in sync - no changes needed!'));
         return;
       }
 
@@ -113,7 +119,8 @@ export function createSyncCommand(): Command {
 
       // Dry run mode - just show what would happen
       if (parsedOptions.dryRun) {
-        console.log(chalk.yellow('Dry run mode - no changes were made'));
+        console.log(chalk.yellow.bold('Dry Run Complete'));
+        console.log(chalk.yellow('No changes were made - this was a preview of what would happen.'));
         return;
       }
 
@@ -124,15 +131,19 @@ export function createSyncCommand(): Command {
           {
             type: 'confirm',
             name: 'proceed',
-            message: 'Proceed?',
+            message: 'Apply these changes to the vector store?',
             default: false,
           },
         ]);
 
         if (!proceed) {
-          console.log(chalk.gray('Sync cancelled'));
+          console.log(chalk.yellow('❌ Sync cancelled by user'));
           return;
         }
+      } else if (parsedOptions.ci) {
+        console.log(chalk.green('✓ Auto-proceeding in CI mode'));
+      } else if (parsedOptions.force) {
+        console.log(chalk.green('✓ Auto-proceeding with --force flag'));
       }
 
       // Execute changes
@@ -140,6 +151,7 @@ export function createSyncCommand(): Command {
         strategy: parsedOptions.strategy,
         metadata: additionalMetadata,
         gitInfo: gitInfo.isRepo ? gitInfo : undefined,
+        concurrency: parsedOptions.concurrency,
       });
 
       // Update sync state
