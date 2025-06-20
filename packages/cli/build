@@ -21,8 +21,24 @@ for file in CHANGELOG.md; do
   if [ -e "${file}" ]; then cp "${file}" dist; fi
 done
 
-# Process and copy package.json to dist directory
-PKG_JSON_PATH=../../packages/cli/package.json node ../../scripts/utils/make-dist-package-json.cjs > dist/package.json
+# Copy scripts folder if it exists (needed for postinstall)
+if [ -d "scripts" ]; then
+  cp -rp scripts dist
+fi
+
+# Create package.json for publishing from dist
+node -e "
+const pkg = require('./package.json');
+// Fix paths for publishing from dist
+pkg.bin.mxbai = pkg.bin.mxbai.replace('./dist/', './');
+pkg.main = pkg.main.replace('dist/', '');
+pkg.types = pkg.types.replace('dist/', '');
+// Update files array to include actual files
+pkg.files = ['bin/**/*', 'commands/**/*', 'utils/**/*', 'scripts/**/*', 'index.*', 'README.md', 'LICENSE', 'CHANGELOG.md'];
+// Remove dev dependencies
+delete pkg.devDependencies;
+console.log(JSON.stringify(pkg, null, 2));
+" > dist/package.json
 
 
 # Build to .js/.mjs/.d.ts files using tsc-multi
