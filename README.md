@@ -14,6 +14,27 @@ It is generated with [Stainless](https://www.stainless.com/).
 npm install @mixedbread/sdk
 ```
 
+### CLI Installation
+
+The Mixedbread SDK automatically installs the `mxbai` CLI tool globally when you install the SDK. This provides a convenient command-line interface for managing vector stores and files.
+
+If the automatic installation is skipped (e.g., in CI environments), you can install the CLI manually:
+
+```sh
+npm install -g @mixedbread/cli
+```
+
+Or run the interactive setup:
+
+```sh
+npm run setup-cli
+```
+
+To skip automatic CLI installation, set the environment variable:
+```sh
+MXBAI_SKIP_CLI_INSTALL=true npm install @mixedbread/sdk
+```
+
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
