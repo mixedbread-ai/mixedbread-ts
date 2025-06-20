@@ -32,7 +32,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "bash ./build",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "test": "jest",
@@ -68,6 +68,7 @@
     "mock-fs": "^5.5.0",
     "prettier": "^3.0.0",
     "ts-jest": "^29.1.0",
+    "tsc-multi": "https://github.com/stainless-api/tsc-multi/releases/download/v1.1.8/tsc-multi.tgz",
     "typescript": "5.8.3",
     "typescript-eslint": "8.31.1"
   }
