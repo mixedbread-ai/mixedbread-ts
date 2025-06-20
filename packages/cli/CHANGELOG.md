@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 (2025-06-20)
+
+### Fixed
+
+- Fixed "Cannot find module '../../package.json'" error when running via bunx/npx
+- Implemented fallback logic to find package.json in both published and development environments
+
 ## 0.1.1 (2025-06-20)
 
 Full Changelog: [v0.1.0...v0.1.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0...v0.1.1)

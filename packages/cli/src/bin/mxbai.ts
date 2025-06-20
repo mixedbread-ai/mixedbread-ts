@@ -2,7 +2,29 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-const { version } = require('../../package.json');
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// Find package.json relative to the compiled file location
+// In the published package, from bin/mxbai.js, package.json is one level up
+let version = '0.0.0';
+try {
+  // First try one level up (for published package)
+  const packageJsonPath = join(__dirname, '..', 'package.json');
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+  version = packageJson.version;
+} catch (error) {
+  try {
+    // Fallback to two levels up (for development/build environment)
+    const packageJsonPath = join(__dirname, '..', '..', 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+    version = packageJson.version;
+  } catch (error2) {
+    // Final fallback if package.json is not found
+    console.warn('Warning: Could not read package.json for version information');
+  }
+}
+
 import { createVectorStoreCommand } from '../commands/vector-store';
 import { createConfigCommand } from '../commands/config';
 import { setupGlobalOptions } from '../utils/global-options';
