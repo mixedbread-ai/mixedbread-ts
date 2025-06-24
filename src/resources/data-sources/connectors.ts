@@ -249,7 +249,7 @@ export interface ConnectorUpdateParams {
   /**
    * Body param: The metadata of the connector
    */
-  metadata?: Record<string, unknown> | null;
+  metadata?: { [key: string]: unknown } | null;
 
   /**
    * Body param: Whether the connector should be synced after update

@@ -181,7 +181,7 @@ export interface DataSourceOauth2Params {
   /**
    * Additional parameters for the OAuth2 flow
    */
-  additional_params?: Record<string, unknown> | null;
+  additional_params?: { [key: string]: unknown } | null;
 }
 
 export type DataSourceType = 'notion' | 'linear';
