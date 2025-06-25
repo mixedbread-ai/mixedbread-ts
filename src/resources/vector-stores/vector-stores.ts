@@ -155,6 +155,11 @@ export interface ScoredAudioURLInputChunk {
   mime_type?: string;
 
   /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
+
+  /**
    * model used for this chunk
    */
   model?: string | null;
@@ -227,6 +232,11 @@ export interface ScoredImageURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -308,6 +318,11 @@ export interface ScoredTextInputChunk {
   mime_type?: string;
 
   /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
+
+  /**
    * model used for this chunk
    */
   model?: string | null;
@@ -358,6 +373,11 @@ export interface ScoredVideoURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
