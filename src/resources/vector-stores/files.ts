@@ -5,6 +5,7 @@ import * as FilesAPI from './files';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { APIPromise } from '../../core/api-promise';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
 import { Uploadable } from '../../uploads';
@@ -56,8 +57,12 @@ export class Files extends APIResource {
     vectorStoreIdentifier: string,
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<FileListResponse> {
-    return this._client.get(path`/v1/vector_stores/${vectorStoreIdentifier}/files`, { query, ...options });
+  ): PagePromise<VectorStoreFilesCursor, VectorStoreFile> {
+    return this._client.getAPIList(
+      path`/v1/vector_stores/${vectorStoreIdentifier}/files`,
+      Cursor<VectorStoreFile>,
+      { query, ...options },
+    );
   }
 
   /**
@@ -196,6 +201,8 @@ export class Files extends APIResource {
     return this.poll(vectorStoreIdentifier, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
   }
 }
+
+export type VectorStoreFilesCursor = Cursor<VectorStoreFile>;
 
 /**
  * Represents a reranking configuration.
@@ -345,55 +352,6 @@ export interface VectorStoreFile {
   object?: 'vector_store.file';
 }
 
-export interface FileListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  pagination: FileListResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-
-  /**
-   * The list of vector store files
-   */
-  data: Array<VectorStoreFile>;
-}
-
-export namespace FileListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  export interface Pagination {
-    /**
-     * Cursor for the next page, null if no more pages
-     */
-    next_cursor: string | null;
-
-    /**
-     * Cursor for the previous page, null if no previous pages
-     */
-    prev_cursor: string | null;
-
-    /**
-     * Whether there are more items available
-     */
-    has_more: boolean;
-
-    /**
-     * Whether there are previous items available
-     */
-    has_prev: boolean;
-
-    /**
-     * Total number of items available
-     */
-    total?: number | null;
-  }
-}
-
 /**
  * Response model for file deletion.
  */
@@ -467,22 +425,7 @@ export interface FileRetrieveParams {
   vector_store_identifier: string;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
-
-  /**
-   * Cursor for pagination (base64 encoded cursor)
-   */
-  cursor?: string | null;
-
-  /**
-   * Whether to include the total number of items
-   */
-  include_total?: boolean;
-
+export interface FileListParams extends CursorParams {
   /**
    * Status to filter by
    */
@@ -580,9 +523,9 @@ export declare namespace Files {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
-    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
+    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,

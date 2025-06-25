@@ -15,7 +15,13 @@ import * as qs from './internal/qs';
 import { VERSION } from './version';
 import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
-import { AbstractPage, type LimitOffsetParams, LimitOffsetResponse } from './core/pagination';
+import {
+  AbstractPage,
+  type CursorParams,
+  CursorResponse,
+  type LimitOffsetParams,
+  LimitOffsetResponse,
+} from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
@@ -44,8 +50,8 @@ import {
   FileCreateParams,
   FileDeleteResponse,
   FileListParams,
-  FileListResponse,
   FileObject,
+  FileObjectsCursor,
   FileUpdateParams,
   Files,
   PaginationWithTotal,
@@ -55,11 +61,11 @@ import {
   DataSourceCreateParams,
   DataSourceDeleteResponse,
   DataSourceListParams,
-  DataSourceListResponse,
   DataSourceOauth2Params,
   DataSourceType,
   DataSourceUpdateParams,
   DataSources,
+  DataSourcesCursor,
   LinearDataSource,
   NotionDataSource,
   Oauth2Params,
@@ -77,13 +83,13 @@ import {
   VectorStoreCreateParams,
   VectorStoreDeleteResponse,
   VectorStoreListParams,
-  VectorStoreListResponse,
   VectorStoreQuestionAnsweringParams,
   VectorStoreQuestionAnsweringResponse,
   VectorStoreSearchParams,
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStores,
+  VectorStoresCursor,
 } from './resources/vector-stores/vector-stores';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -862,6 +868,9 @@ export declare namespace Mixedbread {
   export import LimitOffset = Pagination.LimitOffset;
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
+  export import Cursor = Pagination.Cursor;
+  export { type CursorParams as CursorParams, type CursorResponse as CursorResponse };
+
   export {
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
@@ -881,10 +890,10 @@ export declare namespace Mixedbread {
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
-    type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
+    type VectorStoresCursor as VectorStoresCursor,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -898,8 +907,8 @@ export declare namespace Mixedbread {
     Files as Files,
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
-    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
+    type FileObjectsCursor as FileObjectsCursor,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
@@ -922,8 +931,8 @@ export declare namespace Mixedbread {
     type LinearDataSource as LinearDataSource,
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
-    type DataSourceListResponse as DataSourceListResponse,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
