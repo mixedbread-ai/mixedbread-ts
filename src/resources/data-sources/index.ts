@@ -3,13 +3,13 @@
 export {
   Connectors,
   type DataSourceConnector,
+  type ConnectorListResponse,
   type ConnectorDeleteResponse,
   type ConnectorCreateParams,
   type ConnectorRetrieveParams,
   type ConnectorUpdateParams,
   type ConnectorListParams,
   type ConnectorDeleteParams,
-  type DataSourceConnectorsLimitOffset,
 } from './connectors';
 export {
   DataSources,
@@ -19,9 +19,9 @@ export {
   type LinearDataSource,
   type NotionDataSource,
   type Oauth2Params,
+  type DataSourceListResponse,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourcesLimitOffset,
 } from './data-sources';

@@ -9,7 +9,6 @@ import {
   JobDeleteResponse,
   JobListParams,
   JobListResponse,
-  JobListResponsesLimitOffset,
   Jobs,
   ParsingJob,
   ParsingJobStatus,
@@ -32,7 +31,6 @@ export declare namespace Parsing {
     type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
-    type JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };

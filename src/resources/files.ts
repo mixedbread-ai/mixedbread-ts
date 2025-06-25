@@ -2,7 +2,6 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../core/pagination';
 import { type Uploadable } from '../core/uploads';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
@@ -56,8 +55,8 @@ export class Files extends APIResource {
   list(
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<FileObjectsLimitOffset, FileObject> {
-    return this._client.getAPIList('/v1/files', LimitOffset<FileObject>, { query, ...options });
+  ): APIPromise<FileListResponse> {
+    return this._client.get('/v1/files', { query, ...options });
   }
 
   /**
@@ -86,8 +85,6 @@ export class Files extends APIResource {
     });
   }
 }
-
-export type FileObjectsLimitOffset = LimitOffset<FileObject>;
 
 /**
  * A model representing a file object in the system.
@@ -152,6 +149,55 @@ export interface PaginationWithTotal {
   total?: number;
 }
 
+export interface FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of files
+   */
+  data: Array<FileObject>;
+}
+
+export namespace FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  export interface Pagination {
+    /**
+     * Cursor for the next page, null if no more pages
+     */
+    next_cursor: string | null;
+
+    /**
+     * Cursor for the previous page, null if no previous pages
+     */
+    prev_cursor: string | null;
+
+    /**
+     * Whether there are more items available
+     */
+    has_more: boolean;
+
+    /**
+     * Whether there are previous items available
+     */
+    has_prev: boolean;
+
+    /**
+     * Total number of items available
+     */
+    total?: number | null;
+  }
+}
+
 export interface FileDeleteResponse {
   /**
    * The ID of the deleted file
@@ -183,14 +229,29 @@ export interface FileUpdateParams {
   file: Uploadable;
 }
 
-export interface FileListParams extends LimitOffsetParams {}
+export interface FileListParams {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
+
+  /**
+   * Cursor for pagination (base64 encoded cursor)
+   */
+  cursor?: string | null;
+
+  /**
+   * Whether to include the total number of items
+   */
+  include_total?: boolean;
+}
 
 export declare namespace Files {
   export {
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileObjectsLimitOffset as FileObjectsLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
