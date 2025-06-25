@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0 (2025-06-25)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* **api:** update via SDK Studio ([edd9331](https://github.com/mixedbread-ai/mixedbread-ts/commit/edd93314a62c424b2fc78b00cd89f9380d18d00f))
+
 ## 0.10.0 (2025-06-25)
 
 Full Changelog: [v0.9.3...v0.10.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.3...v0.10.0)
