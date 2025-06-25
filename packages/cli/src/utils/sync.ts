@@ -9,6 +9,7 @@ import { formatBytes, formatCountWithSuffix } from './output';
 import Mixedbread from '@mixedbread/sdk';
 import { uploadFile } from './upload';
 import ora from 'ora';
+import { processWithConcurrency } from './concurrency';
 
 interface FileChange {
   path: string;
@@ -200,8 +201,10 @@ export async function executeSyncChanges(
     strategy?: 'fast' | 'high_quality';
     metadata?: Record<string, unknown>;
     gitInfo?: { commit: string; branch: string };
+    concurrency?: number;
   },
 ): Promise<void> {
+  const concurrency = options.concurrency ?? 5;
   const totalOperations = analysis.added.length + analysis.modified.length * 2 + analysis.deleted.length;
   let completed = 0;
 
@@ -213,21 +216,26 @@ export async function executeSyncChanges(
 
     if (filesToDelete.length > 0) {
       console.log(chalk.yellow(`\nDeleting ${formatCountWithSuffix(filesToDelete.length, 'file')}...`));
-      for (const file of filesToDelete) {
-        const deleteSpinner = ora(`Deleting ${path.relative(process.cwd(), file.path)}`).start();
-        try {
-          await client.vectorStores.files.delete(file.fileId!, {
-            vector_store_identifier: vectorStoreId,
-          });
-          completed++;
-          deleteSpinner.succeed(
-            `[${completed}/${totalOperations}] Deleted ${path.relative(process.cwd(), file.path)}`,
-          );
-        } catch (error) {
-          deleteSpinner.fail(`Failed to delete ${path.relative(process.cwd(), file.path)}`);
-          throw error;
-        }
-      }
+
+      await processWithConcurrency(
+        filesToDelete,
+        async (file, index) => {
+          const deleteSpinner = ora(`Deleting ${path.relative(process.cwd(), file.path)}`).start();
+          try {
+            await client.vectorStores.files.delete(file.fileId!, {
+              vector_store_identifier: vectorStoreId,
+            });
+            completed++;
+            deleteSpinner.succeed(
+              `[${completed}/${totalOperations}] Deleted ${path.relative(process.cwd(), file.path)}`,
+            );
+          } catch (error) {
+            deleteSpinner.fail(`Failed to delete ${path.relative(process.cwd(), file.path)}`);
+            throw error;
+          }
+        },
+        concurrency,
+      );
     }
 
     // Upload new and modified files
@@ -235,36 +243,41 @@ export async function executeSyncChanges(
 
     if (filesToUpload.length > 0) {
       console.log(chalk.blue(`\nUploading ${formatCountWithSuffix(filesToUpload.length, 'file')}...`));
-      for (const file of filesToUpload) {
-        const uploadSpinner = ora(`Uploading ${path.relative(process.cwd(), file.path)}`).start();
-        try {
-          // Calculate hash if not already done
-          const fileHash = file.localHash || (await calculateFileHash(file.path));
 
-          // Build sync metadata
-          const syncMetadata = buildFileSyncMetadata(file.path, fileHash, options.gitInfo);
+      await processWithConcurrency(
+        filesToUpload,
+        async (file, index) => {
+          const uploadSpinner = ora(`Uploading ${path.relative(process.cwd(), file.path)}`).start();
+          try {
+            // Calculate hash if not already done
+            const fileHash = file.localHash || (await calculateFileHash(file.path));
 
-          // Merge with user-provided metadata
-          const finalMetadata = {
-            ...options.metadata,
-            ...syncMetadata,
-          };
+            // Build sync metadata
+            const syncMetadata = buildFileSyncMetadata(file.path, fileHash, options.gitInfo);
 
-          // Upload file
-          await uploadFile(client, vectorStoreId, file.path, {
-            metadata: finalMetadata,
-            strategy: options.strategy,
-          });
+            // Merge with user-provided metadata
+            const finalMetadata = {
+              ...options.metadata,
+              ...syncMetadata,
+            };
 
-          completed++;
-          uploadSpinner.succeed(
-            `[${completed}/${totalOperations}] Uploaded ${path.relative(process.cwd(), file.path)}`,
-          );
-        } catch (error) {
-          uploadSpinner.fail(`Failed to upload ${path.relative(process.cwd(), file.path)}`);
-          throw error;
-        }
-      }
+            // Upload file
+            await uploadFile(client, vectorStoreId, file.path, {
+              metadata: finalMetadata,
+              strategy: options.strategy,
+            });
+
+            completed++;
+            uploadSpinner.succeed(
+              `[${completed}/${totalOperations}] Uploaded ${path.relative(process.cwd(), file.path)}`,
+            );
+          } catch (error) {
+            uploadSpinner.fail(`Failed to upload ${path.relative(process.cwd(), file.path)}`);
+            throw error;
+          }
+        },
+        concurrency,
+      );
     }
 
     console.log(chalk.green('\n✓ Sync completed successfully'));
