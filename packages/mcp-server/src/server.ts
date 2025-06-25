@@ -26,7 +26,7 @@ export { endpoints } from './tools';
 export const server = new McpServer(
   {
     name: 'mixedbread_sdk_api',
-    version: '0.9.3',
+    version: '0.10.0',
   },
   {
     capabilities: {

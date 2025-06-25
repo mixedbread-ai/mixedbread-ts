@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.10.0 (2025-06-25)
+
+Full Changelog: [v0.9.3...v0.10.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.3...v0.10.0)
+
+### Features
+
+* **api:** api update ([f4a471a](https://github.com/mixedbread-ai/mixedbread-ts/commit/f4a471a470f8683675da47af7a9c617f55ce88d6))
+* **api:** update via SDK Studio ([7fd1456](https://github.com/mixedbread-ai/mixedbread-ts/commit/7fd1456a298dd520897ddb6d9353b6db431167f5))
+* **api:** update via SDK Studio ([f79bda7](https://github.com/mixedbread-ai/mixedbread-ts/commit/f79bda7bbf2e3f2a134bedc6cf2ba5d556146d64))
+* **api:** update via SDK Studio ([373d495](https://github.com/mixedbread-ai/mixedbread-ts/commit/373d4950636354d883a735da32fa269d05704c43))
+
+
+### Bug Fixes
+
+* **client:** explicitly copy fetch in withOptions ([f6378e1](https://github.com/mixedbread-ai/mixedbread-ts/commit/f6378e14cab529de6b11b85de10b5553eb3fb3e7))
+
+
+### Chores
+
+* fix build ([5cded30](https://github.com/mixedbread-ai/mixedbread-ts/commit/5cded303d94ed03be96a1c9707e4b630fbe46392))
+* fix lint ([5db9ab7](https://github.com/mixedbread-ai/mixedbread-ts/commit/5db9ab7eb1423bf376fd441c26692330aaef2d3e))
+* update build script ([d64cd0d](https://github.com/mixedbread-ai/mixedbread-ts/commit/d64cd0db7b83d32e6f34c8172d115b9888b576fc))
+* update CLI ([cbf0c06](https://github.com/mixedbread-ai/mixedbread-ts/commit/cbf0c067898668f8702c5ee7273d7fc37ee16d9c))
+
+
+### Refactors
+
+* **types:** replace Record with mapped types ([56d3912](https://github.com/mixedbread-ai/mixedbread-ts/commit/56d3912fb56295978279d965f082bbac0947f79d))
+
 ## 0.9.3 (2025-06-19)
 
 Full Changelog: [v0.9.2...v0.9.3](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.2...v0.9.3)
