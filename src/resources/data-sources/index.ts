@@ -9,7 +9,7 @@ export {
   type ConnectorUpdateParams,
   type ConnectorListParams,
   type ConnectorDeleteParams,
-  type DataSourceConnectorsLimitOffset,
+  type DataSourceConnectorsCursor,
 } from './connectors';
 export {
   DataSources,
@@ -23,5 +23,5 @@ export {
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourcesLimitOffset,
+  type DataSourcesCursor,
 } from './data-sources';

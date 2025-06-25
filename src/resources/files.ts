@@ -2,7 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../core/pagination';
 import { type Uploadable } from '../core/uploads';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
@@ -56,8 +56,8 @@ export class Files extends APIResource {
   list(
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<FileObjectsLimitOffset, FileObject> {
-    return this._client.getAPIList('/v1/files', LimitOffset<FileObject>, { query, ...options });
+  ): PagePromise<FileObjectsCursor, FileObject> {
+    return this._client.getAPIList('/v1/files', Cursor<FileObject>, { query, ...options });
   }
 
   /**
@@ -87,7 +87,7 @@ export class Files extends APIResource {
   }
 }
 
-export type FileObjectsLimitOffset = LimitOffset<FileObject>;
+export type FileObjectsCursor = Cursor<FileObject>;
 
 /**
  * A model representing a file object in the system.
@@ -183,14 +183,14 @@ export interface FileUpdateParams {
   file: Uploadable;
 }
 
-export interface FileListParams extends LimitOffsetParams {}
+export interface FileListParams extends CursorParams {}
 
 export declare namespace Files {
   export {
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileObjectsLimitOffset as FileObjectsLimitOffset,
+    type FileObjectsCursor as FileObjectsCursor,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

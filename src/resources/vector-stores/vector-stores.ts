@@ -16,10 +16,10 @@ import {
   ScoredVectorStoreFile,
   VectorStoreFile,
   VectorStoreFileStatus,
-  VectorStoreFilesLimitOffset,
+  VectorStoreFilesCursor,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -77,8 +77,8 @@ export class VectorStores extends APIResource {
   list(
     query: VectorStoreListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoresLimitOffset, VectorStore> {
-    return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStore>, { query, ...options });
+  ): PagePromise<VectorStoresCursor, VectorStore> {
+    return this._client.getAPIList('/v1/vector_stores', Cursor<VectorStore>, { query, ...options });
   }
 
   /**
@@ -126,7 +126,7 @@ export class VectorStores extends APIResource {
   }
 }
 
-export type VectorStoresLimitOffset = LimitOffset<VectorStore>;
+export type VectorStoresCursor = Cursor<VectorStore>;
 
 /**
  * Represents an expiration policy for a vector store.
@@ -153,6 +153,11 @@ export interface ScoredAudioURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -227,6 +232,11 @@ export interface ScoredImageURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -308,6 +318,11 @@ export interface ScoredTextInputChunk {
   mime_type?: string;
 
   /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
+
+  /**
    * model used for this chunk
    */
   model?: string | null;
@@ -358,6 +373,11 @@ export interface ScoredVideoURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -669,7 +689,7 @@ export interface VectorStoreUpdateParams {
   metadata?: unknown;
 }
 
-export interface VectorStoreListParams extends LimitOffsetParams {
+export interface VectorStoreListParams extends CursorParams {
   /**
    * Search query for fuzzy matching over name and description fields
    */
@@ -800,7 +820,7 @@ export declare namespace VectorStores {
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresLimitOffset as VectorStoresLimitOffset,
+    type VectorStoresCursor as VectorStoresCursor,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -816,7 +836,7 @@ export declare namespace VectorStores {
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
+    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,

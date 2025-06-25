@@ -5,7 +5,7 @@ import * as FilesAPI from './files';
 import * as Shared from '../shared';
 import * as VectorStoresAPI from './vector-stores';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
 import { Uploadable } from '../../uploads';
@@ -57,10 +57,10 @@ export class Files extends APIResource {
     vectorStoreIdentifier: string,
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoreFilesLimitOffset, VectorStoreFile> {
+  ): PagePromise<VectorStoreFilesCursor, VectorStoreFile> {
     return this._client.getAPIList(
       path`/v1/vector_stores/${vectorStoreIdentifier}/files`,
-      LimitOffset<VectorStoreFile>,
+      Cursor<VectorStoreFile>,
       { query, ...options },
     );
   }
@@ -202,7 +202,7 @@ export class Files extends APIResource {
   }
 }
 
-export type VectorStoreFilesLimitOffset = LimitOffset<VectorStoreFile>;
+export type VectorStoreFilesCursor = Cursor<VectorStoreFile>;
 
 /**
  * Represents a reranking configuration.
@@ -425,7 +425,12 @@ export interface FileRetrieveParams {
   vector_store_identifier: string;
 }
 
-export interface FileListParams extends LimitOffsetParams {}
+export interface FileListParams extends CursorParams {
+  /**
+   * Status to filter by
+   */
+  statuses?: Array<VectorStoreFileStatus> | null;
+}
 
 export interface FileDeleteParams {
   /**
@@ -520,7 +525,7 @@ export declare namespace Files {
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
+    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,

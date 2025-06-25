@@ -3,7 +3,7 @@
 import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 import * as polling from '../../lib/polling';
@@ -42,8 +42,8 @@ export class Jobs extends APIResource {
   list(
     query: JobListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<JobListResponsesLimitOffset, JobListResponse> {
-    return this._client.getAPIList('/v1/parsing/jobs', LimitOffset<JobListResponse>, { query, ...options });
+  ): PagePromise<JobListResponsesCursor, JobListResponse> {
+    return this._client.getAPIList('/v1/parsing/jobs', Cursor<JobListResponse>, { query, ...options });
   }
 
   /**
@@ -161,7 +161,7 @@ export class Jobs extends APIResource {
   }
 }
 
-export type JobListResponsesLimitOffset = LimitOffset<JobListResponse>;
+export type JobListResponsesCursor = Cursor<JobListResponse>;
 
 /**
  * Strategy used for chunking document content.
@@ -429,7 +429,7 @@ export interface JobCreateParams {
   mode?: 'fast' | 'high_quality';
 }
 
-export interface JobListParams extends LimitOffsetParams {}
+export interface JobListParams extends CursorParams {}
 
 export declare namespace Jobs {
   export {
@@ -440,7 +440,7 @@ export declare namespace Jobs {
     type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
-    type JobListResponsesLimitOffset as JobListResponsesLimitOffset,
+    type JobListResponsesCursor as JobListResponsesCursor,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };

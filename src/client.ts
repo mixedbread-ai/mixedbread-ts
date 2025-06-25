@@ -11,10 +11,17 @@ import type { APIResponseProps } from './internal/parse';
 import { getPlatformHeaders } from './internal/detect-platform';
 import * as Shims from './internal/shims';
 import * as Opts from './internal/request-options';
+import * as qs from './internal/qs';
 import { VERSION } from './version';
 import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
-import { AbstractPage, type LimitOffsetParams, LimitOffsetResponse } from './core/pagination';
+import {
+  AbstractPage,
+  type CursorParams,
+  CursorResponse,
+  type LimitOffsetParams,
+  LimitOffsetResponse,
+} from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
@@ -44,7 +51,7 @@ import {
   FileDeleteResponse,
   FileListParams,
   FileObject,
-  FileObjectsLimitOffset,
+  FileObjectsCursor,
   FileUpdateParams,
   Files,
   PaginationWithTotal,
@@ -58,7 +65,7 @@ import {
   DataSourceType,
   DataSourceUpdateParams,
   DataSources,
-  DataSourcesLimitOffset,
+  DataSourcesCursor,
   LinearDataSource,
   NotionDataSource,
   Oauth2Params,
@@ -82,7 +89,7 @@ import {
   VectorStoreSearchResponse,
   VectorStoreUpdateParams,
   VectorStores,
-  VectorStoresLimitOffset,
+  VectorStoresCursor,
 } from './resources/vector-stores/vector-stores';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -272,6 +279,7 @@ export class Mixedbread {
       timeout: this.timeout,
       logger: this.logger,
       logLevel: this.logLevel,
+      fetch: this.fetch,
       fetchOptions: this.fetchOptions,
       apiKey: this.apiKey,
       ...options,
@@ -332,24 +340,8 @@ export class Mixedbread {
     return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
-  /**
-   * Basic re-implementation of `qs.stringify` for primitive types.
-   */
   protected stringifyQuery(query: Record<string, unknown>): string {
-    return Object.entries(query)
-      .filter(([_, value]) => typeof value !== 'undefined')
-      .map(([key, value]) => {
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        }
-        if (value === null) {
-          return `${encodeURIComponent(key)}=`;
-        }
-        throw new Errors.MixedbreadError(
-          `Cannot stringify type ${typeof value}; Expected string, number, boolean, or null. If you need to pass nested query parameters, you can manually encode them, e.g. { query: { 'foo[key1]': value1, 'foo[key2]': value2 } }, and please open a GitHub issue requesting better support for your use case.`,
-        );
-      })
-      .join('&');
+    return qs.stringify(query, { arrayFormat: 'comma' });
   }
 
   private getUserAgent(): string {
@@ -876,6 +868,9 @@ export declare namespace Mixedbread {
   export import LimitOffset = Pagination.LimitOffset;
   export { type LimitOffsetParams as LimitOffsetParams, type LimitOffsetResponse as LimitOffsetResponse };
 
+  export import Cursor = Pagination.Cursor;
+  export { type CursorParams as CursorParams, type CursorResponse as CursorResponse };
+
   export {
     type Embedding as Embedding,
     type EmbeddingCreateResponse as EmbeddingCreateResponse,
@@ -898,7 +893,7 @@ export declare namespace Mixedbread {
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresLimitOffset as VectorStoresLimitOffset,
+    type VectorStoresCursor as VectorStoresCursor,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -913,7 +908,7 @@ export declare namespace Mixedbread {
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileObjectsLimitOffset as FileObjectsLimitOffset,
+    type FileObjectsCursor as FileObjectsCursor,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
@@ -937,7 +932,7 @@ export declare namespace Mixedbread {
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
-    type DataSourcesLimitOffset as DataSourcesLimitOffset,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,

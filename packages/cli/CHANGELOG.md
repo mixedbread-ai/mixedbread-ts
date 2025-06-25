@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1 (2025-06-25)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.0...v0.1.1)
+
+### Chores
+
+* fix build ([5cded30](https://github.com/mixedbread-ai/mixedbread-ts/commit/5cded303d94ed03be96a1c9707e4b630fbe46392))
+* fix lint ([5db9ab7](https://github.com/mixedbread-ai/mixedbread-ts/commit/5db9ab7eb1423bf376fd441c26692330aaef2d3e))
+* update build script ([d64cd0d](https://github.com/mixedbread-ai/mixedbread-ts/commit/d64cd0db7b83d32e6f34c8172d115b9888b576fc))
+* update CLI ([cbf0c06](https://github.com/mixedbread-ai/mixedbread-ts/commit/cbf0c067898668f8702c5ee7273d7fc37ee16d9c))
+
 ## 0.1.3 (2025-06-20)
 
 ### Fixed

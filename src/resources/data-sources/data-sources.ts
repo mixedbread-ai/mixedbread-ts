@@ -11,10 +11,10 @@ import {
   ConnectorUpdateParams,
   Connectors,
   DataSourceConnector,
-  DataSourceConnectorsLimitOffset,
+  DataSourceConnectorsCursor,
 } from './connectors';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -67,8 +67,8 @@ export class DataSources extends APIResource {
   list(
     query: DataSourceListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<DataSourcesLimitOffset, DataSource> {
-    return this._client.getAPIList('/v1/data_sources/', LimitOffset<DataSource>, { query, ...options });
+  ): PagePromise<DataSourcesCursor, DataSource> {
+    return this._client.getAPIList('/v1/data_sources/', Cursor<DataSource>, { query, ...options });
   }
 
   /**
@@ -81,7 +81,7 @@ export class DataSources extends APIResource {
   }
 }
 
-export type DataSourcesLimitOffset = LimitOffset<DataSource>;
+export type DataSourcesCursor = Cursor<DataSource>;
 
 /**
  * Service-level representation of a data source.
@@ -181,7 +181,7 @@ export interface DataSourceOauth2Params {
   /**
    * Additional parameters for the OAuth2 flow
    */
-  additional_params?: Record<string, unknown> | null;
+  additional_params?: { [key: string]: unknown } | null;
 }
 
 export type DataSourceType = 'notion' | 'linear';
@@ -408,7 +408,7 @@ export declare namespace DataSourceUpdateParams {
   }
 }
 
-export interface DataSourceListParams extends LimitOffsetParams {}
+export interface DataSourceListParams extends CursorParams {}
 
 DataSources.Connectors = Connectors;
 
@@ -421,7 +421,7 @@ export declare namespace DataSources {
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
-    type DataSourcesLimitOffset as DataSourcesLimitOffset,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
@@ -431,7 +431,7 @@ export declare namespace DataSources {
     Connectors as Connectors,
     type DataSourceConnector as DataSourceConnector,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
+    type DataSourceConnectorsCursor as DataSourceConnectorsCursor,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,
