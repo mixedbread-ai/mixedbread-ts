@@ -168,7 +168,7 @@ export interface DataSourceConnector {
   /**
    * The sync error of the connector
    */
-  error: string | null;
+  error: { [key: string]: unknown } | null;
 
   /**
    * The type of the object
