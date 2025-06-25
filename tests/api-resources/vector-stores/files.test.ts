@@ -64,7 +64,7 @@ describe('resource files', () => {
     await expect(
       client.vectorStores.files.list(
         'vector_store_identifier',
-        { limit: 1000, cursor: 'cursor', include_total: true, statuses: ['pending'] },
+        { limit: 1000, cursor: 'cursor', include_total: true, statuses: ['pending', 'in_progress'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
