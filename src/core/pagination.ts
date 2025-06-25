@@ -181,3 +181,71 @@ export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffset
     return null;
   }
 }
+
+export interface CursorResponse<Item> {
+  data: Array<Item>;
+
+  pagination: CursorResponse.Pagination;
+}
+
+export namespace CursorResponse {
+  export interface Pagination {
+    next_cursor?: string;
+
+    prev_cursor?: string;
+
+    has_more?: unknown;
+
+    has_prev?: boolean;
+
+    total?: number;
+  }
+}
+
+export interface CursorParams {
+  /**
+   * The cursor to base the request on.
+   */
+  cursor?: string;
+
+  limit?: number;
+
+  include_total?: boolean;
+}
+
+export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<Item> {
+  data: Array<Item>;
+
+  pagination: CursorResponse.Pagination;
+
+  constructor(
+    client: Mixedbread,
+    response: Response,
+    body: CursorResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
+    super(client, response, body, options);
+
+    this.data = body.data || [];
+    this.pagination = body.pagination || {};
+  }
+
+  getPaginatedItems(): Item[] {
+    return this.data ?? [];
+  }
+
+  nextPageRequestOptions(): PageRequestOptions | null {
+    const cursor = this.pagination?.next_cursor;
+    if (!cursor) {
+      return null;
+    }
+
+    return {
+      ...this.options,
+      query: {
+        ...maybeObj(this.options.query),
+        cursor,
+      },
+    };
+  }
+}

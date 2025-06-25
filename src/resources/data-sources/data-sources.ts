@@ -7,13 +7,14 @@ import {
   ConnectorDeleteParams,
   ConnectorDeleteResponse,
   ConnectorListParams,
-  ConnectorListResponse,
   ConnectorRetrieveParams,
   ConnectorUpdateParams,
   Connectors,
   DataSourceConnector,
+  DataSourceConnectorsCursor,
 } from './connectors';
 import { APIPromise } from '../../core/api-promise';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -66,8 +67,8 @@ export class DataSources extends APIResource {
   list(
     query: DataSourceListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<DataSourceListResponse> {
-    return this._client.get('/v1/data_sources/', { query, ...options });
+  ): PagePromise<DataSourcesCursor, DataSource> {
+    return this._client.getAPIList('/v1/data_sources/', Cursor<DataSource>, { query, ...options });
   }
 
   /**
@@ -79,6 +80,8 @@ export class DataSources extends APIResource {
     return this._client.delete(path`/v1/data_sources/${dataSourceID}`, options);
   }
 }
+
+export type DataSourcesCursor = Cursor<DataSource>;
 
 /**
  * Service-level representation of a data source.
@@ -256,58 +259,6 @@ export interface Oauth2Params {
 }
 
 /**
- * A list of data sources with pagination.
- */
-export interface DataSourceListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  pagination: DataSourceListResponse.Pagination;
-
-  /**
-   * The list of data sources
-   */
-  data: Array<DataSource>;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace DataSourceListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  export interface Pagination {
-    /**
-     * Cursor for the next page, null if no more pages
-     */
-    next_cursor: string | null;
-
-    /**
-     * Cursor for the previous page, null if no previous pages
-     */
-    prev_cursor: string | null;
-
-    /**
-     * Whether there are more items available
-     */
-    has_more: boolean;
-
-    /**
-     * Whether there are previous items available
-     */
-    has_prev: boolean;
-
-    /**
-     * Total number of items available
-     */
-    total?: number | null;
-  }
-}
-
-/**
  * Deleted data source.
  */
 export interface DataSourceDeleteResponse {
@@ -457,22 +408,7 @@ export declare namespace DataSourceUpdateParams {
   }
 }
 
-export interface DataSourceListParams {
-  /**
-   * Maximum number of items to return per page
-   */
-  limit?: number;
-
-  /**
-   * Cursor for pagination (base64 encoded cursor)
-   */
-  cursor?: string | null;
-
-  /**
-   * Whether to include the total number of items
-   */
-  include_total?: boolean;
-}
+export interface DataSourceListParams extends CursorParams {}
 
 DataSources.Connectors = Connectors;
 
@@ -484,8 +420,8 @@ export declare namespace DataSources {
     type LinearDataSource as LinearDataSource,
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
-    type DataSourceListResponse as DataSourceListResponse,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
@@ -494,8 +430,8 @@ export declare namespace DataSources {
   export {
     Connectors as Connectors,
     type DataSourceConnector as DataSourceConnector,
-    type ConnectorListResponse as ConnectorListResponse,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
+    type DataSourceConnectorsCursor as DataSourceConnectorsCursor,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,
