@@ -3,7 +3,6 @@
 import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -37,11 +36,8 @@ export class Jobs extends APIResource {
    *
    * Returns: List of parsing jobs with pagination.
    */
-  list(
-    query: JobListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): PagePromise<JobListResponsesLimitOffset, JobListResponse> {
-    return this._client.getAPIList('/v1/parsing/jobs', LimitOffset<JobListResponse>, { query, ...options });
+  list(query: JobListParams | null | undefined = {}, options?: RequestOptions): APIPromise<JobListResponse> {
+    return this._client.get('/v1/parsing/jobs', { query, ...options });
   }
 
   /**
@@ -66,8 +62,6 @@ export class Jobs extends APIResource {
     return this._client.patch(path`/v1/parsing/jobs/${jobID}`, options);
   }
 }
-
-export type JobListResponsesLimitOffset = LimitOffset<JobListResponse>;
 
 /**
  * Strategy used for chunking document content.
@@ -244,48 +238,100 @@ export namespace ParsingJob {
 export type ReturnFormat = 'html' | 'markdown' | 'plain';
 
 /**
- * A parsing job item for list responses, omitting result and error fields.
+ * A list of parsing jobs with pagination.
  */
 export interface JobListResponse {
   /**
-   * The ID of the job
+   * Response model for cursor-based pagination.
    */
-  id: string;
+  pagination: JobListResponse.Pagination;
 
   /**
-   * The ID of the file to parse
+   * The list of parsing jobs
    */
-  file_id: string;
+  data: Array<JobListResponse.Data>;
 
   /**
-   * The status of the job
+   * The object type of the response
    */
-  status: ParsingJobStatus;
+  object?: 'list';
+}
+
+export namespace JobListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  export interface Pagination {
+    /**
+     * Cursor for the next page, null if no more pages
+     */
+    next_cursor: string | null;
+
+    /**
+     * Cursor for the previous page, null if no previous pages
+     */
+    prev_cursor: string | null;
+
+    /**
+     * Whether there are more items available
+     */
+    has_more: boolean;
+
+    /**
+     * Whether there are previous items available
+     */
+    has_prev: boolean;
+
+    /**
+     * Total number of items available
+     */
+    total?: number | null;
+  }
 
   /**
-   * The started time of the job
+   * A parsing job item for list responses, omitting result and error fields.
    */
-  started_at?: string | null;
+  export interface Data {
+    /**
+     * The ID of the job
+     */
+    id: string;
 
-  /**
-   * The finished time of the job
-   */
-  finished_at?: string | null;
+    /**
+     * The ID of the file to parse
+     */
+    file_id: string;
 
-  /**
-   * The creation time of the job
-   */
-  created_at?: string;
+    /**
+     * The status of the job
+     */
+    status: JobsAPI.ParsingJobStatus;
 
-  /**
-   * The updated time of the job
-   */
-  updated_at?: string | null;
+    /**
+     * The started time of the job
+     */
+    started_at?: string | null;
 
-  /**
-   * The type of the object
-   */
-  object?: 'parsing_job';
+    /**
+     * The finished time of the job
+     */
+    finished_at?: string | null;
+
+    /**
+     * The creation time of the job
+     */
+    created_at?: string;
+
+    /**
+     * The updated time of the job
+     */
+    updated_at?: string | null;
+
+    /**
+     * The type of the object
+     */
+    object?: 'parsing_job';
+  }
 }
 
 /**
@@ -335,7 +381,22 @@ export interface JobCreateParams {
   mode?: 'fast' | 'high_quality';
 }
 
-export interface JobListParams extends LimitOffsetParams {}
+export interface JobListParams {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
+
+  /**
+   * Cursor for pagination (base64 encoded cursor)
+   */
+  cursor?: string | null;
+
+  /**
+   * Whether to include the total number of items
+   */
+  include_total?: boolean;
+}
 
 export declare namespace Jobs {
   export {
@@ -346,7 +407,6 @@ export declare namespace Jobs {
     type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
-    type JobListResponsesLimitOffset as JobListResponsesLimitOffset,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
   };

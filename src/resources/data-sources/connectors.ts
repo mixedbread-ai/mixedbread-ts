@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -73,12 +72,8 @@ export class Connectors extends APIResource {
     dataSourceID: string,
     query: ConnectorListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<DataSourceConnectorsLimitOffset, DataSourceConnector> {
-    return this._client.getAPIList(
-      path`/v1/data_sources/${dataSourceID}/connectors`,
-      LimitOffset<DataSourceConnector>,
-      { query, ...options },
-    );
+  ): APIPromise<ConnectorListResponse> {
+    return this._client.get(path`/v1/data_sources/${dataSourceID}/connectors`, { query, ...options });
   }
 
   /**
@@ -98,8 +93,6 @@ export class Connectors extends APIResource {
     return this._client.delete(path`/v1/data_sources/${data_source_id}/connectors/${connectorID}`, options);
   }
 }
-
-export type DataSourceConnectorsLimitOffset = LimitOffset<DataSourceConnector>;
 
 /**
  * Service-level representation of a connector.
@@ -174,6 +167,58 @@ export interface DataSourceConnector {
    * The type of the object
    */
   object?: 'data_source.connector';
+}
+
+/**
+ * A list of connectors with pagination.
+ */
+export interface ConnectorListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  pagination: ConnectorListResponse.Pagination;
+
+  /**
+   * The list of connectors
+   */
+  data: Array<DataSourceConnector>;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+}
+
+export namespace ConnectorListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  export interface Pagination {
+    /**
+     * Cursor for the next page, null if no more pages
+     */
+    next_cursor: string | null;
+
+    /**
+     * Cursor for the previous page, null if no previous pages
+     */
+    prev_cursor: string | null;
+
+    /**
+     * Whether there are more items available
+     */
+    has_more: boolean;
+
+    /**
+     * Whether there are previous items available
+     */
+    has_prev: boolean;
+
+    /**
+     * Total number of items available
+     */
+    total?: number | null;
+  }
 }
 
 /**
@@ -267,7 +312,22 @@ export interface ConnectorUpdateParams {
   polling_interval?: number | string | null;
 }
 
-export interface ConnectorListParams extends LimitOffsetParams {}
+export interface ConnectorListParams {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
+
+  /**
+   * Cursor for pagination (base64 encoded cursor)
+   */
+  cursor?: string | null;
+
+  /**
+   * Whether to include the total number of items
+   */
+  include_total?: boolean;
+}
 
 export interface ConnectorDeleteParams {
   /**
@@ -279,8 +339,8 @@ export interface ConnectorDeleteParams {
 export declare namespace Connectors {
   export {
     type DataSourceConnector as DataSourceConnector,
+    type ConnectorListResponse as ConnectorListResponse,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,

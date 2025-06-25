@@ -11,6 +11,5 @@ export {
   type JobDeleteResponse,
   type JobCreateParams,
   type JobListParams,
-  type JobListResponsesLimitOffset,
 } from './jobs';
 export { Parsing } from './parsing';

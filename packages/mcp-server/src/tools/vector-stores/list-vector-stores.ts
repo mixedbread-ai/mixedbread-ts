@@ -27,10 +27,15 @@ export const tool: Tool = {
         title: 'Limit',
         description: 'Maximum number of items to return per page',
       },
-      offset: {
-        type: 'integer',
-        title: 'Offset',
-        description: 'Offset of the first item to return',
+      cursor: {
+        type: 'string',
+        title: 'Cursor',
+        description: 'Cursor for pagination (base64 encoded cursor)',
+      },
+      include_total: {
+        type: 'boolean',
+        title: 'Include Total',
+        description: 'Whether to include the total number of items',
       },
       q: {
         type: 'string',

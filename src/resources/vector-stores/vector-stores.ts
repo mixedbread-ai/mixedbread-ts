@@ -8,6 +8,7 @@ import {
   FileDeleteParams,
   FileDeleteResponse,
   FileListParams,
+  FileListResponse,
   FileRetrieveParams,
   FileSearchParams,
   FileSearchResponse,
@@ -16,10 +17,8 @@ import {
   ScoredVectorStoreFile,
   VectorStoreFile,
   VectorStoreFileStatus,
-  VectorStoreFilesLimitOffset,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -77,8 +76,8 @@ export class VectorStores extends APIResource {
   list(
     query: VectorStoreListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoresLimitOffset, VectorStore> {
-    return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStore>, { query, ...options });
+  ): APIPromise<VectorStoreListResponse> {
+    return this._client.get('/v1/vector_stores', { query, ...options });
   }
 
   /**
@@ -125,8 +124,6 @@ export class VectorStores extends APIResource {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
-
-export type VectorStoresLimitOffset = LimitOffset<VectorStore>;
 
 /**
  * Represents an expiration policy for a vector store.
@@ -579,6 +576,55 @@ export interface VectorStoreChunkSearchOptions {
   return_metadata?: boolean;
 }
 
+export interface VectorStoreListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  pagination: VectorStoreListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of vector stores
+   */
+  data: Array<VectorStore>;
+}
+
+export namespace VectorStoreListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   */
+  export interface Pagination {
+    /**
+     * Cursor for the next page, null if no more pages
+     */
+    next_cursor: string | null;
+
+    /**
+     * Cursor for the previous page, null if no previous pages
+     */
+    prev_cursor: string | null;
+
+    /**
+     * Whether there are more items available
+     */
+    has_more: boolean;
+
+    /**
+     * Whether there are previous items available
+     */
+    has_prev: boolean;
+
+    /**
+     * Total number of items available
+     */
+    total?: number | null;
+  }
+}
+
 /**
  * Response model for vector store deletion.
  */
@@ -689,7 +735,22 @@ export interface VectorStoreUpdateParams {
   metadata?: unknown;
 }
 
-export interface VectorStoreListParams extends LimitOffsetParams {
+export interface VectorStoreListParams {
+  /**
+   * Maximum number of items to return per page
+   */
+  limit?: number;
+
+  /**
+   * Cursor for pagination (base64 encoded cursor)
+   */
+  cursor?: string | null;
+
+  /**
+   * Whether to include the total number of items
+   */
+  include_total?: boolean;
+
   /**
    * Search query for fuzzy matching over name and description fields
    */
@@ -817,10 +878,10 @@ export declare namespace VectorStores {
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
+    type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresLimitOffset as VectorStoresLimitOffset,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -834,9 +895,9 @@ export declare namespace VectorStores {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
