@@ -194,7 +194,7 @@ export namespace CursorResponse {
 
     prev_cursor?: string;
 
-    has_more?: unknown;
+    has_more?: boolean;
 
     has_prev?: boolean;
 
@@ -232,6 +232,14 @@ export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<I
 
   getPaginatedItems(): Item[] {
     return this.data ?? [];
+  }
+
+  override hasNextPage(): boolean {
+    if (this.pagination?.has_more === false) {
+      return false;
+    }
+
+    return super.hasNextPage();
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
