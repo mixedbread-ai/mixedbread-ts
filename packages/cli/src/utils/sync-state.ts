@@ -1,4 +1,5 @@
 import Mixedbread from '@mixedbread/sdk';
+import { FileListParams } from '@mixedbread/sdk/resources/vector-stores/files';
 
 export interface SyncState {
   last_sync: string;
@@ -25,22 +26,29 @@ export async function getSyncedFiles(
   vectorStoreId: string,
 ): Promise<Map<string, { fileId: string; metadata: FileSyncMetadata }>> {
   const fileMap = new Map<string, { fileId: string; metadata: FileSyncMetadata }>();
+  let list_offset_options: FileListParams | null = {
+    limit: 100,
+    offset: 0,
+  };
 
   try {
     // Get all files in the vector store
-    // Note: In a real implementation, this would need pagination
-    const response = await client.vectorStores.files.list(vectorStoreId, {
-      limit: 100,
-    });
+    while (true) {
+      const response = await client.vectorStores.files.list(vectorStoreId, list_offset_options);
+      if (response.data.length === 0) {
+        break;
+      }
+      list_offset_options.offset = list_offset_options.offset + response.data.length;
 
-    for (const file of response.data) {
-      // Check if file has sync metadata
-      const metadata = file.metadata as FileSyncMetadata;
-      if (metadata && metadata.synced === true && metadata.file_path) {
-        fileMap.set(metadata.file_path, {
-          fileId: file.id,
-          metadata,
-        });
+      for (const file of response.data) {
+        // Check if file has sync metadata
+        const metadata = file.metadata as FileSyncMetadata;
+        if (metadata && metadata.synced === true && metadata.file_path) {
+          fileMap.set(metadata.file_path, {
+            fileId: file.id,
+            metadata,
+          });
+        }
       }
     }
 
