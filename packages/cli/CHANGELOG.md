@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2025-06-27)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.2.0...v0.2.1)
+
+### Chores
+
+* paginate the sync file fetch ([f9a0668](https://github.com/mixedbread-ai/mixedbread-ts/commit/f9a0668356fd9a92043f8cdebad00b31d2e69e0d))
+
 ## 0.2.0 (2025-06-25)
 
 Full Changelog: [v0.1.1...v0.2.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.1.1...v0.2.0)

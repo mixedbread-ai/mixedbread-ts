@@ -1,6 +1,6 @@
 {
   "name": "@mixedbread/cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI tool for managing the Mixedbread platform.",
   "author": "Mixedbread <support@mixedbread.com>",
   "license": "Apache-2.0",

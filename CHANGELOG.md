@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.11.1 (2025-06-27)
+
+Full Changelog: [v0.11.0...v0.11.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.11.0...v0.11.1)
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([9811f00](https://github.com/mixedbread-ai/mixedbread-ts/commit/9811f008494a270c0c7f88f7cadf5762395572b8))
+* **client:** get fetchOptions type more reliably ([00ea5aa](https://github.com/mixedbread-ai/mixedbread-ts/commit/00ea5aaaec432f3604199513443e3f7da6ab4eca))
+
+
+### Chores
+
+* paginate the sync file fetch ([f9a0668](https://github.com/mixedbread-ai/mixedbread-ts/commit/f9a0668356fd9a92043f8cdebad00b31d2e69e0d))
+
 ## 0.11.0 (2025-06-25)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.10.0...v0.11.0)
