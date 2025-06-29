@@ -2,7 +2,9 @@
 
 export {
   Files,
+  type RerankConfig,
   type ScoredVectorStoreFile,
+  type VectorStoreFileStatus,
   type VectorStoreFile,
   type FileDeleteResponse,
   type FileSearchResponse,
@@ -11,7 +13,7 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
-  type VectorStoreFilesLimitOffset,
+  type VectorStoreFilesCursor,
 } from './files';
 export {
   VectorStores,
@@ -30,5 +32,5 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
-  type VectorStoresLimitOffset,
+  type VectorStoresCursor,
 } from './vector-stores';

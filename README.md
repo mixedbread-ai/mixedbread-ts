@@ -1,6 +1,6 @@
 # Mixedbread API TypeScript SDK API Library
 
-[![NPM version](https://img.shields.io/npm/v/@mixedbread/sdk.svg)](https://npmjs.org/package/@mixedbread/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@mixedbread/sdk)
+[![NPM version](<https://img.shields.io/npm/v/@mixedbread/sdk.svg?label=npm%20(stable)>)](https://npmjs.org/package/@mixedbread/sdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@mixedbread/sdk)
 
 This library provides convenient access to the Mixedbread REST API from server-side TypeScript or JavaScript.
 
@@ -27,13 +27,9 @@ const client = new Mixedbread({
   environment: 'local', // defaults to 'production'
 });
 
-async function main() {
-  const vectorStore = await client.vectorStores.create();
+const vectorStore = await client.vectorStores.create();
 
-  console.log(vectorStore.id);
-}
-
-main();
+console.log(vectorStore.id);
 ```
 
 ### Request & Response types
@@ -49,11 +45,7 @@ const client = new Mixedbread({
   environment: 'local', // defaults to 'production'
 });
 
-async function main() {
-  const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
-}
-
-main();
+const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -95,19 +87,15 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-async function main() {
-  const vectorStore = await client.vectorStores.create().catch(async (err) => {
-    if (err instanceof Mixedbread.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
-}
-
-main();
+const vectorStore = await client.vectorStores.create().catch(async (err) => {
+  if (err instanceof Mixedbread.APIError) {
+    console.log(err.status); // 400
+    console.log(err.name); // BadRequestError
+    console.log(err.headers); // {server: 'nginx', ...}
+  } else {
+    throw err;
+  }
+});
 ```
 
 Error codes are as follows:
@@ -296,9 +284,8 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.foo.create({
-  foo: 'my_param',
-  bar: 12,
+client.vectorStores.create({
+  // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',
 });

@@ -11,10 +11,10 @@ import {
   ConnectorUpdateParams,
   Connectors,
   DataSourceConnector,
-  DataSourceConnectorsLimitOffset,
+  DataSourceConnectorsCursor,
 } from './connectors';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -67,8 +67,8 @@ export class DataSources extends APIResource {
   list(
     query: DataSourceListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<DataSourcesLimitOffset, DataSource> {
-    return this._client.getAPIList('/v1/data_sources/', LimitOffset<DataSource>, { query, ...options });
+  ): PagePromise<DataSourcesCursor, DataSource> {
+    return this._client.getAPIList('/v1/data_sources/', Cursor<DataSource>, { query, ...options });
   }
 
   /**
@@ -81,7 +81,7 @@ export class DataSources extends APIResource {
   }
 }
 
-export type DataSourcesLimitOffset = LimitOffset<DataSource>;
+export type DataSourcesCursor = Cursor<DataSource>;
 
 /**
  * Service-level representation of a data source.
@@ -118,14 +118,28 @@ export interface DataSource {
   metadata: unknown;
 
   /**
-   * Authentication parameters for a OAuth data source.
+   * Authentication parameters
    */
-  auth_params: DataSourceOauth2Params | null;
+  auth_params: DataSourceOauth2Params | DataSource.DataSourceAPIKeyParams | null;
 
   /**
    * The type of the object
    */
   object?: 'data_source';
+}
+
+export namespace DataSource {
+  /**
+   * Authentication parameters for a API key data source.
+   */
+  export interface DataSourceAPIKeyParams {
+    type?: 'api_key';
+
+    /**
+     * The API key
+     */
+    api_key: string;
+  }
 }
 
 /**
@@ -140,24 +154,9 @@ export interface DataSourceOauth2Params {
   created_at?: string;
 
   /**
-   * The OAuth2 client ID
-   */
-  client_id: string;
-
-  /**
-   * The OAuth2 client secret
-   */
-  client_secret: string;
-
-  /**
-   * The OAuth2 redirect URI
-   */
-  redirect_uri: string;
-
-  /**
    * The OAuth2 scope
    */
-  scope: string;
+  scope?: string;
 
   /**
    * The OAuth2 access token
@@ -178,9 +177,86 @@ export interface DataSourceOauth2Params {
    * The OAuth2 token expiration timestamp
    */
   expires_on?: string | null;
+
+  /**
+   * Additional parameters for the OAuth2 flow
+   */
+  additional_params?: { [key: string]: unknown } | null;
 }
 
 export type DataSourceType = 'notion' | 'linear';
+
+/**
+ * Parameters for creating or updating a Linear data source.
+ */
+export interface LinearDataSource {
+  /**
+   * The type of data source to create
+   */
+  type?: DataSourceType;
+
+  /**
+   * The name of the data source
+   */
+  name: string;
+
+  /**
+   * The metadata of the data source
+   */
+  metadata?: unknown;
+
+  /**
+   * Base class for OAuth2 create or update parameters.
+   */
+  auth_params?: Oauth2Params | null;
+}
+
+/**
+ * Parameters for creating or updating a Notion data source.
+ */
+export interface NotionDataSource {
+  /**
+   * The type of data source to create
+   */
+  type?: DataSourceType;
+
+  /**
+   * The name of the data source
+   */
+  name: string;
+
+  /**
+   * The metadata of the data source
+   */
+  metadata?: unknown;
+
+  /**
+   * The authentication parameters of the data source. Notion supports OAuth2 and API
+   * key.
+   */
+  auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
+}
+
+export namespace NotionDataSource {
+  /**
+   * Base class for API key create or update parameters.
+   */
+  export interface APIKeyCreateOrUpdateParams {
+    type?: 'api_key';
+
+    /**
+     * The API key
+     */
+    api_key: string;
+  }
+}
+
+/**
+ * Base class for OAuth2 create or update parameters.
+ */
+export interface Oauth2Params {
+  type?: 'oauth2';
+}
 
 /**
  * Deleted data source.
@@ -202,46 +278,137 @@ export interface DataSourceDeleteResponse {
   object?: 'data_source';
 }
 
-export interface DataSourceCreateParams {
-  /**
-   * The type of data source to create
-   */
-  type: DataSourceType;
+export type DataSourceCreateParams =
+  | DataSourceCreateParams.NotionDataSource
+  | DataSourceCreateParams.LinearDataSource;
 
-  /**
-   * The name of the data source
-   */
-  name: string;
+export declare namespace DataSourceCreateParams {
+  export interface NotionDataSource {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
 
-  /**
-   * The metadata of the data source
-   */
-  metadata?: unknown;
+    /**
+     * The name of the data source
+     */
+    name: string;
 
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params?: DataSourceOauth2Params | null;
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * The authentication parameters of the data source. Notion supports OAuth2 and API
+     * key.
+     */
+    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
+  }
+
+  export namespace NotionDataSource {
+    /**
+     * Base class for API key create or update parameters.
+     */
+    export interface APIKeyCreateOrUpdateParams {
+      type?: 'api_key';
+
+      /**
+       * The API key
+       */
+      api_key: string;
+    }
+  }
+
+  export interface LinearDataSource {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
+
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    auth_params?: Oauth2Params | null;
+  }
 }
 
-export interface DataSourceUpdateParams {
-  /**
-   * The name of the data source
-   */
-  name?: string | null;
+export type DataSourceUpdateParams =
+  | DataSourceUpdateParams.NotionDataSource
+  | DataSourceUpdateParams.LinearDataSource;
 
-  /**
-   * The metadata of the data source
-   */
-  metadata?: unknown;
+export declare namespace DataSourceUpdateParams {
+  export interface NotionDataSource {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
 
-  /**
-   * Authentication parameters for a OAuth data source.
-   */
-  auth_params?: DataSourceOauth2Params | null;
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * The authentication parameters of the data source. Notion supports OAuth2 and API
+     * key.
+     */
+    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
+  }
+
+  export namespace NotionDataSource {
+    /**
+     * Base class for API key create or update parameters.
+     */
+    export interface APIKeyCreateOrUpdateParams {
+      type?: 'api_key';
+
+      /**
+       * The API key
+       */
+      api_key: string;
+    }
+  }
+
+  export interface LinearDataSource {
+    /**
+     * The type of data source to create
+     */
+    type?: DataSourceType;
+
+    /**
+     * The name of the data source
+     */
+    name: string;
+
+    /**
+     * The metadata of the data source
+     */
+    metadata?: unknown;
+
+    /**
+     * Base class for OAuth2 create or update parameters.
+     */
+    auth_params?: Oauth2Params | null;
+  }
 }
 
-export interface DataSourceListParams extends LimitOffsetParams {}
+export interface DataSourceListParams extends CursorParams {}
 
 DataSources.Connectors = Connectors;
 
@@ -250,8 +417,11 @@ export declare namespace DataSources {
     type DataSource as DataSource,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
+    type LinearDataSource as LinearDataSource,
+    type NotionDataSource as NotionDataSource,
+    type Oauth2Params as Oauth2Params,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
-    type DataSourcesLimitOffset as DataSourcesLimitOffset,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
@@ -261,7 +431,7 @@ export declare namespace DataSources {
     Connectors as Connectors,
     type DataSourceConnector as DataSourceConnector,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
+    type DataSourceConnectorsCursor as DataSourceConnectorsCursor,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,

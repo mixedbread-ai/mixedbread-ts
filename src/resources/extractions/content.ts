@@ -21,7 +21,7 @@ export class Content extends APIResource {
  * The result of an extraction job.
  */
 export interface ExtractionResult {
-  data: Record<string, unknown>;
+  data: { [key: string]: unknown };
 
   warnings: Array<string>;
 }
@@ -50,6 +50,11 @@ export namespace ImageURLInput {
      * The image URL. Can be either a URL or a Data URI.
      */
     url: string;
+
+    /**
+     * The image format/mimetype
+     */
+    format?: string;
   }
 }
 
@@ -80,7 +85,7 @@ export interface ContentCreateParams {
   /**
    * The JSON schema to use for extraction
    */
-  json_schema: Record<string, unknown>;
+  json_schema: { [key: string]: unknown };
 
   /**
    * Additional instructions for the extraction

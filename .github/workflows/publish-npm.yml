@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       path:
-        description: The path to run the release in, e.g. '.' or 'packages/mcp-server'
+        description: The path to run the release in, e.g. '.'
         required: true
 
   release:
@@ -34,7 +34,7 @@ jobs:
           if [ -n "${{ github.event.inputs.path }}" ]; then
             PATHS_RELEASED='[\"${{ github.event.inputs.path }}\"]'
           else
-            PATHS_RELEASED='[\".\", \"packages/mcp-server\"]'
+            PATHS_RELEASED='[\".\"]'
           fi
           yarn tsn scripts/publish-packages.ts "{ \"paths_released\": \"$PATHS_RELEASED\" }"
         env:

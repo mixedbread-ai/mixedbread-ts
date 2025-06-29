@@ -9,16 +9,19 @@ export {
   type ConnectorUpdateParams,
   type ConnectorListParams,
   type ConnectorDeleteParams,
-  type DataSourceConnectorsLimitOffset,
+  type DataSourceConnectorsCursor,
 } from './connectors';
 export {
   DataSources,
   type DataSource,
   type DataSourceOauth2Params,
   type DataSourceType,
+  type LinearDataSource,
+  type NotionDataSource,
+  type Oauth2Params,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourcesLimitOffset,
+  type DataSourcesCursor,
 } from './data-sources';

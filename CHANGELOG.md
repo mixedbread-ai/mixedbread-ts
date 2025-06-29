@@ -1,5 +1,162 @@
 # Changelog
 
+## 0.11.1 (2025-06-27)
+
+Full Changelog: [v0.11.0...v0.11.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.11.0...v0.11.1)
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([57f0a73](https://github.com/mixedbread-ai/mixedbread-ts/commit/57f0a732dec2a7a81c9706e7ef793494b1fa7544))
+* **client:** get fetchOptions type more reliably ([0bb134b](https://github.com/mixedbread-ai/mixedbread-ts/commit/0bb134bd7ef087e36f0caba9044f3847bd9ce1e7))
+
+
+### Chores
+
+* paginate the sync file fetch ([f9a0668](https://github.com/mixedbread-ai/mixedbread-ts/commit/f9a0668356fd9a92043f8cdebad00b31d2e69e0d))
+* remove cli and mcp-server from release flow ([684d90b](https://github.com/mixedbread-ai/mixedbread-ts/commit/684d90bcc4f3e5eb27ec357e4a2fd96d36fbb22d))
+
+## 0.11.0 (2025-06-25)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* **api:** update via SDK Studio ([edd9331](https://github.com/mixedbread-ai/mixedbread-ts/commit/edd93314a62c424b2fc78b00cd89f9380d18d00f))
+
+## 0.10.0 (2025-06-25)
+
+Full Changelog: [v0.9.3...v0.10.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.3...v0.10.0)
+
+### Features
+
+* **api:** api update ([f4a471a](https://github.com/mixedbread-ai/mixedbread-ts/commit/f4a471a470f8683675da47af7a9c617f55ce88d6))
+* **api:** update via SDK Studio ([7fd1456](https://github.com/mixedbread-ai/mixedbread-ts/commit/7fd1456a298dd520897ddb6d9353b6db431167f5))
+* **api:** update via SDK Studio ([f79bda7](https://github.com/mixedbread-ai/mixedbread-ts/commit/f79bda7bbf2e3f2a134bedc6cf2ba5d556146d64))
+* **api:** update via SDK Studio ([373d495](https://github.com/mixedbread-ai/mixedbread-ts/commit/373d4950636354d883a735da32fa269d05704c43))
+
+
+### Bug Fixes
+
+* **client:** explicitly copy fetch in withOptions ([f6378e1](https://github.com/mixedbread-ai/mixedbread-ts/commit/f6378e14cab529de6b11b85de10b5553eb3fb3e7))
+
+
+### Chores
+
+* fix build ([5cded30](https://github.com/mixedbread-ai/mixedbread-ts/commit/5cded303d94ed03be96a1c9707e4b630fbe46392))
+* fix lint ([5db9ab7](https://github.com/mixedbread-ai/mixedbread-ts/commit/5db9ab7eb1423bf376fd441c26692330aaef2d3e))
+* update build script ([d64cd0d](https://github.com/mixedbread-ai/mixedbread-ts/commit/d64cd0db7b83d32e6f34c8172d115b9888b576fc))
+* update CLI ([cbf0c06](https://github.com/mixedbread-ai/mixedbread-ts/commit/cbf0c067898668f8702c5ee7273d7fc37ee16d9c))
+
+
+### Refactors
+
+* **types:** replace Record with mapped types ([56d3912](https://github.com/mixedbread-ai/mixedbread-ts/commit/56d3912fb56295978279d965f082bbac0947f79d))
+
+## 0.9.3 (2025-06-19)
+
+Full Changelog: [v0.9.2...v0.9.3](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.2...v0.9.3)
+
+### Chores
+
+* format code ([2fc6118](https://github.com/mixedbread-ai/mixedbread-ts/commit/2fc6118e1d9dbff0b9ff28e83b68edb8e36cb189))
+* lint ([630f13e](https://github.com/mixedbread-ai/mixedbread-ts/commit/630f13edf1d2a96b2c0e36c981db1079837b9846))
+* update cli ([9844c6f](https://github.com/mixedbread-ai/mixedbread-ts/commit/9844c6fd5dcb983254784c633f18364328668b32))
+* update github cli ([ec0a676](https://github.com/mixedbread-ai/mixedbread-ts/commit/ec0a676d7d32928255dc5d3b0903945cf2c12534))
+
+## 0.9.2 (2025-06-19)
+
+Full Changelog: [v0.9.1...v0.9.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.1...v0.9.2)
+
+### Chores
+
+* **readme:** use better example snippet for undocumented params ([766ab54](https://github.com/mixedbread-ai/mixedbread-ts/commit/766ab54cf36119da605d6bd196632b7342af2d73))
+
+## 0.9.1 (2025-06-18)
+
+Full Changelog: [v0.9.0...v0.9.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.9.0...v0.9.1)
+
+### Chores
+
+* **readme:** update badges ([355a372](https://github.com/mixedbread-ai/mixedbread-ts/commit/355a3720c0ee705f9a048582e467c173126ab7e3))
+
+## 0.9.0 (2025-06-17)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** api update ([e7cb592](https://github.com/mixedbread-ai/mixedbread-ts/commit/e7cb5922826dc2f28afd393271819991ae81ae63))
+* **client:** add support for endpoint-specific base URLs ([01cb55b](https://github.com/mixedbread-ai/mixedbread-ts/commit/01cb55bed909db63b728125dd617bc836706a62e))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([34fda06](https://github.com/mixedbread-ai/mixedbread-ts/commit/34fda06e668dfd45f4e8d9a6c2f2e5e746e26465))
+* **client:** refactor imports ([e1b0cbb](https://github.com/mixedbread-ai/mixedbread-ts/commit/e1b0cbb80535d2f3d0854a17642be7acf502f97e))
+
+## 0.8.0 (2025-06-16)
+
+Full Changelog: [v0.7.2...v0.8.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.2...v0.8.0)
+
+### Features
+
+* **api:** update via SDK Studio ([dff5c03](https://github.com/mixedbread-ai/mixedbread-ts/commit/dff5c03629b87686e5ffa943a392087f3f9d43b4))
+
+
+### Chores
+
+* update vs identifier ([3314de5](https://github.com/mixedbread-ai/mixedbread-ts/commit/3314de55aa2e0f8a38b9cc628fb2186e8d463891))
+
+## 0.7.2 (2025-06-16)
+
+Full Changelog: [v0.7.1...v0.7.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.1...v0.7.2)
+
+### Chores
+
+* update the vs_id ([a488377](https://github.com/mixedbread-ai/mixedbread-ts/commit/a48837750d4e703839c4006bbbc34ab9d9044418))
+
+## 0.7.1 (2025-06-16)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.7.0...v0.7.1)
+
+## 0.7.0 (2025-06-14)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** api update ([d9376d3](https://github.com/mixedbread-ai/mixedbread-ts/commit/d9376d30769cdb5019ba6c3553a5ff95890a6dee))
+* **api:** api update ([1561d2f](https://github.com/mixedbread-ai/mixedbread-ts/commit/1561d2f597cdd152d851e797daaace847267f625))
+* **api:** api update ([0f9b94b](https://github.com/mixedbread-ai/mixedbread-ts/commit/0f9b94be529790be8e7176599c7cea6980672eee))
+* **api:** api update ([6fc614c](https://github.com/mixedbread-ai/mixedbread-ts/commit/6fc614ce58406b9bd49a1dd138b09d7f5f6ef3da))
+* **api:** update via SDK Studio ([87c97c3](https://github.com/mixedbread-ai/mixedbread-ts/commit/87c97c3162e6d653ef2a0652cf753c4edd585d9f))
+* **api:** update via SDK Studio ([3e527e4](https://github.com/mixedbread-ai/mixedbread-ts/commit/3e527e47c2efe3cc160b83e895f1bc0d92291138))
+* **mcp:** implement support for binary responses ([64a9c65](https://github.com/mixedbread-ai/mixedbread-ts/commit/64a9c65a618e52f49a9f7c92342c35463ce66937))
+* **mcp:** include http information in tools ([3138d3c](https://github.com/mixedbread-ai/mixedbread-ts/commit/3138d3c3399f24fd32f97c2023a1e47dc959969d))
+* **mcp:** set X-Stainless-MCP header ([6b5bdbc](https://github.com/mixedbread-ai/mixedbread-ts/commit/6b5bdbc2cdf382b94a01738084c242c4c969d381))
+
+
+### Bug Fixes
+
+* compat with more runtimes ([101e76f](https://github.com/mixedbread-ai/mixedbread-ts/commit/101e76f065b1a6e9d3b220dac3b0dfc8ee91aa73))
+* **mcp:** include description in dynamic tool search ([69a15a4](https://github.com/mixedbread-ai/mixedbread-ts/commit/69a15a4c84f3393695dc3c45df7af0111927b3a5))
+* publish script — handle NPM errors correctly ([b27592b](https://github.com/mixedbread-ai/mixedbread-ts/commit/b27592ba009a84288b90ddb32c2847122e617cf1))
+
+
+### Chores
+
+* adjust eslint.config.mjs ignore pattern ([fba075c](https://github.com/mixedbread-ai/mixedbread-ts/commit/fba075cbd0b395c7f7cbd9506bdf879de76a7358))
+* avoid type error in certain environments ([a445536](https://github.com/mixedbread-ai/mixedbread-ts/commit/a445536ecf9344b665940c6c19b9547c7a533cda))
+* **deps:** bump eslint-plugin-prettier ([be8bfd9](https://github.com/mixedbread-ai/mixedbread-ts/commit/be8bfd978d71bf2f25dd594ac4872abd93e50f05))
+* **docs:** use top-level-await in example snippets ([aa74b0e](https://github.com/mixedbread-ai/mixedbread-ts/commit/aa74b0ea186751d325daf95b13a4af53a6db1986))
+* improve publish-npm script --latest tag logic ([e6276e1](https://github.com/mixedbread-ai/mixedbread-ts/commit/e6276e1065586031d8c02582ee20131f36083116))
+* **internal:** add pure annotations, make base APIResource abstract ([aff3299](https://github.com/mixedbread-ai/mixedbread-ts/commit/aff3299dcd6d00c739ac8c93435f43ad2fdf7368))
+* **internal:** codegen related update ([a57e92b](https://github.com/mixedbread-ai/mixedbread-ts/commit/a57e92b751a5a7371e1bceca085582477832ecef))
+* **internal:** fix readablestream types in node 20 ([33ce546](https://github.com/mixedbread-ai/mixedbread-ts/commit/33ce546ee0e96b8377f644577bdc1c3a161cc2c4))
+* **internal:** update jest config ([212166e](https://github.com/mixedbread-ai/mixedbread-ts/commit/212166e14882f5ac23155c1a08fbac0feecdecc0))
+* **mcp:** provides high-level initMcpServer function and exports known clients ([e12f795](https://github.com/mixedbread-ai/mixedbread-ts/commit/e12f7952a7afc20c85cb881485b62b6e4b55d76f))
+* **mcp:** remove duplicate assignment ([12ad006](https://github.com/mixedbread-ai/mixedbread-ts/commit/12ad0064f641916d697cc9cde9905c7409b8bdec))
+
 ## 0.6.0 (2025-05-26)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.5.0...v0.6.0)

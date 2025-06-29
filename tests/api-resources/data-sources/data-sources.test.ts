@@ -9,7 +9,7 @@ const client = new Mixedbread({
 
 describe('resource dataSources', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.dataSources.create({ type: 'notion', name: 'name' });
+    const responsePromise = client.dataSources.create({ name: 'name' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -24,18 +24,7 @@ describe('resource dataSources', () => {
       type: 'notion',
       name: 'name',
       metadata: {},
-      auth_params: {
-        type: 'oauth2',
-        created_at: '2019-12-27T18:11:19.117Z',
-        client_id: 'client_id',
-        client_secret: 'client_secret',
-        redirect_uri: 'redirect_uri',
-        scope: 'scope',
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        token_type: 'token_type',
-        expires_on: '2019-12-27T18:11:19.117Z',
-      },
+      auth_params: { type: 'oauth2' },
     });
   });
 
@@ -50,8 +39,10 @@ describe('resource dataSources', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update', async () => {
-    const responsePromise = client.dataSources.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {});
+  test('update: only required params', async () => {
+    const responsePromise = client.dataSources.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      name: 'name',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -59,6 +50,15 @@ describe('resource dataSources', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: required and optional params', async () => {
+    const response = await client.dataSources.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      type: 'notion',
+      name: 'name',
+      metadata: {},
+      auth_params: { type: 'oauth2' },
+    });
   });
 
   test('list', async () => {
@@ -75,7 +75,10 @@ describe('resource dataSources', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.dataSources.list({ limit: 1000, offset: 0 }, { path: '/_stainless_unknown_path' }),
+      client.dataSources.list(
+        { limit: 1000, cursor: 'cursor', include_total: true },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 

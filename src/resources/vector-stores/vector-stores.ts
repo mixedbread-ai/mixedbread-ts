@@ -12,12 +12,14 @@ import {
   FileSearchParams,
   FileSearchResponse,
   Files,
+  RerankConfig,
   ScoredVectorStoreFile,
   VectorStoreFile,
-  VectorStoreFilesLimitOffset,
+  VectorStoreFileStatus,
+  VectorStoreFilesCursor,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -37,56 +39,57 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Get a vector store by ID.
+   * Get a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to retrieve.
+   * Args: vector_store_identifier: The ID or name of the vector store to retrieve.
    *
    * Returns: VectorStore: The response containing the vector store details.
    */
-  retrieve(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStore> {
-    return this._client.get(path`/v1/vector_stores/${vectorStoreID}`, options);
+  retrieve(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStore> {
+    return this._client.get(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
-   * Update a vector store by ID.
+   * Update a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to update.
+   * Args: vector_store_identifier: The ID or name of the vector store to update.
    * vector_store_update: VectorStoreCreate object containing the name, description,
    * and metadata.
    *
    * Returns: VectorStore: The response containing the updated vector store details.
    */
   update(
-    vectorStoreID: string,
+    vectorStoreIdentifier: string,
     body: VectorStoreUpdateParams,
     options?: RequestOptions,
   ): APIPromise<VectorStore> {
-    return this._client.put(path`/v1/vector_stores/${vectorStoreID}`, { body, ...options });
+    return this._client.put(path`/v1/vector_stores/${vectorStoreIdentifier}`, { body, ...options });
   }
 
   /**
-   * List all vector stores.
+   * List all vector stores with optional search.
    *
-   * Args: pagination: The pagination options.
+   * Args: pagination: The pagination options. q: Optional search query to filter
+   * vector stores.
    *
    * Returns: VectorStoreListResponse: The list of vector stores.
    */
   list(
     query: VectorStoreListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoresLimitOffset, VectorStore> {
-    return this._client.getAPIList('/v1/vector_stores', LimitOffset<VectorStore>, { query, ...options });
+  ): PagePromise<VectorStoresCursor, VectorStore> {
+    return this._client.getAPIList('/v1/vector_stores', Cursor<VectorStore>, { query, ...options });
   }
 
   /**
-   * Delete a vector store by ID.
+   * Delete a vector store by ID or name.
    *
-   * Args: vector_store_id: The ID of the vector store to delete.
+   * Args: vector_store_identifier: The ID or name of the vector store to delete.
    *
    * Returns: VectorStore: The response containing the deleted vector store details.
    */
-  delete(vectorStoreID: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
-    return this._client.delete(path`/v1/vector_stores/${vectorStoreID}`, options);
+  delete(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
+    return this._client.delete(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
@@ -107,7 +110,9 @@ export class VectorStores extends APIResource {
    * relevance-scored results.
    *
    * Args: search_params: Search configuration including: - query text or
-   * embeddings - metadata filters - pagination parameters - sorting preferences
+   * embeddings - vector_store_ids: List of vector stores to search - file_ids:
+   * Optional list of file IDs to filter chunks by (or tuple of list and condition
+   * operator) - metadata filters - pagination parameters - sorting preferences
    * \_state: API state dependency \_ctx: Service context dependency
    *
    * Returns: VectorStoreSearchChunkResponse containing: - List of matched chunks
@@ -121,7 +126,7 @@ export class VectorStores extends APIResource {
   }
 }
 
-export type VectorStoresLimitOffset = LimitOffset<VectorStore>;
+export type VectorStoresCursor = Cursor<VectorStore>;
 
 /**
  * Represents an expiration policy for a vector store.
@@ -148,6 +153,11 @@ export interface ScoredAudioURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -224,6 +234,11 @@ export interface ScoredImageURLInputChunk {
   mime_type?: string;
 
   /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
+
+  /**
    * model used for this chunk
    */
   model?: string | null;
@@ -283,6 +298,11 @@ export namespace ScoredImageURLInputChunk {
      * The image URL. Can be either a URL or a Data URI.
      */
     url: string;
+
+    /**
+     * The image format/mimetype
+     */
+    format?: string;
   }
 }
 
@@ -296,6 +316,11 @@ export interface ScoredTextInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -348,6 +373,11 @@ export interface ScoredVideoURLInputChunk {
    * mime type of the chunk
    */
   mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -432,6 +462,11 @@ export interface VectorStore {
   description?: string | null;
 
   /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean;
+
+  /**
    * Additional metadata associated with the vector store
    */
   metadata?: unknown;
@@ -488,6 +523,11 @@ export namespace VectorStore {
    */
   export interface FileCounts {
     /**
+     * Number of files waiting to be processed
+     */
+    pending?: number;
+
+    /**
      * Number of files currently being processed
      */
     in_progress?: number;
@@ -527,6 +567,11 @@ export interface VectorStoreChunkSearchOptions {
    * Whether to rewrite the query
    */
   rewrite_query?: boolean;
+
+  /**
+   * Whether to rerank results and optional reranking configuration
+   */
+  rerank?: boolean | FilesAPI.RerankConfig | null;
 
   /**
    * Whether to return file metadata
@@ -597,6 +642,11 @@ export interface VectorStoreCreateParams {
   description?: string | null;
 
   /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean;
+
+  /**
    * Represents an expiration policy for a vector store.
    */
   expires_after?: ExpiresAfter | null;
@@ -624,6 +674,11 @@ export interface VectorStoreUpdateParams {
   description?: string | null;
 
   /**
+   * Whether the vector store can be accessed by anyone with valid login credentials
+   */
+  is_public?: boolean | null;
+
+  /**
    * Represents an expiration policy for a vector store.
    */
   expires_after?: ExpiresAfter | null;
@@ -634,7 +689,12 @@ export interface VectorStoreUpdateParams {
   metadata?: unknown;
 }
 
-export interface VectorStoreListParams extends LimitOffsetParams {}
+export interface VectorStoreListParams extends CursorParams {
+  /**
+   * Search query for fuzzy matching over name and description fields
+   */
+  q?: string | null;
+}
 
 export interface VectorStoreQuestionAnsweringParams {
   /**
@@ -644,9 +704,14 @@ export interface VectorStoreQuestionAnsweringParams {
   query?: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -661,6 +726,11 @@ export interface VectorStoreQuestionAnsweringParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -702,9 +772,14 @@ export interface VectorStoreSearchParams {
   query: string;
 
   /**
-   * IDs of vector stores to search
+   * IDs or names of vector stores to search
    */
-  vector_store_ids: Array<string>;
+  vector_store_identifiers?: Array<string> | null;
+
+  /**
+   * @deprecated
+   */
+  vector_store_ids?: Array<string> | null;
 
   /**
    * Number of results to return
@@ -719,6 +794,11 @@ export interface VectorStoreSearchParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
 
   /**
    * Search configuration options
@@ -740,7 +820,7 @@ export declare namespace VectorStores {
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresLimitOffset as VectorStoresLimitOffset,
+    type VectorStoresCursor as VectorStoresCursor,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -750,11 +830,13 @@ export declare namespace VectorStores {
 
   export {
     Files as Files,
+    type RerankConfig as RerankConfig,
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
+    type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesLimitOffset as VectorStoreFilesLimitOffset,
+    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,

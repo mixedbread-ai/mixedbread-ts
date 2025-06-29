@@ -27,7 +27,7 @@ describe('resource connectors', () => {
       name: 'name',
       trigger_sync: true,
       metadata: {},
-      polling_interval: 'polling_interval',
+      polling_interval: 1800,
     });
   });
 
@@ -69,7 +69,7 @@ describe('resource connectors', () => {
       name: 'name',
       metadata: { foo: 'bar' },
       trigger_sync: true,
-      polling_interval: 'polling_interval',
+      polling_interval: 1800,
     });
   });
 
@@ -89,7 +89,7 @@ describe('resource connectors', () => {
     await expect(
       client.dataSources.connectors.list(
         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        { limit: 1000, offset: 0 },
+        { limit: 1000, cursor: 'cursor', include_total: true },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);

@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../../core/pagination';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -73,10 +73,10 @@ export class Connectors extends APIResource {
     dataSourceID: string,
     query: ConnectorListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<DataSourceConnectorsLimitOffset, DataSourceConnector> {
+  ): PagePromise<DataSourceConnectorsCursor, DataSourceConnector> {
     return this._client.getAPIList(
       path`/v1/data_sources/${dataSourceID}/connectors`,
-      LimitOffset<DataSourceConnector>,
+      Cursor<DataSourceConnector>,
       { query, ...options },
     );
   }
@@ -99,7 +99,7 @@ export class Connectors extends APIResource {
   }
 }
 
-export type DataSourceConnectorsLimitOffset = LimitOffset<DataSourceConnector>;
+export type DataSourceConnectorsCursor = Cursor<DataSourceConnector>;
 
 /**
  * Service-level representation of a connector.
@@ -168,7 +168,7 @@ export interface DataSourceConnector {
   /**
    * The sync error of the connector
    */
-  error: string | null;
+  error: { [key: string]: unknown } | null;
 
   /**
    * The type of the object
@@ -218,9 +218,14 @@ export interface ConnectorCreateParams {
   metadata?: unknown;
 
   /**
-   * The polling interval of the connector
+   * Polling interval for the connector. Defaults to 30 minutes if not specified. Can
+   * be provided as:
+   *
+   * - int: Number of seconds (e.g., 1800 for 30 minutes)
+   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
+   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
    */
-  polling_interval?: string | null;
+  polling_interval?: number | string | null;
 }
 
 export interface ConnectorRetrieveParams {
@@ -244,7 +249,7 @@ export interface ConnectorUpdateParams {
   /**
    * Body param: The metadata of the connector
    */
-  metadata?: Record<string, unknown> | null;
+  metadata?: { [key: string]: unknown } | null;
 
   /**
    * Body param: Whether the connector should be synced after update
@@ -252,12 +257,17 @@ export interface ConnectorUpdateParams {
   trigger_sync?: boolean | null;
 
   /**
-   * Body param: The polling interval of the connector
+   * Body param: Polling interval for the connector. Defaults to 30 minutes if not
+   * specified. Can be provided as:
+   *
+   * - int: Number of seconds (e.g., 1800 for 30 minutes)
+   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
+   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
    */
-  polling_interval?: string | null;
+  polling_interval?: number | string | null;
 }
 
-export interface ConnectorListParams extends LimitOffsetParams {}
+export interface ConnectorListParams extends CursorParams {}
 
 export interface ConnectorDeleteParams {
   /**
@@ -270,7 +280,7 @@ export declare namespace Connectors {
   export {
     type DataSourceConnector as DataSourceConnector,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
-    type DataSourceConnectorsLimitOffset as DataSourceConnectorsLimitOffset,
+    type DataSourceConnectorsCursor as DataSourceConnectorsCursor,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,

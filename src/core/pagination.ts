@@ -99,7 +99,7 @@ export class PagePromise<
    *      console.log(item)
    *    }
    */
-  async *[Symbol.asyncIterator]() {
+  async *[Symbol.asyncIterator](): AsyncGenerator<Item> {
     const page = await this;
     for await (const item of page) {
       yield item;
@@ -179,5 +179,81 @@ export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffset
     }
 
     return null;
+  }
+}
+
+export interface CursorResponse<Item> {
+  data: Array<Item>;
+
+  pagination: CursorResponse.Pagination;
+}
+
+export namespace CursorResponse {
+  export interface Pagination {
+    next_cursor?: string;
+
+    prev_cursor?: string;
+
+    has_more?: boolean;
+
+    has_prev?: boolean;
+
+    total?: number;
+  }
+}
+
+export interface CursorParams {
+  /**
+   * The cursor to base the request on.
+   */
+  cursor?: string;
+
+  limit?: number;
+
+  include_total?: boolean;
+}
+
+export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<Item> {
+  data: Array<Item>;
+
+  pagination: CursorResponse.Pagination;
+
+  constructor(
+    client: Mixedbread,
+    response: Response,
+    body: CursorResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
+    super(client, response, body, options);
+
+    this.data = body.data || [];
+    this.pagination = body.pagination || {};
+  }
+
+  getPaginatedItems(): Item[] {
+    return this.data ?? [];
+  }
+
+  override hasNextPage(): boolean {
+    if (this.pagination?.has_more === false) {
+      return false;
+    }
+
+    return super.hasNextPage();
+  }
+
+  nextPageRequestOptions(): PageRequestOptions | null {
+    const cursor = this.pagination?.next_cursor;
+    if (!cursor) {
+      return null;
+    }
+
+    return {
+      ...this.options,
+      query: {
+        ...maybeObj(this.options.query),
+        cursor,
+      },
+    };
   }
 }

@@ -16,11 +16,14 @@ export {
   type DataSource,
   type DataSourceOauth2Params,
   type DataSourceType,
+  type LinearDataSource,
+  type NotionDataSource,
+  type Oauth2Params,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourcesLimitOffset,
+  type DataSourcesCursor,
 } from './data-sources/data-sources';
 export { Embeddings, type EncodingFormat, type ObjectType, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
@@ -32,7 +35,7 @@ export {
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
-  type FileObjectsLimitOffset,
+  type FileObjectsCursor,
 } from './files';
 export { Parsing } from './parsing/parsing';
 export {
@@ -52,7 +55,7 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
-  type VectorStoresLimitOffset,
+  type VectorStoresCursor,
 } from './vector-stores/vector-stores';
 export {
   type Embedding,
