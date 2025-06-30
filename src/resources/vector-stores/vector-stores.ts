@@ -8,6 +8,7 @@ import {
   FileDeleteParams,
   FileDeleteResponse,
   FileListParams,
+  FileListResponse,
   FileRetrieveParams,
   FileSearchParams,
   FileSearchResponse,
@@ -16,10 +17,8 @@ import {
   ScoredVectorStoreFile,
   VectorStoreFile,
   VectorStoreFileStatus,
-  VectorStoreFilesCursor,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -77,8 +76,8 @@ export class VectorStores extends APIResource {
   list(
     query: VectorStoreListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<VectorStoresCursor, VectorStore> {
-    return this._client.getAPIList('/v1/vector_stores', Cursor<VectorStore>, { query, ...options });
+  ): APIPromise<VectorStoreListResponse> {
+    return this._client.get('/v1/vector_stores', { query, ...options });
   }
 
   /**
@@ -125,8 +124,6 @@ export class VectorStores extends APIResource {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
   }
 }
-
-export type VectorStoresCursor = Cursor<VectorStore>;
 
 /**
  * Represents an expiration policy for a vector store.
@@ -579,6 +576,95 @@ export interface VectorStoreChunkSearchOptions {
   return_metadata?: boolean;
 }
 
+export interface VectorStoreListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  pagination: VectorStoreListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of vector stores
+   */
+  data: Array<VectorStore>;
+}
+
+export namespace VectorStoreListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  export interface Pagination {
+    /**
+     * Contextual direction-aware flag: True if more items exist in the requested
+     * pagination direction. For 'after': more items after this page. For 'before':
+     * more items before this page.
+     */
+    has_more: boolean;
+
+    /**
+     * Cursor of the first item in this page. Use for backward pagination. None if page
+     * is empty.
+     */
+    first_cursor: string | null;
+
+    /**
+     * Cursor of the last item in this page. Use for forward pagination. None if page
+     * is empty.
+     */
+    last_cursor: string | null;
+
+    /**
+     * Total number of items available across all pages. Only included when
+     * include_total=true was requested. Expensive operation - use sparingly.
+     */
+    total?: number | null;
+  }
+}
+
 /**
  * Response model for vector store deletion.
  */
@@ -689,7 +775,29 @@ export interface VectorStoreUpdateParams {
   metadata?: unknown;
 }
 
-export interface VectorStoreListParams extends CursorParams {
+export interface VectorStoreListParams {
+  /**
+   * Maximum number of items to return per page (1-100)
+   */
+  limit?: number;
+
+  /**
+   * Cursor for forward pagination - get items after this position. Use last_cursor
+   * from previous response.
+   */
+  after?: string | null;
+
+  /**
+   * Cursor for backward pagination - get items before this position. Use
+   * first_cursor from previous response.
+   */
+  before?: string | null;
+
+  /**
+   * Whether to include total count in response (expensive operation)
+   */
+  include_total?: boolean;
+
   /**
    * Search query for fuzzy matching over name and description fields
    */
@@ -817,10 +925,10 @@ export declare namespace VectorStores {
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
+    type VectorStoreListResponse as VectorStoreListResponse,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
     type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
     type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresCursor as VectorStoresCursor,
     type VectorStoreCreateParams as VectorStoreCreateParams,
     type VectorStoreUpdateParams as VectorStoreUpdateParams,
     type VectorStoreListParams as VectorStoreListParams,
@@ -834,9 +942,9 @@ export declare namespace VectorStores {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,

@@ -89,7 +89,12 @@ describe('resource connectors', () => {
     await expect(
       client.dataSources.connectors.list(
         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-        { limit: 1000, cursor: 'cursor', include_total: true },
+        {
+          limit: 10,
+          after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          include_total: false,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);

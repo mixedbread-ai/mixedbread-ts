@@ -2,7 +2,6 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../core/pagination';
 import { type Uploadable } from '../core/uploads';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
@@ -56,8 +55,8 @@ export class Files extends APIResource {
   list(
     query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<FileObjectsCursor, FileObject> {
-    return this._client.getAPIList('/v1/files', Cursor<FileObject>, { query, ...options });
+  ): APIPromise<FileListResponse> {
+    return this._client.get('/v1/files', { query, ...options });
   }
 
   /**
@@ -86,8 +85,6 @@ export class Files extends APIResource {
     });
   }
 }
-
-export type FileObjectsCursor = Cursor<FileObject>;
 
 /**
  * A model representing a file object in the system.
@@ -152,6 +149,95 @@ export interface PaginationWithTotal {
   total?: number;
 }
 
+export interface FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of files
+   */
+  data: Array<FileObject>;
+}
+
+export namespace FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  export interface Pagination {
+    /**
+     * Contextual direction-aware flag: True if more items exist in the requested
+     * pagination direction. For 'after': more items after this page. For 'before':
+     * more items before this page.
+     */
+    has_more: boolean;
+
+    /**
+     * Cursor of the first item in this page. Use for backward pagination. None if page
+     * is empty.
+     */
+    first_cursor: string | null;
+
+    /**
+     * Cursor of the last item in this page. Use for forward pagination. None if page
+     * is empty.
+     */
+    last_cursor: string | null;
+
+    /**
+     * Total number of items available across all pages. Only included when
+     * include_total=true was requested. Expensive operation - use sparingly.
+     */
+    total?: number | null;
+  }
+}
+
 export interface FileDeleteResponse {
   /**
    * The ID of the deleted file
@@ -183,14 +269,41 @@ export interface FileUpdateParams {
   file: Uploadable;
 }
 
-export interface FileListParams extends CursorParams {}
+export interface FileListParams {
+  /**
+   * Maximum number of items to return per page (1-100)
+   */
+  limit?: number;
+
+  /**
+   * Cursor for forward pagination - get items after this position. Use last_cursor
+   * from previous response.
+   */
+  after?: string | null;
+
+  /**
+   * Cursor for backward pagination - get items before this position. Use
+   * first_cursor from previous response.
+   */
+  before?: string | null;
+
+  /**
+   * Whether to include total count in response (expensive operation)
+   */
+  include_total?: boolean;
+
+  /**
+   * Search query for fuzzy matching over name and description fields
+   */
+  q?: string | null;
+}
 
 export declare namespace Files {
   export {
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileObjectsCursor as FileObjectsCursor,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,

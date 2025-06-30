@@ -64,7 +64,13 @@ describe('resource files', () => {
     await expect(
       client.vectorStores.files.list(
         'vector_store_identifier',
-        { limit: 1000, cursor: 'cursor', include_total: true, statuses: ['pending', 'in_progress'] },
+        {
+          limit: 10,
+          after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          include_total: false,
+          statuses: ['pending', 'in_progress'],
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
