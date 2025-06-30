@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.12.0 (2025-06-30)
+
+Full Changelog: [v0.11.1...v0.12.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.11.1...v0.12.0)
+
+### Features
+
+* **api:** api update ([63e8d26](https://github.com/mixedbread-ai/mixedbread-ts/commit/63e8d2605ccc82af089d3e0dc48de0efaaa66355))
+
+
+### Bug Fixes
+
+* handle docker image not existing yet ([8e87aba](https://github.com/mixedbread-ai/mixedbread-ts/commit/8e87abade13104db57204d842e1127487670e483))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([6db3d40](https://github.com/mixedbread-ai/mixedbread-ts/commit/6db3d402f3141cf07a76b1ecba166ce2961e2709))
+
 ## 0.11.1 (2025-06-27)
 
 Full Changelog: [v0.11.0...v0.11.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.11.0...v0.11.1)
