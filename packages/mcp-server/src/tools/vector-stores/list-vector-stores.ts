@@ -25,24 +25,17 @@ export const tool: Tool = {
       limit: {
         type: 'integer',
         title: 'Limit',
-        description: 'Maximum number of items to return per page (1-100)',
+        description: 'Maximum number of items to return per page',
       },
-      after: {
+      cursor: {
         type: 'string',
-        title: 'After',
-        description:
-          'Cursor for forward pagination - get items after this position. Use last_cursor from previous response.',
-      },
-      before: {
-        type: 'string',
-        title: 'Before',
-        description:
-          'Cursor for backward pagination - get items before this position. Use first_cursor from previous response.',
+        title: 'Cursor',
+        description: 'Cursor for pagination (base64 encoded cursor)',
       },
       include_total: {
         type: 'boolean',
         title: 'Include Total',
-        description: 'Whether to include total count in response (expensive operation)',
+        description: 'Whether to include the total number of items',
       },
       q: {
         type: 'string',
