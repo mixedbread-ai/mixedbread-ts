@@ -12,14 +12,6 @@ processExportMap(pkgJson.exports);
 for (const key of ['types', 'main', 'module']) {
   if (typeof pkgJson[key] === 'string') pkgJson[key] = pkgJson[key].replace(/^(\.\/)?dist\//, './');
 }
-// Fix bin paths if present
-if (pkgJson.bin) {
-  for (const key in pkgJson.bin) {
-    if (typeof pkgJson.bin[key] === 'string') {
-      pkgJson.bin[key] = pkgJson.bin[key].replace(/^(\.\/)?dist\//, './');
-    }
-  }
-}
 
 // Fix files array - when publishing from dist, we need to include the actual files
 if (pkgJson.files) {
