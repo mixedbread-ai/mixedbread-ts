@@ -337,6 +337,26 @@ export type ReturnFormat = 'html' | 'markdown' | 'plain';
 export interface JobListResponse {
   /**
    * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
    */
   pagination: JobListResponse.Pagination;
 
@@ -354,30 +374,50 @@ export interface JobListResponse {
 export namespace JobListResponse {
   /**
    * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
    */
   export interface Pagination {
     /**
-     * Cursor for the next page, null if no more pages
-     */
-    next_cursor: string | null;
-
-    /**
-     * Cursor for the previous page, null if no previous pages
-     */
-    prev_cursor: string | null;
-
-    /**
-     * Whether there are more items available
+     * Contextual direction-aware flag: True if more items exist in the requested
+     * pagination direction. For 'after': more items after this page. For 'before':
+     * more items before this page.
      */
     has_more: boolean;
 
     /**
-     * Whether there are previous items available
+     * Cursor of the first item in this page. Use for backward pagination. None if page
+     * is empty.
      */
-    has_prev: boolean;
+    first_cursor: string | null;
 
     /**
-     * Total number of items available
+     * Cursor of the last item in this page. Use for forward pagination. None if page
+     * is empty.
+     */
+    last_cursor: string | null;
+
+    /**
+     * Total number of items available across all pages. Only included when
+     * include_total=true was requested. Expensive operation - use sparingly.
      */
     total?: number | null;
   }
@@ -477,19 +517,31 @@ export interface JobCreateParams {
 
 export interface JobListParams {
   /**
-   * Maximum number of items to return per page
+   * Maximum number of items to return per page (1-100)
    */
   limit?: number;
 
   /**
-   * Cursor for pagination (base64 encoded cursor)
+   * Cursor for forward pagination - get items after this position. Use last_cursor
+   * from previous response.
    */
-  cursor?: string | null;
+  after?: string | null;
 
   /**
-   * Whether to include the total number of items
+   * Cursor for backward pagination - get items before this position. Use
+   * first_cursor from previous response.
+   */
+  before?: string | null;
+
+  /**
+   * Whether to include total count in response (expensive operation)
    */
   include_total?: boolean;
+
+  /**
+   * Status to filter by
+   */
+  statuses?: Array<ParsingJobStatus> | null;
 }
 
 export declare namespace Jobs {
