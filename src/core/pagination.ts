@@ -190,13 +190,11 @@ export interface CursorResponse<Item> {
 
 export namespace CursorResponse {
   export interface Pagination {
-    next_cursor?: string;
+    first_cursor?: string;
 
-    prev_cursor?: string;
+    last_cursor?: string;
 
     has_more?: boolean;
-
-    has_prev?: boolean;
 
     total?: number;
   }
@@ -204,13 +202,20 @@ export namespace CursorResponse {
 
 export interface CursorParams {
   /**
-   * The cursor to base the request on.
+   * The cursor to base the request on for the next elements.
    */
-  cursor?: string;
+  after?: string;
+
+  /**
+   * The cursor to base the request on for the previous elements.
+   */
+  before?: string;
 
   limit?: number;
 
   include_total?: boolean;
+
+  q?: boolean;
 }
 
 export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<Item> {
@@ -243,7 +248,23 @@ export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<I
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const cursor = this.pagination?.next_cursor;
+    if ((this.options.query as Record<string, unknown>)?.['before']) {
+      // in reverse
+      const first_cursor = this.pagination?.first_cursor;
+      if (!first_cursor) {
+        return null;
+      }
+
+      return {
+        ...this.options,
+        query: {
+          ...maybeObj(this.options.query),
+          before: first_cursor,
+        },
+      };
+    }
+
+    const cursor = this.pagination?.last_cursor;
     if (!cursor) {
       return null;
     }
@@ -252,7 +273,7 @@ export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<I
       ...this.options,
       query: {
         ...maybeObj(this.options.query),
-        cursor,
+        after: cursor,
       },
     };
   }
