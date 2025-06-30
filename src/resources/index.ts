@@ -19,11 +19,11 @@ export {
   type LinearDataSource,
   type NotionDataSource,
   type Oauth2Params,
+  type DataSourceListResponse,
   type DataSourceDeleteResponse,
   type DataSourceCreateParams,
   type DataSourceUpdateParams,
   type DataSourceListParams,
-  type DataSourcesCursor,
 } from './data-sources/data-sources';
 export { Embeddings, type EncodingFormat, type ObjectType, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
@@ -31,11 +31,11 @@ export {
   Files,
   type FileObject,
   type PaginationWithTotal,
+  type FileListResponse,
   type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
-  type FileObjectsCursor,
 } from './files';
 export { Parsing } from './parsing/parsing';
 export {
@@ -47,6 +47,7 @@ export {
   type ScoredVideoURLInputChunk,
   type VectorStore,
   type VectorStoreChunkSearchOptions,
+  type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
@@ -55,7 +56,6 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
-  type VectorStoresCursor,
 } from './vector-stores/vector-stores';
 export {
   type Embedding,
