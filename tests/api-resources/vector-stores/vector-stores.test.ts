@@ -56,13 +56,7 @@ describe('resource vectorStores', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.vectorStores.list(
-        {
-          limit: 10,
-          after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
-          before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
-          include_total: false,
-          q: 'x',
-        },
+        { limit: 1000, cursor: 'cursor', include_total: true, q: 'x' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Mixedbread.NotFoundError);
