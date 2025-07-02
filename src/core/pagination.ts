@@ -201,27 +201,21 @@ export namespace CursorResponse {
 }
 
 export interface CursorParams {
-  query?: CursorParams.Query;
-}
+  /**
+   * The cursor to base the request on for the next elements.
+   */
+  after?: string;
 
-export namespace CursorParams {
-  export interface Query {
-    /**
-     * The cursor to base the request on for the next elements.
-     */
-    after?: string;
+  /**
+   * The cursor to base the request on for the previous elements.
+   */
+  before?: string;
 
-    /**
-     * The cursor to base the request on for the previous elements.
-     */
-    before?: string;
+  limit?: number;
 
-    limit?: number;
+  include_total?: boolean;
 
-    include_total?: boolean;
-
-    q?: boolean;
-  }
+  q?: boolean;
 }
 
 export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<Item> {
