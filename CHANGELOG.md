@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.15.0 (2025-07-02)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* **api:** api update ([3b9e398](https://github.com/mixedbread-ai/mixedbread-ts/commit/3b9e398070d9a44a1cb3492d931e1b614d0ca723))
+* **api:** update via SDK Studio ([2531b33](https://github.com/mixedbread-ai/mixedbread-ts/commit/2531b33e6f719c3fc206ed12fdbe239c4ed0201f))
+
+
+### Chores
+
+* **client:** improve path param validation ([c8e5cd9](https://github.com/mixedbread-ai/mixedbread-ts/commit/c8e5cd9dd04f377f045e483290d56ab6cd01a856))
+* **internal:** version bump ([bd80094](https://github.com/mixedbread-ai/mixedbread-ts/commit/bd80094829e25d9e37bb89652016a129af2d6124))
+* **internal:** version bump ([83efea3](https://github.com/mixedbread-ai/mixedbread-ts/commit/83efea3a6207197fd1a4799482ecc9ab57cce215))
+
 ## 0.14.0 (2025-06-30)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.13.0...v0.14.0)
