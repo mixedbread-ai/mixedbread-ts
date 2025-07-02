@@ -195,6 +195,11 @@ export interface ParsingJob {
   file_id: string;
 
   /**
+   * The name of the file
+   */
+  filename?: string | null;
+
+  /**
    * The status of the job
    */
   status: ParsingJobStatus;
@@ -437,6 +442,11 @@ export namespace JobListResponse {
     file_id: string;
 
     /**
+     * The name of the file
+     */
+    filename?: string | null;
+
+    /**
      * The status of the job
      */
     status: JobsAPI.ParsingJobStatus;
@@ -542,6 +552,11 @@ export interface JobListParams {
    * Status to filter by
    */
   statuses?: Array<ParsingJobStatus> | null;
+
+  /**
+   * Search query to filter by
+   */
+  q?: string | null;
 }
 
 export declare namespace Jobs {
