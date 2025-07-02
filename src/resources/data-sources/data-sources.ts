@@ -7,13 +7,14 @@ import {
   ConnectorDeleteParams,
   ConnectorDeleteResponse,
   ConnectorListParams,
-  ConnectorListResponse,
   ConnectorRetrieveParams,
   ConnectorUpdateParams,
   Connectors,
   DataSourceConnector,
+  DataSourceConnectorsCursor,
 } from './connectors';
 import { APIPromise } from '../../core/api-promise';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -66,8 +67,8 @@ export class DataSources extends APIResource {
   list(
     query: DataSourceListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<DataSourceListResponse> {
-    return this._client.get('/v1/data_sources/', { query, ...options });
+  ): PagePromise<DataSourcesCursor, DataSource> {
+    return this._client.getAPIList('/v1/data_sources/', Cursor<DataSource>, { query, ...options });
   }
 
   /**
@@ -79,6 +80,8 @@ export class DataSources extends APIResource {
     return this._client.delete(path`/v1/data_sources/${dataSourceID}`, options);
   }
 }
+
+export type DataSourcesCursor = Cursor<DataSource>;
 
 /**
  * Service-level representation of a data source.
@@ -256,98 +259,6 @@ export interface Oauth2Params {
 }
 
 /**
- * A list of data sources with pagination.
- */
-export interface DataSourceListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   *
-   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
-   *
-   *     Final page response:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
-   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
-   *             "total": 42
-   *         }
-   *
-   *     Empty results:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": null,
-   *             "last_cursor": null,
-   *             "total": 0
-   *         }
-   */
-  pagination: DataSourceListResponse.Pagination;
-
-  /**
-   * The list of data sources
-   */
-  data: Array<DataSource>;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-}
-
-export namespace DataSourceListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   *
-   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
-   *
-   *     Final page response:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
-   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
-   *             "total": 42
-   *         }
-   *
-   *     Empty results:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": null,
-   *             "last_cursor": null,
-   *             "total": 0
-   *         }
-   */
-  export interface Pagination {
-    /**
-     * Contextual direction-aware flag: True if more items exist in the requested
-     * pagination direction. For 'after': more items after this page. For 'before':
-     * more items before this page.
-     */
-    has_more: boolean;
-
-    /**
-     * Cursor of the first item in this page. Use for backward pagination. None if page
-     * is empty.
-     */
-    first_cursor: string | null;
-
-    /**
-     * Cursor of the last item in this page. Use for forward pagination. None if page
-     * is empty.
-     */
-    last_cursor: string | null;
-
-    /**
-     * Total number of items available across all pages. Only included when
-     * include_total=true was requested. Expensive operation - use sparingly.
-     */
-    total?: number | null;
-  }
-}
-
-/**
  * Deleted data source.
  */
 export interface DataSourceDeleteResponse {
@@ -497,29 +408,7 @@ export declare namespace DataSourceUpdateParams {
   }
 }
 
-export interface DataSourceListParams {
-  /**
-   * Maximum number of items to return per page (1-100)
-   */
-  limit?: number;
-
-  /**
-   * Cursor for forward pagination - get items after this position. Use last_cursor
-   * from previous response.
-   */
-  after?: string | null;
-
-  /**
-   * Cursor for backward pagination - get items before this position. Use
-   * first_cursor from previous response.
-   */
-  before?: string | null;
-
-  /**
-   * Whether to include total count in response (expensive operation)
-   */
-  include_total?: boolean;
-}
+export interface DataSourceListParams extends CursorParams {}
 
 DataSources.Connectors = Connectors;
 
@@ -531,8 +420,8 @@ export declare namespace DataSources {
     type LinearDataSource as LinearDataSource,
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
-    type DataSourceListResponse as DataSourceListResponse,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
+    type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
     type DataSourceUpdateParams as DataSourceUpdateParams,
     type DataSourceListParams as DataSourceListParams,
@@ -541,8 +430,8 @@ export declare namespace DataSources {
   export {
     Connectors as Connectors,
     type DataSourceConnector as DataSourceConnector,
-    type ConnectorListResponse as ConnectorListResponse,
     type ConnectorDeleteResponse as ConnectorDeleteResponse,
+    type DataSourceConnectorsCursor as DataSourceConnectorsCursor,
     type ConnectorCreateParams as ConnectorCreateParams,
     type ConnectorRetrieveParams as ConnectorRetrieveParams,
     type ConnectorUpdateParams as ConnectorUpdateParams,
