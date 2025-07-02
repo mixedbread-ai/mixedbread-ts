@@ -214,8 +214,6 @@ export interface CursorParams {
   limit?: number;
 
   include_total?: boolean;
-
-  q?: boolean;
 }
 
 export class Cursor<Item> extends AbstractPage<Item> implements CursorResponse<Item> {

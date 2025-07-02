@@ -6,7 +6,6 @@ export {
   type ScoredVectorStoreFile,
   type VectorStoreFileStatus,
   type VectorStoreFile,
-  type FileListResponse,
   type FileDeleteResponse,
   type FileSearchResponse,
   type FileCreateParams,
@@ -14,6 +13,7 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
+  type VectorStoreFilesCursor,
 } from './files';
 export {
   VectorStores,
@@ -24,7 +24,6 @@ export {
   type ScoredVideoURLInputChunk,
   type VectorStore,
   type VectorStoreChunkSearchOptions,
-  type VectorStoreListResponse,
   type VectorStoreDeleteResponse,
   type VectorStoreQuestionAnsweringResponse,
   type VectorStoreSearchResponse,
@@ -33,4 +32,5 @@ export {
   type VectorStoreListParams,
   type VectorStoreQuestionAnsweringParams,
   type VectorStoreSearchParams,
+  type VectorStoresCursor,
 } from './vector-stores';
