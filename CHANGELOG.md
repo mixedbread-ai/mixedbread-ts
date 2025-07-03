@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.1 (2025-07-03)
+
+Full Changelog: [v0.16.0...v0.16.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.16.0...v0.16.1)
+
+### Chores
+
+* add docs to RequestOptions type ([cdaaeb0](https://github.com/mixedbread-ai/mixedbread-ts/commit/cdaaeb0157ade91f1b96b3f262f360b00db802b6))
+
 ## 0.16.0 (2025-07-02)
 
 Full Changelog: [v0.15.0...v0.16.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.15.0...v0.16.0)
