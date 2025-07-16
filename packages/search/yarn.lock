@@ -340,10 +340,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mixedbread/sdk@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/@mixedbread/sdk/-/sdk-0.6.0.tgz"
-  integrity sha512-ophlWaCop/fxUPQhrpTi+2LL3K+6Qdzc4b6XMOucrVFNuCwPouBPyIGaR9ZW+qtp0uwy7SfOi9fBub/YahlVWw==
+"@mixedbread/sdk@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@mixedbread/sdk/-/sdk-0.16.0.tgz#ef58e5e210b3b4f8ced57c491219e0404866cb6b"
+  integrity sha512-BrcUgvERDZN8cD63FQq90cwsIDYUjJPuD+xgiu0gyT41XrVm3tA4aqWeEwcT5ALGtlwXxfdS+je3TtMNML6TEQ==
 
 "@napi-rs/wasm-runtime@^0.2.10", "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.11"

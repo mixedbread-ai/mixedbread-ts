@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@mixedbread/sdk": "^0.6.0",
+    "@mixedbread/sdk": "^0.16.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-scroll-area": "^1.2.9",
     "@radix-ui/react-slot": "^1.2.3",

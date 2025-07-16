@@ -1,5 +1,5 @@
 import Mixedbread from '@mixedbread/sdk';
-import { FileSearchResponse } from '@mixedbread/sdk/resources/vector-stores';
+import { VectorStoreSearchResponse } from '@mixedbread/sdk/resources/vector-stores';
 import { SearchMetadata } from './types';
 
 export interface MixedbreadOptions {
@@ -31,7 +31,9 @@ interface SortedResult {
   url: string;
 }
 
-type VectorStoreFile = (FileSearchResponse['data'][number] & { metadata: SearchMetadata })[];
+type VectorStoreSearchResult = VectorStoreSearchResponse['data'][number] & {
+  generated_metadata: SearchMetadata;
+};
 
 export async function search(query: string, options: MixedbreadOptions): Promise<SortedResult[]> {
   const { client, vectorStoreId, tag } = options;
@@ -40,7 +42,7 @@ export async function search(query: string, options: MixedbreadOptions): Promise
     return [];
   }
 
-  const res = await client.vectorStores.files.search({
+  const res = await client.vectorStores.search({
     query,
     vector_store_ids: [vectorStoreId],
     top_k: 10,
@@ -49,23 +51,36 @@ export async function search(query: string, options: MixedbreadOptions): Promise
     },
   });
 
-  const results = (res.data as VectorStoreFile)
+  const results = (res.data as VectorStoreSearchResult[])
     .filter((item) => {
-      const metadata = item.metadata;
+      const metadata = item.generated_metadata;
       return !tag || metadata.tag === tag;
     })
-    .map((item) => {
-      const metadata = item.metadata;
+    .flatMap((item) => {
+      const metadata = item.generated_metadata;
 
       const url = metadata.url || '#';
       const title = metadata.title || 'Untitled';
 
-      return {
-        id: item.id,
-        type: 'page' as const,
-        content: title,
-        url,
-      };
+      const results: SortedResult[] = [
+        {
+          id: `${item.file_id}-${item.chunk_index}-page`,
+          type: 'page',
+          content: title,
+          url,
+        },
+      ];
+
+      if (metadata.description) {
+        results.push({
+          id: `${item.file_id}-${item.chunk_index}-text`,
+          type: 'text',
+          content: metadata.description,
+          url,
+        });
+      }
+
+      return results;
     });
 
   return results;
