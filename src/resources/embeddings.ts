@@ -39,7 +39,8 @@ export type ObjectType =
   | 'vector_store.file'
   | 'api_key'
   | 'data_source'
-  | 'data_source.connector';
+  | 'data_source.connector'
+  | 'vector_store.histogram';
 
 export interface EmbeddingCreateParams {
   /**

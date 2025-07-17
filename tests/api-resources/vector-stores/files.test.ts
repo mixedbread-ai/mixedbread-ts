@@ -45,6 +45,7 @@ describe('resource files', () => {
   test('retrieve: required and optional params', async () => {
     const response = await client.vectorStores.files.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
       vector_store_identifier: 'vector_store_identifier',
+      return_chunks: true,
     });
   });
 

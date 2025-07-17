@@ -39,8 +39,11 @@ export class Files extends APIResource {
     params: FileRetrieveParams,
     options?: RequestOptions,
   ): APIPromise<VectorStoreFile> {
-    const { vector_store_identifier } = params;
-    return this._client.get(path`/v1/vector_stores/${vector_store_identifier}/files/${fileID}`, options);
+    const { vector_store_identifier, ...query } = params;
+    return this._client.get(path`/v1/vector_stores/${vector_store_identifier}/files/${fileID}`, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -177,11 +180,6 @@ export interface ScoredVectorStoreFile {
   object?: 'vector_store.file';
 
   /**
-   * score of the file
-   */
-  score: number;
-
-  /**
    * chunks
    */
   chunks: Array<
@@ -190,6 +188,11 @@ export interface ScoredVectorStoreFile {
     | VectorStoresAPI.ScoredAudioURLInputChunk
     | VectorStoresAPI.ScoredVideoURLInputChunk
   > | null;
+
+  /**
+   * score of the file
+   */
+  score: number;
 }
 
 export type VectorStoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
@@ -247,6 +250,166 @@ export interface VectorStoreFile {
    * Type of the object
    */
   object?: 'vector_store.file';
+
+  /**
+   * chunks
+   */
+  chunks?: Array<
+    | VectorStoreFile.TextInputChunk
+    | VectorStoreFile.ImageURLInputChunkBase
+    | VectorStoreFile.AudioURLInputChunkBase
+    | VectorStoreFile.VideoURLInputChunkBase
+  > | null;
+}
+
+export namespace VectorStoreFile {
+  export interface TextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * The offset of the text in the file relative to the start of the file.
+     */
+    offset?: number;
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  export interface ImageURLInputChunkBase {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+  }
+
+  export interface AudioURLInputChunkBase {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+  }
+
+  export interface VideoURLInputChunkBase {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+  }
 }
 
 /**
@@ -317,9 +480,14 @@ export namespace FileCreateParams {
 
 export interface FileRetrieveParams {
   /**
-   * The ID or name of the vector store
+   * Path param: The ID or name of the vector store
    */
   vector_store_identifier: string;
+
+  /**
+   * Query param: Whether to return the chunks for the file
+   */
+  return_chunks?: boolean;
 }
 
 export interface FileListParams extends CursorParams {

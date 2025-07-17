@@ -195,11 +195,6 @@ export interface ScoredAudioURLInputChunk {
   type?: 'audio_url';
 
   /**
-   * The audio input specification.
-   */
-  audio_url: ScoredAudioURLInputChunk.AudioURL;
-
-  /**
    * speech recognition (sr) text of the audio
    */
   transcription?: string | null;
@@ -208,6 +203,11 @@ export interface ScoredAudioURLInputChunk {
    * summary of the audio
    */
   summary?: string | null;
+
+  /**
+   * The audio input specification.
+   */
+  audio_url: ScoredAudioURLInputChunk.AudioURL;
 }
 
 export namespace ScoredAudioURLInputChunk {
@@ -274,11 +274,6 @@ export interface ScoredImageURLInputChunk {
   type?: 'image_url';
 
   /**
-   * The image input specification.
-   */
-  image_url: ScoredImageURLInputChunk.ImageURL;
-
-  /**
    * ocr text of the image
    */
   ocr_text?: string | null;
@@ -287,6 +282,11 @@ export interface ScoredImageURLInputChunk {
    * summary of the image
    */
   summary?: string | null;
+
+  /**
+   * The image input specification.
+   */
+  image_url: ScoredImageURLInputChunk.ImageURL;
 }
 
 export namespace ScoredImageURLInputChunk {
@@ -358,6 +358,11 @@ export interface ScoredTextInputChunk {
   type?: 'text';
 
   /**
+   * The offset of the text in the file relative to the start of the file.
+   */
+  offset?: number;
+
+  /**
    * Text content to process
    */
   text: string;
@@ -415,11 +420,6 @@ export interface ScoredVideoURLInputChunk {
   type?: 'video_url';
 
   /**
-   * The video input specification.
-   */
-  video_url: ScoredVideoURLInputChunk.VideoURL;
-
-  /**
    * speech recognition (sr) text of the video
    */
   transcription?: string | null;
@@ -428,6 +428,11 @@ export interface ScoredVideoURLInputChunk {
    * summary of the video
    */
   summary?: string | null;
+
+  /**
+   * The video input specification.
+   */
+  video_url: ScoredVideoURLInputChunk.VideoURL;
 }
 
 export namespace ScoredVideoURLInputChunk {
