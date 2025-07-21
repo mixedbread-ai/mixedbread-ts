@@ -156,7 +156,7 @@ export interface DataSourceOauth2Params {
   /**
    * The OAuth2 scope
    */
-  scope?: string;
+  scope?: string | null;
 
   /**
    * The OAuth2 access token
@@ -193,7 +193,7 @@ export interface LinearDataSource {
   /**
    * The type of data source to create
    */
-  type?: DataSourceType;
+  type?: 'linear';
 
   /**
    * The name of the data source
@@ -218,7 +218,7 @@ export interface NotionDataSource {
   /**
    * The type of data source to create
    */
-  type?: DataSourceType;
+  type?: 'notion';
 
   /**
    * The name of the data source
@@ -287,7 +287,7 @@ export declare namespace DataSourceCreateParams {
     /**
      * The type of data source to create
      */
-    type?: DataSourceType;
+    type?: 'notion';
 
     /**
      * The name of the data source
@@ -324,7 +324,7 @@ export declare namespace DataSourceCreateParams {
     /**
      * The type of data source to create
      */
-    type?: DataSourceType;
+    type?: 'linear';
 
     /**
      * The name of the data source
@@ -352,7 +352,7 @@ export declare namespace DataSourceUpdateParams {
     /**
      * The type of data source to create
      */
-    type?: DataSourceType;
+    type?: 'notion';
 
     /**
      * The name of the data source
@@ -389,7 +389,7 @@ export declare namespace DataSourceUpdateParams {
     /**
      * The type of data source to create
      */
-    type?: DataSourceType;
+    type?: 'linear';
 
     /**
      * The name of the data source
