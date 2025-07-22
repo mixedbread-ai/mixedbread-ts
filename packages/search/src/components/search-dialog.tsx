@@ -61,7 +61,7 @@ export function CustomSearchDialog(props: { open: boolean; onOpenChange: (open: 
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: dimensions.height, opacity: 1 }}
-          className="overflow-hidden"
+          className="overflow-clip"
         >
           <div ref={ref}>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full gap-0">

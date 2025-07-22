@@ -251,7 +251,9 @@ export function SearchListItemBreadcrumb() {
       {item.breadcrumb.map((breadcrumb, index) => (
         <Fragment key={breadcrumb}>
           <span className="text-xs text-muted-foreground">{breadcrumb}</span>
-          {index !== breadcrumb.length - 1 && <ChevronRightIcon className="size-3 text-muted-foreground" />}
+          {index !== item.breadcrumb.length - 1 && (
+            <ChevronRightIcon className="size-3 text-muted-foreground" />
+          )}
         </Fragment>
       ))}
     </div>
@@ -323,7 +325,7 @@ export interface TagsListProps extends ComponentProps<'div'> {
   allowClear?: boolean;
 }
 
-const itemVariants = cva(
+const tagsListItemVariants = cva(
   'rounded-md border px-2 py-0.5 font-medium text-muted-foreground text-xs transition-colors',
   {
     variants: {
@@ -367,7 +369,7 @@ export function TagsListItem({ value, className, ...props }: TagsListItemProps) 
     <button
       type="button"
       data-active={selected}
-      className={cn(itemVariants({ active: selected, className }))}
+      className={cn(tagsListItemVariants({ active: selected, className }))}
       onClick={() => {
         onTagChange?.(selected && allowClear ? undefined : value);
       }}
