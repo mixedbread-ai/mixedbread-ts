@@ -122,7 +122,13 @@ describe('resource vectorStores', () => {
         ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
-      search_options: { score_threshold: 0, rewrite_query: true, rerank: true, return_metadata: true },
+      search_options: {
+        score_threshold: 0,
+        rewrite_query: true,
+        rerank: true,
+        return_metadata: true,
+        apply_search_rules: true,
+      },
     });
   });
 });

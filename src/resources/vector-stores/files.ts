@@ -579,6 +579,11 @@ export namespace FileSearchParams {
      * Number of chunks to return for each file
      */
     chunks_per_file?: number;
+
+    /**
+     * Whether to apply search rules
+     */
+    apply_search_rules?: boolean;
   }
 }
 
