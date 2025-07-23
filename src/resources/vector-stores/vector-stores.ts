@@ -582,6 +582,11 @@ export interface VectorStoreChunkSearchOptions {
    * Whether to return file metadata
    */
   return_metadata?: boolean;
+
+  /**
+   * Whether to apply search rules
+   */
+  apply_search_rules?: boolean;
 }
 
 /**

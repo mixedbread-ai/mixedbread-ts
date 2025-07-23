@@ -135,6 +135,7 @@ describe('resource files', () => {
         return_metadata: true,
         return_chunks: true,
         chunks_per_file: 0,
+        apply_search_rules: true,
       },
     });
   });
