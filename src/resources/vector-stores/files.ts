@@ -495,6 +495,57 @@ export interface FileListParams extends CursorParams {
    * Status to filter by
    */
   statuses?: Array<VectorStoreFileStatus> | null;
+
+  /**
+   * Metadata filter to apply to the query
+   */
+  metadata_filter?:
+    | FileListParams.MxbaiOmniCoreVectorStoreModelsSearchFilter2
+    | Shared.SearchFilterCondition
+    | Array<FileListParams.MxbaiOmniCoreVectorStoreModelsSearchFilter2 | Shared.SearchFilterCondition>
+    | null;
+}
+
+export namespace FileListParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter2 {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter2 {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
 }
 
 export interface FileDeleteParams {
@@ -529,9 +580,9 @@ export interface FileSearchParams {
    * Optional filter conditions
    */
   filters?:
-    | Shared.SearchFilter
+    | FileSearchParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1
     | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | Array<FileSearchParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1 | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -546,6 +597,46 @@ export interface FileSearchParams {
 }
 
 export namespace FileSearchParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
   /**
    * Search configuration options
    */
