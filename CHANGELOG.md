@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.19.1 (2025-08-06)
+
+Full Changelog: [v0.19.0...v0.19.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.19.0...v0.19.1)
+
+### Features
+
+* **api:** api update ([d4671f9](https://github.com/mixedbread-ai/mixedbread-ts/commit/d4671f9c01e8bd866d18884df3c84222d0ae9718))
+
+
+### Chores
+
+* **internal:** remove redundant imports config ([6089fc2](https://github.com/mixedbread-ai/mixedbread-ts/commit/6089fc23ad15924fdd325892b37150f1259b30b3))
+* **internal:** update examples ([e39bd7f](https://github.com/mixedbread-ai/mixedbread-ts/commit/e39bd7fabcca8d785a7e9f7e4c01be8d73f441e1))
+
 ## 0.19.0 (2025-07-23)
 
 Full Changelog: [v0.18.0...v0.19.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.18.0...v0.19.0)
