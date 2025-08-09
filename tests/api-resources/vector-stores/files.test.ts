@@ -71,20 +71,6 @@ describe('resource files', () => {
           before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
           include_total: false,
           statuses: ['pending', 'in_progress'],
-          metadata_filter: {
-            all: [
-              { key: 'price', operator: 'gt', value: '100' },
-              { key: 'color', operator: 'eq', value: 'red' },
-            ],
-            any: [
-              { key: 'price', operator: 'gt', value: '100' },
-              { key: 'color', operator: 'eq', value: 'red' },
-            ],
-            none: [
-              { key: 'price', operator: 'gt', value: '100' },
-              { key: 'color', operator: 'eq', value: 'red' },
-            ],
-          },
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -127,20 +113,7 @@ describe('resource files', () => {
       vector_store_identifiers: ['string'],
       vector_store_ids: ['string'],
       top_k: 1,
-      filters: {
-        all: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        any: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        none: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-      },
+      filters: { all: [], any: [], none: [] },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       search_options: {
         score_threshold: 0,
