@@ -732,12 +732,9 @@ export interface VectorStoreQuestionAnsweringParams {
    * Optional filter conditions
    */
   filters?:
-    | VectorStoreQuestionAnsweringParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<
-        | VectorStoreQuestionAnsweringParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1
-        | Shared.SearchFilterCondition
-      >
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -762,46 +759,6 @@ export interface VectorStoreQuestionAnsweringParams {
 }
 
 export namespace VectorStoreQuestionAnsweringParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
   /**
    * Question answering configuration options
    */
@@ -843,11 +800,9 @@ export interface VectorStoreSearchParams {
    * Optional filter conditions
    */
   filters?:
-    | VectorStoreSearchParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<
-        VectorStoreSearchParams.MxbaiOmniCoreVectorStoreModelsSearchFilter1 | Shared.SearchFilterCondition
-      >
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -859,48 +814,6 @@ export interface VectorStoreSearchParams {
    * Search configuration options
    */
   search_options?: VectorStoreChunkSearchOptions;
-}
-
-export namespace VectorStoreSearchParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface MxbaiOmniCoreVectorStoreModelsSearchFilter1 {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
 }
 
 VectorStores.Files = Files;
