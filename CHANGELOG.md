@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.19.2 (2025-08-09)
+
+Full Changelog: [v0.19.1...v0.19.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.19.1...v0.19.2)
+
+### Features
+
+* **api:** api update ([3b91c46](https://github.com/mixedbread-ai/mixedbread-ts/commit/3b91c464ac3da588e013fdca473de9026128f268))
+
+
+### Chores
+
+* **internal:** move publish config ([1e310d3](https://github.com/mixedbread-ai/mixedbread-ts/commit/1e310d357e79e6e6d1bb1153070f9e7d646a94b2))
+* **internal:** update comment in script ([0a2296f](https://github.com/mixedbread-ai/mixedbread-ts/commit/0a2296f30c6c0369495fec6663a648c10539e73b))
+* update @stainless-api/prism-cli to v5.15.0 ([717636f](https://github.com/mixedbread-ai/mixedbread-ts/commit/717636ff06f37c87b3538df555f50142609474a3))
+
 ## 0.19.1 (2025-08-06)
 
 Full Changelog: [v0.19.0...v0.19.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.19.0...v0.19.1)
