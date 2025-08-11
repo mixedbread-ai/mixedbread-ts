@@ -90,7 +90,6 @@ client.example.list(undefined, { headers: { ... } });
 This affects the following methods:
 
 - `client.vectorStores.list()`
-- `client.vectorStores.files.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
 - `client.dataSources.list()`

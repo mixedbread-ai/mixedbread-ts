@@ -50,7 +50,7 @@ describe('resource files', () => {
   });
 
   test('list', async () => {
-    const responsePromise = client.vectorStores.files.list('vector_store_identifier');
+    const responsePromise = client.vectorStores.files.list('vector_store_identifier', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,23 +58,6 @@ describe('resource files', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.vectorStores.files.list(
-        'vector_store_identifier',
-        {
-          limit: 10,
-          after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
-          before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
-          include_total: false,
-          statuses: ['pending', 'in_progress'],
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('delete: only required params', async () => {
