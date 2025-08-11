@@ -6,6 +6,7 @@ export {
   type ScoredVectorStoreFile,
   type VectorStoreFileStatus,
   type VectorStoreFile,
+  type FileListResponse,
   type FileDeleteResponse,
   type FileSearchResponse,
   type FileCreateParams,
@@ -13,7 +14,6 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
-  type VectorStoreFilesCursor,
 } from './files';
 export {
   VectorStores,

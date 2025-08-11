@@ -8,6 +8,7 @@ import {
   FileDeleteParams,
   FileDeleteResponse,
   FileListParams,
+  FileListResponse,
   FileRetrieveParams,
   FileSearchParams,
   FileSearchResponse,
@@ -16,7 +17,6 @@ import {
   ScoredVectorStoreFile,
   VectorStoreFile,
   VectorStoreFileStatus,
-  VectorStoreFilesCursor,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
@@ -844,9 +844,9 @@ export declare namespace VectorStores {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type VectorStoreFilesCursor as VectorStoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
