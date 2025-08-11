@@ -48,6 +48,25 @@ export class Files extends APIResource {
   }
 
   /**
+   * List files indexed in a vector store with pagination and metadata filter.
+   *
+   * Args: vector_store_identifier: The ID or name of the vector store pagination:
+   * Pagination parameters and metadata filter
+   *
+   * Returns: VectorStoreFileListResponse: Paginated list of vector store files
+   */
+  list(
+    vectorStoreIdentifier: string,
+    body: FileListParams,
+    options?: RequestOptions,
+  ): APIPromise<FileListResponse> {
+    return this._client.post(path`/v1/vector_stores/${vectorStoreIdentifier}/files/list`, {
+      body,
+      ...options,
+    });
+  }
+
+  /**
    * Delete a file from a vector store.
    *
    * Args: vector_store_identifier: The ID or name of the vector store file_id: The
@@ -492,6 +511,95 @@ export namespace VectorStoreFile {
   }
 }
 
+export interface FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  pagination: FileListResponse.Pagination;
+
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of vector store files
+   */
+  data: Array<VectorStoreFile>;
+}
+
+export namespace FileListResponse {
+  /**
+   * Response model for cursor-based pagination.
+   *
+   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
+   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
+   *
+   *     Final page response:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
+   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
+   *             "total": 42
+   *         }
+   *
+   *     Empty results:
+   *         {
+   *             "has_more": false,
+   *             "first_cursor": null,
+   *             "last_cursor": null,
+   *             "total": 0
+   *         }
+   */
+  export interface Pagination {
+    /**
+     * Contextual direction-aware flag: True if more items exist in the requested
+     * pagination direction. For 'after': more items after this page. For 'before':
+     * more items before this page.
+     */
+    has_more: boolean;
+
+    /**
+     * Cursor of the first item in this page. Use for backward pagination. None if page
+     * is empty.
+     */
+    first_cursor: string | null;
+
+    /**
+     * Cursor of the last item in this page. Use for forward pagination. None if page
+     * is empty.
+     */
+    last_cursor: string | null;
+
+    /**
+     * Total number of items available across all pages. Only included when
+     * include_total=true was requested. Expensive operation - use sparingly.
+     */
+    total?: number | null;
+  }
+}
+
 /**
  * Response model for file deletion.
  */
@@ -568,6 +676,44 @@ export interface FileRetrieveParams {
    * Query param: Whether to return the chunks for the file
    */
   return_chunks?: boolean;
+}
+
+export interface FileListParams {
+  /**
+   * Maximum number of items to return per page (1-100)
+   */
+  limit?: number;
+
+  /**
+   * Cursor for forward pagination - get items after this position. Use last_cursor
+   * from previous response.
+   */
+  after?: string | null;
+
+  /**
+   * Cursor for backward pagination - get items before this position. Use
+   * first_cursor from previous response.
+   */
+  before?: string | null;
+
+  /**
+   * Whether to include total count in response (expensive operation)
+   */
+  include_total?: boolean;
+
+  /**
+   * Status to filter by
+   */
+  statuses?: Array<VectorStoreFileStatus> | null;
+
+  /**
+   * Metadata filter to apply to the query
+   */
+  metadata_filter?:
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | null;
 }
 
 export interface FileDeleteParams {
@@ -666,10 +812,12 @@ export declare namespace Files {
     type ScoredVectorStoreFile as ScoredVectorStoreFile,
     type VectorStoreFileStatus as VectorStoreFileStatus,
     type VectorStoreFile as VectorStoreFile,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
+    type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
   };
