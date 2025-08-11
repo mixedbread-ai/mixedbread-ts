@@ -49,6 +49,17 @@ describe('resource files', () => {
     });
   });
 
+  test('list', async () => {
+    const responsePromise = client.vectorStores.files.list('vector_store_identifier', {});
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
   test('delete: only required params', async () => {
     const responsePromise = client.vectorStores.files.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
       vector_store_identifier: 'vector_store_identifier',
@@ -85,20 +96,7 @@ describe('resource files', () => {
       vector_store_identifiers: ['string'],
       vector_store_ids: ['string'],
       top_k: 1,
-      filters: {
-        all: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        any: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-        none: [
-          { key: 'price', operator: 'gt', value: '100' },
-          { key: 'color', operator: 'eq', value: 'red' },
-        ],
-      },
+      filters: { all: [], any: [], none: [] },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       search_options: {
         score_threshold: 0,
