@@ -18,7 +18,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/shared.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/shared.ts">SearchFilterCondition</a></code>
 - <code><a href="./src/resources/shared.ts">Usage</a></code>
 
@@ -55,7 +54,6 @@ Types:
 - <code><a href="./src/resources/vector-stores/files.ts">ScoredVectorStoreFile</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">VectorStoreFileStatus</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">VectorStoreFile</a></code>
-- <code><a href="./src/resources/vector-stores/files.ts">FileListResponse</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">FileDeleteResponse</a></code>
 - <code><a href="./src/resources/vector-stores/files.ts">FileSearchResponse</a></code>
 
@@ -63,7 +61,6 @@ Methods:
 
 - <code title="post /v1/vector_stores/{vector_store_identifier}/files">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">create</a>(vectorStoreIdentifier, { ...params }) -> VectorStoreFile</code>
 - <code title="get /v1/vector_stores/{vector_store_identifier}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">retrieve</a>(fileID, { ...params }) -> VectorStoreFile</code>
-- <code title="post /v1/vector_stores/{vector_store_identifier}/files/list">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">list</a>(vectorStoreIdentifier, { ...params }) -> FileListResponse</code>
 - <code title="delete /v1/vector_stores/{vector_store_identifier}/files/{file_id}">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">delete</a>(fileID, { ...params }) -> FileDeleteResponse</code>
 - <code title="post /v1/vector_stores/files/search">client.vectorStores.files.<a href="./src/resources/vector-stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
