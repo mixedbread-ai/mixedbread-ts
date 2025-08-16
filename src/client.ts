@@ -859,6 +859,7 @@ export class Mixedbread {
   apiKeys: API.APIKeys = new API.APIKeys(this);
   chat: API.Chat = new API.Chat(this);
 }
+
 Mixedbread.VectorStores = VectorStores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
@@ -867,6 +868,7 @@ Mixedbread.Embeddings = Embeddings;
 Mixedbread.DataSources = DataSources;
 Mixedbread.APIKeys = APIKeys;
 Mixedbread.Chat = Chat;
+
 export declare namespace Mixedbread {
   export type RequestOptions = Opts.RequestOptions;
 
