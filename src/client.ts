@@ -106,6 +106,7 @@ import { isEmptyObj } from './internal/utils/values';
 
 const environments = {
   production: 'https://api.mixedbread.com',
+  development: 'https://api.dev.mixedbread.com',
   local: 'http://127.0.0.1:8000',
 };
 type Environment = keyof typeof environments;
@@ -121,6 +122,7 @@ export interface ClientOptions {
    *
    * Each environment maps to a different base URL:
    * - `production` corresponds to `https://api.mixedbread.com`
+   * - `development` corresponds to `https://api.dev.mixedbread.com`
    * - `local` corresponds to `http://127.0.0.1:8000`
    */
   environment?: Environment | undefined;
