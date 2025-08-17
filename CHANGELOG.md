@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.24.1 (2025-08-17)
+
+Full Changelog: [v0.24.0...v0.24.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.24.0...v0.24.1)
+
+### Chores
+
+* **deps:** update dependency @types/node to v20.17.58 ([f8557e1](https://github.com/mixedbread-ai/mixedbread-ts/commit/f8557e15028ec2435e4467fbd7a5a7c5656df136))
+* **internal:** formatting change ([57a0228](https://github.com/mixedbread-ai/mixedbread-ts/commit/57a022828589cd5707c8dbe407e0dd2d60af86bf))
+
 ## 0.24.0 (2025-08-11)
 
 Full Changelog: [v0.23.0...v0.24.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.23.0...v0.24.0)
