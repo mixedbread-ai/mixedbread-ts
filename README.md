@@ -24,7 +24,7 @@ import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
   apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
-  environment: 'local', // defaults to 'production'
+  environment: 'development', // or 'production' | 'local'; defaults to 'production'
 });
 
 const vectorStore = await client.vectorStores.create();
@@ -42,7 +42,7 @@ import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
   apiKey: process.env['MXBAI_API_KEY'], // This is the default and can be omitted
-  environment: 'local', // defaults to 'production'
+  environment: 'development', // or 'production' | 'local'; defaults to 'production'
 });
 
 const vectorStore: Mixedbread.VectorStore = await client.vectorStores.create();
