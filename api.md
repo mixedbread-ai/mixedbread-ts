@@ -150,7 +150,6 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/embeddings.ts">EncodingFormat</a></code>
-- <code><a href="./src/resources/embeddings.ts">ObjectType</a></code>
 
 Methods:
 
