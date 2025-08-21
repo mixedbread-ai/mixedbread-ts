@@ -45,7 +45,7 @@ import {
   APIKeysLimitOffset,
 } from './resources/api-keys';
 import { Chat, ChatCreateCompletionResponse } from './resources/chat';
-import { EmbeddingCreateParams, Embeddings, EncodingFormat, ObjectType } from './resources/embeddings';
+import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
 import {
   FileCreateParams,
   FileDeleteResponse,
@@ -928,7 +928,6 @@ export declare namespace Mixedbread {
   export {
     Embeddings as Embeddings,
     type EncodingFormat as EncodingFormat,
-    type ObjectType as ObjectType,
     type EmbeddingCreateParams as EmbeddingCreateParams,
   };
 

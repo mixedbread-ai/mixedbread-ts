@@ -716,12 +716,7 @@ export interface VectorStoreQuestionAnsweringParams {
   /**
    * IDs or names of vector stores to search
    */
-  vector_store_identifiers?: Array<string> | null;
-
-  /**
-   * @deprecated
-   */
-  vector_store_ids?: Array<string> | null;
+  vector_store_identifiers: Array<string>;
 
   /**
    * Number of results to return
@@ -784,12 +779,7 @@ export interface VectorStoreSearchParams {
   /**
    * IDs or names of vector stores to search
    */
-  vector_store_identifiers?: Array<string> | null;
-
-  /**
-   * @deprecated
-   */
-  vector_store_ids?: Array<string> | null;
+  vector_store_identifiers: Array<string>;
 
   /**
    * Number of results to return

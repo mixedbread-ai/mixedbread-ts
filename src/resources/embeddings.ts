@@ -27,21 +27,6 @@ export class Embeddings extends APIResource {
  */
 export type EncodingFormat = 'float' | 'float16' | 'base64' | 'binary' | 'ubinary' | 'int8' | 'uint8';
 
-export type ObjectType =
-  | 'list'
-  | 'parsing_job'
-  | 'extraction_job'
-  | 'embedding'
-  | 'embedding_dict'
-  | 'rank_result'
-  | 'file'
-  | 'vector_store'
-  | 'vector_store.file'
-  | 'api_key'
-  | 'data_source'
-  | 'data_source.connector'
-  | 'vector_store.histogram';
-
 export interface EmbeddingCreateParams {
   /**
    * The model to use for creating embeddings.
@@ -76,9 +61,5 @@ export interface EmbeddingCreateParams {
 }
 
 export declare namespace Embeddings {
-  export {
-    type EncodingFormat as EncodingFormat,
-    type ObjectType as ObjectType,
-    type EmbeddingCreateParams as EmbeddingCreateParams,
-  };
+  export { type EncodingFormat as EncodingFormat, type EmbeddingCreateParams as EmbeddingCreateParams };
 }

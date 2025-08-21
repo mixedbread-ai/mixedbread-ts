@@ -39,7 +39,7 @@ export interface EmbeddingCreateResponse {
   /**
    * The object type of the response
    */
-  object?: EmbeddingsAPI.ObjectType;
+  object?: 'list';
 
   /**
    * Whether the embeddings are normalized.

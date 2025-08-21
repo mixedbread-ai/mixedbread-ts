@@ -23,9 +23,9 @@ describe('resource files', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.vectorStores.files.create('vector_store_identifier', {
-      file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
       metadata: {},
       experimental: { parsing_strategy: 'fast', contextualization: true },
+      file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
     });
   });
 
@@ -80,7 +80,10 @@ describe('resource files', () => {
   });
 
   test('search: only required params', async () => {
-    const responsePromise = client.vectorStores.files.search({ query: 'how to configure SSL' });
+    const responsePromise = client.vectorStores.files.search({
+      query: 'how to configure SSL',
+      vector_store_identifiers: ['string'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -94,7 +97,6 @@ describe('resource files', () => {
     const response = await client.vectorStores.files.search({
       query: 'how to configure SSL',
       vector_store_identifiers: ['string'],
-      vector_store_ids: ['string'],
       top_k: 1,
       filters: { all: [], any: [], none: [] },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
