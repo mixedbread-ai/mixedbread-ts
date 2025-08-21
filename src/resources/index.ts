@@ -25,7 +25,7 @@ export {
   type DataSourceListParams,
   type DataSourcesCursor,
 } from './data-sources/data-sources';
-export { Embeddings, type EncodingFormat, type ObjectType, type EmbeddingCreateParams } from './embeddings';
+export { Embeddings, type EncodingFormat, type EmbeddingCreateParams } from './embeddings';
 export { Extractions } from './extractions/extractions';
 export {
   Files,

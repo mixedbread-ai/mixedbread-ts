@@ -79,8 +79,8 @@ describe('resource vectorStores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('questionAnswering', async () => {
-    const responsePromise = client.vectorStores.questionAnswering({});
+  test('questionAnswering: only required params', async () => {
+    const responsePromise = client.vectorStores.questionAnswering({ vector_store_identifiers: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -90,8 +90,30 @@ describe('resource vectorStores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('questionAnswering: required and optional params', async () => {
+    const response = await client.vectorStores.questionAnswering({
+      query: 'x',
+      vector_store_identifiers: ['string'],
+      top_k: 1,
+      filters: { all: [], any: [], none: [] },
+      file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      search_options: {
+        score_threshold: 0,
+        rewrite_query: true,
+        rerank: true,
+        return_metadata: true,
+        apply_search_rules: true,
+      },
+      stream: true,
+      qa_options: { cite: true, multimodal: true },
+    });
+  });
+
   test('search: only required params', async () => {
-    const responsePromise = client.vectorStores.search({ query: 'how to configure SSL' });
+    const responsePromise = client.vectorStores.search({
+      query: 'how to configure SSL',
+      vector_store_identifiers: ['string'],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -105,7 +127,6 @@ describe('resource vectorStores', () => {
     const response = await client.vectorStores.search({
       query: 'how to configure SSL',
       vector_store_identifiers: ['string'],
-      vector_store_ids: ['string'],
       top_k: 1,
       filters: { all: [], any: [], none: [] },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],

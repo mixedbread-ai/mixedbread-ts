@@ -10,12 +10,12 @@ import { path } from '../../internal/utils/path';
 
 export class Files extends APIResource {
   /**
-   * Upload a new file to a vector store for indexing.
+   * Add an already uploaded file to a vector store.
    *
-   * Args: vector_store_identifier: The ID or name of the vector store to upload to
-   * file: The file to upload and index
+   * Args: vector_store_identifier: The ID or name of the vector store to add the
+   * file to file: The file to add and index
    *
-   * Returns: VectorStoreFile: Details of the uploaded and indexed file
+   * Returns: VectorStoreFile: Details of the added and indexed file
    */
   create(
     vectorStoreIdentifier: string,
@@ -176,7 +176,7 @@ export interface ScoredVectorStoreFile {
   object?: 'vector_store.file';
 
   /**
-   * chunks
+   * Array of scored file chunks
    */
   chunks: Array<
     | VectorStoresAPI.ScoredTextInputChunk
@@ -411,26 +411,6 @@ export namespace VectorStoreFile {
 export interface FileListResponse {
   /**
    * Response model for cursor-based pagination.
-   *
-   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
-   *
-   *     Final page response:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
-   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
-   *             "total": 42
-   *         }
-   *
-   *     Empty results:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": null,
-   *             "last_cursor": null,
-   *             "total": 0
-   *         }
    */
   pagination: FileListResponse.Pagination;
 
@@ -448,26 +428,6 @@ export interface FileListResponse {
 export namespace FileListResponse {
   /**
    * Response model for cursor-based pagination.
-   *
-   * Examples: Forward pagination response: { "has_more": true, "first_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMSIsImlkIjoiYWJjMTIzIn0=", "last_cursor":
-   * "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMCIsImlkIjoieHl6Nzg5In0=", "total": null }
-   *
-   *     Final page response:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOSIsImlkIjoibGFzdDEyMyJ9",
-   *             "last_cursor": "eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0yOCIsImlkIjoiZmluYWw0NTYifQ==",
-   *             "total": 42
-   *         }
-   *
-   *     Empty results:
-   *         {
-   *             "has_more": false,
-   *             "first_cursor": null,
-   *             "last_cursor": null,
-   *             "total": 0
-   *         }
    */
   export interface Pagination {
     /**
@@ -531,11 +491,6 @@ export interface FileSearchResponse {
 
 export interface FileCreateParams {
   /**
-   * ID of the file to add
-   */
-  file_id: string;
-
-  /**
    * Optional metadata for the file
    */
   metadata?: unknown;
@@ -544,6 +499,11 @@ export interface FileCreateParams {
    * Strategy for adding the file
    */
   experimental?: FileCreateParams.Experimental;
+
+  /**
+   * ID of the file to add
+   */
+  file_id: string;
 }
 
 export namespace FileCreateParams {
@@ -629,12 +589,7 @@ export interface FileSearchParams {
   /**
    * IDs or names of vector stores to search
    */
-  vector_store_identifiers?: Array<string> | null;
-
-  /**
-   * @deprecated
-   */
-  vector_store_ids?: Array<string> | null;
+  vector_store_identifiers: Array<string>;
 
   /**
    * Number of results to return
