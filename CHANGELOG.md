@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.27.0 (2025-09-01)
+
+Full Changelog: [v0.26.0...v0.27.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.26.0...v0.27.0)
+
+### Features
+
+* **api:** api update ([524783f](https://github.com/mixedbread-ai/mixedbread-ts/commit/524783f24897d99052ae6936fa1c6b4d6b5376ef))
+
+
+### Chores
+
+* add package to package.json ([c779be5](https://github.com/mixedbread-ai/mixedbread-ts/commit/c779be5da5ad3bc11b6e7cf1ccfbf24602301b67))
+* **client:** qualify global Blob ([23ca7bf](https://github.com/mixedbread-ai/mixedbread-ts/commit/23ca7bf776840283a0795bca558f8d7bd4cffe0d))
+* **internal:** update global Error reference ([7aa6f8d](https://github.com/mixedbread-ai/mixedbread-ts/commit/7aa6f8dac2459529f8a29631ef4d617561f345c3))
+* update CI script ([3974cb4](https://github.com/mixedbread-ai/mixedbread-ts/commit/3974cb40889db3cf9b6f43c77d2cc6e7741df1fd))
+
 ## 0.26.0 (2025-08-21)
 
 Full Changelog: [v0.25.0...v0.26.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.25.0...v0.26.0)
