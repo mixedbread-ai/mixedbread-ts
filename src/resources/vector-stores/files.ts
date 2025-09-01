@@ -355,9 +355,9 @@ export interface VectorStoreFile {
    */
   chunks?: Array<
     | VectorStoreFile.TextInputChunk
-    | VectorStoreFile.ImageURLInputChunkBase
-    | VectorStoreFile.AudioURLInputChunkBase
-    | VectorStoreFile.VideoURLInputChunkBase
+    | VectorStoreFile.ImageURLInputChunk
+    | VectorStoreFile.AudioURLInputChunk
+    | VectorStoreFile.VideoURLInputChunk
   > | null;
 }
 
@@ -399,7 +399,7 @@ export namespace VectorStoreFile {
     text: string;
   }
 
-  export interface ImageURLInputChunkBase {
+  export interface ImageURLInputChunk {
     /**
      * position of the chunk in a file
      */
@@ -434,9 +434,31 @@ export namespace VectorStoreFile {
      * summary of the image
      */
     summary?: string | null;
+
+    /**
+     * The image input specification.
+     */
+    image_url: ImageURLInputChunk.ImageURL;
   }
 
-  export interface AudioURLInputChunkBase {
+  export namespace ImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+
+      /**
+       * The image format/mimetype
+       */
+      format?: string;
+    }
+  }
+
+  export interface AudioURLInputChunk {
     /**
      * position of the chunk in a file
      */
@@ -471,9 +493,26 @@ export namespace VectorStoreFile {
      * summary of the audio
      */
     summary?: string | null;
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: AudioURLInputChunk.AudioURL;
   }
 
-  export interface VideoURLInputChunkBase {
+  export namespace AudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  export interface VideoURLInputChunk {
     /**
      * position of the chunk in a file
      */
@@ -508,6 +547,23 @@ export namespace VectorStoreFile {
      * summary of the video
      */
     summary?: string | null;
+
+    /**
+     * The video input specification.
+     */
+    video_url: VideoURLInputChunk.VideoURL;
+  }
+
+  export namespace VideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
   }
 }
 
