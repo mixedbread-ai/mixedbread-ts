@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.27.1 (2025-09-06)
+
+Full Changelog: [v0.27.0...v0.27.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.27.0...v0.27.1)
+
+### Chores
+
+* ci build action ([3f92867](https://github.com/mixedbread-ai/mixedbread-ts/commit/3f92867f85a7baa803649c1e9a3c62f694160e62))
+
 ## 0.27.0 (2025-09-01)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.26.0...v0.27.0)
