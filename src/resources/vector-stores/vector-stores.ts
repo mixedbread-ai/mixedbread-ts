@@ -208,6 +208,11 @@ export interface ScoredAudioURLInputChunk {
    * The audio input specification.
    */
   audio_url: ScoredAudioURLInputChunk.AudioURL;
+
+  /**
+   * The sampling rate of the audio.
+   */
+  sampling_rate: number;
 }
 
 export namespace ScoredAudioURLInputChunk {
