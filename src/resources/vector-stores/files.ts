@@ -498,6 +498,11 @@ export namespace VectorStoreFile {
      * The audio input specification.
      */
     audio_url: AudioURLInputChunk.AudioURL;
+
+    /**
+     * The sampling rate of the audio.
+     */
+    sampling_rate: number;
   }
 
   export namespace AudioURLInputChunk {
