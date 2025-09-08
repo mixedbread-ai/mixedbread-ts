@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.28.0 (2025-09-08)
+
+Full Changelog: [v0.27.0...v0.28.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.27.0...v0.28.0)
+
+### Features
+
+* **api:** api update ([6a8a99c](https://github.com/mixedbread-ai/mixedbread-ts/commit/6a8a99ce5e8b2c32df06d70f95ac5e7d7042828b))
+
+
+### Chores
+
+* ci build action ([3f92867](https://github.com/mixedbread-ai/mixedbread-ts/commit/3f92867f85a7baa803649c1e9a3c62f694160e62))
+
 ## 0.27.0 (2025-09-01)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.26.0...v0.27.0)
