@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.28.1 (2025-09-09)
+
+Full Changelog: [v0.28.0...v0.28.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.28.0...v0.28.1)
+
+### Bug Fixes
+
+* coerce nullable values to undefined ([68cda2a](https://github.com/mixedbread-ai/mixedbread-ts/commit/68cda2a4323f5494e5e7d111c0def10effed7ce2))
+
 ## 0.28.0 (2025-09-08)
 
 Full Changelog: [v0.27.0...v0.28.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.27.0...v0.28.0)
