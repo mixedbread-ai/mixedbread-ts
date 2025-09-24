@@ -100,16 +100,16 @@ describe('resource files', () => {
       top_k: 1,
       filters: {
         all: [
-          { any: [{ none: [{}, {}] }, { none: [{}, {}] }], none: [{ any: [{}, {}] }, { any: [{}, {}] }] },
-          { any: [{ none: [{}, {}] }, { none: [{}, {}] }], none: [{ any: [{}, {}] }, { any: [{}, {}] }] },
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
         any: [
-          { all: [{ none: [{}, {}] }, { none: [{}, {}] }], none: [{ all: [{}, {}] }, { all: [{}, {}] }] },
-          { all: [{ none: [{}, {}] }, { none: [{}, {}] }], none: [{ all: [{}, {}] }, { all: [{}, {}] }] },
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
         none: [
-          { all: [{ any: [{}, {}] }, { any: [{}, {}] }], any: [{ all: [{}, {}] }, { all: [{}, {}] }] },
-          { all: [{ any: [{}, {}] }, { any: [{}, {}] }], any: [{ all: [{}, {}] }, { all: [{}, {}] }] },
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
         ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
