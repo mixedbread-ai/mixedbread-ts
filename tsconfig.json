@@ -7,10 +7,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "baseUrl": "./",
     "paths": {
-      "@mixedbread/sdk/*": ["src/*"],
-      "@mixedbread/sdk": ["src/index.ts"]
+      "@mixedbread/sdk/*": ["./src/*"],
+      "@mixedbread/sdk": ["./src/index.ts"]
     },
     "noEmit": true,
 
