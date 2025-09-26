@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.29.0 (2025-09-26)
+
+Full Changelog: [v0.28.1...v0.29.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.28.1...v0.29.0)
+
+### Features
+
+* **api:** api update ([635b49c](https://github.com/mixedbread-ai/mixedbread-ts/commit/635b49c0d2895c62e3662b543e8866dcd82ce513))
+
+
+### Performance Improvements
+
+* faster formatting ([ccb2d01](https://github.com/mixedbread-ai/mixedbread-ts/commit/ccb2d01a2674d883c29200a1c07da01073d30292))
+
+
+### Chores
+
+* do not install brew dependencies in ./scripts/bootstrap by default ([ace2a5f](https://github.com/mixedbread-ai/mixedbread-ts/commit/ace2a5fee4eb35819b83c4e80d3f50c334722984))
+* **internal:** improve examples ([dd1acb9](https://github.com/mixedbread-ai/mixedbread-ts/commit/dd1acb981543fa1e94885f02a277586c1a1f57ef))
+* **internal:** remove deprecated `compilerOptions.baseUrl` from tsconfig.json ([76dbd55](https://github.com/mixedbread-ai/mixedbread-ts/commit/76dbd55c349cf8f81e8f96c95b31a493534290a9))
+* **internal:** use some smaller example values ([67a5565](https://github.com/mixedbread-ai/mixedbread-ts/commit/67a55657a71ab333e84c281ed9874261dfbd52c1))
+
 ## 0.28.1 (2025-09-09)
 
 Full Changelog: [v0.28.0...v0.28.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.28.0...v0.28.1)
