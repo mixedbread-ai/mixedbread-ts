@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.29.1 (2025-09-27)
+
+Full Changelog: [v0.29.0...v0.29.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.29.0...v0.29.1)
+
+### Chores
+
+* **internal:** fix incremental formatting in some cases ([dfe1da9](https://github.com/mixedbread-ai/mixedbread-ts/commit/dfe1da96cb20721504db57d68f01bb72f2f4fb0f))
+
 ## 0.29.0 (2025-09-26)
 
 Full Changelog: [v0.28.1...v0.29.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.28.1...v0.29.0)
