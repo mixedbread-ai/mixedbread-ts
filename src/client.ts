@@ -74,10 +74,6 @@ import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,
-  ScoredAudioURLInputChunk,
-  ScoredImageURLInputChunk,
-  ScoredTextInputChunk,
-  ScoredVideoURLInputChunk,
   VectorStore,
   VectorStoreChunkSearchOptions,
   VectorStoreCreateParams,
@@ -893,10 +889,6 @@ export declare namespace Mixedbread {
   export {
     VectorStores as VectorStores,
     type ExpiresAfter as ExpiresAfter,
-    type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
-    type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
-    type ScoredTextInputChunk as ScoredTextInputChunk,
-    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type VectorStore as VectorStore,
     type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
     type VectorStoreDeleteResponse as VectorStoreDeleteResponse,

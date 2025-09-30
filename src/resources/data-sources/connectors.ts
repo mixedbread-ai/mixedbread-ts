@@ -121,9 +121,9 @@ export interface DataSourceConnector {
   updated_at: string;
 
   /**
-   * The ID of the vector store
+   * The ID of the store
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * The ID of the data source
@@ -198,9 +198,9 @@ export interface ConnectorDeleteResponse {
 
 export interface ConnectorCreateParams {
   /**
-   * The ID of the vector store
+   * The ID of the store
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * The name of the connector
