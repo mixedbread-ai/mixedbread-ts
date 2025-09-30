@@ -3,7 +3,6 @@
 import { APIResource } from '../../core/resource';
 import * as FilesAPI from './files';
 import * as Shared from '../shared';
-import * as VectorStoresAPI from './vector-stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
@@ -12,12 +11,9 @@ import { path } from '../../internal/utils/path';
 
 export class Files extends APIResource {
   /**
-   * Add an already uploaded file to a vector store.
+   * DEPRECATED: Use POST /stores/{store_identifier}/files instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store to add the
-   * file to file: The file to add and index
-   *
-   * Returns: VectorStoreFile: Details of the added and indexed file
+   * @deprecated
    */
   create(
     vectorStoreIdentifier: string,
@@ -28,12 +24,9 @@ export class Files extends APIResource {
   }
 
   /**
-   * Get details of a specific file in a vector store.
+   * DEPRECATED: Use GET /stores/{store_identifier}/files/{file_id} instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store file_id: The
-   * ID of the file
-   *
-   * Returns: VectorStoreFile: Details of the vector store file
+   * @deprecated
    */
   retrieve(
     fileID: string,
@@ -48,12 +41,9 @@ export class Files extends APIResource {
   }
 
   /**
-   * List files indexed in a vector store with pagination and metadata filter.
+   * DEPRECATED: Use POST /stores/{store_identifier}/files/list instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store pagination:
-   * Pagination parameters and metadata filter
-   *
-   * Returns: VectorStoreFileListResponse: Paginated list of vector store files
+   * @deprecated
    */
   list(
     vectorStoreIdentifier: string,
@@ -67,12 +57,9 @@ export class Files extends APIResource {
   }
 
   /**
-   * Delete a file from a vector store.
+   * DEPRECATED: Use DELETE /stores/{store_identifier}/files/{file_id} instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store file_id: The
-   * ID of the file to delete
-   *
-   * Returns: VectorStoreFileDeleted: The deleted file
+   * @deprecated
    */
   delete(fileID: string, params: FileDeleteParams, options?: RequestOptions): APIPromise<FileDeleteResponse> {
     const { vector_store_identifier } = params;
@@ -80,22 +67,9 @@ export class Files extends APIResource {
   }
 
   /**
-   * Perform semantic search across complete vector store files.
+   * DEPRECATED: Use POST /stores/{store_identifier}/files/search instead
    *
-   * This endpoint searches through vector store files using semantic similarity
-   * matching. Unlike chunk search, it returns complete matching files rather than
-   * individual chunks. Supports complex search queries with filters and returns
-   * relevance-scored results.
-   *
-   * Args: search_params: Search configuration including: - query text or
-   * embeddings - metadata filters - pagination parameters - sorting preferences
-   * \_state: API state dependency \_ctx: Service context dependency
-   *
-   * Returns: VectorStoreSearchFileResponse containing: - List of matched files with
-   * relevance scores - Pagination details including total result count
-   *
-   * Raises: HTTPException (400): If search parameters are invalid HTTPException
-   * (404): If no vector stores are found to search
+   * @deprecated
    */
   search(body: FileSearchParams, options?: RequestOptions): APIPromise<FileSearchResponse> {
     return this._client.post('/v1/vector_stores/files/search', { body, ...options });
@@ -225,7 +199,7 @@ export interface RerankConfig {
 }
 
 /**
- * Represents a scored file stored in a vector store.
+ * Represents a scored store file.
  */
 export interface ScoredVectorStoreFile {
   /**
@@ -246,7 +220,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: VectorStoreFileStatus;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -254,12 +228,12 @@ export interface ScoredVectorStoreFile {
   last_error?: unknown;
 
   /**
-   * ID of the containing vector store
+   * ID of the containing store
    */
   vector_store_id: string;
 
   /**
-   * Timestamp of vector store file creation
+   * Timestamp of store file creation
    */
   created_at: string;
 
@@ -282,10 +256,10 @@ export interface ScoredVectorStoreFile {
    * Array of scored file chunks
    */
   chunks: Array<
-    | VectorStoresAPI.ScoredTextInputChunk
-    | VectorStoresAPI.ScoredImageURLInputChunk
-    | VectorStoresAPI.ScoredAudioURLInputChunk
-    | VectorStoresAPI.ScoredVideoURLInputChunk
+    | ScoredVectorStoreFile.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk
+    | ScoredVectorStoreFile.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk
+    | ScoredVectorStoreFile.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk
+    | ScoredVectorStoreFile.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk
   > | null;
 
   /**
@@ -294,10 +268,333 @@ export interface ScoredVectorStoreFile {
   score: number;
 }
 
+export namespace ScoredVectorStoreFile {
+  /**
+   * Scored text chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * The offset of the text in the file relative to the start of the file.
+     */
+    offset?: number;
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  /**
+   * Scored image chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+
+    /**
+     * The image input specification.
+     */
+    image_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.ImageURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+
+      /**
+       * The image format/mimetype
+       */
+      format?: string;
+    }
+  }
+
+  /**
+   * Scored audio chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * The sampling rate of the audio.
+     */
+    sampling_rate: number;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  /**
+   * Scored video chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+
+    /**
+     * The video input specification.
+     */
+    video_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.VideoURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+}
+
 export type VectorStoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
 /**
- * Represents a file stored in a vector store.
+ * Represents a file stored in a store.
  */
 export interface VectorStoreFile {
   /**
@@ -318,7 +615,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: VectorStoreFileStatus;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -326,12 +623,12 @@ export interface VectorStoreFile {
   last_error?: unknown;
 
   /**
-   * ID of the containing vector store
+   * ID of the containing store
    */
   vector_store_id: string;
 
   /**
-   * Timestamp of vector store file creation
+   * Timestamp of store file creation
    */
   created_at: string;
 
@@ -572,6 +869,9 @@ export namespace VectorStoreFile {
   }
 }
 
+/**
+ * List response wrapper for vector store files.
+ */
 export interface FileListResponse {
   /**
    * Response model for cursor-based pagination.
@@ -641,6 +941,9 @@ export interface FileDeleteResponse {
   object?: 'vector_store.file';
 }
 
+/**
+ * Search response wrapper for vector store files.
+ */
 export interface FileSearchResponse {
   /**
    * The object type of the response
@@ -725,7 +1028,7 @@ export interface FileListParams {
   /**
    * Status to filter by
    */
-  statuses?: Array<VectorStoreFileStatus> | null;
+  statuses?: Array<'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed'> | null;
 
   /**
    * Metadata filter to apply to the query

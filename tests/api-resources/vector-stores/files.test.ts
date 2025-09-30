@@ -30,7 +30,7 @@ describe('resource files', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.vectorStores.files.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+    const responsePromise = client.vectorStores.files.retrieve('file_id', {
       vector_store_identifier: 'vector_store_identifier',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -43,7 +43,7 @@ describe('resource files', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.vectorStores.files.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+    const response = await client.vectorStores.files.retrieve('file_id', {
       vector_store_identifier: 'vector_store_identifier',
       return_chunks: true,
     });
@@ -61,7 +61,7 @@ describe('resource files', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.vectorStores.files.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+    const responsePromise = client.vectorStores.files.delete('file_id', {
       vector_store_identifier: 'vector_store_identifier',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -74,7 +74,7 @@ describe('resource files', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.vectorStores.files.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+    const response = await client.vectorStores.files.delete('file_id', {
       vector_store_identifier: 'vector_store_identifier',
     });
   });
