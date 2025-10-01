@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.30.0 (2025-10-01)
+
+Full Changelog: [v0.29.0...v0.30.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.29.0...v0.30.0)
+
+### Features
+
+* **api:** api update ([48b5be0](https://github.com/mixedbread-ai/mixedbread-ts/commit/48b5be060e9eba8391a02a630759ec0988d691ff))
+* **api:** api update ([7bbda4c](https://github.com/mixedbread-ai/mixedbread-ts/commit/7bbda4cfaa76103c9f5443227945d100ca63be9c))
+* **api:** update via SDK Studio ([1742494](https://github.com/mixedbread-ai/mixedbread-ts/commit/1742494b242f26e54d4d74618d431c1d9ea9e6dd))
+
+
+### Chores
+
+* **internal:** codegen related update ([fcbbc84](https://github.com/mixedbread-ai/mixedbread-ts/commit/fcbbc8463fe486f19d40d7280a6f5871e3e29525))
+* **internal:** fix incremental formatting in some cases ([dfe1da9](https://github.com/mixedbread-ai/mixedbread-ts/commit/dfe1da96cb20721504db57d68f01bb72f2f4fb0f))
+* **internal:** ignore .eslintcache ([7ec4db7](https://github.com/mixedbread-ai/mixedbread-ts/commit/7ec4db7f546d7c8db941e258954424b13d410937))
+* **internal:** remove .eslintcache ([ebaa4d7](https://github.com/mixedbread-ai/mixedbread-ts/commit/ebaa4d7ca1ab6f3d474611ff91ee644dfc22abc0))
+
 ## 0.29.0 (2025-09-26)
 
 Full Changelog: [v0.28.1...v0.29.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.28.1...v0.29.0)
