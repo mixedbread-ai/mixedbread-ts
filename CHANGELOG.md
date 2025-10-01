@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.31.1 (2025-10-01)
+
+Full Changelog: [v0.31.0...v0.31.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.31.0...v0.31.1)
+
+### Chores
+
+* allow the store to be pulled ([ff53f58](https://github.com/mixedbread-ai/mixedbread-ts/commit/ff53f58723326550249c4bcfe6b67bed88c0e0e6))
+
 ## 0.31.0 (2025-10-01)
 
 Full Changelog: [v0.30.0...v0.31.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.30.0...v0.31.0)
