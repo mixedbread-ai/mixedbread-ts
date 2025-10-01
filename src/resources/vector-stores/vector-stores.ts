@@ -27,36 +27,27 @@ export class VectorStores extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
 
   /**
-   * Create a new vector store.
+   * DEPRECATED: Use POST /stores instead
    *
-   * Args: vector_store_create: VectorStoreCreate object containing the name,
-   * description, and metadata.
-   *
-   * Returns: VectorStore: The response containing the created vector store details.
+   * @deprecated
    */
   create(body: VectorStoreCreateParams, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.post('/v1/vector_stores', { body, ...options });
   }
 
   /**
-   * Get a vector store by ID or name.
+   * DEPRECATED: Use GET /stores/{store_identifier} instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store to retrieve.
-   *
-   * Returns: VectorStore: The response containing the vector store details.
+   * @deprecated
    */
   retrieve(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.get(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
-   * Update a vector store by ID or name.
+   * DEPRECATED: Use PUT /stores/{store_identifier} instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store to update.
-   * vector_store_update: VectorStoreCreate object containing the name, description,
-   * and metadata.
-   *
-   * Returns: VectorStore: The response containing the updated vector store details.
+   * @deprecated
    */
   update(
     vectorStoreIdentifier: string,
@@ -67,12 +58,9 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * List all vector stores with optional search.
+   * DEPRECATED: Use GET /stores instead
    *
-   * Args: options: The pagination options including limit, cursor, and optional
-   * search query (q)
-   *
-   * Returns: VectorStoreListResponse: The list of vector stores
+   * @deprecated
    */
   list(
     query: VectorStoreListParams | null | undefined = {},
@@ -82,18 +70,18 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Delete a vector store by ID or name.
+   * DEPRECATED: Use DELETE /stores/{store_identifier} instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store to delete.
-   *
-   * Returns: VectorStore: The response containing the deleted vector store details.
+   * @deprecated
    */
   delete(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
     return this._client.delete(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
   }
 
   /**
-   * Question answering
+   * DEPRECATED: Use POST /stores/question-answering instead
+   *
+   * @deprecated
    */
   questionAnswering(
     body: VectorStoreQuestionAnsweringParams,
@@ -103,23 +91,9 @@ export class VectorStores extends APIResource {
   }
 
   /**
-   * Perform semantic search across vector store chunks.
+   * DEPRECATED: Use POST /stores/search instead
    *
-   * This endpoint searches through vector store chunks using semantic similarity
-   * matching. It supports complex search queries with filters and returns
-   * relevance-scored results.
-   *
-   * Args: search_params: Search configuration including: - query text or
-   * embeddings - vector_store_ids: List of vector stores to search - file_ids:
-   * Optional list of file IDs to filter chunks by (or tuple of list and condition
-   * operator) - metadata filters - pagination parameters - sorting preferences
-   * \_state: API state dependency \_ctx: Service context dependency
-   *
-   * Returns: VectorStoreSearchChunkResponse containing: - List of matched chunks
-   * with relevance scores - Pagination details including total result count
-   *
-   * Raises: HTTPException (400): If search parameters are invalid HTTPException
-   * (404): If no vector stores are found to search
+   * @deprecated
    */
   search(body: VectorStoreSearchParams, options?: RequestOptions): APIPromise<VectorStoreSearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });
@@ -129,7 +103,7 @@ export class VectorStores extends APIResource {
 export type VectorStoresCursor = Cursor<VectorStore>;
 
 /**
- * Represents an expiration policy for a vector store.
+ * Represents an expiration policy for a store.
  */
 export interface ExpiresAfter {
   /**
@@ -138,7 +112,7 @@ export interface ExpiresAfter {
   anchor?: 'last_active_at';
 
   /**
-   * Number of days after which the vector store expires
+   * Number of days after which the store expires
    */
   days?: number;
 }
@@ -157,13 +131,7 @@ export interface ScoredAudioURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | ScoredAudioURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
-    | null;
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -186,9 +154,9 @@ export interface ScoredAudioURLInputChunk {
   filename: string;
 
   /**
-   * vector store id
+   * store id
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * file metadata
@@ -222,96 +190,6 @@ export interface ScoredAudioURLInputChunk {
 }
 
 export namespace ScoredAudioURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages: number;
-
-    total_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type: string;
-
-    file_size: number;
-
-    total_duration_seconds: number;
-
-    sample_rate: number;
-
-    channels: number;
-
-    audio_format: number;
-
-    [k: string]: unknown;
-  }
-
   /**
    * The audio input specification.
    */
@@ -337,13 +215,7 @@ export interface ScoredImageURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | ScoredImageURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.AudioChunkGeneratedMetadata
-    | null;
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -366,9 +238,9 @@ export interface ScoredImageURLInputChunk {
   filename: string;
 
   /**
-   * vector store id
+   * store id
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * file metadata
@@ -397,96 +269,6 @@ export interface ScoredImageURLInputChunk {
 }
 
 export namespace ScoredImageURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages: number;
-
-    total_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type: string;
-
-    file_size: number;
-
-    total_duration_seconds: number;
-
-    sample_rate: number;
-
-    channels: number;
-
-    audio_format: number;
-
-    [k: string]: unknown;
-  }
-
   /**
    * The image input specification.
    */
@@ -517,13 +299,7 @@ export interface ScoredTextInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | ScoredTextInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredTextInputChunk.TextChunkGeneratedMetadata
-    | ScoredTextInputChunk.PdfChunkGeneratedMetadata
-    | ScoredTextInputChunk.CodeChunkGeneratedMetadata
-    | ScoredTextInputChunk.AudioChunkGeneratedMetadata
-    | null;
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -546,9 +322,9 @@ export interface ScoredTextInputChunk {
   filename: string;
 
   /**
-   * vector store id
+   * store id
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * file metadata
@@ -571,98 +347,6 @@ export interface ScoredTextInputChunk {
   text: string;
 }
 
-export namespace ScoredTextInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages: number;
-
-    total_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type: string;
-
-    file_size: number;
-
-    total_duration_seconds: number;
-
-    sample_rate: number;
-
-    channels: number;
-
-    audio_format: number;
-
-    [k: string]: unknown;
-  }
-}
-
 export interface ScoredVideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -677,13 +361,7 @@ export interface ScoredVideoURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | ScoredVideoURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
-    | null;
+  generated_metadata?: { [key: string]: unknown } | null;
 
   /**
    * model used for this chunk
@@ -706,9 +384,9 @@ export interface ScoredVideoURLInputChunk {
   filename: string;
 
   /**
-   * vector store id
+   * store id
    */
-  vector_store_id: string;
+  store_id: string;
 
   /**
    * file metadata
@@ -737,96 +415,6 @@ export interface ScoredVideoURLInputChunk {
 }
 
 export namespace ScoredVideoURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages: number;
-
-    total_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language: string;
-
-    word_count: number;
-
-    file_size: number;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type: string;
-
-    file_size: number;
-
-    total_duration_seconds: number;
-
-    sample_rate: number;
-
-    channels: number;
-
-    audio_format: number;
-
-    [k: string]: unknown;
-  }
-
   /**
    * The video input specification.
    */
@@ -873,7 +461,7 @@ export interface VectorStore {
   file_counts?: VectorStore.FileCounts;
 
   /**
-   * Represents an expiration policy for a vector store.
+   * Represents an expiration policy for a store.
    */
   expires_after?: ExpiresAfter | null;
 
@@ -1013,8 +601,334 @@ export interface VectorStoreQuestionAnsweringResponse {
    * Source documents used to generate the answer
    */
   sources?: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
+    | VectorStoreQuestionAnsweringResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk
+    | VectorStoreQuestionAnsweringResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk
+    | VectorStoreQuestionAnsweringResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk
+    | VectorStoreQuestionAnsweringResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk
   >;
+}
+
+export namespace VectorStoreQuestionAnsweringResponse {
+  /**
+   * Scored text chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * The offset of the text in the file relative to the start of the file.
+     */
+    offset?: number;
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  /**
+   * Scored image chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+
+    /**
+     * The image input specification.
+     */
+    image_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.ImageURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+
+      /**
+       * The image format/mimetype
+       */
+      format?: string;
+    }
+  }
+
+  /**
+   * Scored audio chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * The sampling rate of the audio.
+     */
+    sampling_rate: number;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  /**
+   * Scored video chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+
+    /**
+     * The video input specification.
+     */
+    video_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.VideoURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
 }
 
 export interface VectorStoreSearchResponse {
@@ -1027,8 +941,334 @@ export interface VectorStoreSearchResponse {
    * The list of scored vector store file chunks
    */
   data: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
+    | VectorStoreSearchResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk
+    | VectorStoreSearchResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk
+    | VectorStoreSearchResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk
+    | VectorStoreSearchResponse.MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk
   >;
+}
+
+export namespace VectorStoreSearchResponse {
+  /**
+   * Scored text chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'text';
+
+    /**
+     * The offset of the text in the file relative to the start of the file.
+     */
+    offset?: number;
+
+    /**
+     * Text content to process
+     */
+    text: string;
+  }
+
+  /**
+   * Scored image chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'image_url';
+
+    /**
+     * ocr text of the image
+     */
+    ocr_text?: string | null;
+
+    /**
+     * summary of the image
+     */
+    summary?: string | null;
+
+    /**
+     * The image input specification.
+     */
+    image_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.ImageURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    /**
+     * The image input specification.
+     */
+    export interface ImageURL {
+      /**
+       * The image URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+
+      /**
+       * The image format/mimetype
+       */
+      format?: string;
+    }
+  }
+
+  /**
+   * Scored audio chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'audio_url';
+
+    /**
+     * speech recognition (sr) text of the audio
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the audio
+     */
+    summary?: string | null;
+
+    /**
+     * The audio input specification.
+     */
+    audio_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.AudioURL;
+
+    /**
+     * The sampling rate of the audio.
+     */
+    sampling_rate: number;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    /**
+     * The audio input specification.
+     */
+    export interface AudioURL {
+      /**
+       * The audio URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
+
+  /**
+   * Scored video chunk for deprecated API.
+   */
+  export interface MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * position of the chunk in a file
+     */
+    chunk_index: number;
+
+    /**
+     * mime type of the chunk
+     */
+    mime_type?: string;
+
+    /**
+     * metadata of the chunk
+     */
+    generated_metadata?: { [key: string]: unknown } | null;
+
+    /**
+     * model used for this chunk
+     */
+    model?: string | null;
+
+    /**
+     * score of the chunk
+     */
+    score: number;
+
+    /**
+     * file id
+     */
+    file_id: string;
+
+    /**
+     * filename
+     */
+    filename: string;
+
+    /**
+     * store id
+     */
+    vector_store_id: string;
+
+    /**
+     * file metadata
+     */
+    metadata?: unknown;
+
+    /**
+     * Input type identifier
+     */
+    type?: 'video_url';
+
+    /**
+     * speech recognition (sr) text of the video
+     */
+    transcription?: string | null;
+
+    /**
+     * summary of the video
+     */
+    summary?: string | null;
+
+    /**
+     * The video input specification.
+     */
+    video_url: MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.VideoURL;
+  }
+
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    /**
+     * The video input specification.
+     */
+    export interface VideoURL {
+      /**
+       * The video URL. Can be either a URL or a Data URI.
+       */
+      url: string;
+    }
+  }
 }
 
 export interface VectorStoreCreateParams {
@@ -1048,7 +1288,7 @@ export interface VectorStoreCreateParams {
   is_public?: boolean;
 
   /**
-   * Represents an expiration policy for a vector store.
+   * Represents an expiration policy for a store.
    */
   expires_after?: ExpiresAfter | null;
 
@@ -1065,7 +1305,7 @@ export interface VectorStoreCreateParams {
 
 export interface VectorStoreUpdateParams {
   /**
-   * New name for the vector store
+   * New name for the store
    */
   name?: string | null;
 
@@ -1080,7 +1320,7 @@ export interface VectorStoreUpdateParams {
   is_public?: boolean | null;
 
   /**
-   * Represents an expiration policy for a vector store.
+   * Represents an expiration policy for a store.
    */
   expires_after?: ExpiresAfter | null;
 

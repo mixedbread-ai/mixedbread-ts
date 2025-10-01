@@ -10,7 +10,7 @@ const client = new Mixedbread({
 describe('resource connectors', () => {
   test('create: only required params', async () => {
     const responsePromise = client.dataSources.connectors.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      vector_store_id: 'vector_store_id',
+      store_id: 'store_id',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,7 +23,7 @@ describe('resource connectors', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.dataSources.connectors.create('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      vector_store_id: 'vector_store_id',
+      store_id: 'store_id',
       name: 'name',
       trigger_sync: true,
       metadata: {},
