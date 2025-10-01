@@ -39,6 +39,20 @@ export {
 } from './files';
 export { Parsing } from './parsing/parsing';
 export {
+  Stores,
+  type Store,
+  type StoreChunkSearchOptions,
+  type StoreDeleteResponse,
+  type StoreQuestionAnsweringResponse,
+  type StoreSearchResponse,
+  type StoreCreateParams,
+  type StoreUpdateParams,
+  type StoreListParams,
+  type StoreQuestionAnsweringParams,
+  type StoreSearchParams,
+  type StoresCursor,
+} from './stores/stores';
+export {
   VectorStores,
   type ExpiresAfter,
   type ScoredAudioURLInputChunk,

@@ -73,6 +73,20 @@ import {
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  Store,
+  StoreChunkSearchOptions,
+  StoreCreateParams,
+  StoreDeleteResponse,
+  StoreListParams,
+  StoreQuestionAnsweringParams,
+  StoreQuestionAnsweringResponse,
+  StoreSearchParams,
+  StoreSearchResponse,
+  StoreUpdateParams,
+  Stores,
+  StoresCursor,
+} from './resources/stores/stores';
+import {
   ExpiresAfter,
   ScoredAudioURLInputChunk,
   ScoredImageURLInputChunk,
@@ -853,6 +867,7 @@ export class Mixedbread {
   static toFile = Uploads.toFile;
 
   vectorStores: API.VectorStores = new API.VectorStores(this);
+  stores: API.Stores = new API.Stores(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
   extractions: API.Extractions = new API.Extractions(this);
@@ -863,6 +878,7 @@ export class Mixedbread {
 }
 
 Mixedbread.VectorStores = VectorStores;
+Mixedbread.Stores = Stores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
 Mixedbread.Extractions = Extractions;
@@ -908,6 +924,21 @@ export declare namespace Mixedbread {
     type VectorStoreListParams as VectorStoreListParams,
     type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
     type VectorStoreSearchParams as VectorStoreSearchParams,
+  };
+
+  export {
+    Stores as Stores,
+    type Store as Store,
+    type StoreChunkSearchOptions as StoreChunkSearchOptions,
+    type StoreDeleteResponse as StoreDeleteResponse,
+    type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
+    type StoreSearchResponse as StoreSearchResponse,
+    type StoresCursor as StoresCursor,
+    type StoreCreateParams as StoreCreateParams,
+    type StoreUpdateParams as StoreUpdateParams,
+    type StoreListParams as StoreListParams,
+    type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
+    type StoreSearchParams as StoreSearchParams,
   };
 
   export { Parsing as Parsing };

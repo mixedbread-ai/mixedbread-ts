@@ -56,6 +56,8 @@ This affects the following methods:
 
 - `client.vectorStores.files.retrieve()`
 - `client.vectorStores.files.delete()`
+- `client.stores.files.retrieve()`
+- `client.stores.files.delete()`
 - `client.dataSources.connectors.retrieve()`
 - `client.dataSources.connectors.update()`
 - `client.dataSources.connectors.delete()`
@@ -90,6 +92,7 @@ client.example.list(undefined, { headers: { ... } });
 This affects the following methods:
 
 - `client.vectorStores.list()`
+- `client.stores.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
 - `client.dataSources.list()`
@@ -238,8 +241,8 @@ The `for await` syntax **is not affected**. This still works as-is:
 
 ```ts
 // Automatically fetches more pages as needed.
-for await (const vectorStore of client.vectorStores.list()) {
-  console.log(vectorStore);
+for await (const store of client.stores.list()) {
+  console.log(store);
 }
 ```
 
@@ -261,10 +264,10 @@ Page classes for individual methods are now type aliases:
 
 ```ts
 // Before
-export class VectorStoresCursor extends Cursor<VectorStore> {}
+export class StoresCursor extends Cursor<Store> {}
 
 // After
-export type VectorStoresCursor = Cursor<VectorStore>;
+export type StoresCursor = Cursor<Store>;
 ```
 
 If you were importing these classes at runtime, you'll need to switch to importing the base class or only import them at the type-level.

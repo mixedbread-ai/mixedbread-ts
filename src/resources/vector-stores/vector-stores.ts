@@ -29,7 +29,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use POST /stores instead
    *
-   * @deprecated
+   * @deprecated Use stores instead
    */
   create(body: VectorStoreCreateParams, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.post('/v1/vector_stores', { body, ...options });
@@ -38,7 +38,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use GET /stores/{store_identifier} instead
    *
-   * @deprecated
+   * @deprecated Use stores instead
    */
   retrieve(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStore> {
     return this._client.get(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
@@ -47,7 +47,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use PUT /stores/{store_identifier} instead
    *
-   * @deprecated
+   * @deprecated Use stores instead
    */
   update(
     vectorStoreIdentifier: string,
@@ -60,7 +60,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use GET /stores instead
    *
-   * @deprecated
+   * @deprecated Use stores instead
    */
   list(
     query: VectorStoreListParams | null | undefined = {},
@@ -72,7 +72,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use DELETE /stores/{store_identifier} instead
    *
-   * @deprecated
+   * @deprecated Use stores instead
    */
   delete(vectorStoreIdentifier: string, options?: RequestOptions): APIPromise<VectorStoreDeleteResponse> {
     return this._client.delete(path`/v1/vector_stores/${vectorStoreIdentifier}`, options);
@@ -81,7 +81,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use POST /stores/question-answering instead
    *
-   * @deprecated
+   * @deprecated Use stores.question_answering instead
    */
   questionAnswering(
     body: VectorStoreQuestionAnsweringParams,
@@ -93,7 +93,7 @@ export class VectorStores extends APIResource {
   /**
    * DEPRECATED: Use POST /stores/search instead
    *
-   * @deprecated
+   * @deprecated Use stores.search instead
    */
   search(body: VectorStoreSearchParams, options?: RequestOptions): APIPromise<VectorStoreSearchResponse> {
     return this._client.post('/v1/vector_stores/search', { body, ...options });

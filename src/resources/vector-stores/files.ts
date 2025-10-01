@@ -1,8 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as FilesAPI from './files';
+import * as VectorStoresFilesAPI from './files';
 import * as Shared from '../shared';
+import * as FilesAPI from '../stores/files';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
@@ -13,7 +14,7 @@ export class Files extends APIResource {
   /**
    * DEPRECATED: Use POST /stores/{store_identifier}/files instead
    *
-   * @deprecated
+   * @deprecated Use post stores.files instead
    */
   create(
     vectorStoreIdentifier: string,
@@ -26,7 +27,7 @@ export class Files extends APIResource {
   /**
    * DEPRECATED: Use GET /stores/{store_identifier}/files/{file_id} instead
    *
-   * @deprecated
+   * @deprecated Use stores.files instead
    */
   retrieve(
     fileID: string,
@@ -43,7 +44,7 @@ export class Files extends APIResource {
   /**
    * DEPRECATED: Use POST /stores/{store_identifier}/files/list instead
    *
-   * @deprecated
+   * @deprecated Use post stores.files.list instead
    */
   list(
     vectorStoreIdentifier: string,
@@ -59,7 +60,7 @@ export class Files extends APIResource {
   /**
    * DEPRECATED: Use DELETE /stores/{store_identifier}/files/{file_id} instead
    *
-   * @deprecated
+   * @deprecated Use stores.files instead
    */
   delete(fileID: string, params: FileDeleteParams, options?: RequestOptions): APIPromise<FileDeleteResponse> {
     const { vector_store_identifier } = params;
@@ -69,7 +70,7 @@ export class Files extends APIResource {
   /**
    * DEPRECATED: Use POST /stores/{store_identifier}/files/search instead
    *
-   * @deprecated
+   * @deprecated Use stores.files.search instead
    */
   search(body: FileSearchParams, options?: RequestOptions): APIPromise<FileSearchResponse> {
     return this._client.post('/v1/vector_stores/files/search', { body, ...options });
@@ -220,7 +221,7 @@ export interface ScoredVectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status?: FilesAPI.StoreFileStatus;
 
   /**
    * Last error message if processing failed
@@ -615,7 +616,7 @@ export interface VectorStoreFile {
   /**
    * Processing status of the file
    */
-  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+  status?: FilesAPI.StoreFileStatus;
 
   /**
    * Last error message if processing failed
@@ -1028,7 +1029,7 @@ export interface FileListParams {
   /**
    * Status to filter by
    */
-  statuses?: Array<'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed'> | null;
+  statuses?: Array<FilesAPI.StoreFileStatus> | null;
 
   /**
    * Metadata filter to apply to the query
@@ -1101,7 +1102,7 @@ export namespace FileSearchParams {
     /**
      * Whether to rerank results and optional reranking configuration
      */
-    rerank?: boolean | FilesAPI.RerankConfig | null;
+    rerank?: boolean | VectorStoresFilesAPI.RerankConfig | null;
 
     /**
      * Whether to return file metadata
