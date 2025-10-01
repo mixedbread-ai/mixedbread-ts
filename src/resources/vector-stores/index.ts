@@ -18,6 +18,10 @@ export {
 export {
   VectorStores,
   type ExpiresAfter,
+  type ScoredAudioURLInputChunk,
+  type ScoredImageURLInputChunk,
+  type ScoredTextInputChunk,
+  type ScoredVideoURLInputChunk,
   type VectorStore,
   type VectorStoreChunkSearchOptions,
   type VectorStoreDeleteResponse,
