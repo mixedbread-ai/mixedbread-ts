@@ -13,6 +13,10 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
+  type FilePollHelperParams,
+  type FileCreateAndPollHelperParams,
+  type FileUploadHelperParams,
+  type FileUploadAndPollHelperParams,
 } from './files';
 export {
   Stores,
