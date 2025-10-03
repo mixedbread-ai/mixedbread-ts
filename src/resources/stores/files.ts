@@ -78,7 +78,6 @@ export class Files extends APIResource {
     return this._client.post('/v1/stores/files/search', { body, ...options });
   }
 
-
   /**
    * Poll for a file's processing status until it reaches a terminal state.
    *
@@ -109,15 +108,15 @@ export class Files extends APIResource {
     options?: RequestOptions,
   ): Promise<StoreFile> {
     const normalizedParams =
-      typeof storeIdentifierOrParams === 'string'
-        ? {
-            storeIdentifier: storeIdentifierOrParams,
-            fileId,
-            pollIntervalMs,
-            pollTimeoutMs,
-            options,
-          }
-        : storeIdentifierOrParams;
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          fileId,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
 
     const {
       storeIdentifier,
@@ -177,15 +176,15 @@ export class Files extends APIResource {
     options?: RequestOptions,
   ): Promise<StoreFile> {
     const normalizedParams =
-      typeof storeIdentifierOrParams === 'string'
-        ? {
-            storeIdentifier: storeIdentifierOrParams,
-            body,
-            pollIntervalMs,
-            pollTimeoutMs,
-            options,
-          }
-        : storeIdentifierOrParams;
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          body,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
 
     const {
       storeIdentifier,
@@ -241,16 +240,21 @@ export class Files extends APIResource {
     options?: RequestOptions,
   ): Promise<StoreFile> {
     const normalizedParams =
-      typeof storeIdentifierOrParams === 'string'
-        ? {
-            storeIdentifier: storeIdentifierOrParams,
-            file,
-            body,
-            options,
-          }
-        : storeIdentifierOrParams;
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          file,
+          body,
+          options,
+        }
+      : storeIdentifierOrParams;
 
-    const { storeIdentifier, file: uploadFile, body: uploadBody, options: resolvedOptions } = normalizedParams;
+    const {
+      storeIdentifier,
+      file: uploadFile,
+      body: uploadBody,
+      options: resolvedOptions,
+    } = normalizedParams;
 
     if (!storeIdentifier) {
       throw new Error('storeIdentifier is required for upload');
@@ -305,16 +309,16 @@ export class Files extends APIResource {
     options?: RequestOptions,
   ): Promise<StoreFile> {
     const normalizedParams =
-      typeof storeIdentifierOrParams === 'string'
-        ? {
-            storeIdentifier: storeIdentifierOrParams,
-            file,
-            body,
-            pollIntervalMs,
-            pollTimeoutMs,
-            options,
-          }
-        : storeIdentifierOrParams;
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          file,
+          body,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
 
     const {
       storeIdentifier,
