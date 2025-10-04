@@ -78,15 +78,18 @@ export class Files extends APIResource {
     return this._client.post('/v1/stores/files/search', { body, ...options });
   }
 
-
   /**
    * Poll for a file's processing status until it reaches a terminal state.
    *
-   * @param storeIdentifier - The identifier of the store
-   * @param fileId - The ID of the file to poll
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
+   * Supports both positional arguments (`poll(storeIdentifier, fileId, pollIntervalMs, pollTimeoutMs, options)`) and
+   * a named-parameter object (`poll({ storeIdentifier, fileId, pollIntervalMs, pollTimeoutMs, options })`).
+   *
+   * @param storeIdentifier - The identifier of the store when using positional arguments
+   * @param fileId - The ID of the file to poll when using positional arguments
+   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
+   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
+   * @param options - Additional request options when using positional arguments
+   * @param params - Poll configuration when using named parameters
    * @returns The file object once it reaches a terminal state
    */
   async poll(
@@ -95,27 +98,53 @@ export class Files extends APIResource {
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
+  ): Promise<StoreFile>;
+  async poll(params: FilePollHelperParams): Promise<StoreFile>;
+  async poll(
+    storeIdentifierOrParams: string | FilePollHelperParams,
+    fileId?: string,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: RequestOptions,
   ): Promise<StoreFile> {
-    const pollingIntervalMs = pollIntervalMs || 500;
-    const pollingTimeoutMs = pollTimeoutMs;
+    const params: FilePollHelperParams =
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          fileId: fileId as string,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
+
+    const pollingIntervalMs = params.pollIntervalMs ?? 500;
+    const retrieveParams: FileRetrieveParams = {
+      store_identifier: params.storeIdentifier,
+      ...(params.returnChunks !== undefined && { return_chunks: params.returnChunks }),
+    };
 
     return polling.poll({
-      fn: () => this.retrieve(fileId, { store_identifier: storeIdentifier, ...options }),
+      fn: () => this.retrieve(params.fileId, retrieveParams, params.options),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
-      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
+      ...(params.pollTimeoutMs && { timeoutSeconds: params.pollTimeoutMs / 1000 }),
     });
   }
 
   /**
    * Create a file in a vector store and wait for it to be processed.
    *
-   * @param storeIdentifier - The identifier of the store to upload to
-   * @param body - The file creation parameters
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
+   * Supports both positional arguments (`createAndPoll(storeIdentifier, body, pollIntervalMs, pollTimeoutMs, options)`) and
+   * a named-parameter object (`createAndPoll({ storeIdentifier, body, pollIntervalMs, pollTimeoutMs, options })`).
+   *
+   * @param storeIdentifier - The identifier of the store to upload to when using positional arguments
+   * @param body - The file creation parameters when using positional arguments
+   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
+   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
+   * @param options - Additional request options when using positional arguments
+   * @param params - Create configuration when using named parameters
    * @returns The file object once it reaches a terminal state
    */
   async createAndPoll(
@@ -124,19 +153,49 @@ export class Files extends APIResource {
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
+  ): Promise<StoreFile>;
+  async createAndPoll(params: FileCreateAndPollHelperParams): Promise<StoreFile>;
+  async createAndPoll(
+    storeIdentifierOrParams: string | FileCreateAndPollHelperParams,
+    body?: FileCreateParams,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: RequestOptions,
   ): Promise<StoreFile> {
-    const file = await this.create(storeIdentifier, body, options);
-    return this.poll(storeIdentifier, file.id, pollIntervalMs, pollTimeoutMs, options);
+    const params: FileCreateAndPollHelperParams =
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          body: body as FileCreateParams,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
+
+    const file = await this.create(params.storeIdentifier, params.body, params.options);
+    return this.poll({
+      storeIdentifier: params.storeIdentifier,
+      fileId: file.id,
+      pollIntervalMs: params.pollIntervalMs,
+      pollTimeoutMs: params.pollTimeoutMs,
+      options: params.options,
+      returnChunks: params.returnChunks,
+    });
   }
 
   /**
    * Upload a file to the files API and then create a file in a vector store.
    * Note the file will be asynchronously processed.
    *
-   * @param storeIdentifier - The identifier of the store to add the file to
-   * @param file - The file to upload
-   * @param body - Additional parameters for the vector store file
-   * @param options - Additional request options
+   * Supports both positional arguments (`upload(storeIdentifier, file, body, options)`) and a named-parameter object
+   * (`upload({ storeIdentifier, file, body, options })`).
+   *
+   * @param storeIdentifier - The identifier of the store to add the file to when using positional arguments
+   * @param file - The file to upload when using positional arguments
+   * @param body - Additional parameters for the vector store file when using positional arguments
+   * @param options - Additional request options when using positional arguments
+   * @param params - Upload configuration when using named parameters
    * @returns The created vector store file
    */
   async upload(
@@ -144,28 +203,41 @@ export class Files extends APIResource {
     file: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
     options?: RequestOptions,
+  ): Promise<StoreFile>;
+  async upload(params: FileUploadHelperParams): Promise<StoreFile>;
+  async upload(
+    storeIdentifierOrParams: string | FileUploadHelperParams,
+    file?: Uploadable,
+    body?: Omit<FileCreateParams, 'file_id'>,
+    options?: RequestOptions,
   ): Promise<StoreFile> {
-    const fileUploadResponse = await this._client.files.create({ file }, options);
+    const params: FileUploadHelperParams =
+      typeof storeIdentifierOrParams === 'string' ?
+        { storeIdentifier: storeIdentifierOrParams, file: file as Uploadable, body, options }
+      : storeIdentifierOrParams;
+
+    const fileUploadResponse = await this._client.files.create({ file: params.file }, params.options);
 
     return this.create(
-      storeIdentifier,
-      {
-        file_id: fileUploadResponse.id,
-        ...body,
-      },
-      options,
+      params.storeIdentifier,
+      { file_id: fileUploadResponse.id, ...params.body },
+      params.options,
     );
   }
 
   /**
    * Upload a file to files API, create a file in a vector store, and poll until processing is complete.
    *
-   * @param storeIdentifier - The identifier of the store to add the file to
-   * @param file - The file to upload
-   * @param body - Additional parameters for the vector store file
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
+   * Supports both positional arguments (`uploadAndPoll(storeIdentifier, file, body, pollIntervalMs, pollTimeoutMs, options)`) and
+   * a named-parameter object (`uploadAndPoll({ storeIdentifier, file, body, pollIntervalMs, pollTimeoutMs, options })`).
+   *
+   * @param storeIdentifier - The identifier of the store to add the file to when using positional arguments
+   * @param file - The file to upload when using positional arguments
+   * @param body - Additional parameters for the vector store file when using positional arguments
+   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
+   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
+   * @param options - Additional request options when using positional arguments
+   * @param params - Upload and poll configuration when using named parameters
    * @returns The vector store file object once it reaches a terminal state
    */
   async uploadAndPoll(
@@ -175,10 +247,91 @@ export class Files extends APIResource {
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
+  ): Promise<StoreFile>;
+  async uploadAndPoll(params: FileUploadAndPollHelperParams): Promise<StoreFile>;
+  async uploadAndPoll(
+    storeIdentifierOrParams: string | FileUploadAndPollHelperParams,
+    file?: Uploadable,
+    body?: Omit<FileCreateParams, 'file_id'>,
+    pollIntervalMs?: number,
+    pollTimeoutMs?: number,
+    options?: RequestOptions,
   ): Promise<StoreFile> {
-    const vectorStoreFile = await this.upload(storeIdentifier, file, body, options);
-    return this.poll(storeIdentifier, vectorStoreFile.id, pollIntervalMs, pollTimeoutMs, options);
+    const params: FileUploadAndPollHelperParams =
+      typeof storeIdentifierOrParams === 'string' ?
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          file: file as Uploadable,
+          body,
+          pollIntervalMs,
+          pollTimeoutMs,
+          options,
+        }
+      : storeIdentifierOrParams;
+
+    const vectorStoreFile = await this.upload({
+      storeIdentifier: params.storeIdentifier,
+      file: params.file,
+      body: params.body,
+      options: params.options,
+    });
+
+    return this.poll({
+      storeIdentifier: params.storeIdentifier,
+      fileId: vectorStoreFile.id,
+      pollIntervalMs: params.pollIntervalMs,
+      pollTimeoutMs: params.pollTimeoutMs,
+      options: params.options,
+      returnChunks: params.returnChunks,
+    });
   }
+}
+
+/**
+ * Parameters for polling store file status.
+ */
+export interface FilePollHelperParams {
+  storeIdentifier: string;
+  fileId: string;
+  pollIntervalMs?: number | undefined;
+  pollTimeoutMs?: number | undefined;
+  options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
+}
+
+/**
+ * Parameters for creating and polling a store file.
+ */
+export interface FileCreateAndPollHelperParams {
+  storeIdentifier: string;
+  body: FileCreateParams;
+  pollIntervalMs?: number | undefined;
+  pollTimeoutMs?: number | undefined;
+  options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
+}
+
+/**
+ * Parameters for uploading a file to a store.
+ */
+export interface FileUploadHelperParams {
+  storeIdentifier: string;
+  file: Uploadable;
+  body?: Omit<FileCreateParams, 'file_id'> | undefined;
+  options?: RequestOptions | undefined;
+}
+
+/**
+ * Parameters for uploading and polling a store file.
+ */
+export interface FileUploadAndPollHelperParams {
+  storeIdentifier: string;
+  file: Uploadable;
+  body?: Omit<FileCreateParams, 'file_id'> | undefined;
+  pollIntervalMs?: number | undefined;
+  pollTimeoutMs?: number | undefined;
+  options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
 }
 
 /**
