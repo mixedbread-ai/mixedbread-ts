@@ -125,12 +125,7 @@ export class Files extends APIResource {
     };
 
     return polling.poll({
-      fn: () =>
-        this.retrieve(
-          params.fileId,
-          retrieveParams,
-          params.options,
-        ),
+      fn: () => this.retrieve(params.fileId, retrieveParams, params.options),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
