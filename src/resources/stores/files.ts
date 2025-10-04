@@ -107,42 +107,37 @@ export class Files extends APIResource {
     pollTimeoutMs?: number,
     options?: RequestOptions,
   ): Promise<StoreFile> {
-    const normalizedParams =
+    const params: FilePollHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
         {
           storeIdentifier: storeIdentifierOrParams,
-          fileId,
+          fileId: fileId as string,
           pollIntervalMs,
           pollTimeoutMs,
           options,
         }
       : storeIdentifierOrParams;
 
-    const {
-      storeIdentifier,
-      fileId: resolvedFileId,
-      pollIntervalMs: resolvedInterval,
-      pollTimeoutMs: resolvedTimeout,
-      options: resolvedOptions,
-    } = normalizedParams;
+    const pollingIntervalMs = params.pollIntervalMs ?? 500;
+    const optionsWithParams = (params.options ?? {}) as RequestOptions & Partial<FileRetrieveParams>;
+    const { return_chunks, ...requestOptions } = optionsWithParams;
 
-    if (!storeIdentifier) {
-      throw new Error('storeIdentifier is required for poll');
-    }
-
-    if (!resolvedFileId) {
-      throw new Error('fileId is required for poll');
-    }
-
-    const pollingIntervalMs = resolvedInterval ?? 500;
-    const pollingTimeoutMs = resolvedTimeout;
+    const retrieveParams: FileRetrieveParams = {
+      store_identifier: params.storeIdentifier,
+      ...(return_chunks !== undefined && { return_chunks: Boolean(return_chunks) }),
+    };
 
     return polling.poll({
-      fn: () => this.retrieve(resolvedFileId, { store_identifier: storeIdentifier }, resolvedOptions),
+      fn: () =>
+        this.retrieve(
+          params.fileId,
+          retrieveParams,
+          Object.keys(requestOptions).length > 0 ? requestOptions : undefined,
+        ),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
-      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
+      ...(params.pollTimeoutMs && { timeoutSeconds: params.pollTimeoutMs / 1000 }),
     });
   }
 
@@ -175,40 +170,24 @@ export class Files extends APIResource {
     pollTimeoutMs?: number,
     options?: RequestOptions,
   ): Promise<StoreFile> {
-    const normalizedParams =
+    const params: FileCreateAndPollHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
         {
           storeIdentifier: storeIdentifierOrParams,
-          body,
+          body: body as FileCreateParams,
           pollIntervalMs,
           pollTimeoutMs,
           options,
         }
       : storeIdentifierOrParams;
 
-    const {
-      storeIdentifier,
-      body: resolvedBody,
-      pollIntervalMs: resolvedInterval,
-      pollTimeoutMs: resolvedTimeout,
-      options: resolvedOptions,
-    } = normalizedParams;
-
-    if (!storeIdentifier) {
-      throw new Error('storeIdentifier is required for createAndPoll');
-    }
-
-    if (!resolvedBody) {
-      throw new Error('body is required for createAndPoll');
-    }
-
-    const file = await this.create(storeIdentifier, resolvedBody, resolvedOptions);
+    const file = await this.create(params.storeIdentifier, params.body, params.options);
     return this.poll({
-      storeIdentifier,
+      storeIdentifier: params.storeIdentifier,
       fileId: file.id,
-      pollIntervalMs: resolvedInterval,
-      pollTimeoutMs: resolvedTimeout,
-      options: resolvedOptions,
+      pollIntervalMs: params.pollIntervalMs,
+      pollTimeoutMs: params.pollTimeoutMs,
+      options: params.options,
     });
   }
 
@@ -239,40 +218,17 @@ export class Files extends APIResource {
     body?: Omit<FileCreateParams, 'file_id'>,
     options?: RequestOptions,
   ): Promise<StoreFile> {
-    const normalizedParams =
+    const params: FileUploadHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
-        {
-          storeIdentifier: storeIdentifierOrParams,
-          file,
-          body,
-          options,
-        }
+        { storeIdentifier: storeIdentifierOrParams, file: file as Uploadable, body, options }
       : storeIdentifierOrParams;
 
-    const {
-      storeIdentifier,
-      file: uploadFile,
-      body: uploadBody,
-      options: resolvedOptions,
-    } = normalizedParams;
-
-    if (!storeIdentifier) {
-      throw new Error('storeIdentifier is required for upload');
-    }
-
-    if (!uploadFile) {
-      throw new Error('file is required for upload');
-    }
-
-    const fileUploadResponse = await this._client.files.create({ file: uploadFile }, resolvedOptions);
+    const fileUploadResponse = await this._client.files.create({ file: params.file }, params.options);
 
     return this.create(
-      storeIdentifier,
-      {
-        file_id: fileUploadResponse.id,
-        ...uploadBody,
-      },
-      resolvedOptions,
+      params.storeIdentifier,
+      { file_id: fileUploadResponse.id, ...params.body },
+      params.options,
     );
   }
 
@@ -308,11 +264,11 @@ export class Files extends APIResource {
     pollTimeoutMs?: number,
     options?: RequestOptions,
   ): Promise<StoreFile> {
-    const normalizedParams =
+    const params: FileUploadAndPollHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
         {
           storeIdentifier: storeIdentifierOrParams,
-          file,
+          file: file as Uploadable,
           body,
           pollIntervalMs,
           pollTimeoutMs,
@@ -320,36 +276,19 @@ export class Files extends APIResource {
         }
       : storeIdentifierOrParams;
 
-    const {
-      storeIdentifier,
-      file: uploadFile,
-      body: uploadBody,
-      pollIntervalMs: resolvedInterval,
-      pollTimeoutMs: resolvedTimeout,
-      options: resolvedOptions,
-    } = normalizedParams;
-
-    if (!storeIdentifier) {
-      throw new Error('storeIdentifier is required for uploadAndPoll');
-    }
-
-    if (!uploadFile) {
-      throw new Error('file is required for uploadAndPoll');
-    }
-
     const vectorStoreFile = await this.upload({
-      storeIdentifier,
-      file: uploadFile,
-      body: uploadBody,
-      options: resolvedOptions,
+      storeIdentifier: params.storeIdentifier,
+      file: params.file,
+      body: params.body,
+      options: params.options,
     });
 
     return this.poll({
-      storeIdentifier,
+      storeIdentifier: params.storeIdentifier,
       fileId: vectorStoreFile.id,
-      pollIntervalMs: resolvedInterval,
-      pollTimeoutMs: resolvedTimeout,
-      options: resolvedOptions,
+      pollIntervalMs: params.pollIntervalMs,
+      pollTimeoutMs: params.pollTimeoutMs,
+      options: params.options,
     });
   }
 }
