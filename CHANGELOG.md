@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.32.0 (2025-10-04)
+
+Full Changelog: [v0.31.1...v0.32.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.31.1...v0.32.0)
+
+### Features
+
+* add named args to helper functions ([2373152](https://github.com/mixedbread-ai/mixedbread-ts/commit/2373152b49524ebc1f8283140e666b5d0ac72aec))
+* improve types and destructuring of args ([0693199](https://github.com/mixedbread-ai/mixedbread-ts/commit/0693199df33974ab2fe9be049890037bfbb8e253))
+
+
+### Bug Fixes
+
+* move return chunks to helper params ([53c32b9](https://github.com/mixedbread-ai/mixedbread-ts/commit/53c32b96b1b22d6fe2d9a55ccf19814d675be9a6))
+
+
+### Chores
+
+* format ([cc12650](https://github.com/mixedbread-ai/mixedbread-ts/commit/cc12650e364d58d63947ef6353ab1f0b6ffd73ba))
+* format ([64dd2e3](https://github.com/mixedbread-ai/mixedbread-ts/commit/64dd2e31074aed88063acd20901274836396a623))
+* **jsdoc:** fix [@link](https://github.com/link) annotations to refer only to parts of the package‘s public interface ([0e8cf76](https://github.com/mixedbread-ai/mixedbread-ts/commit/0e8cf76c13c9838fedce08944c2306364ce54f77))
+
 ## 0.31.1 (2025-10-01)
 
 Full Changelog: [v0.31.0...v0.31.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.31.0...v0.31.1)
