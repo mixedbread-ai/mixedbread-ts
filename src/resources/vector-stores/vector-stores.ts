@@ -131,7 +131,13 @@ export interface ScoredAudioURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?: { [key: string]: unknown } | null;
+  generated_metadata?:
+    | ScoredAudioURLInputChunk.MarkdownChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.TextChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
+    | null;
 
   /**
    * model used for this chunk
@@ -190,6 +196,96 @@ export interface ScoredAudioURLInputChunk {
 }
 
 export namespace ScoredAudioURLInputChunk {
+  export interface MarkdownChunkGeneratedMetadata {
+    type?: 'markdown';
+
+    file_type?: 'text/markdown';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+    [k: string]: unknown;
+  }
+
+  export namespace MarkdownChunkGeneratedMetadata {
+    export interface ChunkHeading {
+      level: number;
+
+      text: string;
+    }
+
+    export interface HeadingContext {
+      level: number;
+
+      text: string;
+    }
+  }
+
+  export interface TextChunkGeneratedMetadata {
+    type?: 'text';
+
+    file_type?: 'text/plain';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface PdfChunkGeneratedMetadata {
+    type?: 'pdf';
+
+    file_type?: 'application/pdf';
+
+    total_pages: number;
+
+    total_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface CodeChunkGeneratedMetadata {
+    type?: 'code';
+
+    file_type: string;
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface AudioChunkGeneratedMetadata {
+    type?: 'audio';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    sample_rate: number;
+
+    channels: number;
+
+    audio_format: number;
+
+    [k: string]: unknown;
+  }
+
   /**
    * The audio input specification.
    */
@@ -215,7 +311,13 @@ export interface ScoredImageURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?: { [key: string]: unknown } | null;
+  generated_metadata?:
+    | ScoredImageURLInputChunk.MarkdownChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.TextChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.PdfChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.CodeChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.AudioChunkGeneratedMetadata
+    | null;
 
   /**
    * model used for this chunk
@@ -269,6 +371,96 @@ export interface ScoredImageURLInputChunk {
 }
 
 export namespace ScoredImageURLInputChunk {
+  export interface MarkdownChunkGeneratedMetadata {
+    type?: 'markdown';
+
+    file_type?: 'text/markdown';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+    [k: string]: unknown;
+  }
+
+  export namespace MarkdownChunkGeneratedMetadata {
+    export interface ChunkHeading {
+      level: number;
+
+      text: string;
+    }
+
+    export interface HeadingContext {
+      level: number;
+
+      text: string;
+    }
+  }
+
+  export interface TextChunkGeneratedMetadata {
+    type?: 'text';
+
+    file_type?: 'text/plain';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface PdfChunkGeneratedMetadata {
+    type?: 'pdf';
+
+    file_type?: 'application/pdf';
+
+    total_pages: number;
+
+    total_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface CodeChunkGeneratedMetadata {
+    type?: 'code';
+
+    file_type: string;
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface AudioChunkGeneratedMetadata {
+    type?: 'audio';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    sample_rate: number;
+
+    channels: number;
+
+    audio_format: number;
+
+    [k: string]: unknown;
+  }
+
   /**
    * The image input specification.
    */
@@ -299,7 +491,13 @@ export interface ScoredTextInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?: { [key: string]: unknown } | null;
+  generated_metadata?:
+    | ScoredTextInputChunk.MarkdownChunkGeneratedMetadata
+    | ScoredTextInputChunk.TextChunkGeneratedMetadata
+    | ScoredTextInputChunk.PdfChunkGeneratedMetadata
+    | ScoredTextInputChunk.CodeChunkGeneratedMetadata
+    | ScoredTextInputChunk.AudioChunkGeneratedMetadata
+    | null;
 
   /**
    * model used for this chunk
@@ -347,6 +545,98 @@ export interface ScoredTextInputChunk {
   text: string;
 }
 
+export namespace ScoredTextInputChunk {
+  export interface MarkdownChunkGeneratedMetadata {
+    type?: 'markdown';
+
+    file_type?: 'text/markdown';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+    [k: string]: unknown;
+  }
+
+  export namespace MarkdownChunkGeneratedMetadata {
+    export interface ChunkHeading {
+      level: number;
+
+      text: string;
+    }
+
+    export interface HeadingContext {
+      level: number;
+
+      text: string;
+    }
+  }
+
+  export interface TextChunkGeneratedMetadata {
+    type?: 'text';
+
+    file_type?: 'text/plain';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface PdfChunkGeneratedMetadata {
+    type?: 'pdf';
+
+    file_type?: 'application/pdf';
+
+    total_pages: number;
+
+    total_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface CodeChunkGeneratedMetadata {
+    type?: 'code';
+
+    file_type: string;
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface AudioChunkGeneratedMetadata {
+    type?: 'audio';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    sample_rate: number;
+
+    channels: number;
+
+    audio_format: number;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface ScoredVideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -361,7 +651,13 @@ export interface ScoredVideoURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?: { [key: string]: unknown } | null;
+  generated_metadata?:
+    | ScoredVideoURLInputChunk.MarkdownChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.TextChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
+    | null;
 
   /**
    * model used for this chunk
@@ -415,6 +711,96 @@ export interface ScoredVideoURLInputChunk {
 }
 
 export namespace ScoredVideoURLInputChunk {
+  export interface MarkdownChunkGeneratedMetadata {
+    type?: 'markdown';
+
+    file_type?: 'text/markdown';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+    [k: string]: unknown;
+  }
+
+  export namespace MarkdownChunkGeneratedMetadata {
+    export interface ChunkHeading {
+      level: number;
+
+      text: string;
+    }
+
+    export interface HeadingContext {
+      level: number;
+
+      text: string;
+    }
+  }
+
+  export interface TextChunkGeneratedMetadata {
+    type?: 'text';
+
+    file_type?: 'text/plain';
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface PdfChunkGeneratedMetadata {
+    type?: 'pdf';
+
+    file_type?: 'application/pdf';
+
+    total_pages: number;
+
+    total_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface CodeChunkGeneratedMetadata {
+    type?: 'code';
+
+    file_type: string;
+
+    language: string;
+
+    word_count: number;
+
+    file_size: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface AudioChunkGeneratedMetadata {
+    type?: 'audio';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    sample_rate: number;
+
+    channels: number;
+
+    audio_format: number;
+
+    [k: string]: unknown;
+  }
+
   /**
    * The video input specification.
    */
@@ -626,7 +1012,13 @@ export namespace VectorStoreQuestionAnsweringResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -674,6 +1066,98 @@ export namespace VectorStoreQuestionAnsweringResponse {
     text: string;
   }
 
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+  }
+
   /**
    * Scored image chunk for deprecated API.
    */
@@ -691,7 +1175,13 @@ export namespace VectorStoreQuestionAnsweringResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -745,6 +1235,96 @@ export namespace VectorStoreQuestionAnsweringResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The image input specification.
      */
@@ -778,7 +1358,13 @@ export namespace VectorStoreQuestionAnsweringResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -837,6 +1423,96 @@ export namespace VectorStoreQuestionAnsweringResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The audio input specification.
      */
@@ -865,7 +1541,13 @@ export namespace VectorStoreQuestionAnsweringResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -919,6 +1601,96 @@ export namespace VectorStoreQuestionAnsweringResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The video input specification.
      */
@@ -966,7 +1738,13 @@ export namespace VectorStoreSearchResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -1014,6 +1792,98 @@ export namespace VectorStoreSearchResponse {
     text: string;
   }
 
+  export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredTextInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+  }
+
   /**
    * Scored image chunk for deprecated API.
    */
@@ -1031,7 +1901,13 @@ export namespace VectorStoreSearchResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -1085,6 +1961,96 @@ export namespace VectorStoreSearchResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredImageURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The image input specification.
      */
@@ -1118,7 +2084,13 @@ export namespace VectorStoreSearchResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -1177,6 +2149,96 @@ export namespace VectorStoreSearchResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredAudioURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The audio input specification.
      */
@@ -1205,7 +2267,13 @@ export namespace VectorStoreSearchResponse {
     /**
      * metadata of the chunk
      */
-    generated_metadata?: { [key: string]: unknown } | null;
+    generated_metadata?:
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.MarkdownChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.TextChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
+      | MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
+      | null;
 
     /**
      * model used for this chunk
@@ -1259,6 +2327,96 @@ export namespace VectorStoreSearchResponse {
   }
 
   export namespace MxbaiOmniAPIRoutesV1DeprecatedVectorStoresModelsScoredVideoURLInputChunk {
+    export interface MarkdownChunkGeneratedMetadata {
+      type?: 'markdown';
+
+      file_type?: 'text/markdown';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
+
+      heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
+
+      [k: string]: unknown;
+    }
+
+    export namespace MarkdownChunkGeneratedMetadata {
+      export interface ChunkHeading {
+        level: number;
+
+        text: string;
+      }
+
+      export interface HeadingContext {
+        level: number;
+
+        text: string;
+      }
+    }
+
+    export interface TextChunkGeneratedMetadata {
+      type?: 'text';
+
+      file_type?: 'text/plain';
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface PdfChunkGeneratedMetadata {
+      type?: 'pdf';
+
+      file_type?: 'application/pdf';
+
+      total_pages: number;
+
+      total_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface CodeChunkGeneratedMetadata {
+      type?: 'code';
+
+      file_type: string;
+
+      language: string;
+
+      word_count: number;
+
+      file_size: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface AudioChunkGeneratedMetadata {
+      type?: 'audio';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      sample_rate: number;
+
+      channels: number;
+
+      audio_format: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * The video input specification.
      */
