@@ -119,12 +119,9 @@ export class Files extends APIResource {
       : storeIdentifierOrParams;
 
     const pollingIntervalMs = params.pollIntervalMs ?? 500;
-    const optionsWithParams = (params.options ?? {}) as RequestOptions & Partial<FileRetrieveParams>;
-    const { return_chunks, ...requestOptions } = optionsWithParams;
-
     const retrieveParams: FileRetrieveParams = {
       store_identifier: params.storeIdentifier,
-      ...(return_chunks !== undefined && { return_chunks: Boolean(return_chunks) }),
+      ...(params.returnChunks !== undefined && { return_chunks: params.returnChunks }),
     };
 
     return polling.poll({
@@ -132,7 +129,7 @@ export class Files extends APIResource {
         this.retrieve(
           params.fileId,
           retrieveParams,
-          Object.keys(requestOptions).length > 0 ? requestOptions : undefined,
+          params.options,
         ),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
@@ -188,6 +185,7 @@ export class Files extends APIResource {
       pollIntervalMs: params.pollIntervalMs,
       pollTimeoutMs: params.pollTimeoutMs,
       options: params.options,
+      returnChunks: params.returnChunks,
     });
   }
 
@@ -289,6 +287,7 @@ export class Files extends APIResource {
       pollIntervalMs: params.pollIntervalMs,
       pollTimeoutMs: params.pollTimeoutMs,
       options: params.options,
+      returnChunks: params.returnChunks,
     });
   }
 }
@@ -302,6 +301,7 @@ export interface FilePollHelperParams {
   pollIntervalMs?: number | undefined;
   pollTimeoutMs?: number | undefined;
   options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
 }
 
 /**
@@ -313,6 +313,7 @@ export interface FileCreateAndPollHelperParams {
   pollIntervalMs?: number | undefined;
   pollTimeoutMs?: number | undefined;
   options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
 }
 
 /**
@@ -335,6 +336,7 @@ export interface FileUploadAndPollHelperParams {
   pollIntervalMs?: number | undefined;
   pollTimeoutMs?: number | undefined;
   options?: RequestOptions | undefined;
+  returnChunks?: boolean | undefined;
 }
 
 /**
