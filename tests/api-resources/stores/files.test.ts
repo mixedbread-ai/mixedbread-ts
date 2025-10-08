@@ -24,8 +24,9 @@ describe('resource files', () => {
   test('create: required and optional params', async () => {
     const response = await client.stores.files.create('store_identifier', {
       metadata: {},
-      experimental: { parsing_strategy: 'fast', contextualization: true },
+      config: { parsing_strategy: 'fast', contextualization: true },
       file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      experimental: { parsing_strategy: 'fast', contextualization: true },
     });
   });
 
