@@ -1633,19 +1633,39 @@ export interface FileCreateParams {
   metadata?: unknown;
 
   /**
-   * Strategy for adding the file
+   * Configuration for adding the file
    */
-  experimental?: FileCreateParams.Experimental;
+  config?: FileCreateParams.Config;
 
   /**
    * ID of the file to add
    */
   file_id: string;
+
+  /**
+   * @deprecated Configuration for a file.
+   */
+  experimental?: FileCreateParams.Experimental | null;
 }
 
 export namespace FileCreateParams {
   /**
-   * Strategy for adding the file
+   * Configuration for adding the file
+   */
+  export interface Config {
+    /**
+     * Strategy for adding the file
+     */
+    parsing_strategy?: 'fast' | 'high_quality';
+
+    /**
+     * Whether to contextualize the file
+     */
+    contextualization?: boolean;
+  }
+
+  /**
+   * @deprecated Configuration for a file.
    */
   export interface Experimental {
     /**

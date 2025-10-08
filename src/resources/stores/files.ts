@@ -127,6 +127,11 @@ export interface ScoredStoreFile {
   usage_bytes?: number | null;
 
   /**
+   * Configuration for a file.
+   */
+  config?: ScoredStoreFile.Config | null;
+
+  /**
    * Type of the object
    */
   object?: 'store.file';
@@ -145,6 +150,23 @@ export interface ScoredStoreFile {
    * score of the file
    */
   score: number;
+}
+
+export namespace ScoredStoreFile {
+  /**
+   * Configuration for a file.
+   */
+  export interface Config {
+    /**
+     * Strategy for adding the file
+     */
+    parsing_strategy?: 'fast' | 'high_quality';
+
+    /**
+     * Whether to contextualize the file
+     */
+    contextualization?: boolean;
+  }
 }
 
 export type StoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
@@ -199,6 +221,11 @@ export interface StoreFile {
   usage_bytes?: number | null;
 
   /**
+   * Configuration for a file.
+   */
+  config?: StoreFile.Config | null;
+
+  /**
    * Type of the object
    */
   object?: 'store.file';
@@ -215,6 +242,21 @@ export interface StoreFile {
 }
 
 export namespace StoreFile {
+  /**
+   * Configuration for a file.
+   */
+  export interface Config {
+    /**
+     * Strategy for adding the file
+     */
+    parsing_strategy?: 'fast' | 'high_quality';
+
+    /**
+     * Whether to contextualize the file
+     */
+    contextualization?: boolean;
+  }
+
   export interface TextInputChunk {
     /**
      * position of the chunk in a file
@@ -899,19 +941,39 @@ export interface FileCreateParams {
   metadata?: unknown;
 
   /**
-   * Strategy for adding the file
+   * Configuration for adding the file
    */
-  experimental?: FileCreateParams.Experimental;
+  config?: FileCreateParams.Config;
 
   /**
    * ID of the file to add
    */
   file_id: string;
+
+  /**
+   * @deprecated Configuration for a file.
+   */
+  experimental?: FileCreateParams.Experimental | null;
 }
 
 export namespace FileCreateParams {
   /**
-   * Strategy for adding the file
+   * Configuration for adding the file
+   */
+  export interface Config {
+    /**
+     * Strategy for adding the file
+     */
+    parsing_strategy?: 'fast' | 'high_quality';
+
+    /**
+     * Whether to contextualize the file
+     */
+    contextualization?: boolean;
+  }
+
+  /**
+   * @deprecated Configuration for a file.
    */
   export interface Experimental {
     /**
