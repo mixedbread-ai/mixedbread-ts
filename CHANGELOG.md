@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.33.1 (2025-10-08)
+
+Full Changelog: [v0.33.0...v0.33.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.33.0...v0.33.1)
+
+### Chores
+
+* **internal:** use npm pack for build uploads ([56d17fc](https://github.com/mixedbread-ai/mixedbread-ts/commit/56d17fcfbb6f8b6664a7816ce1c3e8258423a668))
+
 ## 0.33.0 (2025-10-04)
 
 Full Changelog: [v0.32.0...v0.33.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.32.0...v0.33.0)
