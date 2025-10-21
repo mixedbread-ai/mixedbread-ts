@@ -155,11 +155,7 @@ export class LimitOffset<Item> extends AbstractPage<Item> implements LimitOffset
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const offset = this.pagination?.offset;
-    if (!offset) {
-      return null;
-    }
-
+    const offset = this.pagination?.offset ?? 0;
     const length = this.getPaginatedItems().length;
     const currentCount = offset + length;
 
