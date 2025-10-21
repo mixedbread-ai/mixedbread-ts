@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.35.1 (2025-10-21)
+
+Full Changelog: [v0.35.0...v0.35.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.35.0...v0.35.1)
+
+### Bug Fixes
+
+* **client:** incorrect offset pagination check ([fb79ad5](https://github.com/mixedbread-ai/mixedbread-ts/commit/fb79ad5af79fcb9498004c63f2c55f20cfcd08ef))
+
 ## 0.35.0 (2025-10-15)
 
 Full Changelog: [v0.34.0...v0.35.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.34.0...v0.35.0)
