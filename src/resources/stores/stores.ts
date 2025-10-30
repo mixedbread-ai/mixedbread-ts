@@ -89,6 +89,17 @@ export class Stores extends APIResource {
   }
 
   /**
+   * Get metadata facets
+   */
+  metadataFacets(
+    storeIdentifier: string,
+    body: StoreMetadataFacetsParams,
+    options?: RequestOptions,
+  ): APIPromise<StoreMetadataFacetsResponse> {
+    return this._client.post(path`/v1/stores/${storeIdentifier}/metadata-facets`, { body, ...options });
+  }
+
+  /**
    * Question answering
    */
   questionAnswering(
@@ -287,6 +298,16 @@ export interface StoreDeleteResponse {
 }
 
 /**
+ * Represents metadata facets for a store.
+ */
+export interface StoreMetadataFacetsResponse {
+  /**
+   * Metadata facets
+   */
+  facets: { [key: string]: { [key: string]: unknown } };
+}
+
+/**
  * Results from a question answering operation.
  */
 export interface StoreQuestionAnsweringResponse {
@@ -387,6 +408,22 @@ export interface StoreListParams extends CursorParams {
    * Search query for fuzzy matching over name and description fields
    */
   q?: string | null;
+}
+
+export interface StoreMetadataFacetsParams {
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | null;
+
+  /**
+   * Optional list of facets to return. Use dot for nested fields.
+   */
+  facets?: Array<string> | null;
 }
 
 export interface StoreQuestionAnsweringParams {
@@ -496,12 +533,14 @@ export declare namespace Stores {
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
     type StoreDeleteResponse as StoreDeleteResponse,
+    type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
     type StoreSearchResponse as StoreSearchResponse,
     type StoresCursor as StoresCursor,
     type StoreCreateParams as StoreCreateParams,
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
+    type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
   };
