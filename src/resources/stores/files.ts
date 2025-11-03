@@ -24,19 +24,6 @@ export class Files extends APIResource {
   }
 
   /**
-   * Get a file from a store.
-   *
-   * Args: store_identifier: The ID or name of the store. file_id: The ID or name of
-   * the file. options: Get file options.
-   *
-   * Returns: VectorStoreFile: The file details.
-   */
-  retrieve(fileID: string, params: FileRetrieveParams, options?: RequestOptions): APIPromise<StoreFile> {
-    const { store_identifier, ...query } = params;
-    return this._client.get(path`/v1/stores/${store_identifier}/files/${fileID}`, { query, ...options });
-  }
-
-  /**
    * List files indexed in a vector store with pagination and metadata filter.
    *
    * Args: vector_store_identifier: The ID or name of the vector store pagination:
@@ -354,6 +341,11 @@ export interface ScoredStoreFile {
   metadata?: unknown;
 
   /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
+
+  /**
    * Processing status of the file
    */
   status?: StoreFileStatus;
@@ -415,14 +407,9 @@ export namespace ScoredStoreFile {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 }
 
@@ -446,6 +433,11 @@ export interface StoreFile {
    * Optional file metadata
    */
   metadata?: unknown;
+
+  /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
 
   /**
    * Processing status of the file
@@ -504,14 +496,9 @@ export namespace StoreFile {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 
   export interface TextInputChunk {
@@ -1203,6 +1190,16 @@ export interface FileCreateParams {
   config?: FileCreateParams.Config;
 
   /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
+
+  /**
+   * If true, overwrite an existing file with the same external_id
+   */
+  overwrite?: boolean;
+
+  /**
    * ID of the file to add
    */
   file_id: string;
@@ -1219,14 +1216,9 @@ export namespace FileCreateParams {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 
   /**
@@ -1234,27 +1226,10 @@ export namespace FileCreateParams {
    */
   export interface Experimental {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
-}
-
-export interface FileRetrieveParams {
-  /**
-   * Path param: The ID or name of the store
-   */
-  store_identifier: string;
-
-  /**
-   * Query param: Whether to return the chunks for the file
-   */
-  return_chunks?: boolean;
 }
 
 export interface FileListParams {
@@ -1389,7 +1364,6 @@ export declare namespace Files {
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
-    type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,

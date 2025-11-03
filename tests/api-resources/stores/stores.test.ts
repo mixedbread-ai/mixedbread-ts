@@ -79,17 +79,6 @@ describe('resource stores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('metadataFacets', async () => {
-    const responsePromise = client.stores.metadataFacets('store_identifier', {});
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
   test('questionAnswering: only required params', async () => {
     const responsePromise = client.stores.questionAnswering({ store_identifiers: ['string'] });
     const rawResponse = await responsePromise.asResponse();
