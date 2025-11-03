@@ -222,7 +222,7 @@ export namespace Store {
     /**
      * Contextualize files with metadata
      */
-    contextualization?: boolean | Config.ContextualizationConfig;
+    contextualization?: boolean | Config.ContextualizationConfig | null;
   }
 
   export namespace Config {
@@ -414,7 +414,7 @@ export namespace StoreCreateParams {
     /**
      * Contextualize files with metadata
      */
-    contextualization?: boolean | Config.ContextualizationConfig;
+    contextualization?: boolean | Config.ContextualizationConfig | null;
   }
 
   export namespace Config {
