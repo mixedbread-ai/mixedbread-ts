@@ -79,7 +79,7 @@
       "params": [
         {
           "type": "param",
-          "key": "file_id",
+          "key": "file_identifier",
           "location": "path"
         },
         {
@@ -98,7 +98,7 @@
         },
         {
           "type": "param",
-          "key": "file_id",
+          "key": "file_identifier",
           "location": "path"
         },
         {

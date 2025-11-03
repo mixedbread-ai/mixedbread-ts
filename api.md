@@ -85,7 +85,7 @@ Methods:
 - <code title="put /v1/stores/{store_identifier}">client.stores.<a href="./src/resources/stores/stores.ts">update</a>(storeIdentifier, { ...params }) -> Store</code>
 - <code title="get /v1/stores">client.stores.<a href="./src/resources/stores/stores.ts">list</a>({ ...params }) -> StoresCursor</code>
 - <code title="delete /v1/stores/{store_identifier}">client.stores.<a href="./src/resources/stores/stores.ts">delete</a>(storeIdentifier) -> StoreDeleteResponse</code>
-- <code title="post /v1/stores/{store_identifier}/metadata-facets">client.stores.<a href="./src/resources/stores/stores.ts">metadataFacets</a>(storeIdentifier, { ...params }) -> StoreMetadataFacetsResponse</code>
+- <code title="post /v1/stores/metadata-facets">client.stores.<a href="./src/resources/stores/stores.ts">metadataFacets</a>({ ...params }) -> StoreMetadataFacetsResponse</code>
 - <code title="post /v1/stores/question-answering">client.stores.<a href="./src/resources/stores/stores.ts">questionAnswering</a>({ ...params }) -> StoreQuestionAnsweringResponse</code>
 - <code title="post /v1/stores/search">client.stores.<a href="./src/resources/stores/stores.ts">search</a>({ ...params }) -> StoreSearchResponse</code>
 
@@ -103,7 +103,7 @@ Types:
 Methods:
 
 - <code title="post /v1/stores/{store_identifier}/files">client.stores.files.<a href="./src/resources/stores/files.ts">create</a>(storeIdentifier, { ...params }) -> StoreFile</code>
-- <code title="get /v1/stores/{store_identifier}/files/{file_id}">client.stores.files.<a href="./src/resources/stores/files.ts">retrieve</a>(fileID, { ...params }) -> StoreFile</code>
+- <code title="get /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">retrieve</a>(fileIdentifier, { ...params }) -> StoreFile</code>
 - <code title="post /v1/stores/{store_identifier}/files/list">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> FileListResponse</code>
 - <code title="delete /v1/stores/{store_identifier}/files/{file_id}">client.stores.files.<a href="./src/resources/stores/files.ts">delete</a>(fileID, { ...params }) -> FileDeleteResponse</code>
 - <code title="post /v1/stores/files/search">client.stores.files.<a href="./src/resources/stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>

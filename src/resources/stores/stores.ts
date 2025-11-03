@@ -92,11 +92,10 @@ export class Stores extends APIResource {
    * Get metadata facets
    */
   metadataFacets(
-    storeIdentifier: string,
     body: StoreMetadataFacetsParams,
     options?: RequestOptions,
   ): APIPromise<StoreMetadataFacetsResponse> {
-    return this._client.post(path`/v1/stores/${storeIdentifier}/metadata-facets`, { body, ...options });
+    return this._client.post('/v1/stores/metadata-facets', { body, ...options });
   }
 
   /**
@@ -165,6 +164,11 @@ export interface Store {
   metadata?: unknown;
 
   /**
+   * Configuration for a store.
+   */
+  config?: Store.Config | null;
+
+  /**
    * Counts of files in different states
    */
   file_counts?: Store.FileCounts;
@@ -211,6 +215,27 @@ export interface Store {
 }
 
 export namespace Store {
+  /**
+   * Configuration for a store.
+   */
+  export interface Config {
+    /**
+     * Contextualize files with metadata
+     */
+    contextualization?: boolean | Config.ContextualizationConfig;
+  }
+
+  export namespace Config {
+    export interface ContextualizationConfig {
+      /**
+       * Include all metadata or specific fields in the contextualization. Supports dot
+       * notation for nested fields (e.g., 'author.name'). When True, all metadata is
+       * included (flattened). When a list, only specified fields are included.
+       */
+      with_metadata?: boolean | Array<string>;
+    }
+  }
+
   /**
    * Counts of files in different states
    */
@@ -371,9 +396,37 @@ export interface StoreCreateParams {
   metadata?: unknown;
 
   /**
+   * Configuration for a store.
+   */
+  config?: StoreCreateParams.Config | null;
+
+  /**
    * Optional list of file IDs
    */
   file_ids?: Array<string> | null;
+}
+
+export namespace StoreCreateParams {
+  /**
+   * Configuration for a store.
+   */
+  export interface Config {
+    /**
+     * Contextualize files with metadata
+     */
+    contextualization?: boolean | Config.ContextualizationConfig;
+  }
+
+  export namespace Config {
+    export interface ContextualizationConfig {
+      /**
+       * Include all metadata or specific fields in the contextualization. Supports dot
+       * notation for nested fields (e.g., 'author.name'). When True, all metadata is
+       * included (flattened). When a list, only specified fields are included.
+       */
+      with_metadata?: boolean | Array<string>;
+    }
+  }
 }
 
 export interface StoreUpdateParams {
@@ -412,6 +465,21 @@ export interface StoreListParams extends CursorParams {
 
 export interface StoreMetadataFacetsParams {
   /**
+   * Search query text
+   */
+  query?: string | null;
+
+  /**
+   * IDs or names of stores to search
+   */
+  store_identifiers: Array<string>;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
    * Optional filter conditions
    */
   filters?:
@@ -419,6 +487,16 @@ export interface StoreMetadataFacetsParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: StoreChunkSearchOptions;
 
   /**
    * Optional list of facets to return. Use dot for nested fields.

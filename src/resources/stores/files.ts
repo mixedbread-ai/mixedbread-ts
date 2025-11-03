@@ -31,9 +31,16 @@ export class Files extends APIResource {
    *
    * Returns: VectorStoreFile: The file details.
    */
-  retrieve(fileID: string, params: FileRetrieveParams, options?: RequestOptions): APIPromise<StoreFile> {
+  retrieve(
+    fileIdentifier: string,
+    params: FileRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<StoreFile> {
     const { store_identifier, ...query } = params;
-    return this._client.get(path`/v1/stores/${store_identifier}/files/${fileID}`, { query, ...options });
+    return this._client.get(path`/v1/stores/${store_identifier}/files/${fileIdentifier}`, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -354,6 +361,11 @@ export interface ScoredStoreFile {
   metadata?: unknown;
 
   /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
+
+  /**
    * Processing status of the file
    */
   status?: StoreFileStatus;
@@ -415,14 +427,9 @@ export namespace ScoredStoreFile {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 }
 
@@ -446,6 +453,11 @@ export interface StoreFile {
    * Optional file metadata
    */
   metadata?: unknown;
+
+  /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
 
   /**
    * Processing status of the file
@@ -504,14 +516,9 @@ export namespace StoreFile {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 
   export interface TextInputChunk {
@@ -1203,6 +1210,16 @@ export interface FileCreateParams {
   config?: FileCreateParams.Config;
 
   /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
+
+  /**
+   * If true, overwrite an existing file with the same external_id
+   */
+  overwrite?: boolean;
+
+  /**
    * ID of the file to add
    */
   file_id: string;
@@ -1219,14 +1236,9 @@ export namespace FileCreateParams {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 
   /**
@@ -1234,14 +1246,9 @@ export namespace FileCreateParams {
    */
   export interface Experimental {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 }
 

@@ -79,8 +79,8 @@ describe('resource stores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('metadataFacets', async () => {
-    const responsePromise = client.stores.metadataFacets('store_identifier', {});
+  test('metadataFacets: only required params', async () => {
+    const responsePromise = client.stores.metadataFacets({ store_identifiers: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,6 +88,37 @@ describe('resource stores', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('metadataFacets: required and optional params', async () => {
+    const response = await client.stores.metadataFacets({
+      query: 'how to configure SSL',
+      store_identifiers: ['string'],
+      top_k: 1,
+      filters: {
+        all: [
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
+        ],
+        any: [
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
+        ],
+        none: [
+          { key: 'price', value: '100', operator: 'gt' },
+          { key: 'color', value: 'red', operator: 'eq' },
+        ],
+      },
+      file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      search_options: {
+        score_threshold: 0,
+        rewrite_query: true,
+        rerank: true,
+        return_metadata: true,
+        apply_search_rules: true,
+      },
+      facets: ['string'],
+    });
   });
 
   test('questionAnswering: only required params', async () => {
