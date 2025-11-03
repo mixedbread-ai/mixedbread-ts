@@ -32,6 +32,26 @@ describe('resource files', () => {
     });
   });
 
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.stores.files.retrieve('file_identifier', {
+      store_identifier: 'store_identifier',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieve: required and optional params', async () => {
+    const response = await client.stores.files.retrieve('file_identifier', {
+      store_identifier: 'store_identifier',
+      return_chunks: true,
+    });
+  });
+
   test('list', async () => {
     const responsePromise = client.stores.files.list('store_identifier', {});
     const rawResponse = await responsePromise.asResponse();

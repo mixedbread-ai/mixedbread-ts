@@ -9,6 +9,7 @@ import {
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
+  FileRetrieveParams,
   FileSearchParams,
   FileSearchResponse,
   Files,
@@ -85,6 +86,16 @@ export class Stores extends APIResource {
    */
   delete(storeIdentifier: string, options?: RequestOptions): APIPromise<StoreDeleteResponse> {
     return this._client.delete(path`/v1/stores/${storeIdentifier}`, options);
+  }
+
+  /**
+   * Get metadata facets
+   */
+  metadataFacets(
+    body: StoreMetadataFacetsParams,
+    options?: RequestOptions,
+  ): APIPromise<StoreMetadataFacetsResponse> {
+    return this._client.post('/v1/stores/metadata-facets', { body, ...options });
   }
 
   /**
@@ -312,6 +323,16 @@ export interface StoreDeleteResponse {
 }
 
 /**
+ * Represents metadata facets for a store.
+ */
+export interface StoreMetadataFacetsResponse {
+  /**
+   * Metadata facets
+   */
+  facets: { [key: string]: { [key: string]: unknown } };
+}
+
+/**
  * Results from a question answering operation.
  */
 export interface StoreQuestionAnsweringResponse {
@@ -442,6 +463,47 @@ export interface StoreListParams extends CursorParams {
   q?: string | null;
 }
 
+export interface StoreMetadataFacetsParams {
+  /**
+   * Search query text
+   */
+  query?: string | null;
+
+  /**
+   * IDs or names of stores to search
+   */
+  store_identifiers: Array<string>;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: StoreChunkSearchOptions;
+
+  /**
+   * Optional list of facets to return. Use dot for nested fields.
+   */
+  facets?: Array<string> | null;
+}
+
 export interface StoreQuestionAnsweringParams {
   /**
    * Question to answer. If not provided, the question will be extracted from the
@@ -549,12 +611,14 @@ export declare namespace Stores {
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
     type StoreDeleteResponse as StoreDeleteResponse,
+    type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
     type StoreSearchResponse as StoreSearchResponse,
     type StoresCursor as StoresCursor,
     type StoreCreateParams as StoreCreateParams,
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
+    type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
   };
@@ -568,6 +632,7 @@ export declare namespace Stores {
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
+    type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
