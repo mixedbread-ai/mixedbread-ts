@@ -24,27 +24,11 @@ describe('resource files', () => {
   test('create: required and optional params', async () => {
     const response = await client.stores.files.create('store_identifier', {
       metadata: {},
-      config: { parsing_strategy: 'fast', contextualization: true },
+      config: { parsing_strategy: 'fast' },
+      external_id: 'external_id',
+      overwrite: false,
       file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      experimental: { parsing_strategy: 'fast', contextualization: true },
-    });
-  });
-
-  test('retrieve: only required params', async () => {
-    const responsePromise = client.stores.files.retrieve('file_id', { store_identifier: 'store_identifier' });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieve: required and optional params', async () => {
-    const response = await client.stores.files.retrieve('file_id', {
-      store_identifier: 'store_identifier',
-      return_chunks: true,
+      experimental: { parsing_strategy: 'fast' },
     });
   });
 

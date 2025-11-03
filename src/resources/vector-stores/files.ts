@@ -1638,6 +1638,16 @@ export interface FileCreateParams {
   config?: FileCreateParams.Config;
 
   /**
+   * External identifier for this file in the store
+   */
+  external_id?: string | null;
+
+  /**
+   * If true, overwrite an existing file with the same external_id
+   */
+  overwrite?: boolean;
+
+  /**
    * ID of the file to add
    */
   file_id: string;
@@ -1654,14 +1664,9 @@ export namespace FileCreateParams {
    */
   export interface Config {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 
   /**
@@ -1669,14 +1674,9 @@ export namespace FileCreateParams {
    */
   export interface Experimental {
     /**
-     * Strategy for adding the file
+     * Strategy for adding the file, this overrides the store-level default
      */
     parsing_strategy?: 'fast' | 'high_quality';
-
-    /**
-     * Whether to contextualize the file
-     */
-    contextualization?: boolean;
   }
 }
 
