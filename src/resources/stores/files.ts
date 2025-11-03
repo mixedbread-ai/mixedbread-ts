@@ -22,6 +22,26 @@ export class Files extends APIResource {
   }
 
   /**
+   * Get a file from a store.
+   *
+   * Args: store_identifier: The ID or name of the store. file_id: The ID or name of
+   * the file. options: Get file options.
+   *
+   * Returns: VectorStoreFile: The file details.
+   */
+  retrieve(
+    fileIdentifier: string,
+    params: FileRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<StoreFile> {
+    const { store_identifier, ...query } = params;
+    return this._client.get(path`/v1/stores/${store_identifier}/files/${fileIdentifier}`, {
+      query,
+      ...options,
+    });
+  }
+
+  /**
    * List files indexed in a vector store with pagination and metadata filter.
    *
    * Args: vector_store_identifier: The ID or name of the vector store pagination:
@@ -975,6 +995,18 @@ export namespace FileCreateParams {
   }
 }
 
+export interface FileRetrieveParams {
+  /**
+   * Path param: The ID or name of the store
+   */
+  store_identifier: string;
+
+  /**
+   * Query param: Whether to return the chunks for the file
+   */
+  return_chunks?: boolean;
+}
+
 export interface FileListParams {
   /**
    * Maximum number of items to return per page (1-100)
@@ -1107,6 +1139,7 @@ export declare namespace Files {
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
+    type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
