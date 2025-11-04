@@ -88,11 +88,11 @@ export class Files extends APIResource {
   /**
    * Poll for a file's processing status until it reaches a terminal state.
    *
-   * Supports both positional arguments (`poll(storeIdentifier, fileId, pollIntervalMs, pollTimeoutMs, options)`) and
-   * a named-parameter object (`poll({ storeIdentifier, fileId, pollIntervalMs, pollTimeoutMs, options })`).
+   * Supports both positional arguments (`poll(storeIdentifier, fileIdentifier, pollIntervalMs, pollTimeoutMs, options)`) and
+   * a named-parameter object (`poll({ storeIdentifier, fileIdentifier, pollIntervalMs, pollTimeoutMs, options })`).
    *
    * @param storeIdentifier - The identifier of the store when using positional arguments
-   * @param fileId - The ID of the file to poll when using positional arguments
+   * @param fileIdentifier - The ID or external identifier of the file to poll when using positional arguments
    * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
    * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
    * @param options - Additional request options when using positional arguments
@@ -101,7 +101,7 @@ export class Files extends APIResource {
    */
   async poll(
     storeIdentifier: string,
-    fileId: string,
+    fileIdentifier: string,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
@@ -109,7 +109,7 @@ export class Files extends APIResource {
   async poll(params: FilePollHelperParams): Promise<StoreFile>;
   async poll(
     storeIdentifierOrParams: string | FilePollHelperParams,
-    fileId?: string,
+    fileIdentifier?: string,
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
@@ -118,7 +118,7 @@ export class Files extends APIResource {
       typeof storeIdentifierOrParams === 'string' ?
         {
           storeIdentifier: storeIdentifierOrParams,
-          fileId: fileId as string,
+          fileIdentifier: fileIdentifier as string,
           pollIntervalMs,
           pollTimeoutMs,
           options,
@@ -132,7 +132,7 @@ export class Files extends APIResource {
     };
 
     return polling.poll({
-      fn: () => this.retrieve(params.fileId, retrieveParams, params.options),
+      fn: () => this.retrieve(params.fileIdentifier, retrieveParams, params.options),
       condition: (result) =>
         result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
       intervalSeconds: pollingIntervalMs / 1000,
@@ -183,7 +183,7 @@ export class Files extends APIResource {
     const file = await this.create(params.storeIdentifier, params.body, params.options);
     return this.poll({
       storeIdentifier: params.storeIdentifier,
-      fileId: file.id,
+      fileIdentifier: file.id,
       pollIntervalMs: params.pollIntervalMs,
       pollTimeoutMs: params.pollTimeoutMs,
       options: params.options,
@@ -285,7 +285,7 @@ export class Files extends APIResource {
 
     return this.poll({
       storeIdentifier: params.storeIdentifier,
-      fileId: vectorStoreFile.id,
+      fileIdentifier: vectorStoreFile.id,
       pollIntervalMs: params.pollIntervalMs,
       pollTimeoutMs: params.pollTimeoutMs,
       options: params.options,
@@ -299,7 +299,7 @@ export class Files extends APIResource {
  */
 export interface FilePollHelperParams {
   storeIdentifier: string;
-  fileId: string;
+  fileIdentifier: string;
   pollIntervalMs?: number | undefined;
   pollTimeoutMs?: number | undefined;
   options?: RequestOptions | undefined;
