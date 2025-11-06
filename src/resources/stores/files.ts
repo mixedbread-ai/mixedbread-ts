@@ -60,19 +60,6 @@ export class Files extends APIResource {
   }
 
   /**
-   * Delete a file from a store.
-   *
-   * Args: store_identifier: The ID or name of the store. file_id: The ID or name of
-   * the file to delete.
-   *
-   * Returns: VectorStoreFileDeleted: The deleted file details.
-   */
-  delete(fileID: string, params: FileDeleteParams, options?: RequestOptions): APIPromise<FileDeleteResponse> {
-    const { store_identifier } = params;
-    return this._client.delete(path`/v1/stores/${store_identifier}/files/${fileID}`, options);
-  }
-
-  /**
    * Search for files within a store based on semantic similarity.
    *
    * Args: store_identifier: The ID or name of the store to search within
@@ -1166,26 +1153,6 @@ export namespace FileListResponse {
   }
 }
 
-/**
- * Response model for file deletion.
- */
-export interface FileDeleteResponse {
-  /**
-   * ID of the deleted file
-   */
-  id: string;
-
-  /**
-   * Whether the deletion was successful
-   */
-  deleted?: boolean;
-
-  /**
-   * Type of the deleted object
-   */
-  object?: 'store.file';
-}
-
 export interface FileSearchResponse {
   /**
    * The object type of the response
@@ -1302,13 +1269,6 @@ export interface FileListParams {
     | null;
 }
 
-export interface FileDeleteParams {
-  /**
-   * The ID or name of the store
-   */
-  store_identifier: string;
-}
-
 export interface FileSearchParams {
   /**
    * Search query text
@@ -1393,12 +1353,10 @@ export declare namespace Files {
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type FileListResponse as FileListResponse,
-    type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
-    type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
   };
 }

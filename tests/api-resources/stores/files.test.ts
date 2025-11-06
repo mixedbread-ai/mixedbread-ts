@@ -63,21 +63,6 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete: only required params', async () => {
-    const responsePromise = client.stores.files.delete('file_id', { store_identifier: 'store_identifier' });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('delete: required and optional params', async () => {
-    const response = await client.stores.files.delete('file_id', { store_identifier: 'store_identifier' });
-  });
-
   test('search: only required params', async () => {
     const responsePromise = client.stores.files.search({
       query: 'how to configure SSL',
