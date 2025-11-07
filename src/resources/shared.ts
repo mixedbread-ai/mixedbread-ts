@@ -37,7 +37,18 @@ export interface SearchFilterCondition {
   /**
    * The operator for the condition
    */
-  operator: 'eq' | 'not_eq' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'not_in' | 'like' | 'not_like';
+  operator:
+    | 'eq'
+    | 'not_eq'
+    | 'gt'
+    | 'gte'
+    | 'lt'
+    | 'lte'
+    | 'in'
+    | 'not_in'
+    | 'like'
+    | 'starts_with'
+    | 'not_like';
 }
 
 export interface Usage {
