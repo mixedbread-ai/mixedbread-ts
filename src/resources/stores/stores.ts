@@ -5,6 +5,8 @@ import * as Shared from '../shared';
 import * as FilesAPI from './files';
 import {
   FileCreateParams,
+  FileDeleteParams,
+  FileDeleteResponse,
   FileListParams,
   FileListResponse,
   FileRetrieveParams,
@@ -627,10 +629,12 @@ export declare namespace Stores {
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type FileListResponse as FileListResponse,
+    type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileListParams as FileListParams,
+    type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,
   };
 }

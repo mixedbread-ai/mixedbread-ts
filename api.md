@@ -97,6 +97,7 @@ Types:
 - <code><a href="./src/resources/stores/files.ts">StoreFileStatus</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFile</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileListResponse</a></code>
+- <code><a href="./src/resources/stores/files.ts">FileDeleteResponse</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileSearchResponse</a></code>
 
 Methods:
@@ -104,6 +105,7 @@ Methods:
 - <code title="post /v1/stores/{store_identifier}/files">client.stores.files.<a href="./src/resources/stores/files.ts">create</a>(storeIdentifier, { ...params }) -> StoreFile</code>
 - <code title="get /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">retrieve</a>(fileIdentifier, { ...params }) -> StoreFile</code>
 - <code title="post /v1/stores/{store_identifier}/files/list">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> FileListResponse</code>
+- <code title="delete /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">delete</a>(fileIdentifier, { ...params }) -> FileDeleteResponse</code>
 - <code title="post /v1/stores/files/search">client.stores.files.<a href="./src/resources/stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
 # Parsing

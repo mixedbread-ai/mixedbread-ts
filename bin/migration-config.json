@@ -111,6 +111,39 @@
       ]
     },
     {
+      "base": "stores.files",
+      "name": "delete",
+      "params": [
+        {
+          "type": "param",
+          "key": "file_identifier",
+          "location": "path"
+        },
+        {
+          "type": "params",
+          "maybeOverload": false
+        },
+        {
+          "type": "options"
+        }
+      ],
+      "oldParams": [
+        {
+          "type": "param",
+          "key": "store_identifier",
+          "location": "path"
+        },
+        {
+          "type": "param",
+          "key": "file_identifier",
+          "location": "path"
+        },
+        {
+          "type": "options"
+        }
+      ]
+    },
+    {
       "base": "dataSources.connectors",
       "name": "retrieve",
       "params": [

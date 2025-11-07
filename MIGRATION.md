@@ -57,6 +57,7 @@ This affects the following methods:
 - `client.vectorStores.files.retrieve()`
 - `client.vectorStores.files.delete()`
 - `client.stores.files.retrieve()`
+- `client.stores.files.delete()`
 - `client.dataSources.connectors.retrieve()`
 - `client.dataSources.connectors.update()`
 - `client.dataSources.connectors.delete()`
