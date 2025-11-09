@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.42.0 (2025-11-09)
+
+Full Changelog: [v0.41.0...v0.42.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.41.0...v0.42.0)
+
+### Features
+
+* **api:** api update ([2e0f6a0](https://github.com/mixedbread-ai/mixedbread-ts/commit/2e0f6a0ae6059ec8015b17e2c453fc95b1f05968))
+
 ## 0.41.0 (2025-11-07)
 
 Full Changelog: [v0.40.0...v0.41.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.40.0...v0.41.0)
