@@ -285,7 +285,7 @@ export namespace ParsingJob {
       /**
        * The full content of the chunk
        */
-      content: string;
+      content?: string | null;
 
       /**
        * The content of the chunk to embed
