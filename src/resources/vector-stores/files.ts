@@ -254,6 +254,10 @@ export namespace ScoredVectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -282,6 +286,10 @@ export namespace ScoredVectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -307,6 +315,10 @@ export namespace ScoredVectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -422,6 +434,10 @@ export namespace ScoredVectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -450,6 +466,10 @@ export namespace ScoredVectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -475,6 +495,10 @@ export namespace ScoredVectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -610,6 +634,10 @@ export namespace ScoredVectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -638,6 +666,10 @@ export namespace ScoredVectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -663,6 +695,10 @@ export namespace ScoredVectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -788,6 +824,10 @@ export namespace ScoredVectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -816,6 +856,10 @@ export namespace ScoredVectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -841,6 +885,10 @@ export namespace ScoredVectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1002,6 +1050,10 @@ export namespace VectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1030,6 +1082,10 @@ export namespace VectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1055,6 +1111,10 @@ export namespace VectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1142,6 +1202,10 @@ export namespace VectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1170,6 +1234,10 @@ export namespace VectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1195,6 +1263,10 @@ export namespace VectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1302,6 +1374,10 @@ export namespace VectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1330,6 +1406,10 @@ export namespace VectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1355,6 +1435,10 @@ export namespace VectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1452,6 +1536,10 @@ export namespace VectorStoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1480,6 +1568,10 @@ export namespace VectorStoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1505,6 +1597,10 @@ export namespace VectorStoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }

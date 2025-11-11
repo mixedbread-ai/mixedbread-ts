@@ -327,6 +327,10 @@ export namespace StoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -355,6 +359,10 @@ export namespace StoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -380,6 +388,10 @@ export namespace StoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -467,6 +479,10 @@ export namespace StoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -495,6 +511,10 @@ export namespace StoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -520,6 +540,10 @@ export namespace StoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -627,6 +651,10 @@ export namespace StoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -655,6 +683,10 @@ export namespace StoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -680,6 +712,10 @@ export namespace StoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -777,6 +813,10 @@ export namespace StoreFile {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -805,6 +845,10 @@ export namespace StoreFile {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -830,6 +874,10 @@ export namespace StoreFile {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }

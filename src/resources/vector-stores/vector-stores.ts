@@ -211,6 +211,10 @@ export namespace ScoredAudioURLInputChunk {
 
     heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -239,6 +243,10 @@ export namespace ScoredAudioURLInputChunk {
 
     file_size: number;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -264,6 +272,10 @@ export namespace ScoredAudioURLInputChunk {
     word_count: number;
 
     file_size: number;
+
+    start_line?: number;
+
+    num_lines?: number;
 
     [k: string]: unknown;
   }
@@ -386,6 +398,10 @@ export namespace ScoredImageURLInputChunk {
 
     heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -414,6 +430,10 @@ export namespace ScoredImageURLInputChunk {
 
     file_size: number;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -439,6 +459,10 @@ export namespace ScoredImageURLInputChunk {
     word_count: number;
 
     file_size: number;
+
+    start_line?: number;
+
+    num_lines?: number;
 
     [k: string]: unknown;
   }
@@ -561,6 +585,10 @@ export namespace ScoredTextInputChunk {
 
     heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -589,6 +617,10 @@ export namespace ScoredTextInputChunk {
 
     file_size: number;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -614,6 +646,10 @@ export namespace ScoredTextInputChunk {
     word_count: number;
 
     file_size: number;
+
+    start_line?: number;
+
+    num_lines?: number;
 
     [k: string]: unknown;
   }
@@ -726,6 +762,10 @@ export namespace ScoredVideoURLInputChunk {
 
     heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -754,6 +794,10 @@ export namespace ScoredVideoURLInputChunk {
 
     file_size: number;
 
+    start_line?: number;
+
+    num_lines?: number;
+
     [k: string]: unknown;
   }
 
@@ -779,6 +823,10 @@ export namespace ScoredVideoURLInputChunk {
     word_count: number;
 
     file_size: number;
+
+    start_line?: number;
+
+    num_lines?: number;
 
     [k: string]: unknown;
   }
@@ -1082,6 +1130,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1110,6 +1162,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1135,6 +1191,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1250,6 +1310,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1278,6 +1342,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1303,6 +1371,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1438,6 +1510,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1466,6 +1542,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1491,6 +1571,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1616,6 +1700,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1644,6 +1732,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1669,6 +1761,10 @@ export namespace VectorStoreQuestionAnsweringResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1808,6 +1904,10 @@ export namespace VectorStoreSearchResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1836,6 +1936,10 @@ export namespace VectorStoreSearchResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -1861,6 +1965,10 @@ export namespace VectorStoreSearchResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -1976,6 +2084,10 @@ export namespace VectorStoreSearchResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2004,6 +2116,10 @@ export namespace VectorStoreSearchResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2029,6 +2145,10 @@ export namespace VectorStoreSearchResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -2164,6 +2284,10 @@ export namespace VectorStoreSearchResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2192,6 +2316,10 @@ export namespace VectorStoreSearchResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2217,6 +2345,10 @@ export namespace VectorStoreSearchResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
@@ -2342,6 +2474,10 @@ export namespace VectorStoreSearchResponse {
 
       heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2370,6 +2506,10 @@ export namespace VectorStoreSearchResponse {
 
       file_size: number;
 
+      start_line?: number;
+
+      num_lines?: number;
+
       [k: string]: unknown;
     }
 
@@ -2395,6 +2535,10 @@ export namespace VectorStoreSearchResponse {
       word_count: number;
 
       file_size: number;
+
+      start_line?: number;
+
+      num_lines?: number;
 
       [k: string]: unknown;
     }
