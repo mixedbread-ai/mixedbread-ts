@@ -1054,9 +1054,10 @@ export interface FileRetrieveParams {
   store_identifier: string;
 
   /**
-   * Query param: Whether to return the chunks for the file
+   * Query param: Whether to return the chunks for the file. If a list of integers is
+   * provided, only the chunks at the specified indices will be returned.
    */
-  return_chunks?: boolean;
+  return_chunks?: boolean | Array<number>;
 }
 
 export interface FileListParams {
