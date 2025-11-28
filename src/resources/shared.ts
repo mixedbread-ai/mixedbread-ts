@@ -48,7 +48,8 @@ export interface SearchFilterCondition {
     | 'not_in'
     | 'like'
     | 'starts_with'
-    | 'not_like';
+    | 'not_like'
+    | 'regex';
 }
 
 export interface Usage {
