@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.46.0 (2025-12-06)
+
+Full Changelog: [v0.45.0...v0.46.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.45.0...v0.46.0)
+
+### Features
+
+* **api:** api update ([12d721d](https://github.com/mixedbread-ai/mixedbread-ts/commit/12d721da577e89797ca1447143231153cea66adf))
+
+
+### Bug Fixes
+
+* **mcp:** correct code tool API endpoint ([f529aa6](https://github.com/mixedbread-ai/mixedbread-ts/commit/f529aa6179a7b3fd831121bc12a45e9f1d6c8364))
+* **mcp:** return correct lines on typescript errors ([cccf3f1](https://github.com/mixedbread-ai/mixedbread-ts/commit/cccf3f12a4d6c4621d167547ceeb8332b010b015))
+
+
+### Chores
+
+* **client:** fix logger property type ([c7adf5a](https://github.com/mixedbread-ai/mixedbread-ts/commit/c7adf5ad216d5cd1439e83342d38d06981858aaa))
+* **internal:** codegen related update ([349968c](https://github.com/mixedbread-ai/mixedbread-ts/commit/349968cd39715f31ca6e8eedb7dd466f898d796f))
+* **internal:** codegen related update ([db66735](https://github.com/mixedbread-ai/mixedbread-ts/commit/db6673582b3f0844c6849ee5dbf7f26d70a5cafd))
+* **internal:** upgrade eslint ([746f6d4](https://github.com/mixedbread-ai/mixedbread-ts/commit/746f6d4b87984e9745b5da234221a8fd1c86a291))
+
 ## 0.45.0 (2025-11-28)
 
 Full Changelog: [v0.44.0...v0.45.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.44.0...v0.45.0)
