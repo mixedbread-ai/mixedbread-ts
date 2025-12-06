@@ -204,6 +204,11 @@ export interface Store {
   usage_bytes?: number;
 
   /**
+   * Total storage usage in tokens
+   */
+  usage_tokens?: number;
+
+  /**
    * Optional expiration timestamp for the store
    */
   expires_at?: string | null;

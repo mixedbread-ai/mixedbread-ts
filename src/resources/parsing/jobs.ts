@@ -172,17 +172,17 @@ export type ChunkingStrategy = 'page';
  * Types of elements that can be extracted from a document.
  */
 export type ElementType =
-  | 'caption'
-  | 'footnote'
-  | 'formula'
-  | 'list-item'
-  | 'page-footer'
-  | 'page-header'
-  | 'picture'
+  | 'header'
+  | 'footer'
+  | 'title'
   | 'section-header'
+  | 'page-number'
+  | 'list-item'
+  | 'figure'
   | 'table'
+  | 'form'
   | 'text'
-  | 'title';
+  | 'footnote';
 
 export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
