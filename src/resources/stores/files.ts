@@ -143,6 +143,11 @@ export interface ScoredStoreFile {
   usage_bytes?: number | null;
 
   /**
+   * Storage usage in tokens
+   */
+  usage_tokens?: number | null;
+
+  /**
    * Configuration for a file.
    */
   config?: ScoredStoreFile.Config | null;
@@ -235,6 +240,11 @@ export interface StoreFile {
    * Storage usage in bytes
    */
   usage_bytes?: number | null;
+
+  /**
+   * Storage usage in tokens
+   */
+  usage_tokens?: number | null;
 
   /**
    * Configuration for a file.
@@ -1096,6 +1106,11 @@ export interface FileListParams {
     | Shared.SearchFilterCondition
     | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
+
+  /**
+   * Search query for fuzzy matching over name and description fields
+   */
+  q?: string | null;
 }
 
 export interface FileDeleteParams {
