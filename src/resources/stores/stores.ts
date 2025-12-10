@@ -376,7 +376,8 @@ export interface StoreSearchResponse {
 
 export interface StoreCreateParams {
   /**
-   * Name for the new store
+   * Name for the new store. Can only contain lowercase letters, numbers, periods
+   * (.), and hyphens (-).
    */
   name?: string | null;
 
@@ -436,7 +437,8 @@ export namespace StoreCreateParams {
 
 export interface StoreUpdateParams {
   /**
-   * New name for the store
+   * New name for the store. Can only contain lowercase letters, numbers, periods
+   * (.), and hyphens (-).
    */
   name?: string | null;
 
