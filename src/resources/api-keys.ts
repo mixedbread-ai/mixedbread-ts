@@ -136,7 +136,7 @@ export interface APIKey {
 
 export namespace APIKey {
   export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create';
+    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
     resource_type?: 'store' | null;
 
@@ -201,7 +201,7 @@ export interface APIKeyCreated {
 
 export namespace APIKeyCreated {
   export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create';
+    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
     resource_type?: 'store' | null;
 
@@ -248,7 +248,7 @@ export interface APIKeyCreateParams {
 
 export namespace APIKeyCreateParams {
   export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create';
+    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
     resource_type?: 'store' | null;
 
