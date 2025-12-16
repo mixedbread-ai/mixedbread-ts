@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.47.0 (2025-12-16)
+
+Full Changelog: [v0.46.0...v0.47.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.46.0...v0.47.0)
+
+### Features
+
+* **api:** api update ([94f34c0](https://github.com/mixedbread-ai/mixedbread-ts/commit/94f34c080a51498971fbc7409656f840bff359e5))
+* **api:** api update ([9140db1](https://github.com/mixedbread-ai/mixedbread-ts/commit/9140db18a98c577cbb66b3f71d65fcff2f2dcb2c))
+
+
+### Bug Fixes
+
+* **docs:** remove extraneous example object fields ([2105722](https://github.com/mixedbread-ai/mixedbread-ts/commit/2105722679d60861da60ff8c07a0543c19e12bfa))
+
 ## 0.46.0 (2025-12-06)
 
 Full Changelog: [v0.45.0...v0.46.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.45.0...v0.46.0)
