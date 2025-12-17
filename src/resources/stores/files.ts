@@ -42,6 +42,22 @@ export class Files extends APIResource {
   }
 
   /**
+   * Update metadata on a file within a store.
+   *
+   * Args: store_identifier: The ID or name of the store. file_identifier: The ID or
+   * name of the file to update. update_params: Metadata update payload.
+   *
+   * Returns: StoreFile: The updated file details.
+   */
+  update(fileIdentifier: string, params: FileUpdateParams, options?: RequestOptions): APIPromise<StoreFile> {
+    const { store_identifier, ...body } = params;
+    return this._client.patch(path`/v1/stores/${store_identifier}/files/${fileIdentifier}`, {
+      body,
+      ...options,
+    });
+  }
+
+  /**
    * List files indexed in a vector store with pagination and metadata filter.
    *
    * Args: vector_store_identifier: The ID or name of the vector store pagination:
@@ -1070,6 +1086,18 @@ export interface FileRetrieveParams {
   return_chunks?: boolean | Array<number>;
 }
 
+export interface FileUpdateParams {
+  /**
+   * Path param: The ID or name of the store
+   */
+  store_identifier: string;
+
+  /**
+   * Body param: Updated metadata for the file
+   */
+  metadata?: { [key: string]: unknown } | null;
+}
+
 export interface FileListParams {
   /**
    * Maximum number of items to return per page (1-100)
@@ -1208,6 +1236,7 @@ export declare namespace Files {
     type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
+    type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
     type FileSearchParams as FileSearchParams,

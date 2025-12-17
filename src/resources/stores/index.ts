@@ -10,6 +10,7 @@ export {
   type FileSearchResponse,
   type FileCreateParams,
   type FileRetrieveParams,
+  type FileUpdateParams,
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
