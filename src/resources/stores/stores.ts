@@ -292,14 +292,22 @@ export interface StoreChunkSearchOptions {
   score_threshold?: number;
 
   /**
-   * Whether to rewrite the query
+   * Whether to rewrite the query. Ignored when agentic is enabled (the agent handles
+   * query decomposition).
    */
   rewrite_query?: boolean;
 
   /**
-   * Whether to rerank results and optional reranking configuration
+   * Whether to rerank results and optional reranking configuration. Ignored when
+   * agentic is enabled (the agent handles ranking).
    */
   rerank?: boolean | VectorStoresFilesAPI.RerankConfig | null;
+
+  /**
+   * Whether to use agentic multi-query search with automatic query decomposition and
+   * ranking. When enabled, rewrite_query and rerank options are ignored.
+   */
+  agentic?: boolean | StoreChunkSearchOptions.AgenticSearchConfig | null;
 
   /**
    * Whether to return file metadata
@@ -310,6 +318,28 @@ export interface StoreChunkSearchOptions {
    * Whether to apply search rules
    */
   apply_search_rules?: boolean;
+}
+
+export namespace StoreChunkSearchOptions {
+  /**
+   * Configuration for agentic multi-query search.
+   */
+  export interface AgenticSearchConfig {
+    /**
+     * Maximum number of search rounds
+     */
+    max_rounds?: number;
+
+    /**
+     * Maximum queries per round
+     */
+    queries_per_round?: number;
+
+    /**
+     * Results to fetch per query
+     */
+    results_per_query?: number;
+  }
 }
 
 /**
