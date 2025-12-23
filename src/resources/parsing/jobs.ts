@@ -119,7 +119,7 @@ export interface ParsingJob {
   /**
    * The error of the job
    */
-  error?: unknown;
+  error?: { [key: string]: unknown } | null;
 
   /**
    * Result of document parsing operation.
@@ -249,7 +249,7 @@ export namespace ParsingJob {
 export type ReturnFormat = 'html' | 'markdown' | 'plain';
 
 /**
- * A parsing job item for list responses, omitting result and error fields.
+ * A parsing job item for list responses.
  */
 export interface JobListResponse {
   /**
@@ -271,6 +271,11 @@ export interface JobListResponse {
    * The status of the job
    */
   status: ParsingJobStatus;
+
+  /**
+   * The error of the job
+   */
+  error?: { [key: string]: unknown } | null;
 
   /**
    * The started time of the job

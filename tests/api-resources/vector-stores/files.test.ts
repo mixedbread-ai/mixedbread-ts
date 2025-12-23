@@ -107,6 +107,7 @@ describe('resource files', () => {
         score_threshold: 0,
         rewrite_query: true,
         rerank: true,
+        agentic: true,
         return_metadata: true,
         return_chunks: true,
         chunks_per_file: 0,
