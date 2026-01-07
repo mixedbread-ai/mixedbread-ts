@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.49.1 (2026-01-07)
+
+Full Changelog: [v0.49.0...v0.49.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.0...v0.49.1)
+
+### Chores
+
+* break long lines in snippets into multiline ([4b55277](https://github.com/mixedbread-ai/mixedbread-ts/commit/4b55277e74e617323dacc04ac06e5a4eb2395ac7))
+* **internal:** codegen related update ([15578e7](https://github.com/mixedbread-ai/mixedbread-ts/commit/15578e7f6847b3021a89bf47d72e4dd6480c0c62))
+
 ## 0.49.0 (2025-12-23)
 
 Full Changelog: [v0.48.0...v0.49.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.48.0...v0.49.0)
