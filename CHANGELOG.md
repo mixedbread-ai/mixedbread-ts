@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.50.0 (2026-01-08)
+
+Full Changelog: [v0.49.3...v0.50.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.3...v0.50.0)
+
+### Features
+
+* **api:** use npm oidc ([589363d](https://github.com/mixedbread-ai/mixedbread-ts/commit/589363da714dc289f4e18e4a68a45205937db1c5))
+
 ## 0.49.3 (2026-01-08)
 
 Full Changelog: [v0.49.2...v0.49.3](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.2...v0.49.3)
