@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.49.2 (2026-01-08)
+
+Full Changelog: [v0.49.1...v0.49.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.1...v0.49.2)
+
+### Chores
+
+* fix the release workflow ([032a010](https://github.com/mixedbread-ai/mixedbread-ts/commit/032a0101ab64430065331d1a6b2cc7d56328f0e9))
+
 ## 0.49.1 (2026-01-07)
 
 Full Changelog: [v0.49.0...v0.49.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.0...v0.49.1)
