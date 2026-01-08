@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.49.3 (2026-01-08)
+
+Full Changelog: [v0.49.2...v0.49.3](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.2...v0.49.3)
+
+### Chores
+
+* remove the npm token ([3b2f56c](https://github.com/mixedbread-ai/mixedbread-ts/commit/3b2f56cdf9e5c33e7fb3c62272917c3a5622f161))
+
 ## 0.49.2 (2026-01-08)
 
 Full Changelog: [v0.49.1...v0.49.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.1...v0.49.2)
