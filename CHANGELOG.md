@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.50.1 (2026-01-13)
+
+Full Changelog: [v0.50.0...v0.50.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.50.0...v0.50.1)
+
+### Bug Fixes
+
+* **publish:** remove extraneous npm copy from package ([915f68c](https://github.com/mixedbread-ai/mixedbread-ts/commit/915f68c4d5378b75af2aca17d8f8d9f15b518760))
+
 ## 0.50.0 (2026-01-08)
 
 Full Changelog: [v0.49.3...v0.50.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.49.3...v0.50.0)
