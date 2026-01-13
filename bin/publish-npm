@@ -63,7 +63,7 @@ else
 fi
 
 # Install OIDC compatible npm version
-npm install --prefix oidc/ npm@11.6.2
+npm install --prefix ../oidc/ npm@11.6.2
 
 # Publish with the appropriate tag
-oidc/node_modules/.bin/npm publish --tag "$TAG"
+../oidc/node_modules/.bin/npm publish --tag "$TAG"
