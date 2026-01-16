@@ -1,0 +1,35 @@
+name: Sync to Vector Store
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install mixedbread CLI globally
+        run: npm install -g @mixedbread/cli
+
+      - name: Sync vector store
+        env:
+          MXBAI_API_KEY: ${{ secrets.MXBAI_API_KEY }}
+        run: |
+          mxbai vs sync "mixedbread-ts" \
+            "**/*.py" \
+            "**/*.md" \
+            "**/*.mdx" \
+            "**/*.txt" \
+            "**/*.json" \
+            --yes --strategy fast
