@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.50.2 (2026-01-17)
+
+Full Changelog: [v0.50.1...v0.50.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.50.1...v0.50.2)
+
+### Chores
+
+* **internal:** update `actions/checkout` version ([031ec6d](https://github.com/mixedbread-ai/mixedbread-ts/commit/031ec6d9362e201b83422ea33908804067ecbb97))
+* **internal:** upgrade babel, qs, js-yaml ([3e223cf](https://github.com/mixedbread-ai/mixedbread-ts/commit/3e223cfbc42069fe7ef15297366b959a75115db2))
+
 ## 0.50.1 (2026-01-13)
 
 Full Changelog: [v0.50.0...v0.50.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.50.0...v0.50.1)
