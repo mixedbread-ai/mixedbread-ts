@@ -54,8 +54,6 @@ client.parents.children.retrieve('c_456', { parent_id: 'p_123' });
 
 This affects the following methods:
 
-- `client.vectorStores.files.retrieve()`
-- `client.vectorStores.files.delete()`
 - `client.stores.files.retrieve()`
 - `client.stores.files.update()`
 - `client.stores.files.delete()`
@@ -92,7 +90,6 @@ client.example.list(undefined, { headers: { ... } });
 
 This affects the following methods:
 
-- `client.vectorStores.list()`
 - `client.stores.list()`
 - `client.parsing.jobs.list()`
 - `client.files.list()`
@@ -160,16 +157,16 @@ If you were relying on anything that was only exported from `@mixedbread/sdk/cor
 
 #### Resource classes
 
-Previously under certain circumstances it was possible to import resource classes like `VectorStores` directly from the root of the package. This was never valid at the type level and only worked in CommonJS files.
+Previously under certain circumstances it was possible to import resource classes like `Stores` directly from the root of the package. This was never valid at the type level and only worked in CommonJS files.
 Now you must always either reference them as static class properties or import them directly from the files in which they are defined.
 
 ```typescript
 // Before
-const { VectorStores } = require('@mixedbread/sdk');
+const { Stores } = require('@mixedbread/sdk');
 
 // After
 const { Mixedbread } = require('@mixedbread/sdk');
-Mixedbread.VectorStores; // or import directly from @mixedbread/sdk/resources/vector-stores/vector-stores
+Mixedbread.Stores; // or import directly from @mixedbread/sdk/resources/stores/stores
 ```
 
 #### Cleaned up `uploads` exports

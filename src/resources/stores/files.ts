@@ -2,8 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
-import * as VectorStoresFilesAPI from '../vector-stores/files';
-import * as VectorStoresAPI from '../vector-stores/vector-stores';
+import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -177,10 +176,10 @@ export interface ScoredStoreFile {
    * Array of scored file chunks
    */
   chunks: Array<
-    | VectorStoresAPI.ScoredTextInputChunk
-    | VectorStoresAPI.ScoredImageURLInputChunk
-    | VectorStoresAPI.ScoredAudioURLInputChunk
-    | VectorStoresAPI.ScoredVideoURLInputChunk
+    | StoresAPI.ScoredTextInputChunk
+    | StoresAPI.ScoredImageURLInputChunk
+    | StoresAPI.ScoredAudioURLInputChunk
+    | StoresAPI.ScoredVideoURLInputChunk
   > | null;
 
   /**
@@ -1204,7 +1203,7 @@ export namespace FileSearchParams {
      * Whether to rerank results and optional reranking configuration. Ignored when
      * agentic is enabled (the agent handles ranking).
      */
-    rerank?: boolean | VectorStoresFilesAPI.RerankConfig | null;
+    rerank?: boolean | SearchOptions.RerankConfig | null;
 
     /**
      * Whether to use agentic multi-query search with automatic query decomposition and
@@ -1234,6 +1233,27 @@ export namespace FileSearchParams {
   }
 
   export namespace SearchOptions {
+    /**
+     * Represents a reranking configuration.
+     */
+    export interface RerankConfig {
+      /**
+       * The name of the reranking model
+       */
+      model?: string;
+
+      /**
+       * Whether to include metadata in the reranked results
+       */
+      with_metadata?: boolean | Array<string>;
+
+      /**
+       * Maximum number of results to return after reranking. If None, returns all
+       * reranked results.
+       */
+      top_k?: number | null;
+    }
+
     /**
      * Configuration for agentic multi-query search.
      */

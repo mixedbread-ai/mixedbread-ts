@@ -40,6 +40,11 @@ export {
 export { Parsing } from './parsing/parsing';
 export {
   Stores,
+  type ExpiresAfter,
+  type ScoredAudioURLInputChunk,
+  type ScoredImageURLInputChunk,
+  type ScoredTextInputChunk,
+  type ScoredVideoURLInputChunk,
   type Store,
   type StoreChunkSearchOptions,
   type StoreDeleteResponse,
@@ -54,25 +59,6 @@ export {
   type StoreSearchParams,
   type StoresCursor,
 } from './stores/stores';
-export {
-  VectorStores,
-  type ExpiresAfter,
-  type ScoredAudioURLInputChunk,
-  type ScoredImageURLInputChunk,
-  type ScoredTextInputChunk,
-  type ScoredVideoURLInputChunk,
-  type VectorStore,
-  type VectorStoreChunkSearchOptions,
-  type VectorStoreDeleteResponse,
-  type VectorStoreQuestionAnsweringResponse,
-  type VectorStoreSearchResponse,
-  type VectorStoreCreateParams,
-  type VectorStoreUpdateParams,
-  type VectorStoreListParams,
-  type VectorStoreQuestionAnsweringParams,
-  type VectorStoreSearchParams,
-  type VectorStoresCursor,
-} from './vector-stores/vector-stores';
 export {
   type Embedding,
   type EmbeddingCreateResponse,

@@ -17,6 +17,11 @@ export {
 } from './files';
 export {
   Stores,
+  type ExpiresAfter,
+  type ScoredAudioURLInputChunk,
+  type ScoredImageURLInputChunk,
+  type ScoredTextInputChunk,
+  type ScoredVideoURLInputChunk,
   type Store,
   type StoreChunkSearchOptions,
   type StoreDeleteResponse,
