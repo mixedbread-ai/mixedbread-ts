@@ -331,9 +331,9 @@ export namespace StoreFile {
     offset?: number;
 
     /**
-     * Text content to process
+     * Text content
      */
-    text: string;
+    text?: string | null;
   }
 
   export namespace TextInputChunk {
@@ -483,9 +483,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The image input specification.
+     * Model for image URL validation.
      */
-    image_url: ImageURLInputChunk.ImageURL;
+    image_url?: ImageURLInputChunk.ImageURL | null;
   }
 
   export namespace ImageURLInputChunk {
@@ -592,7 +592,7 @@ export namespace StoreFile {
     }
 
     /**
-     * The image input specification.
+     * Model for image URL validation.
      */
     export interface ImageURL {
       /**
@@ -650,9 +650,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The audio input specification.
+     * Model for audio URL validation.
      */
-    audio_url: AudioURLInputChunk.AudioURL;
+    audio_url?: AudioURLInputChunk.AudioURL | null;
 
     /**
      * The sampling rate of the audio.
@@ -764,7 +764,7 @@ export namespace StoreFile {
     }
 
     /**
-     * The audio input specification.
+     * Model for audio URL validation.
      */
     export interface AudioURL {
       /**
@@ -817,9 +817,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The video input specification.
+     * Model for video URL validation.
      */
-    video_url: VideoURLInputChunk.VideoURL;
+    video_url?: VideoURLInputChunk.VideoURL | null;
   }
 
   export namespace VideoURLInputChunk {
@@ -926,7 +926,7 @@ export namespace StoreFile {
     }
 
     /**
-     * The video input specification.
+     * Model for video URL validation.
      */
     export interface VideoURL {
       /**
