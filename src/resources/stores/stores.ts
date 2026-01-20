@@ -220,9 +220,9 @@ export interface ScoredAudioURLInputChunk {
   summary?: string | null;
 
   /**
-   * The audio input specification.
+   * Model for audio URL validation.
    */
-  audio_url: ScoredAudioURLInputChunk.AudioURL;
+  audio_url?: ScoredAudioURLInputChunk.AudioURL | null;
 
   /**
    * The sampling rate of the audio.
@@ -334,7 +334,7 @@ export namespace ScoredAudioURLInputChunk {
   }
 
   /**
-   * The audio input specification.
+   * Model for audio URL validation.
    */
   export interface AudioURL {
     /**
@@ -412,9 +412,9 @@ export interface ScoredImageURLInputChunk {
   summary?: string | null;
 
   /**
-   * The image input specification.
+   * Model for image URL validation.
    */
-  image_url: ScoredImageURLInputChunk.ImageURL;
+  image_url?: ScoredImageURLInputChunk.ImageURL | null;
 }
 
 export namespace ScoredImageURLInputChunk {
@@ -521,7 +521,7 @@ export namespace ScoredImageURLInputChunk {
   }
 
   /**
-   * The image input specification.
+   * Model for image URL validation.
    */
   export interface ImageURL {
     /**
@@ -599,9 +599,9 @@ export interface ScoredTextInputChunk {
   offset?: number;
 
   /**
-   * Text content to process
+   * Text content
    */
-  text: string;
+  text?: string | null;
 }
 
 export namespace ScoredTextInputChunk {
@@ -776,9 +776,9 @@ export interface ScoredVideoURLInputChunk {
   summary?: string | null;
 
   /**
-   * The video input specification.
+   * Model for video URL validation.
    */
-  video_url: ScoredVideoURLInputChunk.VideoURL;
+  video_url?: ScoredVideoURLInputChunk.VideoURL | null;
 }
 
 export namespace ScoredVideoURLInputChunk {
@@ -885,7 +885,7 @@ export namespace ScoredVideoURLInputChunk {
   }
 
   /**
-   * The video input specification.
+   * Model for video URL validation.
    */
   export interface VideoURL {
     /**
@@ -989,6 +989,13 @@ export namespace Store {
      * Contextualize files with metadata
      */
     contextualization?: boolean | Config.ContextualizationConfig;
+
+    /**
+     * Whether to save original content in the store. When False, only vectors are
+     * indexed without the original content (index-only mode). This is useful for data
+     * privacy. Note: Reranking is not supported when content is not saved.
+     */
+    save_content?: boolean;
   }
 
   export namespace Config {
@@ -1227,6 +1234,13 @@ export namespace StoreCreateParams {
      * Contextualize files with metadata
      */
     contextualization?: boolean | Config.ContextualizationConfig;
+
+    /**
+     * Whether to save original content in the store. When False, only vectors are
+     * indexed without the original content (index-only mode). This is useful for data
+     * privacy. Note: Reranking is not supported when content is not saved.
+     */
+    save_content?: boolean;
   }
 
   export namespace Config {
