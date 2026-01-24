@@ -613,6 +613,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      frontmatter?: { [key: string]: unknown };
+
       [k: string]: unknown;
     }
 
@@ -764,6 +766,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
@@ -937,6 +941,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      frontmatter?: { [key: string]: unknown };
+
       [k: string]: unknown;
     }
 
@@ -1098,6 +1104,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
