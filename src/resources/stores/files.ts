@@ -570,6 +570,7 @@ export namespace StoreFile {
       | TextInputChunk.PdfChunkGeneratedMetadata
       | TextInputChunk.CodeChunkGeneratedMetadata
       | TextInputChunk.AudioChunkGeneratedMetadata
+      | TextInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -697,6 +698,26 @@ export namespace StoreFile {
 
       [k: string]: unknown;
     }
+
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
   }
 
   export interface ImageURLInputChunk {
@@ -719,6 +740,7 @@ export namespace StoreFile {
       | ImageURLInputChunk.PdfChunkGeneratedMetadata
       | ImageURLInputChunk.CodeChunkGeneratedMetadata
       | ImageURLInputChunk.AudioChunkGeneratedMetadata
+      | ImageURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -852,6 +874,26 @@ export namespace StoreFile {
       [k: string]: unknown;
     }
 
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * Model for image URL validation.
      */
@@ -888,6 +930,7 @@ export namespace StoreFile {
       | AudioURLInputChunk.PdfChunkGeneratedMetadata
       | AudioURLInputChunk.CodeChunkGeneratedMetadata
       | AudioURLInputChunk.AudioChunkGeneratedMetadata
+      | AudioURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -1026,6 +1069,26 @@ export namespace StoreFile {
       [k: string]: unknown;
     }
 
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
+
     /**
      * Model for audio URL validation.
      */
@@ -1057,6 +1120,7 @@ export namespace StoreFile {
       | VideoURLInputChunk.PdfChunkGeneratedMetadata
       | VideoURLInputChunk.CodeChunkGeneratedMetadata
       | VideoURLInputChunk.AudioChunkGeneratedMetadata
+      | VideoURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -1186,6 +1250,26 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
 
       [k: string]: unknown;
     }

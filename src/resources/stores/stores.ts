@@ -172,6 +172,7 @@ export interface ScoredAudioURLInputChunk {
     | ScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
     | ScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
     | ScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.VideoChunkGeneratedMetadata
     | null;
 
   /**
@@ -335,6 +336,26 @@ export namespace ScoredAudioURLInputChunk {
     [k: string]: unknown;
   }
 
+  export interface VideoChunkGeneratedMetadata {
+    type?: 'video';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    fps: number;
+
+    width: number;
+
+    height: number;
+
+    frame_count: number;
+
+    [k: string]: unknown;
+  }
+
   /**
    * Model for audio URL validation.
    */
@@ -366,6 +387,7 @@ export interface ScoredImageURLInputChunk {
     | ScoredImageURLInputChunk.PdfChunkGeneratedMetadata
     | ScoredImageURLInputChunk.CodeChunkGeneratedMetadata
     | ScoredImageURLInputChunk.AudioChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.VideoChunkGeneratedMetadata
     | null;
 
   /**
@@ -524,6 +546,26 @@ export namespace ScoredImageURLInputChunk {
     [k: string]: unknown;
   }
 
+  export interface VideoChunkGeneratedMetadata {
+    type?: 'video';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    fps: number;
+
+    width: number;
+
+    height: number;
+
+    frame_count: number;
+
+    [k: string]: unknown;
+  }
+
   /**
    * Model for image URL validation.
    */
@@ -560,6 +602,7 @@ export interface ScoredTextInputChunk {
     | ScoredTextInputChunk.PdfChunkGeneratedMetadata
     | ScoredTextInputChunk.CodeChunkGeneratedMetadata
     | ScoredTextInputChunk.AudioChunkGeneratedMetadata
+    | ScoredTextInputChunk.VideoChunkGeneratedMetadata
     | null;
 
   /**
@@ -712,6 +755,26 @@ export namespace ScoredTextInputChunk {
 
     [k: string]: unknown;
   }
+
+  export interface VideoChunkGeneratedMetadata {
+    type?: 'video';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    fps: number;
+
+    width: number;
+
+    height: number;
+
+    frame_count: number;
+
+    [k: string]: unknown;
+  }
 }
 
 export interface ScoredVideoURLInputChunk {
@@ -734,6 +797,7 @@ export interface ScoredVideoURLInputChunk {
     | ScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
     | ScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
     | ScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.VideoChunkGeneratedMetadata
     | null;
 
   /**
@@ -888,6 +952,26 @@ export namespace ScoredVideoURLInputChunk {
     channels: number;
 
     audio_format: number;
+
+    [k: string]: unknown;
+  }
+
+  export interface VideoChunkGeneratedMetadata {
+    type?: 'video';
+
+    file_type: string;
+
+    file_size: number;
+
+    total_duration_seconds: number;
+
+    fps: number;
+
+    width: number;
+
+    height: number;
+
+    frame_count: number;
 
     [k: string]: unknown;
   }
