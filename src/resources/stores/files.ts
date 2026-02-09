@@ -2,7 +2,6 @@
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
-import * as ContentAPI from '../extractions/content';
 import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
@@ -1501,7 +1500,7 @@ export interface FileSearchParams {
   /**
    * Search query text
    */
-  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
+  query: string;
 
   /**
    * IDs or names of stores to search
