@@ -73,6 +73,11 @@ import {
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  ExpiresAfter,
+  ScoredAudioURLInputChunk,
+  ScoredImageURLInputChunk,
+  ScoredTextInputChunk,
+  ScoredVideoURLInputChunk,
   Store,
   StoreChunkSearchOptions,
   StoreCreateParams,
@@ -88,25 +93,6 @@ import {
   Stores,
   StoresCursor,
 } from './resources/stores/stores';
-import {
-  ExpiresAfter,
-  ScoredAudioURLInputChunk,
-  ScoredImageURLInputChunk,
-  ScoredTextInputChunk,
-  ScoredVideoURLInputChunk,
-  VectorStore,
-  VectorStoreChunkSearchOptions,
-  VectorStoreCreateParams,
-  VectorStoreDeleteResponse,
-  VectorStoreListParams,
-  VectorStoreQuestionAnsweringParams,
-  VectorStoreQuestionAnsweringResponse,
-  VectorStoreSearchParams,
-  VectorStoreSearchResponse,
-  VectorStoreUpdateParams,
-  VectorStores,
-  VectorStoresCursor,
-} from './resources/vector-stores/vector-stores';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -868,7 +854,6 @@ export class Mixedbread {
 
   static toFile = Uploads.toFile;
 
-  vectorStores: API.VectorStores = new API.VectorStores(this);
   stores: API.Stores = new API.Stores(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
@@ -879,7 +864,6 @@ export class Mixedbread {
   chat: API.Chat = new API.Chat(this);
 }
 
-Mixedbread.VectorStores = VectorStores;
 Mixedbread.Stores = Stores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
@@ -909,27 +893,12 @@ export declare namespace Mixedbread {
   };
 
   export {
-    VectorStores as VectorStores,
+    Stores as Stores,
     type ExpiresAfter as ExpiresAfter,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
-    type VectorStore as VectorStore,
-    type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
-    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresCursor as VectorStoresCursor,
-    type VectorStoreCreateParams as VectorStoreCreateParams,
-    type VectorStoreUpdateParams as VectorStoreUpdateParams,
-    type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
-  };
-
-  export {
-    Stores as Stores,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
     type StoreDeleteResponse as StoreDeleteResponse,
