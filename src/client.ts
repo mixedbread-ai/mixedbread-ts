@@ -73,6 +73,11 @@ import {
 import { Extractions } from './resources/extractions/extractions';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  ExpiresAfter,
+  ScoredAudioURLInputChunk,
+  ScoredImageURLInputChunk,
+  ScoredTextInputChunk,
+  ScoredVideoURLInputChunk,
   Store,
   StoreChunkSearchOptions,
   StoreCreateParams,
@@ -88,25 +93,6 @@ import {
   Stores,
   StoresCursor,
 } from './resources/stores/stores';
-import {
-  ExpiresAfter,
-  ScoredAudioURLInputChunk,
-  ScoredImageURLInputChunk,
-  ScoredTextInputChunk,
-  ScoredVideoURLInputChunk,
-  VectorStore,
-  VectorStoreChunkSearchOptions,
-  VectorStoreCreateParams,
-  VectorStoreDeleteResponse,
-  VectorStoreListParams,
-  VectorStoreQuestionAnsweringParams,
-  VectorStoreQuestionAnsweringResponse,
-  VectorStoreSearchParams,
-  VectorStoreSearchResponse,
-  VectorStoreUpdateParams,
-  VectorStores,
-  VectorStoresCursor,
-} from './resources/vector-stores/vector-stores';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -620,9 +606,14 @@ export class Mixedbread {
   getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
     path: string,
     Page: new (...args: any[]) => PageClass,
-    opts?: RequestOptions,
+    opts?: PromiseOrValue<RequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
-    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+    return this.requestAPIList(
+      Page,
+      opts && 'then' in opts ?
+        opts.then((opts) => ({ method: 'get', path, ...opts }))
+      : { method: 'get', path, ...opts },
+    );
   }
 
   requestAPIList<
@@ -630,7 +621,7 @@ export class Mixedbread {
     PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
   >(
     Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
-    options: FinalRequestOptions,
+    options: PromiseOrValue<FinalRequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
     const request = this.makeRequest(options, null, undefined);
     return new Pagination.PagePromise<PageClass, Item>(this as any as Mixedbread, request, Page);
@@ -643,9 +634,10 @@ export class Mixedbread {
     controller: AbortController,
   ): Promise<Response> {
     const { signal, method, ...options } = init || {};
-    if (signal) signal.addEventListener('abort', () => controller.abort());
+    const abort = this._makeAbort(controller);
+    if (signal) signal.addEventListener('abort', abort, { once: true });
 
-    const timeout = setTimeout(() => controller.abort(), ms);
+    const timeout = setTimeout(abort, ms);
 
     const isReadableBody =
       ((globalThis as any).ReadableStream && options.body instanceof (globalThis as any).ReadableStream) ||
@@ -812,6 +804,12 @@ export class Mixedbread {
     return headers.values;
   }
 
+  private _makeAbort(controller: AbortController) {
+    // note: we can't just inline this method inside `fetchWithTimeout()` because then the closure
+    //       would capture all request options, and cause a memory leak.
+    return () => controller.abort();
+  }
+
   private buildBody({ options: { body, headers: rawHeaders } }: { options: FinalRequestOptions }): {
     bodyHeaders: HeadersLike;
     body: BodyInit | undefined;
@@ -868,7 +866,6 @@ export class Mixedbread {
 
   static toFile = Uploads.toFile;
 
-  vectorStores: API.VectorStores = new API.VectorStores(this);
   stores: API.Stores = new API.Stores(this);
   parsing: API.Parsing = new API.Parsing(this);
   files: API.Files = new API.Files(this);
@@ -879,7 +876,6 @@ export class Mixedbread {
   chat: API.Chat = new API.Chat(this);
 }
 
-Mixedbread.VectorStores = VectorStores;
 Mixedbread.Stores = Stores;
 Mixedbread.Parsing = Parsing;
 Mixedbread.Files = Files;
@@ -909,27 +905,12 @@ export declare namespace Mixedbread {
   };
 
   export {
-    VectorStores as VectorStores,
+    Stores as Stores,
     type ExpiresAfter as ExpiresAfter,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
-    type VectorStore as VectorStore,
-    type VectorStoreChunkSearchOptions as VectorStoreChunkSearchOptions,
-    type VectorStoreDeleteResponse as VectorStoreDeleteResponse,
-    type VectorStoreQuestionAnsweringResponse as VectorStoreQuestionAnsweringResponse,
-    type VectorStoreSearchResponse as VectorStoreSearchResponse,
-    type VectorStoresCursor as VectorStoresCursor,
-    type VectorStoreCreateParams as VectorStoreCreateParams,
-    type VectorStoreUpdateParams as VectorStoreUpdateParams,
-    type VectorStoreListParams as VectorStoreListParams,
-    type VectorStoreQuestionAnsweringParams as VectorStoreQuestionAnsweringParams,
-    type VectorStoreSearchParams as VectorStoreSearchParams,
-  };
-
-  export {
-    Stores as Stores,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
     type StoreDeleteResponse as StoreDeleteResponse,

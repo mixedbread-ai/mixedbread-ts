@@ -2,8 +2,8 @@
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
-import * as VectorStoresFilesAPI from '../vector-stores/files';
-import * as VectorStoresAPI from '../vector-stores/vector-stores';
+import * as ContentAPI from '../extractions/content';
+import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
@@ -434,10 +434,10 @@ export interface ScoredStoreFile {
    * Array of scored file chunks
    */
   chunks: Array<
-    | VectorStoresAPI.ScoredTextInputChunk
-    | VectorStoresAPI.ScoredImageURLInputChunk
-    | VectorStoresAPI.ScoredAudioURLInputChunk
-    | VectorStoresAPI.ScoredVideoURLInputChunk
+    | StoresAPI.ScoredTextInputChunk
+    | StoresAPI.ScoredImageURLInputChunk
+    | StoresAPI.ScoredAudioURLInputChunk
+    | StoresAPI.ScoredVideoURLInputChunk
   > | null;
 
   /**
@@ -571,6 +571,7 @@ export namespace StoreFile {
       | TextInputChunk.PdfChunkGeneratedMetadata
       | TextInputChunk.CodeChunkGeneratedMetadata
       | TextInputChunk.AudioChunkGeneratedMetadata
+      | TextInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -589,9 +590,9 @@ export namespace StoreFile {
     offset?: number;
 
     /**
-     * Text content to process
+     * Text content
      */
-    text: string;
+    text?: string | null;
   }
 
   export namespace TextInputChunk {
@@ -613,6 +614,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
@@ -693,6 +696,26 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      [k: string]: unknown;
+    }
+
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
 
       [k: string]: unknown;
     }
@@ -718,6 +741,7 @@ export namespace StoreFile {
       | ImageURLInputChunk.PdfChunkGeneratedMetadata
       | ImageURLInputChunk.CodeChunkGeneratedMetadata
       | ImageURLInputChunk.AudioChunkGeneratedMetadata
+      | ImageURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -741,9 +765,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The image input specification.
+     * Model for image URL validation.
      */
-    image_url: ImageURLInputChunk.ImageURL;
+    image_url?: ImageURLInputChunk.ImageURL | null;
   }
 
   export namespace ImageURLInputChunk {
@@ -765,6 +789,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
@@ -849,8 +875,28 @@ export namespace StoreFile {
       [k: string]: unknown;
     }
 
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
+
     /**
-     * The image input specification.
+     * Model for image URL validation.
      */
     export interface ImageURL {
       /**
@@ -885,6 +931,7 @@ export namespace StoreFile {
       | AudioURLInputChunk.PdfChunkGeneratedMetadata
       | AudioURLInputChunk.CodeChunkGeneratedMetadata
       | AudioURLInputChunk.AudioChunkGeneratedMetadata
+      | AudioURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -908,9 +955,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The audio input specification.
+     * Model for audio URL validation.
      */
-    audio_url: AudioURLInputChunk.AudioURL;
+    audio_url?: AudioURLInputChunk.AudioURL | null;
 
     /**
      * The sampling rate of the audio.
@@ -937,6 +984,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
@@ -1021,8 +1070,28 @@ export namespace StoreFile {
       [k: string]: unknown;
     }
 
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
+
     /**
-     * The audio input specification.
+     * Model for audio URL validation.
      */
     export interface AudioURL {
       /**
@@ -1052,6 +1121,7 @@ export namespace StoreFile {
       | VideoURLInputChunk.PdfChunkGeneratedMetadata
       | VideoURLInputChunk.CodeChunkGeneratedMetadata
       | VideoURLInputChunk.AudioChunkGeneratedMetadata
+      | VideoURLInputChunk.VideoChunkGeneratedMetadata
       | null;
 
     /**
@@ -1075,9 +1145,9 @@ export namespace StoreFile {
     summary?: string | null;
 
     /**
-     * The video input specification.
+     * Model for video URL validation.
      */
-    video_url: VideoURLInputChunk.VideoURL;
+    video_url?: VideoURLInputChunk.VideoURL | null;
   }
 
   export namespace VideoURLInputChunk {
@@ -1099,6 +1169,8 @@ export namespace StoreFile {
       start_line?: number;
 
       num_lines?: number;
+
+      frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
     }
@@ -1183,8 +1255,28 @@ export namespace StoreFile {
       [k: string]: unknown;
     }
 
+    export interface VideoChunkGeneratedMetadata {
+      type?: 'video';
+
+      file_type: string;
+
+      file_size: number;
+
+      total_duration_seconds: number;
+
+      fps: number;
+
+      width: number;
+
+      height: number;
+
+      frame_count: number;
+
+      [k: string]: unknown;
+    }
+
     /**
-     * The video input specification.
+     * Model for video URL validation.
      */
     export interface VideoURL {
       /**
@@ -1409,7 +1501,7 @@ export interface FileSearchParams {
   /**
    * Search query text
    */
-  query: string;
+  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
 
   /**
    * IDs or names of stores to search
@@ -1461,7 +1553,7 @@ export namespace FileSearchParams {
      * Whether to rerank results and optional reranking configuration. Ignored when
      * agentic is enabled (the agent handles ranking).
      */
-    rerank?: boolean | VectorStoresFilesAPI.RerankConfig | null;
+    rerank?: boolean | SearchOptions.RerankConfig | null;
 
     /**
      * Whether to use agentic multi-query search with automatic query decomposition and
@@ -1491,6 +1583,27 @@ export namespace FileSearchParams {
   }
 
   export namespace SearchOptions {
+    /**
+     * Represents a reranking configuration.
+     */
+    export interface RerankConfig {
+      /**
+       * The name of the reranking model
+       */
+      model?: string;
+
+      /**
+       * Whether to include metadata in the reranked results
+       */
+      with_metadata?: boolean | Array<string>;
+
+      /**
+       * Maximum number of results to return after reranking. If None, returns all
+       * reranked results.
+       */
+      top_k?: number | null;
+    }
+
     /**
      * Configuration for agentic multi-query search.
      */
