@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.51.0 (2026-02-12)
+
+Full Changelog: [v0.50.2...v0.51.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.50.2...v0.51.0)
+
+### Features
+
+* **api:** api update ([7ef58f9](https://github.com/mixedbread-ai/mixedbread-ts/commit/7ef58f9e396d7c58dd4ef83e9c28440abba14efe))
+* **api:** api update ([867ae96](https://github.com/mixedbread-ai/mixedbread-ts/commit/867ae967605f80cdb194dc4b42be26c66e5b10fa))
+* **api:** api update ([04e2b7b](https://github.com/mixedbread-ai/mixedbread-ts/commit/04e2b7b7ab92122e2e368ad1901144e6bf1ec32c))
+* **api:** api update ([874ec01](https://github.com/mixedbread-ai/mixedbread-ts/commit/874ec0122134a5b66b1e2a3d7c17cc7be286b496))
+* **api:** api update ([c2fda13](https://github.com/mixedbread-ai/mixedbread-ts/commit/c2fda13f6ba86fe2e78ec91cb0c3f4c4ef3693fe))
+* **api:** api update ([9151a81](https://github.com/mixedbread-ai/mixedbread-ts/commit/9151a8135c0a97025c34e37488001c9f9522eeb8))
+* **api:** manual updates ([4594ff6](https://github.com/mixedbread-ai/mixedbread-ts/commit/4594ff68f97e0ead0ae037f25a7426554b21393e))
+
+
+### Bug Fixes
+
+* **client:** avoid memory leak with abort signals ([50e1ffa](https://github.com/mixedbread-ai/mixedbread-ts/commit/50e1ffa5c535730e79c661d4bf1eac968d1f5174))
+* **client:** avoid removing abort listener too early ([87a65e4](https://github.com/mixedbread-ai/mixedbread-ts/commit/87a65e4ba88bd581d01efa4db17a73a5f4053f0e))
+* **docs:** fix mcp installation instructions for remote servers ([46851b3](https://github.com/mixedbread-ai/mixedbread-ts/commit/46851b3b9febd0d9b8015397599d0b9a1adefef1))
+* **publish:** use npm registry directly for trusted publishing support ([9bf2648](https://github.com/mixedbread-ai/mixedbread-ts/commit/9bf2648d3633e033e9edbede04b67abc5af19ced))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([c4e0854](https://github.com/mixedbread-ai/mixedbread-ts/commit/c4e0854e81151cf9c7b53741b6ca8b80ce7079b1))
+* **client:** do not parse responses with empty content-length ([576bbd8](https://github.com/mixedbread-ai/mixedbread-ts/commit/576bbd802365251026008c3ade61457b14670a1a))
+* **client:** restructure abort controller binding ([be1e7d0](https://github.com/mixedbread-ai/mixedbread-ts/commit/be1e7d0eb7137385f1c6004e4ad57aa6e7f77680))
+* **internal:** codegen related update ([3b7a58b](https://github.com/mixedbread-ai/mixedbread-ts/commit/3b7a58b008dda74833a625460d72bae10d86f8f0))
+* **internal:** fix pagination internals not accepting option promises ([dde4682](https://github.com/mixedbread-ai/mixedbread-ts/commit/dde468264ebab6268833eafe243bdd9683c743ec))
+
 ## 0.50.2 (2026-01-17)
 
 Full Changelog: [v0.50.1...v0.50.2](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.50.1...v0.50.2)
