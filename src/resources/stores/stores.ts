@@ -202,6 +202,11 @@ export interface ScoredAudioURLInputChunk {
   store_id: string;
 
   /**
+   * external identifier for this file
+   */
+  external_id?: string | null;
+
+  /**
    * file metadata
    */
   metadata?: unknown;
@@ -415,6 +420,11 @@ export interface ScoredImageURLInputChunk {
    * store id
    */
   store_id: string;
+
+  /**
+   * external identifier for this file
+   */
+  external_id?: string | null;
 
   /**
    * file metadata
@@ -632,6 +642,11 @@ export interface ScoredTextInputChunk {
   store_id: string;
 
   /**
+   * external identifier for this file
+   */
+  external_id?: string | null;
+
+  /**
    * file metadata
    */
   metadata?: unknown;
@@ -825,6 +840,11 @@ export interface ScoredVideoURLInputChunk {
    * store id
    */
   store_id: string;
+
+  /**
+   * external identifier for this file
+   */
+  external_id?: string | null;
 
   /**
    * file metadata
