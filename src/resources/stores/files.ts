@@ -717,6 +717,8 @@ export namespace StoreFile {
 
       frame_count: number;
 
+      has_audio_stream?: boolean;
+
       [k: string]: unknown;
     }
   }
@@ -891,6 +893,8 @@ export namespace StoreFile {
       height: number;
 
       frame_count: number;
+
+      has_audio_stream?: boolean;
 
       [k: string]: unknown;
     }
@@ -1087,6 +1091,8 @@ export namespace StoreFile {
 
       frame_count: number;
 
+      has_audio_stream?: boolean;
+
       [k: string]: unknown;
     }
 
@@ -1271,6 +1277,8 @@ export namespace StoreFile {
       height: number;
 
       frame_count: number;
+
+      has_audio_stream?: boolean;
 
       [k: string]: unknown;
     }
