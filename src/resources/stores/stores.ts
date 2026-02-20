@@ -359,6 +359,8 @@ export namespace ScoredAudioURLInputChunk {
 
     frame_count: number;
 
+    has_audio_stream?: boolean;
+
     [k: string]: unknown;
   }
 
@@ -573,6 +575,8 @@ export namespace ScoredImageURLInputChunk {
     height: number;
 
     frame_count: number;
+
+    has_audio_stream?: boolean;
 
     [k: string]: unknown;
   }
@@ -789,6 +793,8 @@ export namespace ScoredTextInputChunk {
 
     frame_count: number;
 
+    has_audio_stream?: boolean;
+
     [k: string]: unknown;
   }
 }
@@ -993,6 +999,8 @@ export namespace ScoredVideoURLInputChunk {
     height: number;
 
     frame_count: number;
+
+    has_audio_stream?: boolean;
 
     [k: string]: unknown;
   }
