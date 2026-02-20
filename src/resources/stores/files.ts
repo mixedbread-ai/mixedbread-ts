@@ -572,6 +572,7 @@ export namespace StoreFile {
       | TextInputChunk.CodeChunkGeneratedMetadata
       | TextInputChunk.AudioChunkGeneratedMetadata
       | TextInputChunk.VideoChunkGeneratedMetadata
+      | TextInputChunk.ImageChunkGeneratedMetadata
       | null;
 
     /**
@@ -615,6 +616,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
@@ -649,6 +652,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -660,6 +665,8 @@ export namespace StoreFile {
       total_pages: number;
 
       total_size: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -679,6 +686,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -696,6 +705,8 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -718,6 +729,24 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      file_extension?: string | null;
+
+      [k: string]: unknown;
+    }
+
+    export interface ImageChunkGeneratedMetadata {
+      type?: 'image';
+
+      file_type: string;
+
+      file_size: number;
+
+      width: number;
+
+      height: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -744,6 +773,7 @@ export namespace StoreFile {
       | ImageURLInputChunk.CodeChunkGeneratedMetadata
       | ImageURLInputChunk.AudioChunkGeneratedMetadata
       | ImageURLInputChunk.VideoChunkGeneratedMetadata
+      | ImageURLInputChunk.ImageChunkGeneratedMetadata
       | null;
 
     /**
@@ -792,6 +822,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
@@ -826,6 +858,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -837,6 +871,8 @@ export namespace StoreFile {
       total_pages: number;
 
       total_size: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -856,6 +892,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -873,6 +911,8 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -895,6 +935,24 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      file_extension?: string | null;
+
+      [k: string]: unknown;
+    }
+
+    export interface ImageChunkGeneratedMetadata {
+      type?: 'image';
+
+      file_type: string;
+
+      file_size: number;
+
+      width: number;
+
+      height: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -936,6 +994,7 @@ export namespace StoreFile {
       | AudioURLInputChunk.CodeChunkGeneratedMetadata
       | AudioURLInputChunk.AudioChunkGeneratedMetadata
       | AudioURLInputChunk.VideoChunkGeneratedMetadata
+      | AudioURLInputChunk.ImageChunkGeneratedMetadata
       | null;
 
     /**
@@ -989,6 +1048,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
@@ -1023,6 +1084,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -1034,6 +1097,8 @@ export namespace StoreFile {
       total_pages: number;
 
       total_size: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -1053,6 +1118,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -1070,6 +1137,8 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -1092,6 +1161,24 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      file_extension?: string | null;
+
+      [k: string]: unknown;
+    }
+
+    export interface ImageChunkGeneratedMetadata {
+      type?: 'image';
+
+      file_type: string;
+
+      file_size: number;
+
+      width: number;
+
+      height: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -1128,6 +1215,7 @@ export namespace StoreFile {
       | VideoURLInputChunk.CodeChunkGeneratedMetadata
       | VideoURLInputChunk.AudioChunkGeneratedMetadata
       | VideoURLInputChunk.VideoChunkGeneratedMetadata
+      | VideoURLInputChunk.ImageChunkGeneratedMetadata
       | null;
 
     /**
@@ -1176,6 +1264,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       frontmatter?: { [key: string]: unknown };
 
       [k: string]: unknown;
@@ -1210,6 +1300,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -1221,6 +1313,8 @@ export namespace StoreFile {
       total_pages: number;
 
       total_size: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -1240,6 +1334,8 @@ export namespace StoreFile {
 
       num_lines?: number;
 
+      file_extension?: string | null;
+
       [k: string]: unknown;
     }
 
@@ -1257,6 +1353,8 @@ export namespace StoreFile {
       channels: number;
 
       audio_format: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
@@ -1279,6 +1377,24 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      file_extension?: string | null;
+
+      [k: string]: unknown;
+    }
+
+    export interface ImageChunkGeneratedMetadata {
+      type?: 'image';
+
+      file_type: string;
+
+      file_size: number;
+
+      width: number;
+
+      height: number;
+
+      file_extension?: string | null;
 
       [k: string]: unknown;
     }
