@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.53.1 (2026-02-24)
+
+Full Changelog: [v0.53.0...v0.53.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.53.0...v0.53.1)
+
+### Bug Fixes
+
+* **docs/contributing:** correct pnpm link command ([89ca574](https://github.com/mixedbread-ai/mixedbread-ts/commit/89ca574832502b7038bf44381e31c9b024b25e99))
+
 ## 0.53.0 (2026-02-20)
 
 Full Changelog: [v0.52.0...v0.53.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.52.0...v0.53.0)
