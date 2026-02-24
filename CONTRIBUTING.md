@@ -60,7 +60,7 @@ $ yarn link @mixedbread/sdk
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global @mixedbread/sdk
+$ pnpm link --global @mixedbread/sdk
 ```
 
 ## Running tests
