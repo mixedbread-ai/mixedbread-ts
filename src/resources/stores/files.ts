@@ -1741,11 +1741,6 @@ export namespace FileSearchParams {
        * Maximum queries per round
        */
       queries_per_round?: number;
-
-      /**
-       * Results to fetch per query
-       */
-      results_per_query?: number;
     }
   }
 }
