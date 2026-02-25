@@ -324,7 +324,7 @@ export namespace ParsingJob {
         page: number;
 
         /**
-         * The full content of the extracted element
+         * The extracted text content of the element
          */
         content: string;
 
@@ -332,6 +332,11 @@ export namespace ParsingJob {
          * A brief summary of the element's content
          */
         summary?: string | null;
+
+        /**
+         * The base64-encoded image data for figure elements
+         */
+        image?: string | null;
       }
     }
   }
