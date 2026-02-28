@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.56.0 (2026-02-28)
+
+Full Changelog: [v0.55.0...v0.56.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.55.0...v0.56.0)
+
+### Features
+
+* **api:** api update ([83b1428](https://github.com/mixedbread-ai/mixedbread-ts/commit/83b1428dabbf9f7f8ef0444171feccec98888d00))
+
+
+### Chores
+
+* **internal:** move stringifyQuery implementation to internal function ([4454388](https://github.com/mixedbread-ai/mixedbread-ts/commit/4454388fddc6f3a80a3141b3472a19c44efbc239))
+
 ## 0.55.0 (2026-02-25)
 
 Full Changelog: [v0.54.0...v0.55.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.54.0...v0.55.0)
