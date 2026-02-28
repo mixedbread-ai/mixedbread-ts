@@ -1352,7 +1352,7 @@ export interface FileListParams {
     | null;
 
   /**
-   * Search query for fuzzy matching over name and description fields
+   * Search query for fuzzy matching over name and external_id fields
    */
   q?: string | null;
 }
