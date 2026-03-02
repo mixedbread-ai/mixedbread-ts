@@ -7,6 +7,7 @@ import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import * as polling from '../../lib/polling';
+import { type MultipartUploadConfig } from '../../lib/upload-file';
 import { Uploadable } from '../../uploads';
 import { path } from '../../internal/utils/path';
 
@@ -243,7 +244,13 @@ export class Files extends APIResource {
         { storeIdentifier: storeIdentifierOrParams, file: file as Uploadable, body, options }
       : storeIdentifierOrParams;
 
-    const fileUploadResponse = await this._client.files.create({ file: params.file }, params.options);
+    const fileUploadResponse = await this._client.files.create(
+      {
+        file: params.file,
+        ...(params.multipartUpload && { multipartUpload: params.multipartUpload }),
+      },
+      params.options,
+    );
 
     return this.create(
       params.storeIdentifier,
@@ -301,6 +308,7 @@ export class Files extends APIResource {
       file: params.file,
       body: params.body,
       options: params.options,
+      multipartUpload: params.multipartUpload,
     });
 
     return this.poll({
@@ -346,6 +354,7 @@ export interface FileUploadHelperParams {
   file: Uploadable;
   body?: Omit<FileCreateParams, 'file_id'> | undefined;
   options?: RequestOptions | undefined;
+  multipartUpload?: MultipartUploadConfig | undefined;
 }
 
 /**
@@ -359,6 +368,7 @@ export interface FileUploadAndPollHelperParams {
   pollTimeoutMs?: number | undefined;
   options?: RequestOptions | undefined;
   returnChunks?: boolean | undefined;
+  multipartUpload?: MultipartUploadConfig | undefined;
 }
 
 /**

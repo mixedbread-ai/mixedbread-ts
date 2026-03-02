@@ -21,3 +21,4 @@ export {
   PermissionDeniedError,
   UnprocessableEntityError,
 } from './core/error';
+export { type MultipartUploadConfig, type PartUploadEvent, MultipartUploadError } from './lib/upload-file';

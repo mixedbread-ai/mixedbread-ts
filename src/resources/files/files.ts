@@ -20,6 +20,7 @@ import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 import { multipartFormRequestOptions } from '../../internal/uploads';
 import { path } from '../../internal/utils/path';
+import { handleFileCreate, type MultipartUploadConfig } from '../../lib/upload-file';
 
 export class Files extends APIResource {
   uploads: UploadsAPI.Uploads = new UploadsAPI.Uploads(this._client);
@@ -31,8 +32,8 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: RequestOptions): APIPromise<FileObject> {
-    return this._client.post('/v1/files', multipartFormRequestOptions({ body, ...options }, this._client));
+  create(body: FileCreateParams, options?: RequestOptions): Promise<FileObject> {
+    return handleFileCreate(this._client, body, options);
   }
 
   /**
@@ -171,6 +172,13 @@ export interface FileCreateParams {
    * The file to upload
    */
   file: Uploadable;
+
+  /**
+   * Optional configuration for automatic multipart uploads.
+   * When the file size exceeds the threshold (default 100MB), the SDK
+   * will automatically use multipart upload with presigned URLs.
+   */
+  multipartUpload?: MultipartUploadConfig;
 }
 
 export interface FileUpdateParams {
