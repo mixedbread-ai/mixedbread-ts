@@ -2,6 +2,7 @@
 
 export {
   Files,
+  type FileDeleted,
   type FileObject,
   type PaginationWithTotal,
   type FileCreateParams,
@@ -11,7 +12,6 @@ export {
 } from './files';
 export {
   Uploads,
-  type FileDeleted,
   type MultipartUploadPart,
   type MultipartUploadPartURL,
   type UploadCreateResponse,

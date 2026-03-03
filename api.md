@@ -95,6 +95,7 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/files/files.ts">FileDeleted</a></code>
 - <code><a href="./src/resources/files/files.ts">FileObject</a></code>
 - <code><a href="./src/resources/files/files.ts">PaginationWithTotal</a></code>
 

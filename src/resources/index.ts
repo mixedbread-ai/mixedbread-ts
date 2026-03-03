@@ -29,6 +29,7 @@ export { Embeddings, type EncodingFormat, type EmbeddingCreateParams } from './e
 export { Extractions } from './extractions/extractions';
 export {
   Files,
+  type FileDeleted,
   type FileObject,
   type PaginationWithTotal,
   type FileCreateParams,

@@ -3,7 +3,6 @@
 import { APIResource } from '../../core/resource';
 import * as UploadsAPI from './uploads';
 import {
-  FileDeleted,
   MultipartUploadPart,
   MultipartUploadPartURL,
   UploadCompleteParams,
@@ -104,6 +103,23 @@ export class Files extends APIResource {
 
 export type FileObjectsCursor = Cursor<FileObject>;
 
+export interface FileDeleted {
+  /**
+   * The ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the file was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the deleted object
+   */
+  object?: 'file';
+}
+
 /**
  * A model representing a file object in the system.
  *
@@ -199,6 +215,7 @@ Files.Uploads = Uploads;
 
 export declare namespace Files {
   export {
+    type FileDeleted as FileDeleted,
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
     type FileObjectsCursor as FileObjectsCursor,
@@ -209,7 +226,6 @@ export declare namespace Files {
 
   export {
     Uploads as Uploads,
-    type FileDeleted as FileDeleted,
     type MultipartUploadPart as MultipartUploadPart,
     type MultipartUploadPartURL as MultipartUploadPartURL,
     type UploadCreateResponse as UploadCreateResponse,
