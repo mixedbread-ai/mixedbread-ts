@@ -5,6 +5,7 @@ import * as UploadsAPI from './uploads';
 import {
   MultipartUploadPart,
   MultipartUploadPartURL,
+  UploadAbortResponse,
   UploadCompleteParams,
   UploadCreateParams,
   UploadCreateResponse,
@@ -81,7 +82,7 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleted> {
+  delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleteResponse> {
     return this._client.delete(path`/v1/files/${fileID}`, options);
   }
 
@@ -102,23 +103,6 @@ export class Files extends APIResource {
 }
 
 export type FileObjectsCursor = Cursor<FileObject>;
-
-export interface FileDeleted {
-  /**
-   * The ID of the deleted file
-   */
-  id: string;
-
-  /**
-   * Whether the file was deleted
-   */
-  deleted?: boolean;
-
-  /**
-   * The type of the deleted object
-   */
-  object?: 'file';
-}
 
 /**
  * A model representing a file object in the system.
@@ -183,6 +167,23 @@ export interface PaginationWithTotal {
   total?: number;
 }
 
+export interface FileDeleteResponse {
+  /**
+   * The ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the file was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the deleted object
+   */
+  object?: 'file';
+}
+
 export interface FileCreateParams {
   /**
    * The file to upload
@@ -215,9 +216,9 @@ Files.Uploads = Uploads;
 
 export declare namespace Files {
   export {
-    type FileDeleted as FileDeleted,
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
+    type FileDeleteResponse as FileDeleteResponse,
     type FileObjectsCursor as FileObjectsCursor,
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
@@ -231,6 +232,7 @@ export declare namespace Files {
     type UploadCreateResponse as UploadCreateResponse,
     type UploadRetrieveResponse as UploadRetrieveResponse,
     type UploadListResponse as UploadListResponse,
+    type UploadAbortResponse as UploadAbortResponse,
     type UploadCreateParams as UploadCreateParams,
     type UploadCompleteParams as UploadCompleteParams,
   };

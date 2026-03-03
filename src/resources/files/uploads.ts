@@ -33,7 +33,7 @@ export class Uploads extends APIResource {
   /**
    * Abort a multipart upload and clean up any uploaded parts.
    */
-  abort(uploadID: string, options?: RequestOptions): APIPromise<FilesAPI.FileDeleted> {
+  abort(uploadID: string, options?: RequestOptions): APIPromise<UploadAbortResponse> {
     return this._client.post(path`/v1/files/uploads/${uploadID}/abort`, options);
   }
 
@@ -169,6 +169,23 @@ export namespace UploadListResponse {
   }
 }
 
+export interface UploadAbortResponse {
+  /**
+   * The ID of the deleted file
+   */
+  id: string;
+
+  /**
+   * Whether the file was deleted
+   */
+  deleted?: boolean;
+
+  /**
+   * The type of the deleted object
+   */
+  object?: 'file';
+}
+
 export interface UploadCreateParams {
   /**
    * Name of the file including extension
@@ -205,6 +222,7 @@ export declare namespace Uploads {
     type UploadCreateResponse as UploadCreateResponse,
     type UploadRetrieveResponse as UploadRetrieveResponse,
     type UploadListResponse as UploadListResponse,
+    type UploadAbortResponse as UploadAbortResponse,
     type UploadCreateParams as UploadCreateParams,
     type UploadCompleteParams as UploadCompleteParams,
   };
