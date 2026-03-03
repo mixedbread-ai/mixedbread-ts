@@ -231,6 +231,7 @@ export class Files extends APIResource {
     file: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
     options?: RequestOptions,
+    multipartUpload?: MultipartUploadConfig,
   ): Promise<StoreFile>;
   async upload(params: FileUploadHelperParams): Promise<StoreFile>;
   async upload(
@@ -238,10 +239,17 @@ export class Files extends APIResource {
     file?: Uploadable,
     body?: Omit<FileCreateParams, 'file_id'>,
     options?: RequestOptions,
+    multipartUpload?: MultipartUploadConfig,
   ): Promise<StoreFile> {
     const params: FileUploadHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
-        { storeIdentifier: storeIdentifierOrParams, file: file as Uploadable, body, options }
+        {
+          storeIdentifier: storeIdentifierOrParams,
+          file: file as Uploadable,
+          body,
+          options,
+          multipartUpload,
+        }
       : storeIdentifierOrParams;
 
     const fileUploadResponse = await this._client.files.create(
@@ -281,6 +289,7 @@ export class Files extends APIResource {
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
+    multipartUpload?: MultipartUploadConfig,
   ): Promise<StoreFile>;
   async uploadAndPoll(params: FileUploadAndPollHelperParams): Promise<StoreFile>;
   async uploadAndPoll(
@@ -290,6 +299,7 @@ export class Files extends APIResource {
     pollIntervalMs?: number,
     pollTimeoutMs?: number,
     options?: RequestOptions,
+    multipartUpload?: MultipartUploadConfig,
   ): Promise<StoreFile> {
     const params: FileUploadAndPollHelperParams =
       typeof storeIdentifierOrParams === 'string' ?
@@ -300,6 +310,7 @@ export class Files extends APIResource {
           pollIntervalMs,
           pollTimeoutMs,
           options,
+          multipartUpload,
         }
       : storeIdentifierOrParams;
 
