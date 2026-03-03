@@ -63,6 +63,7 @@ import {
 import { Extractions } from './resources/extractions/extractions';
 import {
   FileCreateParams,
+  FileDeleted,
   FileListParams,
   FileObject,
   FileObjectsCursor,
@@ -937,6 +938,7 @@ export declare namespace Mixedbread {
 
   export {
     Files as Files,
+    type FileDeleted as FileDeleted,
     type FileObject as FileObject,
     type PaginationWithTotal as PaginationWithTotal,
     type FileObjectsCursor as FileObjectsCursor,
