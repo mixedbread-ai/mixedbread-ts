@@ -56,7 +56,6 @@ Types:
 - <code><a href="./src/resources/stores/files.ts">ScoredStoreFile</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFileStatus</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFile</a></code>
-- <code><a href="./src/resources/stores/files.ts">FileListResponse</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileDeleteResponse</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileSearchResponse</a></code>
 
@@ -65,7 +64,7 @@ Methods:
 - <code title="post /v1/stores/{store_identifier}/files">client.stores.files.<a href="./src/resources/stores/files.ts">create</a>(storeIdentifier, { ...params }) -> StoreFile</code>
 - <code title="get /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">retrieve</a>(fileIdentifier, { ...params }) -> StoreFile</code>
 - <code title="patch /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">update</a>(fileIdentifier, { ...params }) -> StoreFile</code>
-- <code title="post /v1/stores/{store_identifier}/files/list">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> FileListResponse</code>
+- <code title="get /v1/stores/{store_identifier}/files">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> StoreFilesCursor</code>
 - <code title="delete /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">delete</a>(fileIdentifier, { ...params }) -> FileDeleteResponse</code>
 - <code title="post /v1/stores/files/search">client.stores.files.<a href="./src/resources/stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
@@ -95,18 +94,36 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/files.ts">FileObject</a></code>
-- <code><a href="./src/resources/files.ts">PaginationWithTotal</a></code>
-- <code><a href="./src/resources/files.ts">FileDeleteResponse</a></code>
+- <code><a href="./src/resources/files/files.ts">FileObject</a></code>
+- <code><a href="./src/resources/files/files.ts">PaginationWithTotal</a></code>
 
 Methods:
 
-- <code title="post /v1/files">client.files.<a href="./src/resources/files.ts">create</a>({ ...params }) -> FileObject</code>
-- <code title="get /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">retrieve</a>(fileID) -> FileObject</code>
-- <code title="post /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">update</a>(fileID, { ...params }) -> FileObject</code>
-- <code title="get /v1/files">client.files.<a href="./src/resources/files.ts">list</a>({ ...params }) -> FileObjectsCursor</code>
-- <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files.ts">delete</a>(fileID) -> FileDeleteResponse</code>
-- <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files.ts">content</a>(fileID) -> Response</code>
+- <code title="post /v1/files">client.files.<a href="./src/resources/files/files.ts">create</a>({ ...params }) -> FileObject</code>
+- <code title="get /v1/files/{file_id}">client.files.<a href="./src/resources/files/files.ts">retrieve</a>(fileID) -> FileObject</code>
+- <code title="post /v1/files/{file_id}">client.files.<a href="./src/resources/files/files.ts">update</a>(fileID, { ...params }) -> FileObject</code>
+- <code title="get /v1/files">client.files.<a href="./src/resources/files/files.ts">list</a>({ ...params }) -> FileObjectsCursor</code>
+- <code title="delete /v1/files/{file_id}">client.files.<a href="./src/resources/files/files.ts">delete</a>(fileID) -> FileDeleted</code>
+- <code title="get /v1/files/{file_id}/content">client.files.<a href="./src/resources/files/files.ts">content</a>(fileID) -> Response</code>
+
+## Uploads
+
+Types:
+
+- <code><a href="./src/resources/files/uploads.ts">FileDeleted</a></code>
+- <code><a href="./src/resources/files/uploads.ts">MultipartUploadPart</a></code>
+- <code><a href="./src/resources/files/uploads.ts">MultipartUploadPartURL</a></code>
+- <code><a href="./src/resources/files/uploads.ts">UploadCreateResponse</a></code>
+- <code><a href="./src/resources/files/uploads.ts">UploadRetrieveResponse</a></code>
+- <code><a href="./src/resources/files/uploads.ts">UploadListResponse</a></code>
+
+Methods:
+
+- <code title="post /v1/files/uploads">client.files.uploads.<a href="./src/resources/files/uploads.ts">create</a>({ ...params }) -> UploadCreateResponse</code>
+- <code title="get /v1/files/uploads/{upload_id}">client.files.uploads.<a href="./src/resources/files/uploads.ts">retrieve</a>(uploadID) -> UploadRetrieveResponse</code>
+- <code title="get /v1/files/uploads">client.files.uploads.<a href="./src/resources/files/uploads.ts">list</a>() -> UploadListResponse</code>
+- <code title="post /v1/files/uploads/{upload_id}/abort">client.files.uploads.<a href="./src/resources/files/uploads.ts">abort</a>(uploadID) -> FileDeleted</code>
+- <code title="post /v1/files/uploads/{upload_id}/complete">client.files.uploads.<a href="./src/resources/files/uploads.ts">complete</a>(uploadID, { ...params }) -> FileObject</code>
 
 # Extractions
 
