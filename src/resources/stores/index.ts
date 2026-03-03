@@ -5,6 +5,7 @@ export {
   type ScoredStoreFile,
   type StoreFileStatus,
   type StoreFile,
+  type FileListResponse,
   type FileDeleteResponse,
   type FileSearchResponse,
   type FileCreateParams,
@@ -13,7 +14,6 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
-  type StoreFilesCursor,
 } from './files';
 export {
   Stores,
