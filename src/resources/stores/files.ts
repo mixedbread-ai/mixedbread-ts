@@ -5,6 +5,7 @@ import * as Shared from '../shared';
 import * as ContentAPI from '../extractions/content';
 import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
+import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -58,19 +59,19 @@ export class Files extends APIResource {
   }
 
   /**
-   * List files indexed in a vector store with pagination and metadata filter.
+   * DEPRECATED: Use POST /stores/{store_identifier}/files/list instead
    *
-   * Args: vector_store_identifier: The ID or name of the vector store pagination:
-   * Pagination parameters and metadata filter
-   *
-   * Returns: VectorStoreFileListResponse: Paginated list of vector store files
+   * @deprecated
    */
   list(
     storeIdentifier: string,
-    body: FileListParams,
+    query: FileListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<FileListResponse> {
-    return this._client.post(path`/v1/stores/${storeIdentifier}/files/list`, { body, ...options });
+  ): PagePromise<StoreFilesCursor, StoreFile> {
+    return this._client.getAPIList(path`/v1/stores/${storeIdentifier}/files`, Cursor<StoreFile>, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -103,6 +104,8 @@ export class Files extends APIResource {
     return this._client.post('/v1/stores/files/search', { body, ...options });
   }
 }
+
+export type StoreFilesCursor = Cursor<StoreFile>;
 
 /**
  * Represents a scored store file.
@@ -1154,55 +1157,6 @@ export namespace StoreFile {
   }
 }
 
-export interface FileListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  pagination: FileListResponse.Pagination;
-
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-
-  /**
-   * The list of store files
-   */
-  data: Array<StoreFile>;
-}
-
-export namespace FileListResponse {
-  /**
-   * Response model for cursor-based pagination.
-   */
-  export interface Pagination {
-    /**
-     * Contextual direction-aware flag: True if more items exist in the requested
-     * pagination direction. For 'after': more items after this page. For 'before':
-     * more items before this page.
-     */
-    has_more: boolean;
-
-    /**
-     * Cursor of the first item in this page. Use for backward pagination. None if page
-     * is empty.
-     */
-    first_cursor: string | null;
-
-    /**
-     * Cursor of the last item in this page. Use for forward pagination. None if page
-     * is empty.
-     */
-    last_cursor: string | null;
-
-    /**
-     * Total number of items available across all pages. Only included when
-     * include_total=true was requested. Expensive operation - use sparingly.
-     */
-    total?: number | null;
-  }
-}
-
 /**
  * Response model for file deletion.
  */
@@ -1314,47 +1268,11 @@ export interface FileUpdateParams {
   metadata?: { [key: string]: unknown } | null;
 }
 
-export interface FileListParams {
-  /**
-   * Maximum number of items to return per page (1-100)
-   */
-  limit?: number;
-
-  /**
-   * Cursor for forward pagination - get items after this position. Use last_cursor
-   * from previous response.
-   */
-  after?: string | null;
-
-  /**
-   * Cursor for backward pagination - get items before this position. Use
-   * first_cursor from previous response.
-   */
-  before?: string | null;
-
-  /**
-   * Whether to include total count in response (expensive operation)
-   */
-  include_total?: boolean;
-
+export interface FileListParams extends CursorParams {
   /**
    * Status to filter by
    */
   statuses?: Array<StoreFileStatus> | null;
-
-  /**
-   * Metadata filter to apply to the query
-   */
-  metadata_filter?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
-
-  /**
-   * Search query for fuzzy matching over name and external_id fields
-   */
-  q?: string | null;
 }
 
 export interface FileDeleteParams {
@@ -1493,9 +1411,9 @@ export declare namespace Files {
     type ScoredStoreFile as ScoredStoreFile,
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
-    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
+    type StoreFilesCursor as StoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileUpdateParams as FileUpdateParams,
