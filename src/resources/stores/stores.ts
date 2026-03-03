@@ -9,6 +9,7 @@ import {
   FileDeleteParams,
   FileDeleteResponse,
   FileListParams,
+  FileListResponse,
   FileRetrieveParams,
   FileSearchParams,
   FileSearchResponse,
@@ -17,7 +18,6 @@ import {
   ScoredStoreFile,
   StoreFile,
   StoreFileStatus,
-  StoreFilesCursor,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
@@ -1692,9 +1692,9 @@ export declare namespace Stores {
     type ScoredStoreFile as ScoredStoreFile,
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
+    type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileSearchResponse as FileSearchResponse,
-    type StoreFilesCursor as StoreFilesCursor,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileUpdateParams as FileUpdateParams,

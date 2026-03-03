@@ -5,6 +5,7 @@ export {
   type ScoredStoreFile,
   type StoreFileStatus,
   type StoreFile,
+  type FileListResponse,
   type FileDeleteResponse,
   type FileSearchResponse,
   type FileCreateParams,
