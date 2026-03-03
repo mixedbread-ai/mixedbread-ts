@@ -112,7 +112,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/files/uploads.ts">FileDeleted</a></code>
 - <code><a href="./src/resources/files/uploads.ts">MultipartUploadPart</a></code>
 - <code><a href="./src/resources/files/uploads.ts">MultipartUploadPartURL</a></code>
 - <code><a href="./src/resources/files/uploads.ts">UploadCreateResponse</a></code>

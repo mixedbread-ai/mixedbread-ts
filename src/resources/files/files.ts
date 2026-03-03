@@ -80,7 +80,7 @@ export class Files extends APIResource {
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
    */
-  delete(fileID: string, options?: RequestOptions): APIPromise<UploadsAPI.FileDeleted> {
+  delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleted> {
     return this._client.delete(path`/v1/files/${fileID}`, options);
   }
 
