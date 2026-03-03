@@ -14,7 +14,6 @@ export {
   type FileListParams,
   type FileDeleteParams,
   type FileSearchParams,
-  type StoreFilesCursor,
   type FilePollHelperParams,
   type FileCreateAndPollHelperParams,
   type FileUploadHelperParams,
