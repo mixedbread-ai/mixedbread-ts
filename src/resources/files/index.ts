@@ -2,9 +2,9 @@
 
 export {
   Files,
-  type FileDeleted,
   type FileObject,
   type PaginationWithTotal,
+  type FileDeleteResponse,
   type FileCreateParams,
   type FileUpdateParams,
   type FileListParams,
@@ -17,6 +17,7 @@ export {
   type UploadCreateResponse,
   type UploadRetrieveResponse,
   type UploadListResponse,
+  type UploadAbortResponse,
   type UploadCreateParams,
   type UploadCompleteParams,
 } from './uploads';
