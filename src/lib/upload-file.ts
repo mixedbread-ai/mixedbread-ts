@@ -5,7 +5,7 @@ import type { APIResponseProps } from '../internal/parse';
 import { APIPromise } from '../core/api-promise';
 import { toFile } from '../internal/to-file';
 import { multipartFormRequestOptions } from '../internal/uploads';
-import { getDefaultFetch } from '../internal/shims';
+import type { Fetch } from '../internal/builtin-types';
 
 const DEFAULT_THRESHOLD = 100 * 1024 * 1024; // 100MB
 const DEFAULT_CONCURRENCY = 5;
@@ -119,6 +119,9 @@ export function handleFileCreate(
     const partUrls = uploadResponse.part_urls;
 
     try {
+      // Use the client's configured fetch (respects custom fetch, proxy, TLS settings)
+      const fetchFn: Fetch = (client as any).fetch;
+
       // Step 2: Upload parts with concurrency control
       const completedParts = await uploadParts(
         file,
@@ -126,6 +129,7 @@ export function handleFileCreate(
         concurrency,
         partSize,
         fileSize,
+        fetchFn,
         options?.signal,
         multipartUpload?.onPartUpload,
       );
@@ -163,10 +167,10 @@ async function uploadParts(
   concurrency: number,
   partSize: number,
   fileSize: number,
+  fetchFn: Fetch,
   signal?: AbortSignal | null,
   onPartUpload?: (event: PartUploadEvent) => void,
 ): Promise<CompletedPart[]> {
-  const fetchFn = getDefaultFetch();
   const results: CompletedPart[] = [];
   const totalParts = partUrls.length;
   let uploadedBytes = 0;
