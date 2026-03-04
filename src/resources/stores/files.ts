@@ -459,7 +459,7 @@ export namespace StoreFile {
 
       file_type: string;
 
-      file_size: number;
+      file_size?: number | null;
 
       total_duration_seconds: number;
 
@@ -665,7 +665,7 @@ export namespace StoreFile {
 
       file_type: string;
 
-      file_size: number;
+      file_size?: number | null;
 
       total_duration_seconds: number;
 
@@ -891,7 +891,7 @@ export namespace StoreFile {
 
       file_type: string;
 
-      file_size: number;
+      file_size?: number | null;
 
       total_duration_seconds: number;
 
@@ -1107,7 +1107,7 @@ export namespace StoreFile {
 
       file_type: string;
 
-      file_size: number;
+      file_size?: number | null;
 
       total_duration_seconds: number;
 
