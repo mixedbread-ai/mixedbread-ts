@@ -32,7 +32,7 @@ export class Files extends APIResource {
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
    */
-  create(body: FileCreateParams, options?: RequestOptions): Promise<FileObject> {
+  create(body: FileCreateParams, options?: RequestOptions): APIPromise<FileObject> {
     return handleFileCreate(this._client, body, options);
   }
 

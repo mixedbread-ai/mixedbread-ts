@@ -1,6 +1,8 @@
 import type { Mixedbread } from '../client';
 import type { FileObject, FileCreateParams } from '../resources/files/files';
 import type { RequestOptions } from '../internal/request-options';
+import type { APIResponseProps } from '../internal/parse';
+import { APIPromise } from '../core/api-promise';
 import { toFile } from '../internal/to-file';
 import { multipartFormRequestOptions } from '../internal/uploads';
 import { getDefaultFetch } from '../internal/shims';
@@ -45,86 +47,109 @@ export class MultipartUploadError extends Error {
   }
 }
 
-export async function handleFileCreate(
+function makeResponseProps(response: Response): APIResponseProps {
+  return {
+    response,
+    options: {} as any,
+    controller: new AbortController(),
+    requestLogID: '',
+    retryOfRequestLogID: undefined,
+    startTime: Date.now(),
+  };
+}
+
+export function handleFileCreate(
   client: Mixedbread,
   body: FileCreateParams & { multipartUpload?: MultipartUploadConfig },
   options?: RequestOptions,
-): Promise<FileObject> {
-  const { multipartUpload, ...rest } = body;
-  const threshold = multipartUpload?.threshold ?? DEFAULT_THRESHOLD;
-  const concurrency = multipartUpload?.concurrency ?? DEFAULT_CONCURRENCY;
-  const partSize = multipartUpload?.partSize ?? DEFAULT_PART_SIZE;
+): APIPromise<FileObject> {
+  let resolvedData: FileObject;
 
-  if (partSize < MIN_PART_SIZE) {
-    throw new Error(`partSize must be at least 5MB (${MIN_PART_SIZE} bytes), got ${partSize}`);
-  }
+  const responsePromise: Promise<APIResponseProps> = (async () => {
+    const { multipartUpload, ...rest } = body;
+    const threshold = multipartUpload?.threshold ?? DEFAULT_THRESHOLD;
+    const concurrency = multipartUpload?.concurrency ?? DEFAULT_CONCURRENCY;
+    const partSize = multipartUpload?.partSize ?? DEFAULT_PART_SIZE;
 
-  if (threshold < MIN_PART_SIZE) {
-    throw new Error(`threshold must be at least 5MB (${MIN_PART_SIZE} bytes), got ${threshold}`);
-  }
+    if (partSize < MIN_PART_SIZE) {
+      throw new Error(`partSize must be at least 5MB (${MIN_PART_SIZE} bytes), got ${partSize}`);
+    }
 
-  // Normalize the uploadable to a File object so we can inspect size
-  const file = await toFile(rest.file as any);
-  const fileSize = file.size;
+    if (threshold < MIN_PART_SIZE) {
+      throw new Error(`threshold must be at least 5MB (${MIN_PART_SIZE} bytes), got ${threshold}`);
+    }
 
-  // Small file: delegate to the standard single-request upload
-  if (fileSize <= threshold) {
-    return client.post(
-      '/v1/files',
-      await multipartFormRequestOptions({ body: { file } as Record<string, unknown>, ...options }, client),
-    );
-  }
+    // Normalize the uploadable to a File object so we can inspect size
+    const file = await toFile(rest.file as any);
+    const fileSize = file.size;
 
-  // Large file: multipart upload flow
-  const partCount = Math.ceil(fileSize / partSize);
+    // Small file: delegate to the standard single-request upload
+    if (fileSize <= threshold) {
+      const apiPromise = client.post<FileObject>(
+        '/v1/files',
+        await multipartFormRequestOptions({ body: { file } as Record<string, unknown>, ...options }, client),
+      );
+      const { data, response } = await apiPromise.withResponse();
+      resolvedData = data;
+      return makeResponseProps(response);
+    }
 
-  if (partCount > MAX_PART_COUNT) {
-    throw new Error(
-      `File would require ${partCount} parts, but the maximum is ${MAX_PART_COUNT}. Increase partSize to at least ${Math.ceil(
-        fileSize / MAX_PART_COUNT,
-      )} bytes.`,
-    );
-  }
-  const filename = file.name || 'unknown_file';
-  const mimeType = file.type || 'application/octet-stream';
+    // Large file: multipart upload flow
+    const partCount = Math.ceil(fileSize / partSize);
 
-  // Step 1: Initiate multipart upload
-  const uploadResponse = await client.files.uploads.create({
-    filename,
-    file_size: fileSize,
-    mime_type: mimeType,
-    part_count: partCount,
-  });
+    if (partCount > MAX_PART_COUNT) {
+      throw new Error(
+        `File would require ${partCount} parts, but the maximum is ${MAX_PART_COUNT}. Increase partSize to at least ${Math.ceil(
+          fileSize / MAX_PART_COUNT,
+        )} bytes.`,
+      );
+    }
+    const filename = file.name || 'unknown_file';
+    const mimeType = file.type || 'application/octet-stream';
 
-  const uploadId = uploadResponse.id;
-  const partUrls = uploadResponse.part_urls;
+    // Step 1: Initiate multipart upload
+    const uploadResponse = await client.files.uploads.create({
+      filename,
+      file_size: fileSize,
+      mime_type: mimeType,
+      part_count: partCount,
+    });
 
-  try {
-    // Step 2: Upload parts with concurrency control
-    const completedParts = await uploadParts(
-      file,
-      partUrls,
-      concurrency,
-      partSize,
-      fileSize,
-      options?.signal,
-      multipartUpload?.onPartUpload,
-    );
+    const uploadId = uploadResponse.id;
+    const partUrls = uploadResponse.part_urls;
 
-    // Step 3: Complete the multipart upload
-    return await client.files.uploads.complete(uploadId, { parts: completedParts });
-  } catch (error) {
-    // Attempt to abort on any failure
     try {
-      await client.files.uploads.abort(uploadId);
-    } catch {
-      // Abort is best-effort; ignore failures
+      // Step 2: Upload parts with concurrency control
+      const completedParts = await uploadParts(
+        file,
+        partUrls,
+        concurrency,
+        partSize,
+        fileSize,
+        options?.signal,
+        multipartUpload?.onPartUpload,
+      );
+
+      // Step 3: Complete the multipart upload
+      const completePromise = client.files.uploads.complete(uploadId, { parts: completedParts });
+      const { data, response } = await completePromise.withResponse();
+      resolvedData = data;
+      return makeResponseProps(response);
+    } catch (error) {
+      // Attempt to abort on any failure
+      try {
+        await client.files.uploads.abort(uploadId);
+      } catch {
+        // Abort is best-effort; ignore failures
+      }
+      if (error instanceof MultipartUploadError) {
+        throw error;
+      }
+      throw new MultipartUploadError(error instanceof Error ? error.message : String(error), uploadId);
     }
-    if (error instanceof MultipartUploadError) {
-      throw error;
-    }
-    throw new MultipartUploadError(error instanceof Error ? error.message : String(error), uploadId);
-  }
+  })();
+
+  return new APIPromise<FileObject>(client, responsePromise, async () => resolvedData);
 }
 
 interface CompletedPart {

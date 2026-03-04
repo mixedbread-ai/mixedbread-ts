@@ -6,6 +6,21 @@ function createFile(sizeBytes: number, name = 'test.bin'): File {
   return new File([data], name, { type: 'application/octet-stream' });
 }
 
+// Helper to create a mock APIPromise-like object with withResponse()
+function mockAPIPromise<T>(data: T): any {
+  const promise = Promise.resolve(data) as any;
+  promise.withResponse = async () => ({
+    data,
+    response: new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }),
+  });
+  promise.asResponse = async () =>
+    new Response(JSON.stringify(data), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  return promise;
+}
+
 // Helper to build a mock client with spies
 function createMockClient(overrides?: {
   postResult?: any;
@@ -39,13 +54,13 @@ function createMockClient(overrides?: {
   globalThis.fetch = mockFetch as any;
 
   const uploadsCreate = jest.fn(async () => overrides?.uploadsCreateResult);
-  const uploadsComplete = jest.fn(async () => overrides?.uploadsCompleteResult);
+  const uploadsComplete = jest.fn(() => mockAPIPromise(overrides?.uploadsCompleteResult));
   const uploadsAbort = jest.fn(
     async () => overrides?.uploadsAbortResult ?? { id: 'upload-1', deleted: true },
   );
 
   const client = {
-    post: jest.fn(async () => overrides?.postResult ?? { id: 'file-1', filename: 'test.bin' }),
+    post: jest.fn(() => mockAPIPromise(overrides?.postResult ?? { id: 'file-1', filename: 'test.bin' })),
     files: {
       uploads: {
         create: uploadsCreate,
@@ -173,7 +188,7 @@ describe('handleFileCreate', () => {
               { part_number: 3, url: 'https://s3.example.com/3' },
             ],
           })),
-          complete: jest.fn(async () => ({ id: 'file-1' })),
+          complete: jest.fn(() => mockAPIPromise({ id: 'file-1' })),
           abort: jest.fn(),
         },
       },
