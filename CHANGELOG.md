@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.57.0 (2026-03-04)
+
+Full Changelog: [v0.56.0...v0.57.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.56.0...v0.57.0)
+
+### Features
+
+* also add multipart upload config to store files upload and upload and poll positional arguments ([0d98943](https://github.com/mixedbread-ai/mixedbread-ts/commit/0d989437ff2a71ab580608fcf64a726b29629590))
+* **api:** add uploads (multipart) subresource to files ([dded42d](https://github.com/mixedbread-ai/mixedbread-ts/commit/dded42dd33ca4b9f67413e4e477469bf0b2e026c))
+* **api:** api update ([236f3f8](https://github.com/mixedbread-ai/mixedbread-ts/commit/236f3f8ff6ef9cc732a1e8336179199ed7a8a005))
+* **api:** files uploads (multipart) subresource ([a14e662](https://github.com/mixedbread-ai/mixedbread-ts/commit/a14e662915afd6a7759da3df7a0f8bd75bd27a96))
+* **api:** manual updates ([0c90f04](https://github.com/mixedbread-ai/mixedbread-ts/commit/0c90f04619d97f57562c7ce464662b49aaa2de11))
+* **api:** manual updates ([0cb6997](https://github.com/mixedbread-ai/mixedbread-ts/commit/0cb699743177544a356f3888ea24a1d86d4a1869))
+* **api:** manual updates ([aa32d0f](https://github.com/mixedbread-ai/mixedbread-ts/commit/aa32d0f038351eb9e91be9fb6707671a56849008))
+* use multipart uploads API for files creation ([32c0ef3](https://github.com/mixedbread-ai/mixedbread-ts/commit/32c0ef39f7387afd711a8667482f6a1c33504837))
+
+
+### Bug Fixes
+
+* remove unexported type 'StoreFilesCursor' ([96e3930](https://github.com/mixedbread-ai/mixedbread-ts/commit/96e393097709b54c89010bfe632710b401df75e3))
+* return APIPromise for create file APIs for backwards compatibility ([c361cde](https://github.com/mixedbread-ai/mixedbread-ts/commit/c361cde8c6bd163662c5e20df50101c3e36039bb))
+* use user provided fetch for multipart uploads if provided ([6c522ab](https://github.com/mixedbread-ai/mixedbread-ts/commit/6c522ab9642c9efb265a6469a925ad8401a6581e))
+
 ## 0.56.0 (2026-02-28)
 
 Full Changelog: [v0.55.0...v0.56.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.55.0...v0.56.0)
