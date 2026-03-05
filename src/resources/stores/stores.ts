@@ -358,7 +358,7 @@ export namespace ScoredAudioURLInputChunk {
 
     file_type: string;
 
-    file_size: number;
+    file_size?: number | null;
 
     total_duration_seconds: number;
 
@@ -604,7 +604,7 @@ export namespace ScoredImageURLInputChunk {
 
     file_type: string;
 
-    file_size: number;
+    file_size?: number | null;
 
     total_duration_seconds: number;
 
@@ -850,7 +850,7 @@ export namespace ScoredTextInputChunk {
 
     file_type: string;
 
-    file_size: number;
+    file_size?: number | null;
 
     total_duration_seconds: number;
 
@@ -1086,7 +1086,7 @@ export namespace ScoredVideoURLInputChunk {
 
     file_type: string;
 
-    file_size: number;
+    file_size?: number | null;
 
     total_duration_seconds: number;
 

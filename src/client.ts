@@ -47,16 +47,6 @@ import {
 import { Chat, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
 import {
-  FileCreateParams,
-  FileDeleteResponse,
-  FileListParams,
-  FileObject,
-  FileObjectsCursor,
-  FileUpdateParams,
-  Files,
-  PaginationWithTotal,
-} from './resources/files';
-import {
   DataSource,
   DataSourceCreateParams,
   DataSourceDeleteResponse,
@@ -71,6 +61,16 @@ import {
   Oauth2Params,
 } from './resources/data-sources/data-sources';
 import { Extractions } from './resources/extractions/extractions';
+import {
+  FileCreateParams,
+  FileDeleteResponse,
+  FileListParams,
+  FileObject,
+  FileObjectsCursor,
+  FileUpdateParams,
+  Files,
+  PaginationWithTotal,
+} from './resources/files/files';
 import { Parsing } from './resources/parsing/parsing';
 import {
   ExpiresAfter,

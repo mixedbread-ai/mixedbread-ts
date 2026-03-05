@@ -36,7 +36,7 @@ export {
   type FileUpdateParams,
   type FileListParams,
   type FileObjectsCursor,
-} from './files';
+} from './files/files';
 export { Parsing } from './parsing/parsing';
 export {
   Stores,
