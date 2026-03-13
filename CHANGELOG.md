@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.57.1 (2026-03-12)
+
+Full Changelog: [v0.57.0...v0.57.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.57.0...v0.57.1)
+
+### Bug Fixes
+
+* **client:** preserve URL params already embedded in path ([d239b56](https://github.com/mixedbread-ai/mixedbread-ts/commit/d239b56e551ed970ab63c3a956bab148c24c7371))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([ce5a368](https://github.com/mixedbread-ai/mixedbread-ts/commit/ce5a368b4bb00b5ad2067c28ec4483cdaf114f96))
+* **internal:** codegen related update ([f0d0298](https://github.com/mixedbread-ai/mixedbread-ts/commit/f0d0298506a3f9d96bd876b953f599faa4c082cd))
+* **internal:** update dependencies to address dependabot vulnerabilities ([cb6bfc8](https://github.com/mixedbread-ai/mixedbread-ts/commit/cb6bfc8afa914dfc607c62f11d56d9a0cf900976))
+* **test:** do not count install time for mock server timeout ([9ae9dad](https://github.com/mixedbread-ai/mixedbread-ts/commit/9ae9dad198331a17eca1e5b5cae1abae79fcf571))
+* update placeholder string ([44a82b1](https://github.com/mixedbread-ai/mixedbread-ts/commit/44a82b18245a376c7ed6669f53bc00ea3868a901))
+
 ## 0.57.0 (2026-03-04)
 
 Full Changelog: [v0.56.0...v0.57.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.56.0...v0.57.0)

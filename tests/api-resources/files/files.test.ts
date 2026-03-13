@@ -10,7 +10,7 @@ const client = new Mixedbread({
 describe('resource files', () => {
   test('create: only required params', async () => {
     const responsePromise = client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,7 +23,7 @@ describe('resource files', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.files.create({
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
   });
 
@@ -40,7 +40,7 @@ describe('resource files', () => {
 
   test('update: only required params', async () => {
     const responsePromise = client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -53,7 +53,7 @@ describe('resource files', () => {
 
   test('update: required and optional params', async () => {
     const response = await client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      file: await toFile(Buffer.from('# my file contents'), 'README.md'),
+      file: await toFile(Buffer.from('Example data'), 'README.md'),
     });
   });
 
