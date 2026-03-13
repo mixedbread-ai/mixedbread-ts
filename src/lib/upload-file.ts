@@ -11,6 +11,7 @@ const DEFAULT_THRESHOLD = 10 * 1024 * 1024; // 10MB
 const DEFAULT_CONCURRENCY = 5;
 const DEFAULT_PART_SIZE = 100 * 1024 * 1024; // 100MB per part
 const MIN_PART_SIZE = 1 * 1024 * 1024; // 1MB minimum
+const MIN_PART_SIZE_LABEL = `${MIN_PART_SIZE / (1024 * 1024)}MB`;
 const MAX_PART_COUNT = 10_000;
 
 export interface PartUploadEvent {
@@ -29,9 +30,9 @@ export interface PartUploadEvent {
 export interface MultipartUploadConfig {
   /** Maximum number of concurrent part uploads. Defaults to 5. */
   concurrency?: number;
-  /** File size threshold in bytes above which multipart upload is used. Minimum 5MB. Defaults to 100MB. */
+  /** File size threshold in bytes above which multipart upload is used. Minimum 1MB. Defaults to 100MB. */
   threshold?: number;
-  /** Size of each part in bytes. Minimum 5MB. Must not produce more than 10,000 parts. Defaults to 100MB. */
+  /** Size of each part in bytes. Minimum 1MB. Must not produce more than 10,000 parts. Defaults to 100MB. */
   partSize?: number;
   /** Called after each part is successfully uploaded. */
   onPartUpload?: (event: PartUploadEvent) => void;
@@ -72,11 +73,11 @@ export function handleFileCreate(
     const partSize = multipartUpload?.partSize ?? DEFAULT_PART_SIZE;
 
     if (partSize < MIN_PART_SIZE) {
-      throw new Error(`partSize must be at least 5MB (${MIN_PART_SIZE} bytes), got ${partSize}`);
+      throw new Error(`partSize must be at least ${MIN_PART_SIZE_LABEL} (${MIN_PART_SIZE} bytes), got ${partSize}`);
     }
 
     if (threshold < MIN_PART_SIZE) {
-      throw new Error(`threshold must be at least 5MB (${MIN_PART_SIZE} bytes), got ${threshold}`);
+      throw new Error(`threshold must be at least ${MIN_PART_SIZE_LABEL} (${MIN_PART_SIZE} bytes), got ${threshold}`);
     }
 
     // Normalize the uploadable to a File object so we can inspect size
