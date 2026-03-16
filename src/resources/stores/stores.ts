@@ -348,6 +348,8 @@ export namespace ScoredAudioURLInputChunk {
 
     audio_format: number;
 
+    bpm?: number | null;
+
     file_extension?: string | null;
 
     [k: string]: unknown;
@@ -371,6 +373,8 @@ export namespace ScoredAudioURLInputChunk {
     frame_count: number;
 
     has_audio_stream?: boolean;
+
+    bpm?: number | null;
 
     file_extension?: string | null;
 
@@ -594,6 +598,8 @@ export namespace ScoredImageURLInputChunk {
 
     audio_format: number;
 
+    bpm?: number | null;
+
     file_extension?: string | null;
 
     [k: string]: unknown;
@@ -617,6 +623,8 @@ export namespace ScoredImageURLInputChunk {
     frame_count: number;
 
     has_audio_stream?: boolean;
+
+    bpm?: number | null;
 
     file_extension?: string | null;
 
@@ -840,6 +848,8 @@ export namespace ScoredTextInputChunk {
 
     audio_format: number;
 
+    bpm?: number | null;
+
     file_extension?: string | null;
 
     [k: string]: unknown;
@@ -863,6 +873,8 @@ export namespace ScoredTextInputChunk {
     frame_count: number;
 
     has_audio_stream?: boolean;
+
+    bpm?: number | null;
 
     file_extension?: string | null;
 
@@ -1076,6 +1088,8 @@ export namespace ScoredVideoURLInputChunk {
 
     audio_format: number;
 
+    bpm?: number | null;
+
     file_extension?: string | null;
 
     [k: string]: unknown;
@@ -1099,6 +1113,8 @@ export namespace ScoredVideoURLInputChunk {
     frame_count: number;
 
     has_audio_stream?: boolean;
+
+    bpm?: number | null;
 
     file_extension?: string | null;
 
