@@ -727,6 +727,8 @@ export namespace StoreFile {
 
       audio_format: number;
 
+      bpm?: number | null;
+
       file_extension?: string | null;
 
       [k: string]: unknown;
@@ -750,6 +752,8 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      bpm?: number | null;
 
       file_extension?: string | null;
 
@@ -933,6 +937,8 @@ export namespace StoreFile {
 
       audio_format: number;
 
+      bpm?: number | null;
+
       file_extension?: string | null;
 
       [k: string]: unknown;
@@ -956,6 +962,8 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      bpm?: number | null;
 
       file_extension?: string | null;
 
@@ -1159,6 +1167,8 @@ export namespace StoreFile {
 
       audio_format: number;
 
+      bpm?: number | null;
+
       file_extension?: string | null;
 
       [k: string]: unknown;
@@ -1182,6 +1192,8 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      bpm?: number | null;
 
       file_extension?: string | null;
 
@@ -1375,6 +1387,8 @@ export namespace StoreFile {
 
       audio_format: number;
 
+      bpm?: number | null;
+
       file_extension?: string | null;
 
       [k: string]: unknown;
@@ -1398,6 +1412,8 @@ export namespace StoreFile {
       frame_count: number;
 
       has_audio_stream?: boolean;
+
+      bpm?: number | null;
 
       file_extension?: string | null;
 
