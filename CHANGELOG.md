@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.58.0 (2026-03-17)
+
+Full Changelog: [v0.57.1...v0.58.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.57.1...v0.58.0)
+
+### Features
+
+* **api:** api update ([a09f028](https://github.com/mixedbread-ai/mixedbread-ts/commit/a09f0289312e11c757997f9c40379d5d4831f1e6))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([a3bc46c](https://github.com/mixedbread-ai/mixedbread-ts/commit/a3bc46c0f6a5125028bbdab9f4b221d9e385c298))
+
 ## 0.57.1 (2026-03-12)
 
 Full Changelog: [v0.57.0...v0.57.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.57.0...v0.57.1)
