@@ -623,11 +623,11 @@ export namespace StoreFile {
 
       file_type?: 'text/markdown';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -663,11 +663,11 @@ export namespace StoreFile {
 
       file_type?: 'text/plain';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -683,9 +683,9 @@ export namespace StoreFile {
 
       file_type?: 'application/pdf';
 
-      total_pages: number;
+      total_pages?: number | null;
 
-      total_size: number;
+      total_size?: number | null;
 
       file_extension?: string | null;
 
@@ -697,11 +697,11 @@ export namespace StoreFile {
 
       file_type: string;
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -715,17 +715,17 @@ export namespace StoreFile {
     export interface AudioChunkGeneratedMetadata {
       type?: 'audio';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      sample_rate: number;
+      sample_rate?: number | null;
 
-      channels: number;
+      channels?: number | null;
 
-      audio_format: number;
+      audio_format?: number | null;
 
       bpm?: number | null;
 
@@ -737,19 +737,19 @@ export namespace StoreFile {
     export interface VideoChunkGeneratedMetadata {
       type?: 'video';
 
-      file_type: string;
+      file_type?: string;
 
       file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      fps: number;
+      fps?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
-      frame_count: number;
+      frame_count?: number | null;
 
       has_audio_stream?: boolean;
 
@@ -763,13 +763,13 @@ export namespace StoreFile {
     export interface ImageChunkGeneratedMetadata {
       type?: 'image';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
       file_extension?: string | null;
 
@@ -833,11 +833,11 @@ export namespace StoreFile {
 
       file_type?: 'text/markdown';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -873,11 +873,11 @@ export namespace StoreFile {
 
       file_type?: 'text/plain';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -893,9 +893,9 @@ export namespace StoreFile {
 
       file_type?: 'application/pdf';
 
-      total_pages: number;
+      total_pages?: number | null;
 
-      total_size: number;
+      total_size?: number | null;
 
       file_extension?: string | null;
 
@@ -907,11 +907,11 @@ export namespace StoreFile {
 
       file_type: string;
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -925,17 +925,17 @@ export namespace StoreFile {
     export interface AudioChunkGeneratedMetadata {
       type?: 'audio';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      sample_rate: number;
+      sample_rate?: number | null;
 
-      channels: number;
+      channels?: number | null;
 
-      audio_format: number;
+      audio_format?: number | null;
 
       bpm?: number | null;
 
@@ -947,19 +947,19 @@ export namespace StoreFile {
     export interface VideoChunkGeneratedMetadata {
       type?: 'video';
 
-      file_type: string;
+      file_type?: string;
 
       file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      fps: number;
+      fps?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
-      frame_count: number;
+      frame_count?: number | null;
 
       has_audio_stream?: boolean;
 
@@ -973,13 +973,13 @@ export namespace StoreFile {
     export interface ImageChunkGeneratedMetadata {
       type?: 'image';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
       file_extension?: string | null;
 
@@ -1063,11 +1063,11 @@ export namespace StoreFile {
 
       file_type?: 'text/markdown';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -1103,11 +1103,11 @@ export namespace StoreFile {
 
       file_type?: 'text/plain';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -1123,9 +1123,9 @@ export namespace StoreFile {
 
       file_type?: 'application/pdf';
 
-      total_pages: number;
+      total_pages?: number | null;
 
-      total_size: number;
+      total_size?: number | null;
 
       file_extension?: string | null;
 
@@ -1137,11 +1137,11 @@ export namespace StoreFile {
 
       file_type: string;
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -1155,17 +1155,17 @@ export namespace StoreFile {
     export interface AudioChunkGeneratedMetadata {
       type?: 'audio';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      sample_rate: number;
+      sample_rate?: number | null;
 
-      channels: number;
+      channels?: number | null;
 
-      audio_format: number;
+      audio_format?: number | null;
 
       bpm?: number | null;
 
@@ -1177,19 +1177,19 @@ export namespace StoreFile {
     export interface VideoChunkGeneratedMetadata {
       type?: 'video';
 
-      file_type: string;
+      file_type?: string;
 
       file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      fps: number;
+      fps?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
-      frame_count: number;
+      frame_count?: number | null;
 
       has_audio_stream?: boolean;
 
@@ -1203,13 +1203,13 @@ export namespace StoreFile {
     export interface ImageChunkGeneratedMetadata {
       type?: 'image';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
       file_extension?: string | null;
 
@@ -1283,11 +1283,11 @@ export namespace StoreFile {
 
       file_type?: 'text/markdown';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -1323,11 +1323,11 @@ export namespace StoreFile {
 
       file_type?: 'text/plain';
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -1343,9 +1343,9 @@ export namespace StoreFile {
 
       file_type?: 'application/pdf';
 
-      total_pages: number;
+      total_pages?: number | null;
 
-      total_size: number;
+      total_size?: number | null;
 
       file_extension?: string | null;
 
@@ -1357,11 +1357,11 @@ export namespace StoreFile {
 
       file_type: string;
 
-      language: string;
+      language?: string | null;
 
-      word_count: number;
+      word_count?: number | null;
 
-      file_size: number;
+      file_size?: number | null;
 
       start_line?: number;
 
@@ -1375,17 +1375,17 @@ export namespace StoreFile {
     export interface AudioChunkGeneratedMetadata {
       type?: 'audio';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      sample_rate: number;
+      sample_rate?: number | null;
 
-      channels: number;
+      channels?: number | null;
 
-      audio_format: number;
+      audio_format?: number | null;
 
       bpm?: number | null;
 
@@ -1397,19 +1397,19 @@ export namespace StoreFile {
     export interface VideoChunkGeneratedMetadata {
       type?: 'video';
 
-      file_type: string;
+      file_type?: string;
 
       file_size?: number | null;
 
-      total_duration_seconds: number;
+      total_duration_seconds?: number | null;
 
-      fps: number;
+      fps?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
-      frame_count: number;
+      frame_count?: number | null;
 
       has_audio_stream?: boolean;
 
@@ -1423,13 +1423,13 @@ export namespace StoreFile {
     export interface ImageChunkGeneratedMetadata {
       type?: 'image';
 
-      file_type: string;
+      file_type?: string;
 
-      file_size: number;
+      file_size?: number | null;
 
-      width: number;
+      width?: number | null;
 
-      height: number;
+      height?: number | null;
 
       file_extension?: string | null;
 

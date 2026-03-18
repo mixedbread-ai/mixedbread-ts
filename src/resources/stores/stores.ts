@@ -244,11 +244,11 @@ export namespace ScoredAudioURLInputChunk {
 
     file_type?: 'text/markdown';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -284,11 +284,11 @@ export namespace ScoredAudioURLInputChunk {
 
     file_type?: 'text/plain';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -304,9 +304,9 @@ export namespace ScoredAudioURLInputChunk {
 
     file_type?: 'application/pdf';
 
-    total_pages: number;
+    total_pages?: number | null;
 
-    total_size: number;
+    total_size?: number | null;
 
     file_extension?: string | null;
 
@@ -318,11 +318,11 @@ export namespace ScoredAudioURLInputChunk {
 
     file_type: string;
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -336,17 +336,17 @@ export namespace ScoredAudioURLInputChunk {
   export interface AudioChunkGeneratedMetadata {
     type?: 'audio';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    sample_rate: number;
+    sample_rate?: number | null;
 
-    channels: number;
+    channels?: number | null;
 
-    audio_format: number;
+    audio_format?: number | null;
 
     bpm?: number | null;
 
@@ -358,19 +358,19 @@ export namespace ScoredAudioURLInputChunk {
   export interface VideoChunkGeneratedMetadata {
     type?: 'video';
 
-    file_type: string;
+    file_type?: string;
 
     file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    fps: number;
+    fps?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
-    frame_count: number;
+    frame_count?: number | null;
 
     has_audio_stream?: boolean;
 
@@ -384,13 +384,13 @@ export namespace ScoredAudioURLInputChunk {
   export interface ImageChunkGeneratedMetadata {
     type?: 'image';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
     file_extension?: string | null;
 
@@ -494,11 +494,11 @@ export namespace ScoredImageURLInputChunk {
 
     file_type?: 'text/markdown';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -534,11 +534,11 @@ export namespace ScoredImageURLInputChunk {
 
     file_type?: 'text/plain';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -554,9 +554,9 @@ export namespace ScoredImageURLInputChunk {
 
     file_type?: 'application/pdf';
 
-    total_pages: number;
+    total_pages?: number | null;
 
-    total_size: number;
+    total_size?: number | null;
 
     file_extension?: string | null;
 
@@ -568,11 +568,11 @@ export namespace ScoredImageURLInputChunk {
 
     file_type: string;
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -586,17 +586,17 @@ export namespace ScoredImageURLInputChunk {
   export interface AudioChunkGeneratedMetadata {
     type?: 'audio';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    sample_rate: number;
+    sample_rate?: number | null;
 
-    channels: number;
+    channels?: number | null;
 
-    audio_format: number;
+    audio_format?: number | null;
 
     bpm?: number | null;
 
@@ -608,19 +608,19 @@ export namespace ScoredImageURLInputChunk {
   export interface VideoChunkGeneratedMetadata {
     type?: 'video';
 
-    file_type: string;
+    file_type?: string;
 
     file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    fps: number;
+    fps?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
-    frame_count: number;
+    frame_count?: number | null;
 
     has_audio_stream?: boolean;
 
@@ -634,13 +634,13 @@ export namespace ScoredImageURLInputChunk {
   export interface ImageChunkGeneratedMetadata {
     type?: 'image';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
     file_extension?: string | null;
 
@@ -744,11 +744,11 @@ export namespace ScoredTextInputChunk {
 
     file_type?: 'text/markdown';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -784,11 +784,11 @@ export namespace ScoredTextInputChunk {
 
     file_type?: 'text/plain';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -804,9 +804,9 @@ export namespace ScoredTextInputChunk {
 
     file_type?: 'application/pdf';
 
-    total_pages: number;
+    total_pages?: number | null;
 
-    total_size: number;
+    total_size?: number | null;
 
     file_extension?: string | null;
 
@@ -818,11 +818,11 @@ export namespace ScoredTextInputChunk {
 
     file_type: string;
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -836,17 +836,17 @@ export namespace ScoredTextInputChunk {
   export interface AudioChunkGeneratedMetadata {
     type?: 'audio';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    sample_rate: number;
+    sample_rate?: number | null;
 
-    channels: number;
+    channels?: number | null;
 
-    audio_format: number;
+    audio_format?: number | null;
 
     bpm?: number | null;
 
@@ -858,19 +858,19 @@ export namespace ScoredTextInputChunk {
   export interface VideoChunkGeneratedMetadata {
     type?: 'video';
 
-    file_type: string;
+    file_type?: string;
 
     file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    fps: number;
+    fps?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
-    frame_count: number;
+    frame_count?: number | null;
 
     has_audio_stream?: boolean;
 
@@ -884,13 +884,13 @@ export namespace ScoredTextInputChunk {
   export interface ImageChunkGeneratedMetadata {
     type?: 'image';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
     file_extension?: string | null;
 
@@ -984,11 +984,11 @@ export namespace ScoredVideoURLInputChunk {
 
     file_type?: 'text/markdown';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
 
@@ -1024,11 +1024,11 @@ export namespace ScoredVideoURLInputChunk {
 
     file_type?: 'text/plain';
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -1044,9 +1044,9 @@ export namespace ScoredVideoURLInputChunk {
 
     file_type?: 'application/pdf';
 
-    total_pages: number;
+    total_pages?: number | null;
 
-    total_size: number;
+    total_size?: number | null;
 
     file_extension?: string | null;
 
@@ -1058,11 +1058,11 @@ export namespace ScoredVideoURLInputChunk {
 
     file_type: string;
 
-    language: string;
+    language?: string | null;
 
-    word_count: number;
+    word_count?: number | null;
 
-    file_size: number;
+    file_size?: number | null;
 
     start_line?: number;
 
@@ -1076,17 +1076,17 @@ export namespace ScoredVideoURLInputChunk {
   export interface AudioChunkGeneratedMetadata {
     type?: 'audio';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    sample_rate: number;
+    sample_rate?: number | null;
 
-    channels: number;
+    channels?: number | null;
 
-    audio_format: number;
+    audio_format?: number | null;
 
     bpm?: number | null;
 
@@ -1098,19 +1098,19 @@ export namespace ScoredVideoURLInputChunk {
   export interface VideoChunkGeneratedMetadata {
     type?: 'video';
 
-    file_type: string;
+    file_type?: string;
 
     file_size?: number | null;
 
-    total_duration_seconds: number;
+    total_duration_seconds?: number | null;
 
-    fps: number;
+    fps?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
-    frame_count: number;
+    frame_count?: number | null;
 
     has_audio_stream?: boolean;
 
@@ -1124,13 +1124,13 @@ export namespace ScoredVideoURLInputChunk {
   export interface ImageChunkGeneratedMetadata {
     type?: 'image';
 
-    file_type: string;
+    file_type?: string;
 
-    file_size: number;
+    file_size?: number | null;
 
-    width: number;
+    width?: number | null;
 
-    height: number;
+    height?: number | null;
 
     file_extension?: string | null;
 
