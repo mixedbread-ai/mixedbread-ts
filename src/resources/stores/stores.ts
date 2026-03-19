@@ -1371,6 +1371,12 @@ export namespace StoreChunkSearchOptions {
      * Maximum queries per round
      */
     queries_per_round?: number;
+
+    /**
+     * Additional custom instructions (followed only when not in conflict with existing
+     * rules)
+     */
+    instructions?: string | null;
   }
 }
 
@@ -1619,6 +1625,12 @@ export interface StoreQuestionAnsweringParams {
    * Whether to stream the answer
    */
   stream?: boolean;
+
+  /**
+   * Additional custom instructions (followed only when not in conflict with existing
+   * rules)
+   */
+  instructions?: string | null;
 
   /**
    * Question answering configuration options
