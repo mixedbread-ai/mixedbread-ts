@@ -144,6 +144,7 @@ describe('resource stores', () => {
         apply_search_rules: true,
       },
       stream: true,
+      instructions: 'x',
       qa_options: { cite: true, multimodal: true },
     });
   });
