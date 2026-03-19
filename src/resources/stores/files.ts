@@ -1500,6 +1500,12 @@ export namespace FileSearchParams {
        * Maximum queries per round
        */
       queries_per_round?: number;
+
+      /**
+       * Additional custom instructions (followed only when not in conflict with existing
+       * rules)
+       */
+      instructions?: string | null;
     }
   }
 }
