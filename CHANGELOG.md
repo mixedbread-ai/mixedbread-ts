@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.61.0 (2026-03-24)
+
+Full Changelog: [v0.60.0...v0.61.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.60.0...v0.61.0)
+
+### Features
+
+* **api:** api update ([40afdfd](https://github.com/mixedbread-ai/mixedbread-ts/commit/40afdfd3873ce2f925b45d924e2dee7d8d4e4dd9))
+
+
+### Chores
+
+* **internal:** update gitignore ([200a54e](https://github.com/mixedbread-ai/mixedbread-ts/commit/200a54e73fbe4e84e0ba632a99e9e0b141f0f0a6))
+* **tests:** bump steady to v0.19.4 ([ad5d8d2](https://github.com/mixedbread-ai/mixedbread-ts/commit/ad5d8d24233d9e46c2f0d7b2b948defb936237c6))
+* **tests:** bump steady to v0.19.5 ([ff37fc4](https://github.com/mixedbread-ai/mixedbread-ts/commit/ff37fc4eaf96f92acd2619b1eae1f74b7adc84f2))
+* **tests:** bump steady to v0.19.6 ([880bd60](https://github.com/mixedbread-ai/mixedbread-ts/commit/880bd60440cb60e8b9f01202a1c3709038cbcffa))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([a4c3591](https://github.com/mixedbread-ai/mixedbread-ts/commit/a4c3591d5d0e125ca8d15612719651f4403d7134))
+
 ## 0.60.0 (2026-03-19)
 
 Full Changelog: [v0.59.0...v0.60.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.59.0...v0.60.0)
