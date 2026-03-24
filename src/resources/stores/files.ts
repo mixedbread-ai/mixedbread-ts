@@ -462,6 +462,11 @@ export interface ScoredStoreFile {
   > | null;
 
   /**
+   * Presigned URL for file content
+   */
+  content_url: string;
+
+  /**
    * score of the file
    */
   score: number;
@@ -559,6 +564,11 @@ export interface StoreFile {
     | StoreFile.AudioURLInputChunk
     | StoreFile.VideoURLInputChunk
   > | null;
+
+  /**
+   * Presigned URL for file content
+   */
+  content_url: string;
 }
 
 export namespace StoreFile {
@@ -1042,11 +1052,6 @@ export namespace StoreFile {
     transcription?: string | null;
 
     /**
-     * summary of the audio
-     */
-    summary?: string | null;
-
-    /**
      * Model for audio URL validation.
      */
     audio_url?: AudioURLInputChunk.AudioURL | null;
@@ -1265,11 +1270,6 @@ export namespace StoreFile {
      * speech recognition (sr) text of the video
      */
     transcription?: string | null;
-
-    /**
-     * summary of the video
-     */
-    summary?: string | null;
 
     /**
      * Model for video URL validation.

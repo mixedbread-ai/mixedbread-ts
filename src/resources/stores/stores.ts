@@ -223,11 +223,6 @@ export interface ScoredAudioURLInputChunk {
   transcription?: string | null;
 
   /**
-   * summary of the audio
-   */
-  summary?: string | null;
-
-  /**
    * Model for audio URL validation.
    */
   audio_url?: ScoredAudioURLInputChunk.AudioURL | null;
@@ -966,11 +961,6 @@ export interface ScoredVideoURLInputChunk {
    * speech recognition (sr) text of the video
    */
   transcription?: string | null;
-
-  /**
-   * summary of the video
-   */
-  summary?: string | null;
 
   /**
    * Model for video URL validation.
