@@ -11,11 +11,8 @@ import {
   FileListParams,
   FileListResponse,
   FileRetrieveParams,
-  FileSearchParams,
-  FileSearchResponse,
   FileUpdateParams,
   Files,
-  ScoredStoreFile,
   StoreFile,
   StoreFileStatus,
 } from './files';
@@ -1707,17 +1704,14 @@ export declare namespace Stores {
 
   export {
     Files as Files,
-    type ScoredStoreFile as ScoredStoreFile,
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
-    type FileSearchParams as FileSearchParams,
   };
 }

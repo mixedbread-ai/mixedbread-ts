@@ -2,8 +2,6 @@
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
-import * as ContentAPI from '../extractions/content';
-import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -88,121 +86,6 @@ export class Files extends APIResource {
   ): APIPromise<FileDeleteResponse> {
     const { store_identifier } = params;
     return this._client.delete(path`/v1/stores/${store_identifier}/files/${fileIdentifier}`, options);
-  }
-
-  /**
-   * Search for files within a store based on semantic similarity.
-   *
-   * Args: store_identifier: The ID or name of the store to search within
-   * search_params: Search configuration including query text, pagination, and
-   * filters
-   *
-   * Returns: StoreFileSearchResponse: List of matching files with relevance scores
-   */
-  search(body: FileSearchParams, options?: RequestOptions): APIPromise<FileSearchResponse> {
-    return this._client.post('/v1/stores/files/search', { body, ...options });
-  }
-}
-
-/**
- * Represents a scored store file.
- */
-export interface ScoredStoreFile {
-  /**
-   * Unique identifier for the file
-   */
-  id: string;
-
-  /**
-   * Name of the file
-   */
-  filename?: string;
-
-  /**
-   * Optional file metadata
-   */
-  metadata?: unknown;
-
-  /**
-   * External identifier for this file in the store
-   */
-  external_id?: string | null;
-
-  /**
-   * Processing status of the file
-   */
-  status?: StoreFileStatus;
-
-  /**
-   * Last error message if processing failed
-   */
-  last_error?: unknown;
-
-  /**
-   * ID of the containing store
-   */
-  store_id: string;
-
-  /**
-   * Timestamp of store file creation
-   */
-  created_at: string;
-
-  /**
-   * Version number of the file
-   */
-  version?: number | null;
-
-  /**
-   * Storage usage in bytes
-   */
-  usage_bytes?: number | null;
-
-  /**
-   * Storage usage in tokens
-   */
-  usage_tokens?: number | null;
-
-  /**
-   * Configuration for a file.
-   */
-  config?: ScoredStoreFile.Config | null;
-
-  /**
-   * Type of the object
-   */
-  object?: 'store.file';
-
-  /**
-   * Array of scored file chunks
-   */
-  chunks: Array<
-    | StoresAPI.ScoredTextInputChunk
-    | StoresAPI.ScoredImageURLInputChunk
-    | StoresAPI.ScoredAudioURLInputChunk
-    | StoresAPI.ScoredVideoURLInputChunk
-  > | null;
-
-  /**
-   * Presigned URL for file content
-   */
-  content_url: string;
-
-  /**
-   * score of the file
-   */
-  score: number;
-}
-
-export namespace ScoredStoreFile {
-  /**
-   * Configuration for a file.
-   */
-  export interface Config {
-    /**
-     * Strategy for adding the file, this overrides the store-level default
-     */
-    parsing_strategy?: 'fast' | 'high_quality';
   }
 }
 
@@ -1239,18 +1122,6 @@ export interface FileDeleteResponse {
   object?: 'store.file';
 }
 
-export interface FileSearchResponse {
-  /**
-   * The object type of the response
-   */
-  object?: 'list';
-
-  /**
-   * The list of scored store files
-   */
-  data: Array<ScoredStoreFile>;
-}
-
 export interface FileCreateParams {
   /**
    * Optional metadata for the file
@@ -1380,149 +1251,16 @@ export interface FileDeleteParams {
   store_identifier: string;
 }
 
-export interface FileSearchParams {
-  /**
-   * Search query text
-   */
-  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
-
-  /**
-   * IDs or names of stores to search
-   */
-  store_identifiers: Array<string>;
-
-  /**
-   * Number of results to return
-   */
-  top_k?: number;
-
-  /**
-   * Optional filter conditions
-   */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
-
-  /**
-   * Optional list of file IDs to filter chunks by (inclusion filter)
-   */
-  file_ids?: Array<unknown> | Array<string> | null;
-
-  /**
-   * Search configuration options
-   */
-  search_options?: FileSearchParams.SearchOptions;
-}
-
-export namespace FileSearchParams {
-  /**
-   * Search configuration options
-   */
-  export interface SearchOptions {
-    /**
-     * Minimum similarity score threshold
-     */
-    score_threshold?: number;
-
-    /**
-     * Whether to rewrite the query. Ignored when agentic is enabled (the agent handles
-     * query decomposition).
-     */
-    rewrite_query?: boolean;
-
-    /**
-     * Whether to rerank results and optional reranking configuration. Ignored when
-     * agentic is enabled (the agent handles ranking).
-     */
-    rerank?: boolean | SearchOptions.RerankConfig | null;
-
-    /**
-     * Whether to use agentic multi-query search with automatic query decomposition and
-     * ranking. When enabled, rewrite_query and rerank options are ignored.
-     */
-    agentic?: boolean | SearchOptions.AgenticSearchConfig | null;
-
-    /**
-     * Whether to return file metadata
-     */
-    return_metadata?: boolean;
-
-    /**
-     * Whether to return matching text chunks
-     */
-    return_chunks?: boolean;
-
-    /**
-     * Number of chunks to return for each file
-     */
-    chunks_per_file?: number;
-
-    /**
-     * Whether to apply search rules
-     */
-    apply_search_rules?: boolean;
-  }
-
-  export namespace SearchOptions {
-    /**
-     * Represents a reranking configuration.
-     */
-    export interface RerankConfig {
-      /**
-       * The name of the reranking model
-       */
-      model?: string;
-
-      /**
-       * Whether to include metadata in the reranked results
-       */
-      with_metadata?: boolean | Array<string>;
-
-      /**
-       * Maximum number of results to return after reranking. If None, returns all
-       * reranked results.
-       */
-      top_k?: number | null;
-    }
-
-    /**
-     * Configuration for agentic multi-query search.
-     */
-    export interface AgenticSearchConfig {
-      /**
-       * Maximum number of search rounds
-       */
-      max_rounds?: number;
-
-      /**
-       * Maximum queries per round
-       */
-      queries_per_round?: number;
-
-      /**
-       * Additional custom instructions (followed only when not in conflict with existing
-       * rules)
-       */
-      instructions?: string | null;
-    }
-  }
-}
-
 export declare namespace Files {
   export {
-    type ScoredStoreFile as ScoredStoreFile,
     type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
-    type FileSearchResponse as FileSearchResponse,
     type FileCreateParams as FileCreateParams,
     type FileRetrieveParams as FileRetrieveParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
-    type FileSearchParams as FileSearchParams,
   };
 }

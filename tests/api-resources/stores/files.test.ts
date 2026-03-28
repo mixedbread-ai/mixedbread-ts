@@ -101,42 +101,4 @@ describe('resource files', () => {
       store_identifier: 'store_identifier',
     });
   });
-
-  test('search: only required params', async () => {
-    const responsePromise = client.stores.files.search({
-      query: 'how to configure SSL',
-      store_identifiers: ['string'],
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('search: required and optional params', async () => {
-    const response = await client.stores.files.search({
-      query: 'how to configure SSL',
-      store_identifiers: ['string'],
-      top_k: 1,
-      filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
-      },
-      file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
-      search_options: {
-        score_threshold: 0,
-        rewrite_query: true,
-        rerank: true,
-        agentic: true,
-        return_metadata: true,
-        return_chunks: true,
-        chunks_per_file: 0,
-        apply_search_rules: true,
-      },
-    });
-  });
 });

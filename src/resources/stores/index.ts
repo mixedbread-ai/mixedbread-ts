@@ -2,18 +2,15 @@
 
 export {
   Files,
-  type ScoredStoreFile,
   type StoreFileStatus,
   type StoreFile,
   type FileListResponse,
   type FileDeleteResponse,
-  type FileSearchResponse,
   type FileCreateParams,
   type FileRetrieveParams,
   type FileUpdateParams,
   type FileListParams,
   type FileDeleteParams,
-  type FileSearchParams,
 } from './files';
 export {
   Stores,
