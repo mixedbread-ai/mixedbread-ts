@@ -877,6 +877,11 @@ export namespace StoreFile {
     transcription?: string | null;
 
     /**
+     * summary of the video
+     */
+    summary?: string | null;
+
+    /**
      * Model for video URL validation.
      */
     video_url?: VideoURLInputChunk.VideoURL | null;

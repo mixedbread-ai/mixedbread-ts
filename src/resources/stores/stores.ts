@@ -960,6 +960,11 @@ export interface ScoredVideoURLInputChunk {
   transcription?: string | null;
 
   /**
+   * summary of the video
+   */
+  summary?: string | null;
+
+  /**
    * Model for video URL validation.
    */
   video_url?: ScoredVideoURLInputChunk.VideoURL | null;
