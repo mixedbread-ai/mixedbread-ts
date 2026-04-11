@@ -14,6 +14,15 @@ export class Connectors extends APIResource {
    * params: The connector to create.
    *
    * Returns: The created connector.
+   *
+   * @example
+   * ```ts
+   * const dataSourceConnector =
+   *   await client.dataSources.connectors.create(
+   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     { store_id: 'store_id' },
+   *   );
+   * ```
    */
   create(
     dataSourceID: string,
@@ -30,6 +39,18 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to get.
    *
    * Returns: The connector.
+   *
+   * @example
+   * ```ts
+   * const dataSourceConnector =
+   *   await client.dataSources.connectors.retrieve(
+   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     {
+   *       data_source_id:
+   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     },
+   *   );
+   * ```
    */
   retrieve(
     connectorID: string,
@@ -48,6 +69,18 @@ export class Connectors extends APIResource {
    * update.
    *
    * Returns: The updated connector.
+   *
+   * @example
+   * ```ts
+   * const dataSourceConnector =
+   *   await client.dataSources.connectors.update(
+   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     {
+   *       data_source_id:
+   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     },
+   *   );
+   * ```
    */
   update(
     connectorID: string,
@@ -68,6 +101,16 @@ export class Connectors extends APIResource {
    * pagination: The pagination options.
    *
    * Returns: The list of connectors.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const dataSourceConnector of client.dataSources.connectors.list(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * )) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     dataSourceID: string,
@@ -88,6 +131,18 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to delete.
    *
    * Returns: The deleted connector.
+   *
+   * @example
+   * ```ts
+   * const connector =
+   *   await client.dataSources.connectors.delete(
+   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     {
+   *       data_source_id:
+   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *     },
+   *   );
+   * ```
    */
   delete(
     connectorID: string,

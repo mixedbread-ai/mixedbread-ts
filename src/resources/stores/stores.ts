@@ -31,6 +31,11 @@ export class Stores extends APIResource {
    * description, and metadata.
    *
    * Returns: VectorStore: The response containing the created vector store details.
+   *
+   * @example
+   * ```ts
+   * const store = await client.stores.create();
+   * ```
    */
   create(body: StoreCreateParams, options?: RequestOptions): APIPromise<Store> {
     return this._client.post('/v1/stores', { body, ...options });
@@ -42,6 +47,13 @@ export class Stores extends APIResource {
    * Args: store_identifier: The ID or name of the store to retrieve.
    *
    * Returns: Store: The response containing the store details.
+   *
+   * @example
+   * ```ts
+   * const store = await client.stores.retrieve(
+   *   'store_identifier',
+   * );
+   * ```
    */
   retrieve(storeIdentifier: string, options?: RequestOptions): APIPromise<Store> {
     return this._client.get(path`/v1/stores/${storeIdentifier}`, options);
@@ -54,6 +66,13 @@ export class Stores extends APIResource {
    * StoreCreate object containing the name, description, and metadata.
    *
    * Returns: Store: The response containing the updated store details.
+   *
+   * @example
+   * ```ts
+   * const store = await client.stores.update(
+   *   'store_identifier',
+   * );
+   * ```
    */
   update(storeIdentifier: string, body: StoreUpdateParams, options?: RequestOptions): APIPromise<Store> {
     return this._client.put(path`/v1/stores/${storeIdentifier}`, { body, ...options });
@@ -66,6 +85,14 @@ export class Stores extends APIResource {
    * vector stores.
    *
    * Returns: StoreListResponse: The list of stores.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const store of client.stores.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query: StoreListParams | null | undefined = {},
@@ -80,6 +107,13 @@ export class Stores extends APIResource {
    * Args: store_identifier: The ID or name of the store to delete.
    *
    * Returns: Store: The response containing the deleted store details.
+   *
+   * @example
+   * ```ts
+   * const store = await client.stores.delete(
+   *   'store_identifier',
+   * );
+   * ```
    */
   delete(storeIdentifier: string, options?: RequestOptions): APIPromise<StoreDeleteResponse> {
     return this._client.delete(path`/v1/stores/${storeIdentifier}`, options);
@@ -87,6 +121,13 @@ export class Stores extends APIResource {
 
   /**
    * Get metadata facets
+   *
+   * @example
+   * ```ts
+   * const response = await client.stores.metadataFacets({
+   *   store_identifiers: ['string'],
+   * });
+   * ```
    */
   metadataFacets(
     body: StoreMetadataFacetsParams,
@@ -97,6 +138,13 @@ export class Stores extends APIResource {
 
   /**
    * Question answering
+   *
+   * @example
+   * ```ts
+   * const response = await client.stores.questionAnswering({
+   *   store_identifiers: ['string'],
+   * });
+   * ```
    */
   questionAnswering(
     body: StoreQuestionAnsweringParams,
@@ -127,6 +175,14 @@ export class Stores extends APIResource {
    *
    * Raises: HTTPException (400): If search parameters are invalid HTTPException
    * (404): If no vector stores are found to search
+   *
+   * @example
+   * ```ts
+   * const response = await client.stores.search({
+   *   query: 'how to configure SSL',
+   *   store_identifiers: ['string'],
+   * });
+   * ```
    */
   search(body: StoreSearchParams, options?: RequestOptions): APIPromise<StoreSearchResponse> {
     return this._client.post('/v1/stores/search', { body, ...options });

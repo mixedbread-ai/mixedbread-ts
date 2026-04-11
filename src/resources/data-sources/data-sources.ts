@@ -27,6 +27,13 @@ export class DataSources extends APIResource {
    * Args: params: The data source to create.
    *
    * Returns: The created data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.create({
+   *   name: 'name',
+   * });
+   * ```
    */
   create(body: DataSourceCreateParams, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.post('/v1/data_sources/', { body, ...options });
@@ -38,6 +45,13 @@ export class DataSources extends APIResource {
    * Args: data_source_id: The ID of the data source to fetch.
    *
    * Returns: The data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.retrieve(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   retrieve(dataSourceID: string, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.get(path`/v1/data_sources/${dataSourceID}`, options);
@@ -50,6 +64,14 @@ export class DataSources extends APIResource {
    * source to update.
    *
    * Returns: The updated data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.update(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *   { name: 'name' },
+   * );
+   * ```
    */
   update(
     dataSourceID: string,
@@ -63,6 +85,14 @@ export class DataSources extends APIResource {
    * Get all data sources.
    *
    * Returns: The list of data sources.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const dataSource of client.dataSources.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query: DataSourceListParams | null | undefined = {},
@@ -75,6 +105,13 @@ export class DataSources extends APIResource {
    * Delete a data source.
    *
    * Args: data_source_id: The ID of the data source to delete.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.delete(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   delete(dataSourceID: string, options?: RequestOptions): APIPromise<DataSourceDeleteResponse> {
     return this._client.delete(path`/v1/data_sources/${dataSourceID}`, options);

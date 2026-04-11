@@ -17,6 +17,14 @@ export class Files extends APIResource {
    * to add to the store.
    *
    * Returns: VectorStoreFile: The uploaded file details.
+   *
+   * @example
+   * ```ts
+   * const storeFile = await client.stores.files.create(
+   *   'store_identifier',
+   *   { file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
+   * );
+   * ```
    */
   create(storeIdentifier: string, body: FileCreateParams, options?: RequestOptions): APIPromise<StoreFile> {
     return this._client.post(path`/v1/stores/${storeIdentifier}/files`, { body, ...options });
@@ -29,6 +37,14 @@ export class Files extends APIResource {
    * the file. options: Get file options.
    *
    * Returns: VectorStoreFile: The file details.
+   *
+   * @example
+   * ```ts
+   * const storeFile = await client.stores.files.retrieve(
+   *   'file_identifier',
+   *   { store_identifier: 'store_identifier' },
+   * );
+   * ```
    */
   retrieve(
     fileIdentifier: string,
@@ -49,6 +65,14 @@ export class Files extends APIResource {
    * name of the file to update. update_params: Metadata update payload.
    *
    * Returns: StoreFile: The updated file details.
+   *
+   * @example
+   * ```ts
+   * const storeFile = await client.stores.files.update(
+   *   'file_identifier',
+   *   { store_identifier: 'store_identifier' },
+   * );
+   * ```
    */
   update(fileIdentifier: string, params: FileUpdateParams, options?: RequestOptions): APIPromise<StoreFile> {
     const { store_identifier, ...body } = params;
@@ -65,6 +89,13 @@ export class Files extends APIResource {
    * Pagination parameters and metadata filter
    *
    * Returns: VectorStoreFileListResponse: Paginated list of vector store files
+   *
+   * @example
+   * ```ts
+   * const files = await client.stores.files.list(
+   *   'store_identifier',
+   * );
+   * ```
    */
   list(
     storeIdentifier: string,
@@ -81,6 +112,14 @@ export class Files extends APIResource {
    * the file to delete.
    *
    * Returns: VectorStoreFileDeleted: The deleted file details.
+   *
+   * @example
+   * ```ts
+   * const file = await client.stores.files.delete(
+   *   'file_identifier',
+   *   { store_identifier: 'store_identifier' },
+   * );
+   * ```
    */
   delete(
     fileIdentifier: string,
