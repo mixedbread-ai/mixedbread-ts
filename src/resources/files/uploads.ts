@@ -10,6 +10,15 @@ export class Uploads extends APIResource {
   /**
    * Initiate a multipart upload and receive presigned URLs for uploading parts
    * directly to storage.
+   *
+   * @example
+   * ```ts
+   * const upload = await client.files.uploads.create({
+   *   filename: 'document.pdf',
+   *   file_size: 10485760,
+   *   mime_type: 'application/pdf',
+   * });
+   * ```
    */
   create(body: UploadCreateParams, options?: RequestOptions): APIPromise<UploadCreateResponse> {
     return this._client.post('/v1/files/uploads', { body, ...options });
@@ -18,6 +27,13 @@ export class Uploads extends APIResource {
   /**
    * Get a multipart upload's details with fresh presigned URLs for any parts not yet
    * uploaded.
+   *
+   * @example
+   * ```ts
+   * const upload = await client.files.uploads.retrieve(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   retrieve(uploadID: string, options?: RequestOptions): APIPromise<UploadRetrieveResponse> {
     return this._client.get(path`/v1/files/uploads/${uploadID}`, options);
@@ -25,6 +41,11 @@ export class Uploads extends APIResource {
 
   /**
    * List all in-progress multipart uploads for the authenticated organization.
+   *
+   * @example
+   * ```ts
+   * const uploads = await client.files.uploads.list();
+   * ```
    */
   list(options?: RequestOptions): APIPromise<UploadListResponse> {
     return this._client.get('/v1/files/uploads', options);
@@ -32,6 +53,13 @@ export class Uploads extends APIResource {
 
   /**
    * Abort a multipart upload and clean up any uploaded parts.
+   *
+   * @example
+   * ```ts
+   * const response = await client.files.uploads.abort(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   abort(uploadID: string, options?: RequestOptions): APIPromise<UploadAbortResponse> {
     return this._client.post(path`/v1/files/uploads/${uploadID}/abort`, options);
@@ -40,6 +68,14 @@ export class Uploads extends APIResource {
   /**
    * Complete a multipart upload after all parts have been uploaded. Creates the file
    * object and returns it.
+   *
+   * @example
+   * ```ts
+   * const fileObject = await client.files.uploads.complete(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *   { parts: [{ part_number: 1, etag: 'etag' }] },
+   * );
+   * ```
    */
   complete(
     uploadID: string,

@@ -30,6 +30,13 @@ export class Files extends APIResource {
    * Args: file: The file to upload.
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
+   *
+   * @example
+   * ```ts
+   * const fileObject = await client.files.create({
+   *   file: fs.createReadStream('path/to/file'),
+   * });
+   * ```
    */
   create(body: FileCreateParams, options?: RequestOptions): APIPromise<FileObject> {
     return this._client.post('/v1/files', multipartFormRequestOptions({ body, ...options }, this._client));
@@ -41,6 +48,13 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to retrieve.
    *
    * Returns: FileResponse: The response containing the file details.
+   *
+   * @example
+   * ```ts
+   * const fileObject = await client.files.retrieve(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   retrieve(fileID: string, options?: RequestOptions): APIPromise<FileObject> {
     return this._client.get(path`/v1/files/${fileID}`, options);
@@ -52,6 +66,14 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to update. file: The new details for the file.
    *
    * Returns: FileObject: The updated file details.
+   *
+   * @example
+   * ```ts
+   * const fileObject = await client.files.update(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *   { file: fs.createReadStream('path/to/file') },
+   * );
+   * ```
    */
   update(fileID: string, body: FileUpdateParams, options?: RequestOptions): APIPromise<FileObject> {
     return this._client.post(
@@ -66,6 +88,14 @@ export class Files extends APIResource {
    * Args: pagination: The pagination options
    *
    * Returns: A list of files belonging to the user.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const fileObject of client.files.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query: FileListParams | null | undefined = {},
@@ -80,6 +110,13 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to delete.
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
+   *
+   * @example
+   * ```ts
+   * const file = await client.files.delete(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleteResponse> {
     return this._client.delete(path`/v1/files/${fileID}`, options);
@@ -91,6 +128,16 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to download.
    *
    * Returns: FileStreamResponse: The response containing the file to be downloaded.
+   *
+   * @example
+   * ```ts
+   * const response = await client.files.content(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   *
+   * const content = await response.blob();
+   * console.log(content);
+   * ```
    */
   content(fileID: string, options?: RequestOptions): APIPromise<Response> {
     return this._client.get(path`/v1/files/${fileID}/content`, {
