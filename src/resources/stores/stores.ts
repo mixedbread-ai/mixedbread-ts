@@ -1221,6 +1221,11 @@ export interface Store {
   is_public?: boolean;
 
   /**
+   * License for public stores
+   */
+  license?: string | null;
+
+  /**
    * Additional metadata associated with the store
    */
   metadata?: unknown;
@@ -1507,6 +1512,11 @@ export interface StoreCreateParams {
   is_public?: boolean;
 
   /**
+   * License for public stores
+   */
+  license?: string | null;
+
+  /**
    * Represents an expiration policy for a store.
    */
   expires_after?: ExpiresAfter | null;
@@ -1573,6 +1583,11 @@ export interface StoreUpdateParams {
    * Whether the store can be accessed by anyone with valid login credentials
    */
   is_public?: boolean | null;
+
+  /**
+   * License for public stores
+   */
+  license?: string | null;
 
   /**
    * Represents an expiration policy for a store.
