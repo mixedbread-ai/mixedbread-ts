@@ -269,6 +269,11 @@ export namespace StoreFile {
      * Text content
      */
     text?: string | null;
+
+    /**
+     * LLM-generated context that situates this chunk within its source document
+     */
+    context?: string | null;
   }
 
   export namespace TextInputChunk {
