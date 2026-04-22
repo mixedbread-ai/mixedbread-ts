@@ -784,6 +784,11 @@ export interface ScoredTextInputChunk {
    * Text content
    */
   text?: string | null;
+
+  /**
+   * LLM-generated context that situates this chunk within its source document
+   */
+  context?: string | null;
 }
 
 export namespace ScoredTextInputChunk {
@@ -1312,6 +1317,13 @@ export namespace Store {
        * included (flattened). When a list, only specified fields are included.
        */
       with_metadata?: boolean | Array<string>;
+
+      /**
+       * Use an LLM to generate a short context for each text chunk that situates it
+       * within the full document, improving retrieval accuracy. Only applies to text
+       * content during non-sliced ingestion.
+       */
+      with_file_context?: boolean;
     }
   }
 
@@ -1563,6 +1575,13 @@ export namespace StoreCreateParams {
        * included (flattened). When a list, only specified fields are included.
        */
       with_metadata?: boolean | Array<string>;
+
+      /**
+       * Use an LLM to generate a short context for each text chunk that situates it
+       * within the full document, improving retrieval accuracy. Only applies to text
+       * content during non-sliced ingestion.
+       */
+      with_file_context?: boolean;
     }
   }
 }
