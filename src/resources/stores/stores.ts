@@ -5,6 +5,7 @@ import * as Shared from '../shared';
 import * as ContentAPI from '../extractions/content';
 import * as FilesAPI from './files';
 import {
+  AudioURLInputChunk,
   FileCreateParams,
   FileDeleteParams,
   FileDeleteResponse,
@@ -13,8 +14,12 @@ import {
   FileRetrieveParams,
   FileUpdateParams,
   Files,
+  ImageURLInputChunk,
   StoreFile,
+  StoreFileConfig,
   StoreFileStatus,
+  TextInputChunk,
+  VideoURLInputChunk,
 } from './files';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
@@ -192,6 +197,95 @@ export class Stores extends APIResource {
 export type StoresCursor = Cursor<Store>;
 
 /**
+ * Configuration for agentic multi-query search.
+ */
+export interface AgenticSearchConfig {
+  /**
+   * Maximum number of search rounds
+   */
+  max_rounds?: number;
+
+  /**
+   * Maximum queries per round
+   */
+  queries_per_round?: number;
+
+  /**
+   * Additional custom instructions (followed only when not in conflict with existing
+   * rules)
+   */
+  instructions?: string | null;
+}
+
+export interface AudioChunkGeneratedMetadata {
+  type?: 'audio';
+
+  file_type?: string;
+
+  file_size?: number | null;
+
+  total_duration_seconds?: number | null;
+
+  sample_rate?: number | null;
+
+  channels?: number | null;
+
+  audio_format?: number | null;
+
+  bpm?: number | null;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+/**
+ * Model for audio URL validation.
+ */
+export interface AudioURL {
+  /**
+   * The audio URL. Can be either a URL or a Data URI.
+   */
+  url: string;
+}
+
+export interface CodeChunkGeneratedMetadata {
+  type?: 'code';
+
+  file_type: string;
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+export interface ContextualizationConfig {
+  /**
+   * Include all metadata or specific fields in the contextualization. Supports dot
+   * notation for nested fields (e.g., 'author.name'). When True, all metadata is
+   * included (flattened). When a list, only specified fields are included.
+   */
+  with_metadata?: boolean | Array<string>;
+
+  /**
+   * Use an LLM to generate a short context for each text chunk that situates it
+   * within the full document, improving retrieval accuracy. Only applies to text
+   * content during non-sliced ingestion.
+   */
+  with_file_context?: boolean;
+}
+
+/**
  * Represents an expiration policy for a store.
  */
 export interface ExpiresAfter {
@@ -204,6 +298,139 @@ export interface ExpiresAfter {
    * Number of days after which the store expires
    */
   days?: number;
+}
+
+/**
+ * Tracks counts of files in different states within a store.
+ */
+export interface FileCounts {
+  /**
+   * Number of files waiting to be processed
+   */
+  pending?: number;
+
+  /**
+   * Number of files currently being processed
+   */
+  in_progress?: number;
+
+  /**
+   * Number of files whose processing was cancelled
+   */
+  cancelled?: number;
+
+  /**
+   * Number of successfully processed files
+   */
+  completed?: number;
+
+  /**
+   * Number of files that failed processing
+   */
+  failed?: number;
+
+  /**
+   * Total number of files
+   */
+  total?: number;
+}
+
+export interface ImageChunkGeneratedMetadata {
+  type?: 'image';
+
+  file_type?: string;
+
+  file_size?: number | null;
+
+  width?: number | null;
+
+  height?: number | null;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+/**
+ * Model for image URL validation.
+ */
+export interface ImageURLOutput {
+  /**
+   * The image URL. Can be either a URL or a Data URI.
+   */
+  url: string;
+
+  /**
+   * The image format/mimetype
+   */
+  format?: string;
+}
+
+export interface MarkdownChunkGeneratedMetadata {
+  type?: 'markdown';
+
+  file_type?: 'text/markdown';
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  chunk_headings?: Array<MarkdownHeading>;
+
+  heading_context?: Array<MarkdownHeading>;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+
+  frontmatter?: { [key: string]: unknown };
+
+  [k: string]: unknown;
+}
+
+export interface MarkdownHeading {
+  level: number;
+
+  text: string;
+}
+
+export interface PdfChunkGeneratedMetadata {
+  type?: 'pdf';
+
+  file_type?: 'application/pdf';
+
+  total_pages?: number | null;
+
+  total_size?: number | null;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+/**
+ * Represents a reranking configuration.
+ */
+export interface RerankConfig {
+  /**
+   * The name of the reranking model
+   */
+  model?: string;
+
+  /**
+   * Whether to include metadata in the reranked results
+   */
+  with_metadata?: boolean | Array<string>;
+
+  /**
+   * Maximum number of results to return after reranking. If None, returns all
+   * reranked results.
+   */
+  top_k?: number | null;
 }
 
 export interface ScoredAudioURLInputChunk {
@@ -221,13 +448,13 @@ export interface ScoredAudioURLInputChunk {
    * metadata of the chunk
    */
   generated_metadata?:
-    | ScoredAudioURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.AudioChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.VideoChunkGeneratedMetadata
-    | ScoredAudioURLInputChunk.ImageChunkGeneratedMetadata
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
     | null;
 
   /**
@@ -278,182 +505,12 @@ export interface ScoredAudioURLInputChunk {
   /**
    * Model for audio URL validation.
    */
-  audio_url?: ScoredAudioURLInputChunk.AudioURL | null;
+  audio_url?: AudioURL | null;
 
   /**
    * The sampling rate of the audio.
    */
   sampling_rate: number;
-}
-
-export namespace ScoredAudioURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    frontmatter?: { [key: string]: unknown };
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages?: number | null;
-
-    total_size?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    sample_rate?: number | null;
-
-    channels?: number | null;
-
-    audio_format?: number | null;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface VideoChunkGeneratedMetadata {
-    type?: 'video';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    fps?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    frame_count?: number | null;
-
-    has_audio_stream?: boolean;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface ImageChunkGeneratedMetadata {
-    type?: 'image';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  /**
-   * Model for audio URL validation.
-   */
-  export interface AudioURL {
-    /**
-     * The audio URL. Can be either a URL or a Data URI.
-     */
-    url: string;
-  }
 }
 
 export interface ScoredImageURLInputChunk {
@@ -471,13 +528,13 @@ export interface ScoredImageURLInputChunk {
    * metadata of the chunk
    */
   generated_metadata?:
-    | ScoredImageURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.AudioChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.VideoChunkGeneratedMetadata
-    | ScoredImageURLInputChunk.ImageChunkGeneratedMetadata
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
     | null;
 
   /**
@@ -533,182 +590,7 @@ export interface ScoredImageURLInputChunk {
   /**
    * Model for image URL validation.
    */
-  image_url?: ScoredImageURLInputChunk.ImageURL | null;
-}
-
-export namespace ScoredImageURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    frontmatter?: { [key: string]: unknown };
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages?: number | null;
-
-    total_size?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    sample_rate?: number | null;
-
-    channels?: number | null;
-
-    audio_format?: number | null;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface VideoChunkGeneratedMetadata {
-    type?: 'video';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    fps?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    frame_count?: number | null;
-
-    has_audio_stream?: boolean;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface ImageChunkGeneratedMetadata {
-    type?: 'image';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  /**
-   * Model for image URL validation.
-   */
-  export interface ImageURL {
-    /**
-     * The image URL. Can be either a URL or a Data URI.
-     */
-    url: string;
-
-    /**
-     * The image format/mimetype
-     */
-    format?: string;
-  }
+  image_url?: ImageURLOutput | null;
 }
 
 export interface ScoredTextInputChunk {
@@ -726,13 +608,13 @@ export interface ScoredTextInputChunk {
    * metadata of the chunk
    */
   generated_metadata?:
-    | ScoredTextInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredTextInputChunk.TextChunkGeneratedMetadata
-    | ScoredTextInputChunk.PdfChunkGeneratedMetadata
-    | ScoredTextInputChunk.CodeChunkGeneratedMetadata
-    | ScoredTextInputChunk.AudioChunkGeneratedMetadata
-    | ScoredTextInputChunk.VideoChunkGeneratedMetadata
-    | ScoredTextInputChunk.ImageChunkGeneratedMetadata
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
     | null;
 
   /**
@@ -791,166 +673,6 @@ export interface ScoredTextInputChunk {
   context?: string | null;
 }
 
-export namespace ScoredTextInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    frontmatter?: { [key: string]: unknown };
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages?: number | null;
-
-    total_size?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    sample_rate?: number | null;
-
-    channels?: number | null;
-
-    audio_format?: number | null;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface VideoChunkGeneratedMetadata {
-    type?: 'video';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    fps?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    frame_count?: number | null;
-
-    has_audio_stream?: boolean;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface ImageChunkGeneratedMetadata {
-    type?: 'image';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-}
-
 export interface ScoredVideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -966,13 +688,13 @@ export interface ScoredVideoURLInputChunk {
    * metadata of the chunk
    */
   generated_metadata?:
-    | ScoredVideoURLInputChunk.MarkdownChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.TextChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.PdfChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.CodeChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.AudioChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.VideoChunkGeneratedMetadata
-    | ScoredVideoURLInputChunk.ImageChunkGeneratedMetadata
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
     | null;
 
   /**
@@ -1028,177 +750,7 @@ export interface ScoredVideoURLInputChunk {
   /**
    * Model for video URL validation.
    */
-  video_url?: ScoredVideoURLInputChunk.VideoURL | null;
-}
-
-export namespace ScoredVideoURLInputChunk {
-  export interface MarkdownChunkGeneratedMetadata {
-    type?: 'markdown';
-
-    file_type?: 'text/markdown';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    chunk_headings?: Array<MarkdownChunkGeneratedMetadata.ChunkHeading>;
-
-    heading_context?: Array<MarkdownChunkGeneratedMetadata.HeadingContext>;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    frontmatter?: { [key: string]: unknown };
-
-    [k: string]: unknown;
-  }
-
-  export namespace MarkdownChunkGeneratedMetadata {
-    export interface ChunkHeading {
-      level: number;
-
-      text: string;
-    }
-
-    export interface HeadingContext {
-      level: number;
-
-      text: string;
-    }
-  }
-
-  export interface TextChunkGeneratedMetadata {
-    type?: 'text';
-
-    file_type?: 'text/plain';
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface PdfChunkGeneratedMetadata {
-    type?: 'pdf';
-
-    file_type?: 'application/pdf';
-
-    total_pages?: number | null;
-
-    total_size?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface CodeChunkGeneratedMetadata {
-    type?: 'code';
-
-    file_type: string;
-
-    language?: string | null;
-
-    word_count?: number | null;
-
-    file_size?: number | null;
-
-    start_line?: number;
-
-    num_lines?: number;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface AudioChunkGeneratedMetadata {
-    type?: 'audio';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    sample_rate?: number | null;
-
-    channels?: number | null;
-
-    audio_format?: number | null;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface VideoChunkGeneratedMetadata {
-    type?: 'video';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    total_duration_seconds?: number | null;
-
-    fps?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    frame_count?: number | null;
-
-    has_audio_stream?: boolean;
-
-    bpm?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  export interface ImageChunkGeneratedMetadata {
-    type?: 'image';
-
-    file_type?: string;
-
-    file_size?: number | null;
-
-    width?: number | null;
-
-    height?: number | null;
-
-    file_extension?: string | null;
-
-    [k: string]: unknown;
-  }
-
-  /**
-   * Model for video URL validation.
-   */
-  export interface VideoURL {
-    /**
-     * The video URL. Can be either a URL or a Data URI.
-     */
-    url: string;
-  }
+  video_url?: VideoURL | null;
 }
 
 /**
@@ -1238,12 +790,12 @@ export interface Store {
   /**
    * Configuration for a store.
    */
-  config?: Store.Config | null;
+  config?: StoreConfig | null;
 
   /**
    * Counts of files in different states
    */
-  file_counts?: Store.FileCounts;
+  file_counts?: FileCounts;
 
   /**
    * Represents an expiration policy for a store.
@@ -1291,78 +843,6 @@ export interface Store {
   object?: 'store';
 }
 
-export namespace Store {
-  /**
-   * Configuration for a store.
-   */
-  export interface Config {
-    /**
-     * Contextualize files with metadata
-     */
-    contextualization?: boolean | Config.ContextualizationConfig;
-
-    /**
-     * Whether to save original content in the store. When False, only vectors are
-     * indexed without the original content (index-only mode). This is useful for data
-     * privacy. Note: Reranking is not supported when content is not saved.
-     */
-    save_content?: boolean;
-  }
-
-  export namespace Config {
-    export interface ContextualizationConfig {
-      /**
-       * Include all metadata or specific fields in the contextualization. Supports dot
-       * notation for nested fields (e.g., 'author.name'). When True, all metadata is
-       * included (flattened). When a list, only specified fields are included.
-       */
-      with_metadata?: boolean | Array<string>;
-
-      /**
-       * Use an LLM to generate a short context for each text chunk that situates it
-       * within the full document, improving retrieval accuracy. Only applies to text
-       * content during non-sliced ingestion.
-       */
-      with_file_context?: boolean;
-    }
-  }
-
-  /**
-   * Counts of files in different states
-   */
-  export interface FileCounts {
-    /**
-     * Number of files waiting to be processed
-     */
-    pending?: number;
-
-    /**
-     * Number of files currently being processed
-     */
-    in_progress?: number;
-
-    /**
-     * Number of files whose processing was cancelled
-     */
-    cancelled?: number;
-
-    /**
-     * Number of successfully processed files
-     */
-    completed?: number;
-
-    /**
-     * Number of files that failed processing
-     */
-    failed?: number;
-
-    /**
-     * Total number of files
-     */
-    total?: number;
-  }
-}
-
 /**
  * Options for configuring store chunk searches.
  */
@@ -1382,13 +862,13 @@ export interface StoreChunkSearchOptions {
    * Whether to rerank results and optional reranking configuration. Ignored when
    * agentic is enabled (the agent handles ranking).
    */
-  rerank?: boolean | StoreChunkSearchOptions.RerankConfig | null;
+  rerank?: boolean | RerankConfig | null;
 
   /**
    * Whether to use agentic multi-query search with automatic query decomposition and
    * ranking. When enabled, rewrite_query and rerank options are ignored.
    */
-  agentic?: boolean | StoreChunkSearchOptions.AgenticSearchConfig | null;
+  agentic?: boolean | AgenticSearchConfig | null;
 
   /**
    * Whether to return file metadata
@@ -1401,48 +881,77 @@ export interface StoreChunkSearchOptions {
   apply_search_rules?: boolean;
 }
 
-export namespace StoreChunkSearchOptions {
+/**
+ * Configuration for a store.
+ */
+export interface StoreConfig {
   /**
-   * Represents a reranking configuration.
+   * Contextualize files with metadata
    */
-  export interface RerankConfig {
-    /**
-     * The name of the reranking model
-     */
-    model?: string;
-
-    /**
-     * Whether to include metadata in the reranked results
-     */
-    with_metadata?: boolean | Array<string>;
-
-    /**
-     * Maximum number of results to return after reranking. If None, returns all
-     * reranked results.
-     */
-    top_k?: number | null;
-  }
+  contextualization?: boolean | ContextualizationConfig;
 
   /**
-   * Configuration for agentic multi-query search.
+   * Whether to save original content in the store. When False, only vectors are
+   * indexed without the original content (index-only mode). This is useful for data
+   * privacy. Note: Reranking is not supported when content is not saved.
    */
-  export interface AgenticSearchConfig {
-    /**
-     * Maximum number of search rounds
-     */
-    max_rounds?: number;
+  save_content?: boolean;
+}
 
-    /**
-     * Maximum queries per round
-     */
-    queries_per_round?: number;
+export interface TextChunkGeneratedMetadata {
+  type?: 'text';
 
-    /**
-     * Additional custom instructions (followed only when not in conflict with existing
-     * rules)
-     */
-    instructions?: string | null;
-  }
+  file_type?: 'text/plain';
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+export interface VideoChunkGeneratedMetadata {
+  type?: 'video';
+
+  file_type?: string;
+
+  file_size?: number | null;
+
+  total_duration_seconds?: number | null;
+
+  fps?: number | null;
+
+  width?: number | null;
+
+  height?: number | null;
+
+  frame_count?: number | null;
+
+  has_audio_stream?: boolean;
+
+  bpm?: number | null;
+
+  file_extension?: string | null;
+
+  [k: string]: unknown;
+}
+
+/**
+ * Model for video URL validation.
+ */
+export interface VideoURL {
+  /**
+   * The video URL. Can be either a URL or a Data URI.
+   */
+  url: string;
 }
 
 /**
@@ -1541,49 +1050,12 @@ export interface StoreCreateParams {
   /**
    * Configuration for a store.
    */
-  config?: StoreCreateParams.Config | null;
+  config?: StoreConfig | null;
 
   /**
    * Optional list of file IDs
    */
   file_ids?: Array<string> | null;
-}
-
-export namespace StoreCreateParams {
-  /**
-   * Configuration for a store.
-   */
-  export interface Config {
-    /**
-     * Contextualize files with metadata
-     */
-    contextualization?: boolean | Config.ContextualizationConfig;
-
-    /**
-     * Whether to save original content in the store. When False, only vectors are
-     * indexed without the original content (index-only mode). This is useful for data
-     * privacy. Note: Reranking is not supported when content is not saved.
-     */
-    save_content?: boolean;
-  }
-
-  export namespace Config {
-    export interface ContextualizationConfig {
-      /**
-       * Include all metadata or specific fields in the contextualization. Supports dot
-       * notation for nested fields (e.g., 'author.name'). When True, all metadata is
-       * included (flattened). When a list, only specified fields are included.
-       */
-      with_metadata?: boolean | Array<string>;
-
-      /**
-       * Use an LLM to generate a short context for each text chunk that situates it
-       * within the full document, improving retrieval accuracy. Only applies to text
-       * content during non-sliced ingestion.
-       */
-      with_file_context?: boolean;
-    }
-  }
 }
 
 export interface StoreUpdateParams {
@@ -1777,13 +1249,29 @@ Stores.Files = Files;
 
 export declare namespace Stores {
   export {
+    type AgenticSearchConfig as AgenticSearchConfig,
+    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
+    type AudioURL as AudioURL,
+    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
+    type ContextualizationConfig as ContextualizationConfig,
     type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
+    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
+    type ImageURLOutput as ImageURLOutput,
+    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
+    type MarkdownHeading as MarkdownHeading,
+    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
+    type RerankConfig as RerankConfig,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
+    type StoreConfig as StoreConfig,
+    type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type VideoChunkGeneratedMetadata as VideoChunkGeneratedMetadata,
+    type VideoURL as VideoURL,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
@@ -1799,8 +1287,13 @@ export declare namespace Stores {
 
   export {
     Files as Files,
-    type StoreFileStatus as StoreFileStatus,
+    type AudioURLInputChunk as AudioURLInputChunk,
+    type ImageURLInputChunk as ImageURLInputChunk,
     type StoreFile as StoreFile,
+    type StoreFileConfig as StoreFileConfig,
+    type StoreFileStatus as StoreFileStatus,
+    type TextInputChunk as TextInputChunk,
+    type VideoURLInputChunk as VideoURLInputChunk,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
     type FileCreateParams as FileCreateParams,

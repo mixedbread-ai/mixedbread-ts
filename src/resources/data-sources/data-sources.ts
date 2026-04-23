@@ -121,6 +121,18 @@ export class DataSources extends APIResource {
 export type DataSourcesCursor = Cursor<DataSource>;
 
 /**
+ * Base class for API key create or update parameters.
+ */
+export interface APIKeyCreateOrUpdateParams {
+  type?: 'api_key';
+
+  /**
+   * The API key
+   */
+  api_key: string;
+}
+
+/**
  * Service-level representation of a data source.
  */
 export interface DataSource {
@@ -157,7 +169,7 @@ export interface DataSource {
   /**
    * Authentication parameters
    */
-  auth_params: DataSourceOauth2Params | DataSource.DataSourceAPIKeyParams | null;
+  auth_params: DataSourceOauth2Params | DataSourceAPIKeyParams | null;
 
   /**
    * The type of the object
@@ -165,18 +177,16 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
-  /**
-   * Authentication parameters for a API key data source.
-   */
-  export interface DataSourceAPIKeyParams {
-    type?: 'api_key';
+/**
+ * Authentication parameters for a API key data source.
+ */
+export interface DataSourceAPIKeyParams {
+  type?: 'api_key';
 
-    /**
-     * The API key
-     */
-    api_key: string;
-  }
+  /**
+   * The API key
+   */
+  api_key: string;
 }
 
 /**
@@ -271,21 +281,7 @@ export interface NotionDataSource {
    * The authentication parameters of the data source. Notion supports OAuth2 and API
    * key.
    */
-  auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-}
-
-export namespace NotionDataSource {
-  /**
-   * Base class for API key create or update parameters.
-   */
-  export interface APIKeyCreateOrUpdateParams {
-    type?: 'api_key';
-
-    /**
-     * The API key
-     */
-    api_key: string;
-  }
+  auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
 }
 
 /**
@@ -340,21 +336,7 @@ export declare namespace DataSourceCreateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-  }
-
-  export namespace NotionDataSource {
-    /**
-     * Base class for API key create or update parameters.
-     */
-    export interface APIKeyCreateOrUpdateParams {
-      type?: 'api_key';
-
-      /**
-       * The API key
-       */
-      api_key: string;
-    }
+    auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
   }
 
   export interface LinearDataSource {
@@ -405,21 +387,7 @@ export declare namespace DataSourceUpdateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-  }
-
-  export namespace NotionDataSource {
-    /**
-     * Base class for API key create or update parameters.
-     */
-    export interface APIKeyCreateOrUpdateParams {
-      type?: 'api_key';
-
-      /**
-       * The API key
-       */
-      api_key: string;
-    }
+    auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
   }
 
   export interface LinearDataSource {
@@ -451,7 +419,9 @@ DataSources.Connectors = Connectors;
 
 export declare namespace DataSources {
   export {
+    type APIKeyCreateOrUpdateParams as APIKeyCreateOrUpdateParams,
     type DataSource as DataSource,
+    type DataSourceAPIKeyParams as DataSourceAPIKeyParams,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
     type LinearDataSource as LinearDataSource,
