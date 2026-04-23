@@ -26,13 +26,29 @@ Types:
 
 Types:
 
+- <code><a href="./src/resources/stores/stores.ts">AgenticSearchConfig</a></code>
+- <code><a href="./src/resources/stores/stores.ts">AudioChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">AudioURL</a></code>
+- <code><a href="./src/resources/stores/stores.ts">CodeChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">ContextualizationConfig</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ExpiresAfter</a></code>
+- <code><a href="./src/resources/stores/stores.ts">FileCounts</a></code>
+- <code><a href="./src/resources/stores/stores.ts">ImageChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">ImageURLOutput</a></code>
+- <code><a href="./src/resources/stores/stores.ts">MarkdownChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">MarkdownHeading</a></code>
+- <code><a href="./src/resources/stores/stores.ts">PdfChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">RerankConfig</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredAudioURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredImageURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredTextInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredVideoURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">Store</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreChunkSearchOptions</a></code>
+- <code><a href="./src/resources/stores/stores.ts">StoreConfig</a></code>
+- <code><a href="./src/resources/stores/stores.ts">TextChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">VideoChunkGeneratedMetadata</a></code>
+- <code><a href="./src/resources/stores/stores.ts">VideoURL</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreDeleteResponse</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreMetadataFacetsResponse</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreQuestionAnsweringResponse</a></code>
@@ -53,12 +69,15 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/stores/files.ts">ScoredStoreFile</a></code>
-- <code><a href="./src/resources/stores/files.ts">StoreFileStatus</a></code>
+- <code><a href="./src/resources/stores/files.ts">AudioURLInputChunk</a></code>
+- <code><a href="./src/resources/stores/files.ts">ImageURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFile</a></code>
+- <code><a href="./src/resources/stores/files.ts">StoreFileConfig</a></code>
+- <code><a href="./src/resources/stores/files.ts">StoreFileStatus</a></code>
+- <code><a href="./src/resources/stores/files.ts">TextInputChunk</a></code>
+- <code><a href="./src/resources/stores/files.ts">VideoURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileListResponse</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileDeleteResponse</a></code>
-- <code><a href="./src/resources/stores/files.ts">FileSearchResponse</a></code>
 
 Methods:
 
@@ -67,7 +86,6 @@ Methods:
 - <code title="patch /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">update</a>(fileIdentifier, { ...params }) -> StoreFile</code>
 - <code title="post /v1/stores/{store_identifier}/files/list">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> FileListResponse</code>
 - <code title="delete /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">delete</a>(fileIdentifier, { ...params }) -> FileDeleteResponse</code>
-- <code title="post /v1/stores/files/search">client.stores.files.<a href="./src/resources/stores/files.ts">search</a>({ ...params }) -> FileSearchResponse</code>
 
 # Parsing
 
@@ -75,10 +93,13 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/parsing/jobs.ts">Chunk</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">ChunkElement</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ChunkingStrategy</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">DocumentParserResult</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ElementType</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">ParsingJobStatus</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">ParsingJobStatus</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ReturnFormat</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
@@ -180,7 +201,9 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/data-sources/data-sources.ts">APIKeyCreateOrUpdateParams</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSource</a></code>
+- <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceAPIKeyParams</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceOauth2Params</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">DataSourceType</a></code>
 - <code><a href="./src/resources/data-sources/data-sources.ts">LinearDataSource</a></code>
@@ -217,6 +240,7 @@ Types:
 
 - <code><a href="./src/resources/api-keys.ts">APIKey</a></code>
 - <code><a href="./src/resources/api-keys.ts">APIKeyCreated</a></code>
+- <code><a href="./src/resources/api-keys.ts">Scope</a></code>
 - <code><a href="./src/resources/api-keys.ts">APIKeyDeleteResponse</a></code>
 
 Methods:

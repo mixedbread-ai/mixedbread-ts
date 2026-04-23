@@ -27,6 +27,13 @@ export class DataSources extends APIResource {
    * Args: params: The data source to create.
    *
    * Returns: The created data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.create({
+   *   name: 'name',
+   * });
+   * ```
    */
   create(body: DataSourceCreateParams, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.post('/v1/data_sources/', { body, ...options });
@@ -38,6 +45,13 @@ export class DataSources extends APIResource {
    * Args: data_source_id: The ID of the data source to fetch.
    *
    * Returns: The data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.retrieve(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   retrieve(dataSourceID: string, options?: RequestOptions): APIPromise<DataSource> {
     return this._client.get(path`/v1/data_sources/${dataSourceID}`, options);
@@ -50,6 +64,14 @@ export class DataSources extends APIResource {
    * source to update.
    *
    * Returns: The updated data source.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.update(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   *   { name: 'name' },
+   * );
+   * ```
    */
   update(
     dataSourceID: string,
@@ -63,6 +85,14 @@ export class DataSources extends APIResource {
    * Get all data sources.
    *
    * Returns: The list of data sources.
+   *
+   * @example
+   * ```ts
+   * // Automatically fetches more pages as needed.
+   * for await (const dataSource of client.dataSources.list()) {
+   *   // ...
+   * }
+   * ```
    */
   list(
     query: DataSourceListParams | null | undefined = {},
@@ -75,6 +105,13 @@ export class DataSources extends APIResource {
    * Delete a data source.
    *
    * Args: data_source_id: The ID of the data source to delete.
+   *
+   * @example
+   * ```ts
+   * const dataSource = await client.dataSources.delete(
+   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+   * );
+   * ```
    */
   delete(dataSourceID: string, options?: RequestOptions): APIPromise<DataSourceDeleteResponse> {
     return this._client.delete(path`/v1/data_sources/${dataSourceID}`, options);
@@ -82,6 +119,18 @@ export class DataSources extends APIResource {
 }
 
 export type DataSourcesCursor = Cursor<DataSource>;
+
+/**
+ * Base class for API key create or update parameters.
+ */
+export interface APIKeyCreateOrUpdateParams {
+  type?: 'api_key';
+
+  /**
+   * The API key
+   */
+  api_key: string;
+}
 
 /**
  * Service-level representation of a data source.
@@ -120,7 +169,7 @@ export interface DataSource {
   /**
    * Authentication parameters
    */
-  auth_params: DataSourceOauth2Params | DataSource.DataSourceAPIKeyParams | null;
+  auth_params: DataSourceOauth2Params | DataSourceAPIKeyParams | null;
 
   /**
    * The type of the object
@@ -128,18 +177,16 @@ export interface DataSource {
   object?: 'data_source';
 }
 
-export namespace DataSource {
-  /**
-   * Authentication parameters for a API key data source.
-   */
-  export interface DataSourceAPIKeyParams {
-    type?: 'api_key';
+/**
+ * Authentication parameters for a API key data source.
+ */
+export interface DataSourceAPIKeyParams {
+  type?: 'api_key';
 
-    /**
-     * The API key
-     */
-    api_key: string;
-  }
+  /**
+   * The API key
+   */
+  api_key: string;
 }
 
 /**
@@ -234,21 +281,7 @@ export interface NotionDataSource {
    * The authentication parameters of the data source. Notion supports OAuth2 and API
    * key.
    */
-  auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-}
-
-export namespace NotionDataSource {
-  /**
-   * Base class for API key create or update parameters.
-   */
-  export interface APIKeyCreateOrUpdateParams {
-    type?: 'api_key';
-
-    /**
-     * The API key
-     */
-    api_key: string;
-  }
+  auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
 }
 
 /**
@@ -303,21 +336,7 @@ export declare namespace DataSourceCreateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-  }
-
-  export namespace NotionDataSource {
-    /**
-     * Base class for API key create or update parameters.
-     */
-    export interface APIKeyCreateOrUpdateParams {
-      type?: 'api_key';
-
-      /**
-       * The API key
-       */
-      api_key: string;
-    }
+    auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
   }
 
   export interface LinearDataSource {
@@ -368,21 +387,7 @@ export declare namespace DataSourceUpdateParams {
      * The authentication parameters of the data source. Notion supports OAuth2 and API
      * key.
      */
-    auth_params?: Oauth2Params | NotionDataSource.APIKeyCreateOrUpdateParams | null;
-  }
-
-  export namespace NotionDataSource {
-    /**
-     * Base class for API key create or update parameters.
-     */
-    export interface APIKeyCreateOrUpdateParams {
-      type?: 'api_key';
-
-      /**
-       * The API key
-       */
-      api_key: string;
-    }
+    auth_params?: Oauth2Params | APIKeyCreateOrUpdateParams | null;
   }
 
   export interface LinearDataSource {
@@ -414,7 +419,9 @@ DataSources.Connectors = Connectors;
 
 export declare namespace DataSources {
   export {
+    type APIKeyCreateOrUpdateParams as APIKeyCreateOrUpdateParams,
     type DataSource as DataSource,
+    type DataSourceAPIKeyParams as DataSourceAPIKeyParams,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
     type LinearDataSource as LinearDataSource,
