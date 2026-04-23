@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.62.0 (2026-04-23)
+
+Full Changelog: [v0.61.0...v0.62.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.61.0...v0.62.0)
+
+### Features
+
+* **api:** api update ([8549b82](https://github.com/mixedbread-ai/mixedbread-ts/commit/8549b8248ba84a8bbe5e12b7bb5b0cbea6d630ab))
+* **api:** api update ([89945a5](https://github.com/mixedbread-ai/mixedbread-ts/commit/89945a5ed28a0d3725b00b4b57bf09be0fd71120))
+* **api:** api update ([0e686db](https://github.com/mixedbread-ai/mixedbread-ts/commit/0e686db40168590a3e3e38271242ff912acc2574))
+* **api:** api update ([9d759a3](https://github.com/mixedbread-ai/mixedbread-ts/commit/9d759a3f4713c9f8205f5c47ed2c2fb4a2eb804f))
+* include results in store search events response ([3eda5a6](https://github.com/mixedbread-ai/mixedbread-ts/commit/3eda5a61c700cce523d27043e770c8a0ce2c8576))
+
+
+### Bug Fixes
+
+* **internal:** gitignore generated `oidc` dir ([9c2ea55](https://github.com/mixedbread-ai/mixedbread-ts/commit/9c2ea55147004de9f2db31e315ace2649d2de5a3))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([e8f9335](https://github.com/mixedbread-ai/mixedbread-ts/commit/e8f93351e6bec3c7b91b582e901b5fe0ecd51796))
+* **internal:** codegen related update ([77be1c7](https://github.com/mixedbread-ai/mixedbread-ts/commit/77be1c7b66fd41ac57ee4b3534d46a6433e00d8b))
+* **internal:** codegen related update ([20d1e7d](https://github.com/mixedbread-ai/mixedbread-ts/commit/20d1e7d1655ae93dbb7f565c7ee7bf1035327437))
+* **internal:** more robust bootstrap script ([470abc6](https://github.com/mixedbread-ai/mixedbread-ts/commit/470abc6009f8451684d5ec9a7df9843d8636ea2e))
+* **internal:** update multipart form array serialization ([2e2cecb](https://github.com/mixedbread-ai/mixedbread-ts/commit/2e2cecb0f90c1338bf66b871f0d8816c9593607c))
+* **tests:** bump steady to v0.19.7 ([73b9ba2](https://github.com/mixedbread-ai/mixedbread-ts/commit/73b9ba20cc592760e4d8b8e808b0ebdbd09d11ce))
+* **tests:** bump steady to v0.20.1 ([72cda8c](https://github.com/mixedbread-ai/mixedbread-ts/commit/72cda8c3ff54505f2c6608680a09bf186508ee22))
+* **tests:** bump steady to v0.20.2 ([a63751b](https://github.com/mixedbread-ai/mixedbread-ts/commit/a63751b3cdc907765e26336fb6b9ba5e6d48acd8))
+* **tests:** bump steady to v0.22.1 ([db7dece](https://github.com/mixedbread-ai/mixedbread-ts/commit/db7dece83e6577a579bddf7e10d98a275bb44dd3))
+
+
+### Documentation
+
+* update examples ([d82ed92](https://github.com/mixedbread-ai/mixedbread-ts/commit/d82ed9233fef2dc2ae778212b7b339bd7436c86f))
+
 ## 0.61.0 (2026-03-24)
 
 Full Changelog: [v0.60.0...v0.61.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.60.0...v0.61.0)
