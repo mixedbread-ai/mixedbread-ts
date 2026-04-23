@@ -43,11 +43,14 @@ import {
   APIKeyListParams,
   APIKeys,
   APIKeysLimitOffset,
+  Scope,
 } from './resources/api-keys';
 import { Chat, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
 import {
+  APIKeyCreateOrUpdateParams,
   DataSource,
+  DataSourceAPIKeyParams,
   DataSourceCreateParams,
   DataSourceDeleteResponse,
   DataSourceListParams,
@@ -73,13 +76,26 @@ import {
 } from './resources/files/files';
 import { Parsing } from './resources/parsing/parsing';
 import {
+  AgenticSearchConfig,
+  AudioChunkGeneratedMetadata,
+  AudioURL,
+  CodeChunkGeneratedMetadata,
+  ContextualizationConfig,
   ExpiresAfter,
+  FileCounts,
+  ImageChunkGeneratedMetadata,
+  ImageURLOutput,
+  MarkdownChunkGeneratedMetadata,
+  MarkdownHeading,
+  PdfChunkGeneratedMetadata,
+  RerankConfig,
   ScoredAudioURLInputChunk,
   ScoredImageURLInputChunk,
   ScoredTextInputChunk,
   ScoredVideoURLInputChunk,
   Store,
   StoreChunkSearchOptions,
+  StoreConfig,
   StoreCreateParams,
   StoreDeleteResponse,
   StoreListParams,
@@ -92,6 +108,9 @@ import {
   StoreUpdateParams,
   Stores,
   StoresCursor,
+  TextChunkGeneratedMetadata,
+  VideoChunkGeneratedMetadata,
+  VideoURL,
 } from './resources/stores/stores';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -937,13 +956,29 @@ export declare namespace Mixedbread {
 
   export {
     Stores as Stores,
+    type AgenticSearchConfig as AgenticSearchConfig,
+    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
+    type AudioURL as AudioURL,
+    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
+    type ContextualizationConfig as ContextualizationConfig,
     type ExpiresAfter as ExpiresAfter,
+    type FileCounts as FileCounts,
+    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
+    type ImageURLOutput as ImageURLOutput,
+    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
+    type MarkdownHeading as MarkdownHeading,
+    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
+    type RerankConfig as RerankConfig,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
     type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
+    type StoreConfig as StoreConfig,
+    type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type VideoChunkGeneratedMetadata as VideoChunkGeneratedMetadata,
+    type VideoURL as VideoURL,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
@@ -980,7 +1015,9 @@ export declare namespace Mixedbread {
 
   export {
     DataSources as DataSources,
+    type APIKeyCreateOrUpdateParams as APIKeyCreateOrUpdateParams,
     type DataSource as DataSource,
+    type DataSourceAPIKeyParams as DataSourceAPIKeyParams,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
     type LinearDataSource as LinearDataSource,
@@ -997,6 +1034,7 @@ export declare namespace Mixedbread {
     APIKeys as APIKeys,
     type APIKey as APIKey,
     type APIKeyCreated as APIKeyCreated,
+    type Scope as Scope,
     type APIKeyDeleteResponse as APIKeyDeleteResponse,
     type APIKeysLimitOffset as APIKeysLimitOffset,
     type APIKeyCreateParams as APIKeyCreateParams,

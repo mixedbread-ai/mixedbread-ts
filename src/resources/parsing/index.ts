@@ -2,10 +2,13 @@
 
 export {
   Jobs,
+  type Chunk,
+  type ChunkElement,
   type ChunkingStrategy,
+  type DocumentParserResult,
   type ElementType,
-  type ParsingJobStatus,
   type ParsingJob,
+  type ParsingJobStatus,
   type ReturnFormat,
   type JobListResponse,
   type JobDeleteResponse,

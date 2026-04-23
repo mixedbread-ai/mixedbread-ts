@@ -131,17 +131,7 @@ export interface APIKey {
   /**
    * The scope of the API key
    */
-  scope?: Array<APIKey.Scope> | null;
-}
-
-export namespace APIKey {
-  export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
-
-    resource_type?: 'store' | null;
-
-    resource_id?: string | null;
-  }
+  scope?: Array<Scope> | null;
 }
 
 /**
@@ -191,7 +181,7 @@ export interface APIKeyCreated {
   /**
    * The scope of the API key
    */
-  scope?: Array<APIKeyCreated.Scope> | null;
+  scope?: Array<Scope> | null;
 
   /**
    * The value of the API key
@@ -199,14 +189,12 @@ export interface APIKeyCreated {
   value: string;
 }
 
-export namespace APIKeyCreated {
-  export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
+export interface Scope {
+  method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
-    resource_type?: 'store' | null;
+  resource_type?: 'store' | null;
 
-    resource_id?: string | null;
-  }
+  resource_id?: string | null;
 }
 
 /**
@@ -238,22 +226,12 @@ export interface APIKeyCreateParams {
   /**
    * The scope of the API key
    */
-  scope?: Array<APIKeyCreateParams.Scope> | null;
+  scope?: Array<Scope> | null;
 
   /**
    * Optional expiration datetime
    */
   expires_at?: string | null;
-}
-
-export namespace APIKeyCreateParams {
-  export interface Scope {
-    method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
-
-    resource_type?: 'store' | null;
-
-    resource_id?: string | null;
-  }
 }
 
 export interface APIKeyListParams extends LimitOffsetParams {}
@@ -262,6 +240,7 @@ export declare namespace APIKeys {
   export {
     type APIKey as APIKey,
     type APIKeyCreated as APIKeyCreated,
+    type Scope as Scope,
     type APIKeyDeleteResponse as APIKeyDeleteResponse,
     type APIKeysLimitOffset as APIKeysLimitOffset,
     type APIKeyCreateParams as APIKeyCreateParams,

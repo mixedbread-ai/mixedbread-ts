@@ -3,7 +3,10 @@
 import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
 import {
+  Chunk,
+  ChunkElement,
   ChunkingStrategy,
+  DocumentParserResult,
   ElementType,
   JobCreateParams,
   JobDeleteResponse,
@@ -25,10 +28,13 @@ Parsing.Jobs = Jobs;
 export declare namespace Parsing {
   export {
     Jobs as Jobs,
+    type Chunk as Chunk,
+    type ChunkElement as ChunkElement,
     type ChunkingStrategy as ChunkingStrategy,
+    type DocumentParserResult as DocumentParserResult,
     type ElementType as ElementType,
-    type ParsingJobStatus as ParsingJobStatus,
     type ParsingJob as ParsingJob,
+    type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,

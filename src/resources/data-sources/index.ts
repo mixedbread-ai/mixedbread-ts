@@ -13,7 +13,9 @@ export {
 } from './connectors';
 export {
   DataSources,
+  type APIKeyCreateOrUpdateParams,
   type DataSource,
+  type DataSourceAPIKeyParams,
   type DataSourceOauth2Params,
   type DataSourceType,
   type LinearDataSource,
