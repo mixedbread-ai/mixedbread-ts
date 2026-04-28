@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.63.0 (2026-04-28)
+
+Full Changelog: [v0.62.0...v0.63.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.62.0...v0.63.0)
+
+### Features
+
+* support setting headers via env ([9f574b1](https://github.com/mixedbread-ai/mixedbread-ts/commit/9f574b1f878c11a0d46d9ff72cf15c30c882b062))
+
+
+### Chores
+
+* **internal:** codegen related update ([15ef319](https://github.com/mixedbread-ai/mixedbread-ts/commit/15ef31955d968a94f21cdb8b258745c181f7ea83))
+
 ## 0.62.0 (2026-04-23)
 
 Full Changelog: [v0.61.0...v0.62.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.61.0...v0.62.0)
