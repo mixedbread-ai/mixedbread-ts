@@ -211,13 +211,12 @@ export interface AgenticSearchConfig {
   queries_per_round?: number;
 
   /**
-   * Whether to enforce top_k by truncating agent rankings and backfilling short
-   * rankings
+   * Whether the final retrieved chunk list must provide exactly top_k ranked chunks
    */
   strict_top_k?: boolean;
 
   /**
-   * Whether to provide image content to the agent when image URLs are available
+   * Whether to provide media content to the agent for non-text modalities
    */
   multimodal?: boolean;
 
