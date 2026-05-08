@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.65.0 (2026-05-08)
+
+Full Changelog: [v0.64.0...v0.65.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.64.0...v0.65.0)
+
+### Features
+
+* **api:** api update ([50ebe58](https://github.com/mixedbread-ai/mixedbread-ts/commit/50ebe58e9bf366859b28f5212555b7fec11cc946))
+
+
+### Chores
+
+* **format:** run eslint and prettier separately ([6e4a29d](https://github.com/mixedbread-ai/mixedbread-ts/commit/6e4a29df4f354dbe6d69d34bdfb8ff3187c12ebe))
+* redact api-key headers in debug logs ([8768041](https://github.com/mixedbread-ai/mixedbread-ts/commit/87680419e5a64d445ddc1d8278d74da758c92856))
+
 ## 0.64.0 (2026-04-29)
 
 Full Changelog: [v0.63.0...v0.64.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.63.0...v0.64.0)
