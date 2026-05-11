@@ -110,6 +110,9 @@ describe('resource stores', () => {
         apply_search_rules: true,
       },
       facets: ['string'],
+      max_fields: 1,
+      max_values_per_field: 1,
+      max_files: 1,
     });
   });
 
