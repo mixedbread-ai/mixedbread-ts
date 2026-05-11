@@ -216,9 +216,11 @@ export interface AgenticSearchConfig {
   strict_top_k?: boolean;
 
   /**
-   * Whether to provide media content to the agent for non-text modalities
+   * Controls when retrieved image content is provided to the agent. `auto` sends
+   * images only when no OCR text or summary is available, `never` disables image
+   * content, and `always` sends image content when available.
    */
-  multimodal?: boolean;
+  media_content?: 'auto' | 'never' | 'always';
 
   /**
    * Additional custom instructions (followed only when not in conflict with existing
@@ -511,6 +513,11 @@ export interface ScoredAudioURLInputChunk {
    * speech recognition (sr) text of the audio
    */
   transcription?: string | null;
+
+  /**
+   * summary of the audio
+   */
+  summary?: string | null;
 
   /**
    * Model for audio URL validation.
@@ -1023,6 +1030,8 @@ export interface StoreSearchResponse {
   data: Array<
     ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
   >;
+
+  [k: string]: unknown;
 }
 
 export interface StoreCreateParams {
@@ -1147,6 +1156,21 @@ export interface StoreMetadataFacetsParams {
    * Optional list of facets to return. Use dot for nested fields.
    */
   facets?: Array<string> | null;
+
+  /**
+   * Maximum number of distinct metadata fields (keys) to return.
+   */
+  max_fields?: number;
+
+  /**
+   * Maximum number of distinct values returned per field, ranked by count.
+   */
+  max_values_per_field?: number;
+
+  /**
+   * Maximum number of store files scanned to compute facets.
+   */
+  max_files?: number;
 }
 
 export interface StoreQuestionAnsweringParams {

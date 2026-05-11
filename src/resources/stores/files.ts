@@ -169,6 +169,11 @@ export interface AudioURLInputChunk {
   transcription?: string | null;
 
   /**
+   * summary of the audio
+   */
+  summary?: string | null;
+
+  /**
    * Model for audio URL validation.
    */
   audio_url?: StoresAPI.AudioURL | null;
