@@ -1,26 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 /**
- * Represents a filter with AND, OR, and NOT conditions.
- */
-export interface SearchFilter {
-  /**
-   * List of conditions or filters to be ANDed together
-   */
-  all?: Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
-   * List of conditions or filters to be ORed together
-   */
-  any?: Array<SearchFilter | SearchFilterCondition> | null;
-
-  /**
-   * List of conditions or filters to be NOTed
-   */
-  none?: Array<SearchFilter | SearchFilterCondition> | null;
-}
-
-/**
  * Represents a condition with a field, operator, and value.
  */
 export interface SearchFilterCondition {

@@ -18,7 +18,6 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/shared.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/shared.ts">SearchFilterCondition</a></code>
 - <code><a href="./src/resources/shared.ts">Usage</a></code>
 

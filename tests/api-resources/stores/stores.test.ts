@@ -92,15 +92,48 @@ describe('resource stores', () => {
 
   test('metadataFacets: required and optional params', async () => {
     const response = await client.stores.metadataFacets({
-      query: 'how to configure SSL',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        any: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        none: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      query: 'how to configure SSL',
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -129,15 +162,48 @@ describe('resource stores', () => {
 
   test('questionAnswering: required and optional params', async () => {
     const response = await client.stores.questionAnswering({
-      query: 'x',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        any: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        none: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      query: 'x',
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -154,8 +220,8 @@ describe('resource stores', () => {
 
   test('search: only required params', async () => {
     const responsePromise = client.stores.search({
-      query: 'how to configure SSL',
       store_identifiers: ['string'],
+      query: 'how to configure SSL',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -168,15 +234,48 @@ describe('resource stores', () => {
 
   test('search: required and optional params', async () => {
     const response = await client.stores.search({
-      query: 'how to configure SSL',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        any: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        none: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      query: 'how to configure SSL',
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
