@@ -584,15 +584,57 @@ export interface FileListParams {
    * Metadata filter to apply to the query
    */
   metadata_filter?:
-    | Shared.SearchFilter
+    | FileListParams.SearchFilterInput
     | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | Array<FileListParams.SearchFilterInput | Shared.SearchFilterCondition>
     | null;
 
   /**
    * Search query for fuzzy matching over name and external_id fields
    */
   q?: string | null;
+}
+
+export namespace FileListParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
 }
 
 export interface FileDeleteParams {

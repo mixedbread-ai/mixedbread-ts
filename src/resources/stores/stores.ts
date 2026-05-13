@@ -184,8 +184,8 @@ export class Stores extends APIResource {
    * @example
    * ```ts
    * const response = await client.stores.search({
-   *   query: 'how to configure SSL',
    *   store_identifiers: ['string'],
+   *   query: 'how to configure SSL',
    * });
    * ```
    */
@@ -1119,12 +1119,7 @@ export interface StoreListParams extends CursorParams {
 
 export interface StoreMetadataFacetsParams {
   /**
-   * Search query text
-   */
-  query?: string | null;
-
-  /**
-   * IDs or names of stores to search
+   * IDs or names of stores
    */
   store_identifiers: Array<string>;
 
@@ -1137,15 +1132,20 @@ export interface StoreMetadataFacetsParams {
    * Optional filter conditions
    */
   filters?:
-    | Shared.SearchFilter
+    | StoreMetadataFacetsParams.SearchFilterInput
     | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | Array<StoreMetadataFacetsParams.SearchFilterInput | Shared.SearchFilterCondition>
     | null;
 
   /**
    * Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Search query text
+   */
+  query?: string | null;
 
   /**
    * Search configuration options
@@ -1173,15 +1173,51 @@ export interface StoreMetadataFacetsParams {
   max_files?: number;
 }
 
-export interface StoreQuestionAnsweringParams {
+export namespace StoreMetadataFacetsParams {
   /**
-   * Question to answer. If not provided, the question will be extracted from the
-   * passed messages.
+   * Represents a filter with AND, OR, and NOT conditions.
    */
-  query?: string;
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
 
   /**
-   * IDs or names of stores to search
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+}
+
+export interface StoreQuestionAnsweringParams {
+  /**
+   * IDs or names of stores
    */
   store_identifiers: Array<string>;
 
@@ -1194,15 +1230,21 @@ export interface StoreQuestionAnsweringParams {
    * Optional filter conditions
    */
   filters?:
-    | Shared.SearchFilter
+    | StoreQuestionAnsweringParams.SearchFilterInput
     | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | Array<StoreQuestionAnsweringParams.SearchFilterInput | Shared.SearchFilterCondition>
     | null;
 
   /**
    * Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Question to answer. If not provided, the question will be extracted from the
+   * passed messages.
+   */
+  query?: string;
 
   /**
    * Search configuration options
@@ -1228,6 +1270,46 @@ export interface StoreQuestionAnsweringParams {
 
 export namespace StoreQuestionAnsweringParams {
   /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
    * Question answering configuration options
    */
   export interface QaOptions {
@@ -1245,12 +1327,7 @@ export namespace StoreQuestionAnsweringParams {
 
 export interface StoreSearchParams {
   /**
-   * Search query text
-   */
-  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
-
-  /**
-   * IDs or names of stores to search
+   * IDs or names of stores
    */
   store_identifiers: Array<string>;
 
@@ -1263,9 +1340,9 @@ export interface StoreSearchParams {
    * Optional filter conditions
    */
   filters?:
-    | Shared.SearchFilter
+    | StoreSearchParams.SearchFilterInput
     | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+    | Array<StoreSearchParams.SearchFilterInput | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1274,9 +1351,56 @@ export interface StoreSearchParams {
   file_ids?: Array<unknown> | Array<string> | null;
 
   /**
+   * Search query text
+   */
+  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
+
+  /**
    * Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
+}
+
+export namespace StoreSearchParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
 }
 
 Stores.Files = Files;
