@@ -227,6 +227,13 @@ export interface AgenticSearchConfig {
    * rules)
    */
   instructions?: string | null;
+
+  /**
+   * Internal: when set, the response includes a `trace` field with the full
+   * tool-call timeline. Used by the Mixedbread playground; not part of the
+   * documented public API.
+   */
+  verbose?: boolean;
 }
 
 export interface AudioChunkGeneratedMetadata {
