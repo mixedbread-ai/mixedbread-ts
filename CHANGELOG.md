@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.68.1 (2026-05-19)
+
+Full Changelog: [v0.68.0...v0.68.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.68.0...v0.68.1)
+
+### Bug Fixes
+
+* **typescript:** upgrade tsc-multi so that it works with Node 26 ([80b325b](https://github.com/mixedbread-ai/mixedbread-ts/commit/80b325b1de6c63dfc0f2ba0537f0d9a6a9631875))
+
+
+### Chores
+
+* **tests:** remove redundant File import ([211753c](https://github.com/mixedbread-ai/mixedbread-ts/commit/211753cee98959c2ac912d4f4effe87bde909a59))
+
 ## 0.68.0 (2026-05-16)
 
 Full Changelog: [v0.67.0...v0.68.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.67.0...v0.68.0)
