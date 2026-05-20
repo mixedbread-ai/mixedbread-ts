@@ -125,6 +125,40 @@ export class Stores extends APIResource {
   }
 
   /**
+   * Match store chunks against a regular expression.
+   *
+   * Unlike `/stores/search`, this performs exact text matching — no embeddings, no
+   * semantic similarity, no reranking. Use it to find chunks containing a specific
+   * token, identifier, error code, or literal phrase.
+   *
+   * grep targets a single store and does not support pagination; raise `top_k` to
+   * retrieve more matches.
+   *
+   * Args: grep_params: Grep configuration including: - pattern: RE2 regular
+   * expression matched against chunk text - targets: chunk content groups to match
+   * (`text`, `generated`) - case_sensitive: whether the pattern is case-sensitive -
+   * store_identifiers: the single store to grep - file_ids: optional list of file
+   * IDs to filter chunks by - filters: optional metadata filter conditions - top_k:
+   * number of matches to return
+   *
+   * Returns: StoreGrepResponse containing the list of matching chunks.
+   *
+   * Raises: HTTPException (400): If grep parameters are invalid HTTPException (404):
+   * If the store is not found
+   *
+   * @example
+   * ```ts
+   * const response = await client.stores.grep({
+   *   store_identifiers: ['string'],
+   *   pattern: 'ERR-\\d{4}',
+   * });
+   * ```
+   */
+  grep(body: StoreGrepParams, options?: RequestOptions): APIPromise<StoreGrepResponse> {
+    return this._client.post('/v1/stores/grep', { body, ...options });
+  }
+
+  /**
    * Get metadata facets
    *
    * @example
@@ -998,6 +1032,20 @@ export interface StoreDeleteResponse {
   object?: 'store';
 }
 
+export interface StoreGrepResponse {
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of chunks matching the pattern
+   */
+  data: Array<
+    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
+  >;
+}
+
 /**
  * Represents metadata facets for a store.
  */
@@ -1122,6 +1170,96 @@ export interface StoreListParams extends CursorParams {
    * Search query for fuzzy matching over name and description fields
    */
   q?: string | null;
+}
+
+export interface StoreGrepParams {
+  /**
+   * IDs or names of stores
+   */
+  store_identifiers: Array<string>;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | StoreGrepParams.SearchFilterInput
+    | Shared.SearchFilterCondition
+    | Array<StoreGrepParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Regular expression (RE2 syntax) matched against chunk text
+   */
+  pattern: string;
+
+  /**
+   * Chunk content groups to match against. `text` matches the original text of text
+   * chunks; `generated` matches ingestion-derived fields (transcription, OCR text,
+   * summaries).
+   */
+  targets?: Array<'text' | 'generated'>;
+
+  /**
+   * Whether the regular expression is case-sensitive
+   */
+  case_sensitive?: boolean;
+
+  /**
+   * Whether to return file metadata
+   */
+  return_metadata?: boolean;
+}
+
+export namespace StoreGrepParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
 }
 
 export interface StoreMetadataFacetsParams {
@@ -1438,6 +1576,7 @@ export declare namespace Stores {
     type VideoChunkGeneratedMetadata as VideoChunkGeneratedMetadata,
     type VideoURL as VideoURL,
     type StoreDeleteResponse as StoreDeleteResponse,
+    type StoreGrepResponse as StoreGrepResponse,
     type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
     type StoreSearchResponse as StoreSearchResponse,
@@ -1445,6 +1584,7 @@ export declare namespace Stores {
     type StoreCreateParams as StoreCreateParams,
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
+    type StoreGrepParams as StoreGrepParams,
     type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
