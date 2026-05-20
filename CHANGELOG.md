@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.69.0 (2026-05-20)
+
+Full Changelog: [v0.68.1...v0.69.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.68.1...v0.69.0)
+
+### Features
+
+* **api:** add grep ([9f8e517](https://github.com/mixedbread-ai/mixedbread-ts/commit/9f8e517e872cc9117119bf9b166d964b7a7ab3a2))
+
 ## 0.68.1 (2026-05-19)
 
 Full Changelog: [v0.68.0...v0.68.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.68.0...v0.68.1)
