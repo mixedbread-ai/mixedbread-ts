@@ -729,6 +729,11 @@ export interface ScoredTextInputChunk {
    * LLM-generated context that situates this chunk within its source document
    */
   context?: string | null;
+
+  /**
+   * summary of the text chunk
+   */
+  summary?: string | null;
 }
 
 export interface ScoredVideoURLInputChunk {
