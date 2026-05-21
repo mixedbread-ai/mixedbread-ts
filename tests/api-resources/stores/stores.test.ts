@@ -140,6 +140,72 @@ describe('resource stores', () => {
     });
   });
 
+  test('listChunks: only required params', async () => {
+    const responsePromise = client.stores.listChunks({ store_identifiers: ['string'] });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('listChunks: required and optional params', async () => {
+    const response = await client.stores.listChunks({
+      store_identifiers: ['string'],
+      top_k: 1,
+      filters: {
+        all: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        any: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+        none: [
+          {
+            key: 'price',
+            operator: 'gt',
+            value: '100',
+          },
+          {
+            key: 'color',
+            operator: 'eq',
+            value: 'red',
+          },
+        ],
+      },
+      file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      sort_by: 'price',
+      search_options: {
+        score_threshold: 0,
+        rewrite_query: true,
+        rerank: true,
+        agentic: true,
+        return_metadata: true,
+        apply_search_rules: true,
+      },
+    });
+  });
+
   test('metadataFacets: only required params', async () => {
     const responsePromise = client.stores.metadataFacets({ store_identifiers: ['string'] });
     const rawResponse = await responsePromise.asResponse();
