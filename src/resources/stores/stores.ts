@@ -159,6 +159,41 @@ export class Stores extends APIResource {
   }
 
   /**
+   * List store chunks purely by metadata filters — no embeddings, no semantic
+   * similarity, no reranking.
+   *
+   * Unlike `/stores/search`, this endpoint does not require a query and never runs a
+   * vector lookup. It returns chunks whose file and chunk metadata satisfy
+   * `filters`, optionally ordered by a numeric metadata field via `sort_by`. Useful
+   * for ranked retrieval over numeric attributes (e.g. price, BPM) and for
+   * reproducing the agentic `filter_chunks` tool externally.
+   *
+   * list-chunks targets a single store and does not support pagination; raise
+   * `top_k` to retrieve more chunks.
+   *
+   * Args: filter_params: Filter configuration including: - store_identifiers: the
+   * single store to filter against - filters: optional metadata filter conditions -
+   * file_ids: optional list of file IDs to filter chunks by - sort_by: optional
+   * metadata field path, or `(field, ascending)` tuple, for numeric ordering -
+   * top_k: number of chunks to return
+   *
+   * Returns: StoreListChunksResponse containing the list of matching chunks.
+   *
+   * Raises: HTTPException (400): If filter parameters are invalid or multiple stores
+   * are passed HTTPException (404): If the store is not found
+   *
+   * @example
+   * ```ts
+   * const response = await client.stores.listChunks({
+   *   store_identifiers: ['string'],
+   * });
+   * ```
+   */
+  listChunks(body: StoreListChunksParams, options?: RequestOptions): APIPromise<StoreListChunksResponse> {
+    return this._client.post('/v1/stores/list-chunks', { body, ...options });
+  }
+
+  /**
    * Get metadata facets
    *
    * @example
@@ -1051,6 +1086,20 @@ export interface StoreGrepResponse {
   >;
 }
 
+export interface StoreListChunksResponse {
+  /**
+   * The object type of the response
+   */
+  object?: 'list';
+
+  /**
+   * The list of chunks matching the metadata filters
+   */
+  data: Array<
+    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
+  >;
+}
+
 /**
  * Represents metadata facets for a store.
  */
@@ -1226,6 +1275,86 @@ export interface StoreGrepParams {
 }
 
 export namespace StoreGrepParams {
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+
+  /**
+   * Represents a filter with AND, OR, and NOT conditions.
+   */
+  export interface SearchFilterInput {
+    /**
+     * List of conditions or filters to be ANDed together
+     */
+    all?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be ORed together
+     */
+    any?: Array<unknown | Shared.SearchFilterCondition> | null;
+
+    /**
+     * List of conditions or filters to be NOTed
+     */
+    none?: Array<unknown | Shared.SearchFilterCondition> | null;
+  }
+}
+
+export interface StoreListChunksParams {
+  /**
+   * IDs or names of stores
+   */
+  store_identifiers: Array<string>;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?:
+    | StoreListChunksParams.SearchFilterInput
+    | Shared.SearchFilterCondition
+    | Array<StoreListChunksParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Optional sort applied to the returned chunks. Pass a metadata field path or a
+   * tuple of (field path, ascending). Unprefixed dot paths target file metadata;
+   * generated_metadata.\* targets chunk metadata.
+   */
+  sort_by?: string | Array<unknown> | null;
+
+  /**
+   * Search configuration options
+   */
+  search_options?: StoreChunkSearchOptions;
+}
+
+export namespace StoreListChunksParams {
   /**
    * Represents a filter with AND, OR, and NOT conditions.
    */
@@ -1582,6 +1711,7 @@ export declare namespace Stores {
     type VideoURL as VideoURL,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreGrepResponse as StoreGrepResponse,
+    type StoreListChunksResponse as StoreListChunksResponse,
     type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
     type StoreQuestionAnsweringResponse as StoreQuestionAnsweringResponse,
     type StoreSearchResponse as StoreSearchResponse,
@@ -1590,6 +1720,7 @@ export declare namespace Stores {
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
     type StoreGrepParams as StoreGrepParams,
+    type StoreListChunksParams as StoreListChunksParams,
     type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
