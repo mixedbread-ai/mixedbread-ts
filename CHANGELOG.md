@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.71.0 (2026-05-21)
+
+Full Changelog: [v0.70.0...v0.71.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.70.0...v0.71.0)
+
+### Features
+
+* **api:** add list_chunks ([bc46979](https://github.com/mixedbread-ai/mixedbread-ts/commit/bc469791118f23a6ac2baccc342b1294db39dd8e))
+
 ## 0.70.0 (2026-05-21)
 
 Full Changelog: [v0.69.0...v0.70.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.69.0...v0.70.0)
