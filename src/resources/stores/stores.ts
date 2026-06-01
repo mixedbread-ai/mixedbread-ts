@@ -127,9 +127,9 @@ export class Stores extends APIResource {
   /**
    * Match store chunks against a regular expression.
    *
-   * Unlike `/stores/search`, this performs exact text matching — no embeddings, no
-   * semantic similarity, no reranking. Use it to find chunks containing a specific
-   * token, identifier, error code, or literal phrase.
+   * Unlike `/stores/search`, this runs your regex against the literal text of each
+   * chunk. Use it to find chunks containing a specific token, identifier, error
+   * code, or literal phrase.
    *
    * grep targets a single store and does not support pagination; raise `top_k` to
    * retrieve more matches.
