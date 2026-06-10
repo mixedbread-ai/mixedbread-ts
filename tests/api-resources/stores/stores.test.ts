@@ -98,37 +98,37 @@ describe('resource stores', () => {
         all: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         any: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         none: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
       },
@@ -159,37 +159,37 @@ describe('resource stores', () => {
         all: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         any: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         none: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
       },
@@ -225,37 +225,37 @@ describe('resource stores', () => {
         all: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         any: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         none: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
       },
@@ -295,37 +295,37 @@ describe('resource stores', () => {
         all: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         any: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         none: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
       },
@@ -367,37 +367,37 @@ describe('resource stores', () => {
         all: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         any: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
         none: [
           {
             key: 'price',
-            operator: 'gt',
             value: '100',
+            operator: 'gt',
           },
           {
             key: 'color',
-            operator: 'eq',
             value: 'red',
+            operator: 'eq',
           },
         ],
       },
