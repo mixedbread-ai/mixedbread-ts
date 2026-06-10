@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.73.1 (2026-06-10)
+
+Full Changelog: [v0.73.0...v0.73.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.73.0...v0.73.1)
+
+### Bug Fixes
+
+* handle recursive unions in example generation ([8bbe7e3](https://github.com/mixedbread-ai/mixedbread-ts/commit/8bbe7e3aaee266379b7795ae45cebad1932b2126))
+
 ## 0.73.0 (2026-06-01)
 
 Full Changelog: [v0.72.0...v0.73.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.72.0...v0.73.0)
