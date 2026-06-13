@@ -891,6 +891,11 @@ export interface Store {
   config?: StoreConfig | null;
 
   /**
+   * Customer bucket backing this store's storage; null = platform default
+   */
+  bucket_id?: string | null;
+
+  /**
    * Counts of files in different states
    */
   file_counts?: FileCounts;
