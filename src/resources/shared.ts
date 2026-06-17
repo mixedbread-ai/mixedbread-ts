@@ -47,6 +47,7 @@ export interface SearchFilterCondition {
     | 'in'
     | 'not_in'
     | 'like'
+    | 'contains'
     | 'starts_with'
     | 'not_like'
     | 'regex';
