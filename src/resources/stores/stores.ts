@@ -1246,9 +1246,9 @@ export interface StoreGrepParams {
    * Optional filter conditions
    */
   filters?:
-    | StoreGrepParams.SearchFilterInput
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<StoreGrepParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1279,48 +1279,6 @@ export interface StoreGrepParams {
   return_metadata?: boolean;
 }
 
-export namespace StoreGrepParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-}
-
 export interface StoreListChunksParams {
   /**
    * IDs or names of stores
@@ -1336,9 +1294,9 @@ export interface StoreListChunksParams {
    * Optional filter conditions
    */
   filters?:
-    | StoreListChunksParams.SearchFilterInput
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<StoreListChunksParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1359,48 +1317,6 @@ export interface StoreListChunksParams {
   search_options?: StoreChunkSearchOptions;
 }
 
-export namespace StoreListChunksParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-}
-
 export interface StoreMetadataFacetsParams {
   /**
    * IDs or names of stores
@@ -1416,9 +1332,9 @@ export interface StoreMetadataFacetsParams {
    * Optional filter conditions
    */
   filters?:
-    | StoreMetadataFacetsParams.SearchFilterInput
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<StoreMetadataFacetsParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1457,48 +1373,6 @@ export interface StoreMetadataFacetsParams {
   max_files?: number;
 }
 
-export namespace StoreMetadataFacetsParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-}
-
 export interface StoreQuestionAnsweringParams {
   /**
    * IDs or names of stores
@@ -1514,9 +1388,9 @@ export interface StoreQuestionAnsweringParams {
    * Optional filter conditions
    */
   filters?:
-    | StoreQuestionAnsweringParams.SearchFilterInput
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<StoreQuestionAnsweringParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1554,46 +1428,6 @@ export interface StoreQuestionAnsweringParams {
 
 export namespace StoreQuestionAnsweringParams {
   /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
    * Question answering configuration options
    */
   export interface QaOptions {
@@ -1624,9 +1458,9 @@ export interface StoreSearchParams {
    * Optional filter conditions
    */
   filters?:
-    | StoreSearchParams.SearchFilterInput
+    | Shared.SearchFilter
     | Shared.SearchFilterCondition
-    | Array<StoreSearchParams.SearchFilterInput | Shared.SearchFilterCondition>
+    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
     | null;
 
   /**
@@ -1643,48 +1477,6 @@ export interface StoreSearchParams {
    * Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
-}
-
-export namespace StoreSearchParams {
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
-
-  /**
-   * Represents a filter with AND, OR, and NOT conditions.
-   */
-  export interface SearchFilterInput {
-    /**
-     * List of conditions or filters to be ANDed together
-     */
-    all?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be ORed together
-     */
-    any?: Array<unknown | Shared.SearchFilterCondition> | null;
-
-    /**
-     * List of conditions or filters to be NOTed
-     */
-    none?: Array<unknown | Shared.SearchFilterCondition> | null;
-  }
 }
 
 Stores.Files = Files;
