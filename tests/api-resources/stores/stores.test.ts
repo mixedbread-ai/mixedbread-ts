@@ -95,42 +95,9 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        any: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        none: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
+        all: [{}, {}],
+        any: [{}, {}],
+        none: [{}, {}],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       pattern: 'ERR-\\d{4}',
@@ -156,42 +123,9 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        any: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        none: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
+        all: [{}, {}],
+        any: [{}, {}],
+        none: [{}, {}],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       sort_by: 'price',
@@ -222,42 +156,9 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        any: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        none: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
+        all: [{}, {}],
+        any: [{}, {}],
+        none: [{}, {}],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
@@ -292,42 +193,9 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        any: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        none: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
+        all: [{}, {}],
+        any: [{}, {}],
+        none: [{}, {}],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'x',
@@ -364,42 +232,9 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        any: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
-        none: [
-          {
-            key: 'price',
-            value: '100',
-            operator: 'gt',
-          },
-          {
-            key: 'color',
-            value: 'red',
-            operator: 'eq',
-          },
-        ],
+        all: [{}, {}],
+        any: [{}, {}],
+        none: [{}, {}],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
