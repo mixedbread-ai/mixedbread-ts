@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.74.1 (2026-06-17)
+
+Full Changelog: [v0.74.0...v0.74.1](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.74.0...v0.74.1)
+
+### Bug Fixes
+
+* **client:** send content-type header for requests with an omitted optional body ([94362a5](https://github.com/mixedbread-ai/mixedbread-ts/commit/94362a5646a2244f9de4326783828e0db521d48f))
+
 ## 0.74.0 (2026-06-13)
 
 Full Changelog: [v0.73.1...v0.74.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.73.1...v0.74.0)
