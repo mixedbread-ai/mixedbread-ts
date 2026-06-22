@@ -436,7 +436,50 @@ export interface ImageChunkGeneratedMetadata {
 
   file_extension?: string | null;
 
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * `elements` are ordered by reading order (list position == reading order).
+   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
+   * to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  layout?: ImageChunkGeneratedMetadata.Layout | null;
+
   [k: string]: unknown;
+}
+
+export namespace ImageChunkGeneratedMetadata {
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * `elements` are ordered by reading order (list position == reading order).
+   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
+   * to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  export interface Layout {
+    width?: number | null;
+
+    height?: number | null;
+
+    elements?: Array<Layout.Element>;
+  }
+
+  export namespace Layout {
+    /**
+     * A single detected layout element and its location on the page image.
+     */
+    export interface Element {
+      bbox: Array<unknown>;
+
+      type: string;
+    }
+  }
 }
 
 /**
@@ -497,7 +540,50 @@ export interface PdfChunkGeneratedMetadata {
 
   file_extension?: string | null;
 
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * `elements` are ordered by reading order (list position == reading order).
+   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
+   * to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  layout?: PdfChunkGeneratedMetadata.Layout | null;
+
   [k: string]: unknown;
+}
+
+export namespace PdfChunkGeneratedMetadata {
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * `elements` are ordered by reading order (list position == reading order).
+   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
+   * to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  export interface Layout {
+    width?: number | null;
+
+    height?: number | null;
+
+    elements?: Array<Layout.Element>;
+  }
+
+  export namespace Layout {
+    /**
+     * A single detected layout element and its location on the page image.
+     */
+    export interface Element {
+      bbox: Array<unknown>;
+
+      type: string;
+    }
+  }
 }
 
 /**
