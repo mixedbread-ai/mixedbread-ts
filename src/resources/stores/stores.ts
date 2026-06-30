@@ -478,6 +478,8 @@ export namespace ImageChunkGeneratedMetadata {
       bbox: Array<unknown>;
 
       type: string;
+
+      text?: string | null;
     }
   }
 }
@@ -582,6 +584,8 @@ export namespace PdfChunkGeneratedMetadata {
       bbox: Array<unknown>;
 
       type: string;
+
+      text?: string | null;
     }
   }
 }
