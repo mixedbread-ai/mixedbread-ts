@@ -7,10 +7,10 @@ import { toFile } from '../internal/to-file';
 import { multipartFormRequestOptions } from '../internal/uploads';
 import type { Fetch } from '../internal/builtin-types';
 
-const DEFAULT_THRESHOLD = 100 * 1024 * 1024; // 100MB
+const DEFAULT_THRESHOLD = 10 * 1024 * 1024; // 10MB
 const DEFAULT_CONCURRENCY = 5;
 const DEFAULT_PART_SIZE = 100 * 1024 * 1024; // 100MB per part
-const MIN_PART_SIZE = 5 * 1024 * 1024; // 5MB minimum
+const MIN_PART_SIZE = 1 * 1024 * 1024; // 1MB minimum
 const MAX_PART_COUNT = 10_000;
 
 export interface PartUploadEvent {
