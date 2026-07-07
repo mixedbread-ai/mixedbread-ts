@@ -15,7 +15,6 @@ import {
 } from './uploads';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
-import { type Uploadable } from '../../core/uploads';
 import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 import { multipartFormRequestOptions } from '../../internal/uploads';
@@ -35,7 +34,7 @@ export class Files extends APIResource {
    * @example
    * ```ts
    * const fileObject = await client.files.create({
-   *   file: fs.createReadStream('path/to/file'),
+   *   file: 'file',
    * });
    * ```
    */
@@ -72,7 +71,7 @@ export class Files extends APIResource {
    * ```ts
    * const fileObject = await client.files.update(
    *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *   { file: fs.createReadStream('path/to/file') },
+   *   { file: 'file' },
    * );
    * ```
    */
@@ -235,7 +234,7 @@ export interface FileCreateParams {
   /**
    * The file to upload
    */
-  file: Uploadable;
+  file: string;
 
   /**
    * Optional configuration for automatic multipart uploads.
@@ -249,7 +248,7 @@ export interface FileUpdateParams {
   /**
    * The file to update
    */
-  file: Uploadable;
+  file: string;
 }
 
 export interface FileListParams extends CursorParams {
