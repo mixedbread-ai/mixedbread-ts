@@ -1094,7 +1094,7 @@ export interface StoreConfig {
 export interface TextChunkGeneratedMetadata {
   type?: 'text';
 
-  file_type?: 'text/plain';
+  file_type?: 'text/plain' | 'message/rfc822';
 
   language?: string | null;
 
