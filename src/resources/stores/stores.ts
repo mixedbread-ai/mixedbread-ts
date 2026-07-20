@@ -366,9 +366,10 @@ export interface ContextualizationConfig {
   with_metadata?: boolean | Array<string>;
 
   /**
-   * Use an LLM to generate a short context for each text chunk that situates it
-   * within the full document, improving retrieval accuracy. Only applies to text
-   * content during non-sliced ingestion.
+   * Use an LLM to generate a short context for each chunk with parsed text, OCR,
+   * transcription, or a summary that situates it within the document, improving
+   * retrieval accuracy. During sliced ingestion, chunks are situated within their
+   * current slice.
    */
   with_file_context?: boolean;
 }
@@ -681,6 +682,11 @@ export interface ScoredAudioURLInputChunk {
   transcription?: string | null;
 
   /**
+   * LLM-generated context that situates this audio chunk within its source file
+   */
+  context?: string | null;
+
+  /**
    * summary of the audio
    */
   summary?: string | null;
@@ -764,6 +770,11 @@ export interface ScoredImageURLInputChunk {
    * ocr text of the image
    */
   ocr_text?: string | null;
+
+  /**
+   * LLM-generated context that situates this image within its source document
+   */
+  context?: string | null;
 
   /**
    * summary of the image
@@ -929,6 +940,11 @@ export interface ScoredVideoURLInputChunk {
    * speech recognition (sr) text of the video
    */
   transcription?: string | null;
+
+  /**
+   * LLM-generated context that situates this video chunk within its source file
+   */
+  context?: string | null;
 
   /**
    * summary of the video
