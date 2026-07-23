@@ -106,6 +106,9 @@ export class Files extends APIResource {
   /**
    * Delete a specific file by its ID.
    *
+   * Removes the file from every store that references it (cleaning up chunks and
+   * store stats) before deleting the file object itself.
+   *
    * Args: file_id: The ID of the file to delete.
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
