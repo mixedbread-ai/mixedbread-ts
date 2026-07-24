@@ -1,6 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as JobsAPI from './jobs';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -14,7 +15,7 @@ export class Jobs extends APIResource {
    *
    * Returns: The created parsing job.
    */
-  create(body: JobCreateParams, options?: RequestOptions): APIPromise<ParsingJob> {
+  create(body: JobCreateParams, options?: RequestOptions): APIPromise<JobCreateResponse> {
     return this._client.post('/v1/parsing/jobs', { body, ...options });
   }
 
@@ -25,7 +26,7 @@ export class Jobs extends APIResource {
    *
    * Returns: Detailed information about the parse job.
    */
-  retrieve(jobID: string, options?: RequestOptions): APIPromise<ParsingJob> {
+  retrieve(jobID: string, options?: RequestOptions): APIPromise<JobRetrieveResponse> {
     return this._client.get(path`/v1/parsing/jobs/${jobID}`, options);
   }
 
@@ -61,7 +62,7 @@ export class Jobs extends APIResource {
    *
    * Returns: The cancelled parsing job.
    */
-  cancel(jobID: string, options?: RequestOptions): APIPromise<ParsingJob> {
+  cancel(jobID: string, options?: RequestOptions): APIPromise<JobCancelResponse> {
     return this._client.patch(path`/v1/parsing/jobs/${jobID}`, options);
   }
 }
@@ -69,99 +70,9 @@ export class Jobs extends APIResource {
 export type JobListResponsesCursor = Cursor<JobListResponse>;
 
 /**
- * A chunk of text extracted from a document page.
- */
-export interface Chunk {
-  /**
-   * The full content of the chunk
-   */
-  content?: string | null;
-
-  /**
-   * The content of the chunk to embed
-   */
-  content_to_embed: string;
-
-  /**
-   * List of elements contained in this chunk
-   */
-  elements: Array<ChunkElement>;
-}
-
-/**
- * Represents an extracted element from a document with its content and metadata.
- */
-export interface ChunkElement {
-  /**
-   * The type of the extracted element
-   */
-  type: ElementType;
-
-  /**
-   * The confidence score of the extraction
-   */
-  confidence: number;
-
-  /**
-   * The bounding box coordinates [x1, y1, x2, y2]
-   */
-  bbox: Array<unknown>;
-
-  /**
-   * The page number where the element was found
-   */
-  page: number;
-
-  /**
-   * The extracted text content of the element
-   */
-  content: string;
-
-  /**
-   * A brief summary of the element's content
-   */
-  summary?: string | null;
-
-  /**
-   * The base64-encoded image data for figure elements
-   */
-  image?: string | null;
-}
-
-/**
  * Strategy used for chunking document content.
  */
 export type ChunkingStrategy = 'page';
-
-/**
- * Result of document parsing operation.
- */
-export interface DocumentParserResult {
-  /**
-   * The strategy used for chunking the document
-   */
-  chunking_strategy: ChunkingStrategy;
-
-  /**
-   * The format of the returned content
-   */
-  return_format: ReturnFormat;
-
-  /**
-   * The types of elements extracted
-   */
-  element_types: Array<ElementType>;
-
-  /**
-   * List of extracted chunks from the document
-   */
-  chunks: Array<Chunk>;
-
-  /**
-   * List of (width, height) tuples for each page
-   */
-  page_sizes?: Array<Array<unknown>>;
-}
 
 /**
  * Types of elements that can be extracted from a document.
@@ -179,10 +90,17 @@ export type ElementType =
   | 'text'
   | 'footnote';
 
+export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
 /**
- * A job for parsing documents with its current state and result.
+ * Format options for the returned document content.
  */
-export interface ParsingJob {
+export type ReturnFormat = 'html' | 'markdown' | 'plain';
+
+/**
+ * A parsing job with its result narrowed to the public fields.
+ */
+export interface JobCreateResponse {
   /**
    * The ID of the job
    */
@@ -209,9 +127,9 @@ export interface ParsingJob {
   error?: { [key: string]: unknown } | null;
 
   /**
-   * Result of document parsing operation.
+   * The public result of a parsing job.
    */
-  result?: DocumentParserResult | null;
+  result?: JobCreateResponse.Result | null;
 
   /**
    * The started time of the job
@@ -239,12 +157,257 @@ export interface ParsingJob {
   object?: 'parsing_job';
 }
 
-export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+export namespace JobCreateResponse {
+  /**
+   * The public result of a parsing job.
+   */
+  export interface Result {
+    /**
+     * The strategy used for chunking the document
+     */
+    chunking_strategy: JobsAPI.ChunkingStrategy;
+
+    /**
+     * The format of the returned content
+     */
+    return_format: JobsAPI.ReturnFormat;
+
+    /**
+     * The types of elements extracted
+     */
+    element_types: Array<JobsAPI.ElementType>;
+
+    /**
+     * List of extracted chunks from the document
+     */
+    chunks: Array<Result.Chunk>;
+
+    /**
+     * List of (width, height) tuples for each page
+     */
+    page_sizes?: Array<Array<unknown>>;
+  }
+
+  export namespace Result {
+    /**
+     * A chunk of a parsed document in a job response.
+     */
+    export interface Chunk {
+      /**
+       * The full content of the chunk
+       */
+      content?: string | null;
+
+      /**
+       * The content of the chunk to embed
+       */
+      content_to_embed: string;
+
+      /**
+       * List of elements contained in this chunk
+       */
+      elements: Array<Chunk.Element>;
+    }
+
+    export namespace Chunk {
+      /**
+       * An element extracted from a document with its content and metadata.
+       */
+      export interface Element {
+        /**
+         * The type of the extracted element
+         */
+        type: JobsAPI.ElementType;
+
+        /**
+         * The confidence score of the extraction
+         */
+        confidence: number;
+
+        /**
+         * The bounding box coordinates [x1, y1, x2, y2]
+         */
+        bbox: Array<unknown>;
+
+        /**
+         * The page number where the element was found
+         */
+        page: number;
+
+        /**
+         * The extracted text content of the element
+         */
+        content: string;
+
+        /**
+         * A brief summary of the element's content
+         */
+        summary?: string | null;
+
+        /**
+         * The base64-encoded image data for figure elements
+         */
+        image?: string | null;
+      }
+    }
+  }
+}
 
 /**
- * Format options for the returned document content.
+ * A parsing job with its result narrowed to the public fields.
  */
-export type ReturnFormat = 'html' | 'markdown' | 'plain';
+export interface JobRetrieveResponse {
+  /**
+   * The ID of the job
+   */
+  id: string;
+
+  /**
+   * The ID of the file to parse
+   */
+  file_id: string;
+
+  /**
+   * The name of the file
+   */
+  filename?: string | null;
+
+  /**
+   * The status of the job
+   */
+  status: ParsingJobStatus;
+
+  /**
+   * The error of the job
+   */
+  error?: { [key: string]: unknown } | null;
+
+  /**
+   * The public result of a parsing job.
+   */
+  result?: JobRetrieveResponse.Result | null;
+
+  /**
+   * The started time of the job
+   */
+  started_at?: string | null;
+
+  /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
+
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
+
+  /**
+   * The updated time of the job
+   */
+  updated_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
+}
+
+export namespace JobRetrieveResponse {
+  /**
+   * The public result of a parsing job.
+   */
+  export interface Result {
+    /**
+     * The strategy used for chunking the document
+     */
+    chunking_strategy: JobsAPI.ChunkingStrategy;
+
+    /**
+     * The format of the returned content
+     */
+    return_format: JobsAPI.ReturnFormat;
+
+    /**
+     * The types of elements extracted
+     */
+    element_types: Array<JobsAPI.ElementType>;
+
+    /**
+     * List of extracted chunks from the document
+     */
+    chunks: Array<Result.Chunk>;
+
+    /**
+     * List of (width, height) tuples for each page
+     */
+    page_sizes?: Array<Array<unknown>>;
+  }
+
+  export namespace Result {
+    /**
+     * A chunk of a parsed document in a job response.
+     */
+    export interface Chunk {
+      /**
+       * The full content of the chunk
+       */
+      content?: string | null;
+
+      /**
+       * The content of the chunk to embed
+       */
+      content_to_embed: string;
+
+      /**
+       * List of elements contained in this chunk
+       */
+      elements: Array<Chunk.Element>;
+    }
+
+    export namespace Chunk {
+      /**
+       * An element extracted from a document with its content and metadata.
+       */
+      export interface Element {
+        /**
+         * The type of the extracted element
+         */
+        type: JobsAPI.ElementType;
+
+        /**
+         * The confidence score of the extraction
+         */
+        confidence: number;
+
+        /**
+         * The bounding box coordinates [x1, y1, x2, y2]
+         */
+        bbox: Array<unknown>;
+
+        /**
+         * The page number where the element was found
+         */
+        page: number;
+
+        /**
+         * The extracted text content of the element
+         */
+        content: string;
+
+        /**
+         * A brief summary of the element's content
+         */
+        summary?: string | null;
+
+        /**
+         * The base64-encoded image data for figure elements
+         */
+        image?: string | null;
+      }
+    }
+  }
+}
 
 /**
  * A parsing job item for list responses.
@@ -321,6 +484,162 @@ export interface JobDeleteResponse {
   object?: 'parsing_job';
 }
 
+/**
+ * A parsing job with its result narrowed to the public fields.
+ */
+export interface JobCancelResponse {
+  /**
+   * The ID of the job
+   */
+  id: string;
+
+  /**
+   * The ID of the file to parse
+   */
+  file_id: string;
+
+  /**
+   * The name of the file
+   */
+  filename?: string | null;
+
+  /**
+   * The status of the job
+   */
+  status: ParsingJobStatus;
+
+  /**
+   * The error of the job
+   */
+  error?: { [key: string]: unknown } | null;
+
+  /**
+   * The public result of a parsing job.
+   */
+  result?: JobCancelResponse.Result | null;
+
+  /**
+   * The started time of the job
+   */
+  started_at?: string | null;
+
+  /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
+
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
+
+  /**
+   * The updated time of the job
+   */
+  updated_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
+}
+
+export namespace JobCancelResponse {
+  /**
+   * The public result of a parsing job.
+   */
+  export interface Result {
+    /**
+     * The strategy used for chunking the document
+     */
+    chunking_strategy: JobsAPI.ChunkingStrategy;
+
+    /**
+     * The format of the returned content
+     */
+    return_format: JobsAPI.ReturnFormat;
+
+    /**
+     * The types of elements extracted
+     */
+    element_types: Array<JobsAPI.ElementType>;
+
+    /**
+     * List of extracted chunks from the document
+     */
+    chunks: Array<Result.Chunk>;
+
+    /**
+     * List of (width, height) tuples for each page
+     */
+    page_sizes?: Array<Array<unknown>>;
+  }
+
+  export namespace Result {
+    /**
+     * A chunk of a parsed document in a job response.
+     */
+    export interface Chunk {
+      /**
+       * The full content of the chunk
+       */
+      content?: string | null;
+
+      /**
+       * The content of the chunk to embed
+       */
+      content_to_embed: string;
+
+      /**
+       * List of elements contained in this chunk
+       */
+      elements: Array<Chunk.Element>;
+    }
+
+    export namespace Chunk {
+      /**
+       * An element extracted from a document with its content and metadata.
+       */
+      export interface Element {
+        /**
+         * The type of the extracted element
+         */
+        type: JobsAPI.ElementType;
+
+        /**
+         * The confidence score of the extraction
+         */
+        confidence: number;
+
+        /**
+         * The bounding box coordinates [x1, y1, x2, y2]
+         */
+        bbox: Array<unknown>;
+
+        /**
+         * The page number where the element was found
+         */
+        page: number;
+
+        /**
+         * The extracted text content of the element
+         */
+        content: string;
+
+        /**
+         * A brief summary of the element's content
+         */
+        summary?: string | null;
+
+        /**
+         * The base64-encoded image data for figure elements
+         */
+        image?: string | null;
+      }
+    }
+  }
+}
+
 export interface JobCreateParams {
   /**
    * The ID of the file to parse
@@ -362,16 +681,15 @@ export interface JobListParams extends CursorParams {
 
 export declare namespace Jobs {
   export {
-    type Chunk as Chunk,
-    type ChunkElement as ChunkElement,
     type ChunkingStrategy as ChunkingStrategy,
-    type DocumentParserResult as DocumentParserResult,
     type ElementType as ElementType,
-    type ParsingJob as ParsingJob,
     type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
+    type JobCreateResponse as JobCreateResponse,
+    type JobRetrieveResponse as JobRetrieveResponse,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
+    type JobCancelResponse as JobCancelResponse,
     type JobListResponsesCursor as JobListResponsesCursor,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
