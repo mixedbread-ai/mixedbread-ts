@@ -366,10 +366,8 @@ export interface ContextualizationConfig {
   with_metadata?: boolean | Array<string>;
 
   /**
-   * Use an LLM to generate a short context for each chunk with parsed text, OCR,
-   * transcription, or a summary that situates it within the document, improving
-   * retrieval accuracy. During sliced ingestion, chunks are situated within their
-   * current slice.
+   * Use an LLM to generate a short context for each chunk that situates it within
+   * the full document, improving retrieval accuracy.
    */
   with_file_context?: boolean;
 }
@@ -1095,7 +1093,7 @@ export interface StoreChunkSearchOptions {
  */
 export interface StoreConfig {
   /**
-   * Contextualize files with metadata
+   * Include additional context when embedding chunks.
    */
   contextualization?: boolean | ContextualizationConfig;
 
