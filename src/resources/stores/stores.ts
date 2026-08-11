@@ -287,7 +287,8 @@ export interface AgenticSearchConfig {
   /**
    * Controls when retrieved image content is provided to the agent. `auto` sends
    * images only when no OCR text or summary is available, `never` disables image
-   * content, and `always` sends image content when available.
+   * content, and `always` sends image content when available. Currently not
+   * forwarded: the search agent runs without image content.
    */
   media_content?: 'auto' | 'never' | 'always';
 
