@@ -8,8 +8,10 @@ const client = new Mixedbread({
 });
 
 describe('resource chat', () => {
-  test('createCompletion', async () => {
-    const responsePromise = client.chat.createCompletion();
+  test('createCompletion: only required params', async () => {
+    const responsePromise = client.chat.createCompletion({
+      messages: [{ role: 'system', content: 'string' }],
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -17,5 +19,39 @@ describe('resource chat', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('createCompletion: required and optional params', async () => {
+    const response = await client.chat.createCompletion({
+      messages: [{ role: 'system', content: 'string' }],
+      model: 'model',
+      tools: [
+        {
+          enabled: true,
+          store_identifiers: ['string'],
+          type: 'store_search',
+          max_num_results: 1,
+          filters: {
+            all: [{}, {}],
+            any: [{}, {}],
+            none: [{}, {}],
+          },
+          score_threshold: 0,
+          citations: true,
+        },
+      ],
+      tool_choice: 'auto',
+      store: true,
+      previous_completion_id: 'previous_completion_id',
+      stream: true,
+      temperature: 0,
+      top_p: 0,
+      max_completion_tokens: 16,
+      max_tokens: 16,
+      max_tool_calls: 1,
+      parallel_tool_calls: true,
+      metadata: { foo: 'string' },
+      include: ['string'],
+    });
   });
 });

@@ -45,7 +45,7 @@ import {
   APIKeysLimitOffset,
   Scope,
 } from './resources/api-keys';
-import { Chat, ChatCreateCompletionResponse } from './resources/chat';
+import { Chat, ChatCreateCompletionParams, ChatCreateCompletionResponse } from './resources/chat';
 import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
 import {
   APIKeyCreateOrUpdateParams,
@@ -1069,7 +1069,11 @@ export declare namespace Mixedbread {
     type APIKeyListParams as APIKeyListParams,
   };
 
-  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
+  export {
+    Chat as Chat,
+    type ChatCreateCompletionResponse as ChatCreateCompletionResponse,
+    type ChatCreateCompletionParams as ChatCreateCompletionParams,
+  };
 
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
