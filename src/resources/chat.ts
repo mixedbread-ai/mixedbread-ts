@@ -7,7 +7,7 @@ import { RequestOptions } from '../internal/request-options';
 
 export class Chat extends APIResource {
   /**
-   * Create a chat completion over the caller's stores.
+   * Create a chat completion, optionally grounded in the caller's stores.
    *
    * Supports the OpenAI Chat Completions API subset: a message list, function tools,
    * streaming via server-sent events, and persistence via `store`. The caller sends
@@ -15,15 +15,16 @@ export class Chat extends APIResource {
    * turns into a conversation and restores the full model context — when the
    * request's messages extend the stored conversation unchanged, the model also sees
    * the previous turns' hosted tool calls and results, while an edited history is
-   * honored exactly as sent. Server-side, the model may search, grep, filter, and
-   * read the caller's stores as needed; those executions are reported in the
-   * `hosted_tool_calls` extension field (and as extra streaming chunks), with chunk
-   * results included only for the requested `include` keys. Retrieval is active by
-   * default and scoped by the store-tool configurations; disable a tool by declaring
-   * it with `enabled: false`. A model call to a caller-declared function tool ends
-   * the completion with `tool_calls` on the choice message (finish_reason
-   * `tool_calls`); execute the functions and continue the conversation by appending
-   * the assistant message and the matching `tool` messages to the next request.
+   * honored exactly as sent. Retrieval is opt-in: declare the hosted store tools
+   * (`store_search`, `store_grep`, `store_list_chunks`, `store_metadata_facets`,
+   * `list_stores`) in `tools` to let the model search, grep, filter, and read the
+   * caller's stores server-side, scoped by each declaration. Those executions are
+   * reported in the `hosted_tool_calls` extension field (and as extra streaming
+   * chunks), with chunk results included only for the requested `include` keys. A
+   * model call to a caller-declared function tool ends the completion with
+   * `tool_calls` on the choice message (finish_reason `tool_calls`); execute the
+   * functions and continue the conversation by appending the assistant message and
+   * the matching `tool` messages to the next request.
    */
   createCompletion(
     body: ChatCreateCompletionParams,
@@ -69,6 +70,14 @@ export interface ChatCreateCompletionResponse {
     | ChatCreateCompletionResponse.MetadataFacetsCallItem
     | ChatCreateCompletionResponse.ListStoresCallItem
   >;
+
+  /**
+   * One short-lived ticket per client-executed tool call (Mixedbread extension).
+   * Send the matching ticket as the X-Mxbai-Tool-Ticket header on the store search
+   * or grep you run for that call, and it bills at the discounted agent rate. Each
+   * ticket redeems once.
+   */
+  tool_tickets?: Array<ChatCreateCompletionResponse.ToolTicket>;
 }
 
 export namespace ChatCreateCompletionResponse {
@@ -127,6 +136,23 @@ export namespace ChatCreateCompletionResponse {
     completion_tokens?: number;
 
     total_tokens?: number;
+
+    /**
+     * Breakdown of the prompt tokens, as in the OpenAI usage object.
+     */
+    prompt_tokens_details?: Usage.PromptTokensDetails;
+  }
+
+  export namespace Usage {
+    /**
+     * Breakdown of the prompt tokens, as in the OpenAI usage object.
+     */
+    export interface PromptTokensDetails {
+      /**
+       * Prompt tokens served from the cache; part of prompt_tokens, not extra
+       */
+      cached_tokens?: number;
+    }
   }
 
   /**
@@ -542,6 +568,26 @@ export namespace ChatCreateCompletionResponse {
       message: string;
     }
   }
+
+  /**
+   * Proof that one client-executed tool call belongs to this completion.
+   */
+  export interface ToolTicket {
+    /**
+     * ID of the tool call in `choices[].message.tool_calls` this covers
+     */
+    tool_call_id: string;
+
+    /**
+     * Opaque token to send as the X-Mxbai-Tool-Ticket header
+     */
+    ticket: string;
+
+    /**
+     * Unix timestamp after which the ticket no longer redeems
+     */
+    expires_at: number;
+  }
 }
 
 export interface ChatCreateCompletionParams {
@@ -557,14 +603,13 @@ export interface ChatCreateCompletionParams {
   >;
 
   /**
-   * Accepted for OpenAI SDK compatibility and ignored; the platform selects the
-   * model
+   * Public model ID. Defaults to toast-1
    */
-  model?: string | null;
+  model?: string;
 
   /**
-   * Tools the model may call; hosted tools without required configuration are active
-   * by default and can be disabled by declaring them with enabled=false
+   * Tools the model may call; the hosted tools are opt-in and run server-side for
+   * the completions that declare them
    */
   tools?: Array<
     | ChatCreateCompletionParams.StoreSearchTool
@@ -744,13 +789,8 @@ export namespace ChatCreateCompletionParams {
    */
   export interface StoreSearchTool {
     /**
-     * Set to false to disable the tool for this completion
-     */
-    enabled?: boolean;
-
-    /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call, an empty list disables the tool
+     * store per call
      */
     store_identifiers?: Array<string> | null;
 
@@ -792,13 +832,8 @@ export namespace ChatCreateCompletionParams {
    */
   export interface StoreGrepTool {
     /**
-     * Set to false to disable the tool for this completion
-     */
-    enabled?: boolean;
-
-    /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call, an empty list disables the tool
+     * store per call
      */
     store_identifiers?: Array<string> | null;
 
@@ -834,13 +869,8 @@ export namespace ChatCreateCompletionParams {
    */
   export interface StoreListChunksTool {
     /**
-     * Set to false to disable the tool for this completion
-     */
-    enabled?: boolean;
-
-    /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call, an empty list disables the tool
+     * store per call
      */
     store_identifiers?: Array<string> | null;
 
@@ -877,13 +907,8 @@ export namespace ChatCreateCompletionParams {
    */
   export interface MetadataFacetsTool {
     /**
-     * Set to false to disable the tool for this completion
-     */
-    enabled?: boolean;
-
-    /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call, an empty list disables the tool
+     * store per call
      */
     store_identifiers?: Array<string> | null;
 
@@ -907,15 +932,11 @@ export namespace ChatCreateCompletionParams {
   /**
    * Hosted tool: paginated listing of the caller's stores, executed server-side.
    *
-   * Active by default; declare it with enabled=false to turn it off.
+   * Pair it with the store-scoped tools that are left unpinned, so the model can
+   * discover which stores it may name.
    */
   export interface ListStoresTool {
     type?: 'list_stores';
-
-    /**
-     * Set to false to disable the tool for this completion
-     */
-    enabled?: boolean;
 
     /**
      * Number of stores returned per listing call

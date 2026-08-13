@@ -23,6 +23,7 @@ import {
 } from './files';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
+import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -154,8 +155,16 @@ export class Stores extends APIResource {
    * });
    * ```
    */
-  grep(body: StoreGrepParams, options?: RequestOptions): APIPromise<StoreGrepResponse> {
-    return this._client.post('/v1/stores/grep', { body, ...options });
+  grep(params: StoreGrepParams, options?: RequestOptions): APIPromise<StoreGrepResponse> {
+    const { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket, ...body } = params;
+    return this._client.post('/v1/stores/grep', {
+      body,
+      ...options,
+      headers: buildHeaders([
+        { ...(xMxbaiToolTicket != null ? { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket } : undefined) },
+        options?.headers,
+      ]),
+    });
   }
 
   /**
@@ -258,8 +267,16 @@ export class Stores extends APIResource {
    * });
    * ```
    */
-  search(body: StoreSearchParams, options?: RequestOptions): APIPromise<StoreSearchResponse> {
-    return this._client.post('/v1/stores/search', { body, ...options });
+  search(params: StoreSearchParams, options?: RequestOptions): APIPromise<StoreSearchResponse> {
+    const { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket, ...body } = params;
+    return this._client.post('/v1/stores/search', {
+      body,
+      ...options,
+      headers: buildHeaders([
+        { ...(xMxbaiToolTicket != null ? { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket } : undefined) },
+        options?.headers,
+      ]),
+    });
   }
 }
 
@@ -1338,17 +1355,24 @@ export interface StoreListParams extends CursorParams {
 
 export interface StoreGrepParams {
   /**
-   * IDs or names of stores
+   * Header param: Ticket from a chat completion's `tool_tickets`, proving this call
+   * runs a tool call that completion asked for. Redeems once, and bills the
+   * operation at the discounted agent rate.
+   */
+  'X-Mxbai-Tool-Ticket'?: string;
+
+  /**
+   * Body param: IDs or names of stores
    */
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
+   * Body param: Number of results to return
    */
   top_k?: number;
 
   /**
-   * Optional filter conditions
+   * Body param: Optional filter conditions
    */
   filters?:
     | Shared.SearchFilter
@@ -1357,29 +1381,29 @@ export interface StoreGrepParams {
     | null;
 
   /**
-   * Optional list of file IDs to filter chunks by (inclusion filter)
+   * Body param: Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
 
   /**
-   * Regular expression (RE2 syntax) matched against chunk text
+   * Body param: Regular expression (RE2 syntax) matched against chunk text
    */
   pattern: string;
 
   /**
-   * Chunk content groups to match against. `text` matches the original text of text
-   * chunks; `generated` matches ingestion-derived fields (transcription, OCR text,
-   * summaries).
+   * Body param: Chunk content groups to match against. `text` matches the original
+   * text of text chunks; `generated` matches ingestion-derived fields
+   * (transcription, OCR text, summaries).
    */
   targets?: Array<'text' | 'generated'>;
 
   /**
-   * Whether the regular expression is case-sensitive
+   * Body param: Whether the regular expression is case-sensitive
    */
   case_sensitive?: boolean;
 
   /**
-   * Whether to return file metadata
+   * Body param: Whether to return file metadata
    */
   return_metadata?: boolean;
 }
@@ -1550,17 +1574,24 @@ export namespace StoreQuestionAnsweringParams {
 
 export interface StoreSearchParams {
   /**
-   * IDs or names of stores
+   * Header param: Ticket from a chat completion's `tool_tickets`, proving this call
+   * runs a tool call that completion asked for. Redeems once, and bills the
+   * operation at the discounted agent rate.
+   */
+  'X-Mxbai-Tool-Ticket'?: string;
+
+  /**
+   * Body param: IDs or names of stores
    */
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
+   * Body param: Number of results to return
    */
   top_k?: number;
 
   /**
-   * Optional filter conditions
+   * Body param: Optional filter conditions
    */
   filters?:
     | Shared.SearchFilter
@@ -1569,17 +1600,17 @@ export interface StoreSearchParams {
     | null;
 
   /**
-   * Optional list of file IDs to filter chunks by (inclusion filter)
+   * Body param: Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
 
   /**
-   * Search query text
+   * Body param: Search query text
    */
   query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
 
   /**
-   * Search configuration options
+   * Body param: Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
 }
