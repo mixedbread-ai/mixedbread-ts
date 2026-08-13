@@ -27,7 +27,6 @@ describe('resource chat', () => {
       model: 'model',
       tools: [
         {
-          enabled: true,
           store_identifiers: ['string'],
           type: 'store_search',
           max_num_results: 1,
