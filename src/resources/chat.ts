@@ -10,21 +10,20 @@ export class Chat extends APIResource {
    * Create a chat completion, optionally grounded in the caller's stores.
    *
    * Supports the OpenAI Chat Completions API subset: a message list, function tools,
-   * streaming via server-sent events, and persistence via `store`. The caller sends
-   * the full conversation on every call; `previous_completion_id` groups stored
-   * turns into a conversation and restores the full model context — when the
-   * request's messages extend the stored conversation unchanged, the model also sees
-   * the previous turns' hosted tool calls and results, while an edited history is
-   * honored exactly as sent. Retrieval is opt-in: declare the hosted store tools
-   * (`store_search`, `store_grep`, `store_list_chunks`, `store_metadata_facets`,
-   * `list_stores`) in `tools` to let the model search, grep, filter, and read the
-   * caller's stores server-side, scoped by each declaration. Those executions are
-   * reported in the `hosted_tool_calls` extension field (and as extra streaming
-   * chunks), with chunk results included only for the requested `include` keys. A
-   * model call to a caller-declared function tool ends the completion with
-   * `tool_calls` on the choice message (finish_reason `tool_calls`); execute the
-   * functions and continue the conversation by appending the assistant message and
-   * the matching `tool` messages to the next request.
+   * streaming via server-sent events, and persistence via `store`. The
+   * `previous_completion_id` groups stored turns into a conversation and restores
+   * the full model context. Callers normally send only the new suffix;
+   * `previous_messages` can replace the restored prefix after client-side context
+   * pruning. Retrieval is opt-in: declare the hosted store tools (`store_search`,
+   * `store_grep`, `store_list_chunks`, `store_metadata_facets`, `list_stores`) in
+   * `tools` to let the model search, grep, filter, and read the caller's stores
+   * server-side, scoped by each declaration. Those executions are reported in the
+   * `hosted_tool_calls` extension field (and as extra streaming chunks), with chunk
+   * results included only for the requested `include` keys. A model call to a
+   * caller-declared function tool ends the completion with `tool_calls` on the
+   * choice message (finish_reason `tool_calls`); execute the functions and continue
+   * the conversation by appending the assistant message and the matching `tool`
+   * messages to the next request.
    */
   createCompletion(
     body: ChatCreateCompletionParams,
@@ -78,6 +77,17 @@ export interface ChatCreateCompletionResponse {
    * ticket redeems once.
    */
   tool_tickets?: Array<ChatCreateCompletionResponse.ToolTicket>;
+
+  /**
+   * Complete stored conversation transcript when requested through include
+   */
+  transcript?: Array<
+    | ChatCreateCompletionResponse.SystemMessage
+    | ChatCreateCompletionResponse.DeveloperMessage
+    | ChatCreateCompletionResponse.UserMessage
+    | ChatCreateCompletionResponse.AssistantMessageOutput
+    | ChatCreateCompletionResponse.ToolMessage
+  > | null;
 }
 
 export namespace ChatCreateCompletionResponse {
@@ -588,11 +598,112 @@ export namespace ChatCreateCompletionResponse {
      */
     expires_at: number;
   }
+
+  export interface SystemMessage {
+    role: 'system';
+
+    content: string | Array<SystemMessage.UnionMember1>;
+  }
+
+  export namespace SystemMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  /**
+   * Alias of the system role; forwarded to the provider as system instructions.
+   */
+  export interface DeveloperMessage {
+    role: 'developer';
+
+    content: string | Array<DeveloperMessage.UnionMember1>;
+  }
+
+  export namespace DeveloperMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  export interface UserMessage {
+    role: 'user';
+
+    content: string | Array<UserMessage.UnionMember1>;
+  }
+
+  export namespace UserMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  export interface AssistantMessageOutput {
+    role: 'assistant';
+
+    content?: string | Array<AssistantMessageOutput.UnionMember1> | null;
+
+    tool_calls?: Array<AssistantMessageOutput.ToolCall>;
+
+    reasoning_content?: string | null;
+  }
+
+  export namespace AssistantMessageOutput {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+
+    /**
+     * One function tool call of an assistant message.
+     */
+    export interface ToolCall {
+      id: string;
+
+      type?: 'function';
+
+      function: ToolCall.Function;
+    }
+
+    export namespace ToolCall {
+      export interface Function {
+        name: string;
+
+        arguments: string;
+      }
+    }
+  }
+
+  /**
+   * Result of a function tool call, sent back by the caller.
+   */
+  export interface ToolMessage {
+    role: 'tool';
+
+    content: string | Array<ToolMessage.UnionMember1>;
+
+    tool_call_id: string;
+  }
+
+  export namespace ToolMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
 }
 
 export interface ChatCreateCompletionParams {
   /**
-   * The conversation so far; the caller carries the full history every call
+   * The conversation, or its new suffix when continuing a stored completion
    */
   messages: Array<
     | ChatCreateCompletionParams.SystemMessage
@@ -641,12 +752,28 @@ export interface ChatCreateCompletionParams {
 
   /**
    * ID of a stored completion this one continues (Mixedbread extension). Groups
-   * turns into a conversation for listing and deletion, and restores the full model
-   * context: when messages extend the stored conversation unchanged, the model also
-   * sees the previous turns' hosted tool calls and results, not just the text. An
-   * edited history is honored exactly as sent
+   * turns into a conversation for listing and deletion, and always restores the
+   * previous completion's full model context, including hosted tool calls and
+   * results
    */
   previous_completion_id?: string | null;
+
+  /**
+   * Authoritative replacement for the previous completion's model context. Use when
+   * client-side pruning changes already stored messages
+   */
+  previous_messages?: Array<
+    | ChatCreateCompletionParams.SystemMessage
+    | ChatCreateCompletionParams.DeveloperMessage
+    | ChatCreateCompletionParams.UserMessage
+    | ChatCreateCompletionParams.AssistantMessageInput
+    | ChatCreateCompletionParams.ToolMessage
+  > | null;
+
+  /**
+   * Function tool whose answer argument closes the stored transcript
+   */
+  terminal_tool_name?: string | null;
 
   /**
    * Stream the completion as server-sent events
@@ -736,6 +863,8 @@ export namespace ChatCreateCompletionParams {
     content?: string | Array<AssistantMessageInput.UnionMember1> | null;
 
     tool_calls?: Array<AssistantMessageInput.ToolCall>;
+
+    reasoning_content?: string | null;
   }
 
   export namespace AssistantMessageInput {
@@ -1021,6 +1150,107 @@ export namespace ChatCreateCompletionParams {
    */
   export interface ToolChoiceMetadataFacets {
     type?: 'store_metadata_facets';
+  }
+
+  export interface SystemMessage {
+    role: 'system';
+
+    content: string | Array<SystemMessage.UnionMember1>;
+  }
+
+  export namespace SystemMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  /**
+   * Alias of the system role; forwarded to the provider as system instructions.
+   */
+  export interface DeveloperMessage {
+    role: 'developer';
+
+    content: string | Array<DeveloperMessage.UnionMember1>;
+  }
+
+  export namespace DeveloperMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  export interface UserMessage {
+    role: 'user';
+
+    content: string | Array<UserMessage.UnionMember1>;
+  }
+
+  export namespace UserMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+  }
+
+  export interface AssistantMessageInput {
+    role: 'assistant';
+
+    content?: string | Array<AssistantMessageInput.UnionMember1> | null;
+
+    tool_calls?: Array<AssistantMessageInput.ToolCall>;
+
+    reasoning_content?: string | null;
+  }
+
+  export namespace AssistantMessageInput {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
+
+    /**
+     * One function tool call of an assistant message.
+     */
+    export interface ToolCall {
+      id: string;
+
+      type?: 'function';
+
+      function: ToolCall.Function;
+    }
+
+    export namespace ToolCall {
+      export interface Function {
+        name: string;
+
+        arguments: string;
+      }
+    }
+  }
+
+  /**
+   * Result of a function tool call, sent back by the caller.
+   */
+  export interface ToolMessage {
+    role: 'tool';
+
+    content: string | Array<ToolMessage.UnionMember1>;
+
+    tool_call_id: string;
+  }
+
+  export namespace ToolMessage {
+    export interface UnionMember1 {
+      type?: 'text';
+
+      text: string;
+    }
   }
 }
 

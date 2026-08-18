@@ -42,6 +42,8 @@ describe('resource chat', () => {
       tool_choice: 'auto',
       store: true,
       previous_completion_id: 'previous_completion_id',
+      previous_messages: [{ role: 'system', content: 'string' }],
+      terminal_tool_name: 'terminal_tool_name',
       stream: true,
       temperature: 0,
       top_p: 0,
