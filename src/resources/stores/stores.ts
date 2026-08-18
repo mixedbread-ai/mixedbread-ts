@@ -1482,6 +1482,13 @@ export interface StoreMetadataFacetsParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
+   * Internal: when set, the response is a server-sent event stream of live agentic
+   * trace events followed by the final search response. Requires agentic search.
+   * Used by the Mixedbread playground; not part of the documented public API.
+   */
+  stream?: boolean;
+
+  /**
    * Optional list of facets to return. Use dot for nested fields.
    */
   facets?: Array<string> | null;
@@ -1613,6 +1620,14 @@ export interface StoreSearchParams {
    * Body param: Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
+
+  /**
+   * Body param: Internal: when set, the response is a server-sent event stream of
+   * live agentic trace events followed by the final search response. Requires
+   * agentic search. Used by the Mixedbread playground; not part of the documented
+   * public API.
+   */
+  stream?: boolean;
 }
 
 Stores.Files = Files;
