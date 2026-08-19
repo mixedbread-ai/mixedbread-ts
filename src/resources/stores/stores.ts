@@ -1252,6 +1252,8 @@ export interface StoreQuestionAnsweringResponse {
   sources?: Array<
     ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
   >;
+
+  [k: string]: unknown;
 }
 
 export interface StoreSearchResponse {
@@ -1546,7 +1548,9 @@ export interface StoreQuestionAnsweringParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Whether to stream the answer
+   * Internal: when set, the response is a server-sent event stream of live agentic
+   * trace events followed by the final answer. Requires agentic search. Used by the
+   * Mixedbread playground; not part of the documented public API.
    */
   stream?: boolean;
 
