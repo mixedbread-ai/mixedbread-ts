@@ -241,7 +241,8 @@ export class Stores extends APIResource {
    *
    * This endpoint searches through store chunks using semantic similarity matching.
    * It supports complex search queries with filters and returns relevance-scored
-   * results.
+   * results. Agentic searches can set `stream=true` to receive live trace events as
+   * server-sent events while the search runs, followed by the final search response.
    *
    * For the special 'mixedbread/web' store, this endpoint performs web search using
    * a mixture of different providers instead of semantic search. Web search results
@@ -1484,13 +1485,6 @@ export interface StoreMetadataFacetsParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Internal: when set, the response is a server-sent event stream of live agentic
-   * trace events followed by the final search response. Requires agentic search.
-   * Used by the Mixedbread playground; not part of the documented public API.
-   */
-  stream?: boolean;
-
-  /**
    * Optional list of facets to return. Use dot for nested fields.
    */
   facets?: Array<string> | null;
@@ -1626,10 +1620,10 @@ export interface StoreSearchParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Body param: Internal: when set, the response is a server-sent event stream of
-   * live agentic trace events followed by the final search response. Requires
-   * agentic search. Used by the Mixedbread playground; not part of the documented
-   * public API.
+   * Body param: When true, return live agentic-search trace events as a server-sent
+   * event stream. Requires search_options.agentic to be enabled. A successful stream
+   * ends with a search.completed event containing the final search response,
+   * followed by [DONE].
    */
   stream?: boolean;
 }

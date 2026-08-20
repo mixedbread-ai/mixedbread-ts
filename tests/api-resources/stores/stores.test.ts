@@ -171,7 +171,6 @@ describe('resource stores', () => {
         return_metadata: true,
         apply_search_rules: true,
       },
-      stream: true,
       facets: ['string'],
       max_fields: 1,
       max_values_per_field: 1,
