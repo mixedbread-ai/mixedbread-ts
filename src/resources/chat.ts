@@ -1082,6 +1082,10 @@ export namespace ChatCreateCompletionParams {
     /**
      * Definition of a client-executed function tool, as in the OpenAI Chat Completions
      * API.
+     *
+     * Hosted tool names are only reserved against the requests that declare that
+     * hosted tool (checked at the params level); the loop's internal terminal name is
+     * never usable.
      */
     function: FunctionTool.Function;
   }
@@ -1090,6 +1094,10 @@ export namespace ChatCreateCompletionParams {
     /**
      * Definition of a client-executed function tool, as in the OpenAI Chat Completions
      * API.
+     *
+     * Hosted tool names are only reserved against the requests that declare that
+     * hosted tool (checked at the params level); the loop's internal terminal name is
+     * never usable.
      */
     export interface Function {
       name: string;
