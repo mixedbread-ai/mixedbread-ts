@@ -1097,6 +1097,12 @@ export interface StoreChunkSearchOptions {
   agentic?: boolean | AgenticSearchConfig | null;
 
   /**
+   * Whether to apply the learned scoring function to second-stage scoring. Requires
+   * weights configured for the searched stores; silently skipped otherwise.
+   */
+  lsf?: boolean | null;
+
+  /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
