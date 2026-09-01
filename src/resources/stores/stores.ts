@@ -1548,9 +1548,9 @@ export interface StoreQuestionAnsweringParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Internal: when set, the response is a server-sent event stream of live agentic
-   * trace events followed by the final answer. Requires agentic search. Used by the
-   * Mixedbread playground; not part of the documented public API.
+   * Internal: when set, the response is a server-sent event stream of the retrieved
+   * chunks, live trace events, and finally the answer. Used by the Mixedbread
+   * playground; not part of the documented public API.
    */
   stream?: boolean;
 
@@ -1626,10 +1626,10 @@ export interface StoreSearchParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Body param: When true, return live agentic-search trace events as a server-sent
-   * event stream. Requires search_options.agentic to be enabled. A successful stream
-   * ends with a search.completed event containing the final search response,
-   * followed by [DONE].
+   * Body param: When true, return the search as a server-sent event stream: live
+   * agentic-search trace events when the search is agentic, and nothing before the
+   * results otherwise. A successful stream ends with a search.completed event
+   * containing the final search response, followed by [DONE].
    */
   stream?: boolean;
 }
