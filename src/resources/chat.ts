@@ -10,20 +10,22 @@ export class Chat extends APIResource {
    * Create a chat completion, optionally grounded in the caller's stores.
    *
    * Supports the OpenAI Chat Completions API subset: a message list, function tools,
-   * streaming via server-sent events, and persistence via `store`. The
-   * `previous_completion_id` groups stored turns into a conversation and restores
-   * the full model context. Callers normally send only the new suffix;
-   * `previous_messages` can replace the restored prefix after client-side context
-   * pruning. Retrieval is opt-in: declare the hosted store tools (`store_search`,
-   * `store_grep`, `store_list_chunks`, `store_metadata_facets`, `list_stores`) in
-   * `tools` to let the model search, grep, filter, and read the caller's stores
-   * server-side, scoped by each declaration. Those executions are reported in the
-   * `hosted_tool_calls` extension field (and as extra streaming chunks), with chunk
-   * results included only for the requested `include` keys. A model call to a
-   * caller-declared function tool ends the completion with `tool_calls` on the
-   * choice message (finish_reason `tool_calls`); execute the functions and continue
-   * the conversation by appending the assistant message and the matching `tool`
-   * messages to the next request.
+   * streaming via server-sent events, and persistence via `store`. A request without
+   * hosted tools is one generation over exactly what was sent: no instructions,
+   * tools, or turns are added. The `previous_completion_id` groups stored turns into
+   * a conversation and restores the full model context; callers normally send only
+   * the new suffix. (`previous_messages` and `terminal_tool_name` are deprecated:
+   * resend the full edited history in `messages` instead.) Retrieval is opt-in:
+   * declare the hosted store tools (`store_search`, `store_grep`,
+   * `store_list_chunks`, `store_metadata_facets`, `list_stores`) in `tools` to let
+   * the model search, grep, filter, and read the caller's stores server-side, scoped
+   * by each declaration. Those executions are reported in the `hosted_tool_calls`
+   * extension field (and as extra streaming chunks), with chunk results included
+   * only for the requested `include` keys. A model call to a caller-declared
+   * function tool ends the completion with `tool_calls` on the choice message
+   * (finish_reason `tool_calls`); execute the functions and continue the
+   * conversation by appending the assistant message and the matching `tool` messages
+   * to the next request.
    */
   createCompletion(
     body: ChatCreateCompletionParams,
@@ -759,8 +761,9 @@ export interface ChatCreateCompletionParams {
   previous_completion_id?: string | null;
 
   /**
-   * Authoritative replacement for the previous completion's model context. Use when
-   * client-side pruning changes already stored messages
+   * @deprecated Deprecated. Replacement for the previous completion's stored model
+   * context after client-side pruning. Send the full edited history in `messages`
+   * without `previous_completion_id` instead; the request is honored exactly as sent
    */
   previous_messages?: Array<
     | ChatCreateCompletionParams.SystemMessage
@@ -771,7 +774,9 @@ export interface ChatCreateCompletionParams {
   > | null;
 
   /**
-   * Function tool whose answer argument closes the stored transcript
+   * @deprecated Deprecated and ignored. The stored transcript is never rewritten
+   * around a terminal tool call; the completion ends with the model's plain-text
+   * answer
    */
   terminal_tool_name?: string | null;
 
@@ -1083,9 +1088,8 @@ export namespace ChatCreateCompletionParams {
      * Definition of a client-executed function tool, as in the OpenAI Chat Completions
      * API.
      *
-     * Hosted tool names are only reserved against the requests that declare that
-     * hosted tool (checked at the params level); the loop's internal terminal name is
-     * never usable.
+     * Any name is usable; hosted tool names are only reserved against the requests
+     * that declare that hosted tool (checked at the params level).
      */
     function: FunctionTool.Function;
   }
@@ -1095,9 +1099,8 @@ export namespace ChatCreateCompletionParams {
      * Definition of a client-executed function tool, as in the OpenAI Chat Completions
      * API.
      *
-     * Hosted tool names are only reserved against the requests that declare that
-     * hosted tool (checked at the params level); the loop's internal terminal name is
-     * never usable.
+     * Any name is usable; hosted tool names are only reserved against the requests
+     * that declare that hosted tool (checked at the params level).
      */
     export interface Function {
       name: string;
