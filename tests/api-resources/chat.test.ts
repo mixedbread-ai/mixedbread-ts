@@ -28,7 +28,7 @@ describe('resource chat', () => {
       tools: [
         {
           store_identifiers: ['string'],
-          type: 'store_search',
+          type: 'search_corpus',
           max_num_results: 1,
           filters: {
             all: [{}, {}],
@@ -50,6 +50,7 @@ describe('resource chat', () => {
       max_completion_tokens: 16,
       max_tokens: 16,
       max_tool_calls: 1,
+      context_management: { edits: [{ type: 'prune_context' }] },
       parallel_tool_calls: true,
       metadata: { foo: 'string' },
       include: ['string'],
