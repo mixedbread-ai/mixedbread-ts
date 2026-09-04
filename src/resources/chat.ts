@@ -62,15 +62,28 @@ export interface ChatCreateCompletionResponse {
   /**
    * Server-side hosted tool executions of this completion (Mixedbread extension);
    * chunk results ride along only for requested include keys, e.g.
-   * store_search_call.results
+   * search_corpus_call.results
    */
   hosted_tool_calls?: Array<
+    | ChatCreateCompletionResponse.SearchCorpusCallItem
+    | ChatCreateCompletionResponse.GrepCallItem
+    | ChatCreateCompletionResponse.FilterChunksCallItem
+    | ChatCreateCompletionResponse.InspectMetadataCallItem
+    | ChatCreateCompletionResponse.GetChunksCallItem
     | ChatCreateCompletionResponse.StoreSearchCallItem
     | ChatCreateCompletionResponse.StoreGrepCallItem
     | ChatCreateCompletionResponse.StoreListChunksCallItem
     | ChatCreateCompletionResponse.MetadataFacetsCallItem
     | ChatCreateCompletionResponse.ListStoresCallItem
   >;
+
+  /**
+   * Context edits applied while serving one request (Mixedbread extension).
+   *
+   * Only ever emitted non-empty: a request whose context was never edited carries no
+   * `context_management` object at all.
+   */
+  context_management?: ChatCreateCompletionResponse.ContextManagement | null;
 
   /**
    * One short-lived ticket per client-executed tool call (Mixedbread extension).
@@ -153,6 +166,11 @@ export namespace ChatCreateCompletionResponse {
      * Breakdown of the prompt tokens, as in the OpenAI usage object.
      */
     prompt_tokens_details?: Usage.PromptTokensDetails;
+
+    /**
+     * Breakdown of the completion tokens, as in the OpenAI usage object.
+     */
+    completion_tokens_details?: Usage.CompletionTokensDetails;
   }
 
   export namespace Usage {
@@ -165,10 +183,309 @@ export namespace ChatCreateCompletionResponse {
        */
       cached_tokens?: number;
     }
+
+    /**
+     * Breakdown of the completion tokens, as in the OpenAI usage object.
+     */
+    export interface CompletionTokensDetails {
+      /**
+       * Tokens of the hosted loop's narration; part of completion_tokens, not extra
+       */
+      reasoning_tokens?: number;
+    }
   }
 
   /**
-   * Record of one server-side store search execution.
+   * Record of one server-side search execution.
+   */
+  export interface SearchCorpusCallItem {
+    type?: 'search_corpus_call';
+
+    id: string;
+
+    status?: 'in_progress' | 'completed' | 'failed';
+
+    queries?: Array<string>;
+
+    metadata_filters?: Array<SearchCorpusCallItem.MetadataFilter> | null;
+
+    filter_mode?: 'all' | 'any';
+
+    store?: string | null;
+
+    results?: Array<{ [key: string]: unknown }> | null;
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    error?: SearchCorpusCallItem.Error | null;
+
+    reasoning_offset?: number | null;
+  }
+
+  export namespace SearchCorpusCallItem {
+    /**
+     * One metadata filter condition the model may attach to a hosted tool call.
+     */
+    export interface MetadataFilter {
+      /**
+       * Metadata field key
+       */
+      key: string;
+
+      /**
+       * Comparison operator
+       */
+      operator:
+        | 'eq'
+        | 'not_eq'
+        | 'gt'
+        | 'gte'
+        | 'lt'
+        | 'lte'
+        | 'in'
+        | 'not_in'
+        | 'like'
+        | 'contains'
+        | 'starts_with'
+        | 'not_like'
+        | 'regex';
+
+      /**
+       * Value to compare against. Use a list for `in`/`not_in`.
+       */
+      value: string | number | boolean | Array<string | number | boolean> | null;
+    }
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    export interface Error {
+      code: 'permission_denied' | 'invalid_arguments' | 'server_error';
+
+      message: string;
+    }
+  }
+
+  /**
+   * Record of one server-side grep execution.
+   */
+  export interface GrepCallItem {
+    type?: 'grep_call';
+
+    id: string;
+
+    status?: 'in_progress' | 'completed' | 'failed';
+
+    pattern?: string | null;
+
+    targets?: Array<'text' | 'generated'> | null;
+
+    case_sensitive?: boolean;
+
+    metadata_filters?: Array<GrepCallItem.MetadataFilter> | null;
+
+    filter_mode?: 'all' | 'any';
+
+    store?: string | null;
+
+    results?: Array<{ [key: string]: unknown }> | null;
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    error?: GrepCallItem.Error | null;
+
+    reasoning_offset?: number | null;
+  }
+
+  export namespace GrepCallItem {
+    /**
+     * One metadata filter condition the model may attach to a hosted tool call.
+     */
+    export interface MetadataFilter {
+      /**
+       * Metadata field key
+       */
+      key: string;
+
+      /**
+       * Comparison operator
+       */
+      operator:
+        | 'eq'
+        | 'not_eq'
+        | 'gt'
+        | 'gte'
+        | 'lt'
+        | 'lte'
+        | 'in'
+        | 'not_in'
+        | 'like'
+        | 'contains'
+        | 'starts_with'
+        | 'not_like'
+        | 'regex';
+
+      /**
+       * Value to compare against. Use a list for `in`/`not_in`.
+       */
+      value: string | number | boolean | Array<string | number | boolean> | null;
+    }
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    export interface Error {
+      code: 'permission_denied' | 'invalid_arguments' | 'server_error';
+
+      message: string;
+    }
+  }
+
+  /**
+   * Record of one server-side metadata-driven chunk listing.
+   */
+  export interface FilterChunksCallItem {
+    type?: 'filter_chunks_call';
+
+    id: string;
+
+    status?: 'in_progress' | 'completed' | 'failed';
+
+    metadata_filters?: Array<FilterChunksCallItem.MetadataFilter> | null;
+
+    filter_mode?: 'all' | 'any';
+
+    rank_by?: string | null;
+
+    direction?: 'asc' | 'desc';
+
+    store?: string | null;
+
+    results?: Array<{ [key: string]: unknown }> | null;
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    error?: FilterChunksCallItem.Error | null;
+
+    reasoning_offset?: number | null;
+  }
+
+  export namespace FilterChunksCallItem {
+    /**
+     * One metadata filter condition the model may attach to a hosted tool call.
+     */
+    export interface MetadataFilter {
+      /**
+       * Metadata field key
+       */
+      key: string;
+
+      /**
+       * Comparison operator
+       */
+      operator:
+        | 'eq'
+        | 'not_eq'
+        | 'gt'
+        | 'gte'
+        | 'lt'
+        | 'lte'
+        | 'in'
+        | 'not_in'
+        | 'like'
+        | 'contains'
+        | 'starts_with'
+        | 'not_like'
+        | 'regex';
+
+      /**
+       * Value to compare against. Use a list for `in`/`not_in`.
+       */
+      value: string | number | boolean | Array<string | number | boolean> | null;
+    }
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    export interface Error {
+      code: 'permission_denied' | 'invalid_arguments' | 'server_error';
+
+      message: string;
+    }
+  }
+
+  /**
+   * Record of one server-side metadata facets lookup.
+   */
+  export interface InspectMetadataCallItem {
+    type?: 'inspect_metadata_call';
+
+    id: string;
+
+    status?: 'in_progress' | 'completed' | 'failed';
+
+    store?: string | null;
+
+    facets?: { [key: string]: unknown } | null;
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    error?: InspectMetadataCallItem.Error | null;
+
+    reasoning_offset?: number | null;
+  }
+
+  export namespace InspectMetadataCallItem {
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    export interface Error {
+      code: 'permission_denied' | 'invalid_arguments' | 'server_error';
+
+      message: string;
+    }
+  }
+
+  /**
+   * Record of one server-side re-fetch of already-seen chunks.
+   */
+  export interface GetChunksCallItem {
+    type?: 'get_chunks_call';
+
+    id: string;
+
+    status?: 'in_progress' | 'completed' | 'failed';
+
+    chunk_ids?: Array<string>;
+
+    results?: Array<{ [key: string]: unknown }> | null;
+
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    error?: GetChunksCallItem.Error | null;
+
+    reasoning_offset?: number | null;
+  }
+
+  export namespace GetChunksCallItem {
+    /**
+     * Machine-readable reason a hosted tool call failed (Mixedbread extension).
+     */
+    export interface Error {
+      code: 'permission_denied' | 'invalid_arguments' | 'server_error';
+
+      message: string;
+    }
+  }
+
+  /**
+   * @deprecated Deprecated `store_search_call` form, emitted for requests that
+   * declared the alias.
    */
   export interface StoreSearchCallItem {
     type?: 'store_search_call';
@@ -185,7 +502,7 @@ export namespace ChatCreateCompletionResponse {
 
     store?: string | null;
 
-    results?: Array<StoreSearchCallItem.Result> | null;
+    results?: Array<{ [key: string]: unknown }> | null;
 
     /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
@@ -230,42 +547,6 @@ export namespace ChatCreateCompletionResponse {
     }
 
     /**
-     * User-facing search result chunk.
-     */
-    export interface Result {
-      index?: number | null;
-
-      store_id: string;
-
-      file_id: string;
-
-      chunk_index: number;
-
-      filename?: string | null;
-
-      mime_type?: string | null;
-
-      score: number;
-
-      text?: string | null;
-
-      ocr_text?: string | null;
-
-      transcription?: string | null;
-
-      summary?: string | null;
-
-      metadata?: unknown;
-
-      /**
-       * Metadata derived at ingestion. For chunks parsed in high-quality mode this
-       * carries `layout`, whose `elements` hold the per-region bounding boxes a
-       * <cite i="..." e="..."/> tag grounds to.
-       */
-      generated_metadata?: unknown;
-    }
-
-    /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     export interface Error {
@@ -276,7 +557,8 @@ export namespace ChatCreateCompletionResponse {
   }
 
   /**
-   * Record of one server-side grep execution.
+   * @deprecated Deprecated `store_grep_call` form, emitted for requests that
+   * declared the alias.
    */
   export interface StoreGrepCallItem {
     type?: 'store_grep_call';
@@ -297,7 +579,7 @@ export namespace ChatCreateCompletionResponse {
 
     store?: string | null;
 
-    results?: Array<StoreGrepCallItem.Result> | null;
+    results?: Array<{ [key: string]: unknown }> | null;
 
     /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
@@ -342,42 +624,6 @@ export namespace ChatCreateCompletionResponse {
     }
 
     /**
-     * User-facing search result chunk.
-     */
-    export interface Result {
-      index?: number | null;
-
-      store_id: string;
-
-      file_id: string;
-
-      chunk_index: number;
-
-      filename?: string | null;
-
-      mime_type?: string | null;
-
-      score: number;
-
-      text?: string | null;
-
-      ocr_text?: string | null;
-
-      transcription?: string | null;
-
-      summary?: string | null;
-
-      metadata?: unknown;
-
-      /**
-       * Metadata derived at ingestion. For chunks parsed in high-quality mode this
-       * carries `layout`, whose `elements` hold the per-region bounding boxes a
-       * <cite i="..." e="..."/> tag grounds to.
-       */
-      generated_metadata?: unknown;
-    }
-
-    /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     export interface Error {
@@ -388,7 +634,8 @@ export namespace ChatCreateCompletionResponse {
   }
 
   /**
-   * Record of one server-side metadata-driven chunk listing.
+   * @deprecated Deprecated `store_list_chunks_call` form, emitted for requests that
+   * declared the alias.
    */
   export interface StoreListChunksCallItem {
     type?: 'store_list_chunks_call';
@@ -407,7 +654,7 @@ export namespace ChatCreateCompletionResponse {
 
     store?: string | null;
 
-    results?: Array<StoreListChunksCallItem.Result> | null;
+    results?: Array<{ [key: string]: unknown }> | null;
 
     /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
@@ -452,42 +699,6 @@ export namespace ChatCreateCompletionResponse {
     }
 
     /**
-     * User-facing search result chunk.
-     */
-    export interface Result {
-      index?: number | null;
-
-      store_id: string;
-
-      file_id: string;
-
-      chunk_index: number;
-
-      filename?: string | null;
-
-      mime_type?: string | null;
-
-      score: number;
-
-      text?: string | null;
-
-      ocr_text?: string | null;
-
-      transcription?: string | null;
-
-      summary?: string | null;
-
-      metadata?: unknown;
-
-      /**
-       * Metadata derived at ingestion. For chunks parsed in high-quality mode this
-       * carries `layout`, whose `elements` hold the per-region bounding boxes a
-       * <cite i="..." e="..."/> tag grounds to.
-       */
-      generated_metadata?: unknown;
-    }
-
-    /**
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     export interface Error {
@@ -498,7 +709,8 @@ export namespace ChatCreateCompletionResponse {
   }
 
   /**
-   * Record of one server-side metadata facets lookup.
+   * @deprecated Deprecated `store_metadata_facets_call` form, emitted for requests
+   * that declared the alias.
    */
   export interface MetadataFacetsCallItem {
     type?: 'store_metadata_facets_call';
@@ -578,6 +790,54 @@ export namespace ChatCreateCompletionResponse {
       code: 'permission_denied' | 'invalid_arguments' | 'server_error';
 
       message: string;
+    }
+  }
+
+  /**
+   * Context edits applied while serving one request (Mixedbread extension).
+   *
+   * Only ever emitted non-empty: a request whose context was never edited carries no
+   * `context_management` object at all.
+   */
+  export interface ContextManagement {
+    applied_edits: Array<
+      ContextManagement.AppliedPruneContextEdit | ContextManagement.AppliedTruncateToolResultEdit
+    >;
+  }
+
+  export namespace ContextManagement {
+    /**
+     * Aggregate of the model's prune_context calls in one request.
+     */
+    export interface AppliedPruneContextEdit {
+      type?: 'prune_context';
+
+      /**
+       * Number of prune_context calls the model made in this request
+       */
+      calls: number;
+
+      /**
+       * Input tokens cleared from the model's context
+       */
+      cleared_input_tokens: number;
+    }
+
+    /**
+     * One caller tool result shortened by the server's context-overflow recovery.
+     */
+    export interface AppliedTruncateToolResultEdit {
+      type?: 'truncate_tool_result';
+
+      /**
+       * ID of the tool call whose result was shortened
+       */
+      tool_call_id: string;
+
+      /**
+       * Input tokens cleared from the model's context
+       */
+      cleared_input_tokens: number;
     }
   }
 
@@ -725,6 +985,11 @@ export interface ChatCreateCompletionParams {
    * the completions that declare them
    */
   tools?: Array<
+    | ChatCreateCompletionParams.SearchCorpusTool
+    | ChatCreateCompletionParams.GrepTool
+    | ChatCreateCompletionParams.FilterChunksTool
+    | ChatCreateCompletionParams.InspectMetadataTool
+    | ChatCreateCompletionParams.GetChunksTool
     | ChatCreateCompletionParams.StoreSearchTool
     | ChatCreateCompletionParams.StoreGrepTool
     | ChatCreateCompletionParams.StoreListChunksTool
@@ -741,8 +1006,12 @@ export interface ChatCreateCompletionParams {
     | 'none'
     | 'required'
     | ChatCreateCompletionParams.ToolChoiceFunction
-    | ChatCreateCompletionParams.ToolChoiceStoreSearch
+    | ChatCreateCompletionParams.ToolChoiceSearchCorpus
+    | ChatCreateCompletionParams.ToolChoiceGrep
+    | ChatCreateCompletionParams.ToolChoiceFilterChunks
+    | ChatCreateCompletionParams.ToolChoiceInspectMetadata
     | ChatCreateCompletionParams.ToolChoiceListStores
+    | ChatCreateCompletionParams.ToolChoiceStoreSearch
     | ChatCreateCompletionParams.ToolChoiceStoreGrep
     | ChatCreateCompletionParams.ToolChoiceStoreListChunks
     | ChatCreateCompletionParams.ToolChoiceMetadataFacets;
@@ -797,9 +1066,15 @@ export interface ChatCreateCompletionParams {
   max_tokens?: number | null;
 
   /**
-   * Maximum number of hosted retrieval calls executed for this completion
+   * Maximum number of server-handled tool calls (store tools and prune_context)
+   * executed for this completion; ignored when none are declared
    */
   max_tool_calls?: number | null;
+
+  /**
+   * Opt-in context editing for one completion (Mixedbread extension).
+   */
+  context_management?: ChatCreateCompletionParams.ContextManagement | null;
 
   /**
    * Whether the model may call multiple tools in one turn; when false, at most one
@@ -810,7 +1085,7 @@ export interface ChatCreateCompletionParams {
   metadata?: { [key: string]: string } | null;
 
   /**
-   * Extra fields to include, e.g. store_search_call.results; unsupported values are
+   * Extra fields to include, e.g. search_corpus_call.results; unsupported values are
    * ignored
    */
   include?: Array<string> | null;
@@ -921,17 +1196,17 @@ export namespace ChatCreateCompletionParams {
   /**
    * Hosted tool: semantic search over the caller's stores, executed server-side.
    */
-  export interface StoreSearchTool {
+  export interface SearchCorpusTool {
     /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call
+     * store per call (requires the list_stores tool)
      */
     store_identifiers?: Array<string> | null;
 
-    type?: 'store_search';
+    type?: 'search_corpus';
 
     /**
-     * Number of chunks returned per search call
+     * Number of chunks returned per search call (harness default)
      */
     max_num_results?: number;
 
@@ -964,17 +1239,17 @@ export namespace ChatCreateCompletionParams {
    * reranker. It covers exactly one store per call, so with several pinned stores
    * the model picks which of them to grep.
    */
-  export interface StoreGrepTool {
+  export interface GrepTool {
     /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call
+     * store per call (requires the list_stores tool)
      */
     store_identifiers?: Array<string> | null;
 
-    type?: 'store_grep';
+    type?: 'grep';
 
     /**
-     * Number of chunks returned per grep call
+     * Number of chunks returned per grep call (harness default)
      */
     max_num_results?: number;
 
@@ -1001,17 +1276,17 @@ export namespace ChatCreateCompletionParams {
    * optionally ordered by a numeric metadata field. It covers a single store per
    * call, so with several pinned stores the model picks which one to list.
    */
-  export interface StoreListChunksTool {
+  export interface FilterChunksTool {
     /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call
+     * store per call (requires the list_stores tool)
      */
     store_identifiers?: Array<string> | null;
 
-    type?: 'store_list_chunks';
+    type?: 'filter_chunks';
 
     /**
-     * Number of chunks returned per listing call
+     * Number of chunks returned per listing call (harness default)
      */
     max_num_results?: number;
 
@@ -1036,13 +1311,164 @@ export namespace ChatCreateCompletionParams {
    * server-side.
    *
    * Facets tell the model which metadata keys exist and what their values look like,
-   * so it can filter (`store_grep`, `store_list_chunks`) and phrase queries against
-   * real values instead of guessing.
+   * so it can filter (`grep`, `filter_chunks`) and phrase queries against real
+   * values instead of guessing.
+   */
+  export interface InspectMetadataTool {
+    /**
+     * IDs or names of the stores the tool runs against; omit to let the model pick a
+     * store per call (requires the list_stores tool)
+     */
+    store_identifiers?: Array<string> | null;
+
+    type?: 'inspect_metadata';
+
+    /**
+     * Optional filter conditions restricting the files the facets are computed over
+     */
+    filters?:
+      | Shared.SearchFilter
+      | Shared.SearchFilterCondition
+      | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+      | null;
+
+    /**
+     * Number of representative values reported per metadata field (harness default)
+     */
+    max_values_per_field?: number;
+  }
+
+  /**
+   * Hosted tool: re-fetch of already-seen chunks by their `file_id:chunk_index` ids.
+   *
+   * The recovery half of the per-chunk payload clip: a chunk a search returned
+   * truncated can be re-read at a much larger budget. Configuration is the shared
+   * store scope only; the per-call id bound is the tool schema's own `maxItems`.
+   */
+  export interface GetChunksTool {
+    /**
+     * IDs or names of the stores the tool runs against; omit to let the model pick a
+     * store per call (requires the list_stores tool)
+     */
+    store_identifiers?: Array<string> | null;
+
+    type?: 'get_chunks';
+  }
+
+  /**
+   * @deprecated Deprecated alias of `search_corpus`; parses to the same tool, echoed
+   * as sent.
+   */
+  export interface StoreSearchTool {
+    /**
+     * IDs or names of the stores the tool runs against; omit to let the model pick a
+     * store per call (requires the list_stores tool)
+     */
+    store_identifiers?: Array<string> | null;
+
+    type?: 'store_search';
+
+    /**
+     * Number of chunks returned per search call (harness default)
+     */
+    max_num_results?: number;
+
+    /**
+     * Optional filter conditions applied to every search
+     */
+    filters?:
+      | Shared.SearchFilter
+      | Shared.SearchFilterCondition
+      | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+      | null;
+
+    /**
+     * Minimum similarity score threshold
+     */
+    score_threshold?: number;
+
+    /**
+     * Cite sources in the answer as <cite i="..."/> tags referencing result index
+     * fields
+     */
+    citations?: boolean;
+  }
+
+  /**
+   * @deprecated Deprecated alias of `grep`; parses to the same tool, echoed as sent.
+   */
+  export interface StoreGrepTool {
+    /**
+     * IDs or names of the stores the tool runs against; omit to let the model pick a
+     * store per call (requires the list_stores tool)
+     */
+    store_identifiers?: Array<string> | null;
+
+    type?: 'store_grep';
+
+    /**
+     * Number of chunks returned per grep call (harness default)
+     */
+    max_num_results?: number;
+
+    /**
+     * Optional filter conditions applied to every grep
+     */
+    filters?:
+      | Shared.SearchFilter
+      | Shared.SearchFilterCondition
+      | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+      | null;
+
+    /**
+     * Cite sources in the answer as <cite i="..."/> tags referencing result index
+     * fields
+     */
+    citations?: boolean;
+  }
+
+  /**
+   * @deprecated Deprecated alias of `filter_chunks`; parses to the same tool, echoed
+   * as sent.
+   */
+  export interface StoreListChunksTool {
+    /**
+     * IDs or names of the stores the tool runs against; omit to let the model pick a
+     * store per call (requires the list_stores tool)
+     */
+    store_identifiers?: Array<string> | null;
+
+    type?: 'store_list_chunks';
+
+    /**
+     * Number of chunks returned per listing call (harness default)
+     */
+    max_num_results?: number;
+
+    /**
+     * Optional filter conditions applied to every listing
+     */
+    filters?:
+      | Shared.SearchFilter
+      | Shared.SearchFilterCondition
+      | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
+      | null;
+
+    /**
+     * Cite sources in the answer as <cite i="..."/> tags referencing result index
+     * fields
+     */
+    citations?: boolean;
+  }
+
+  /**
+   * @deprecated Deprecated alias of `inspect_metadata`; parses to the same tool,
+   * echoed as sent.
    */
   export interface MetadataFacetsTool {
     /**
      * IDs or names of the stores the tool runs against; omit to let the model pick a
-     * store per call
+     * store per call (requires the list_stores tool)
      */
     store_identifiers?: Array<string> | null;
 
@@ -1058,7 +1484,7 @@ export namespace ChatCreateCompletionParams {
       | null;
 
     /**
-     * Number of representative values reported per metadata field
+     * Number of representative values reported per metadata field (harness default)
      */
     max_values_per_field?: number;
   }
@@ -1129,10 +1555,31 @@ export namespace ChatCreateCompletionParams {
   }
 
   /**
-   * Force a call to the hosted store search tool (Mixedbread extension).
+   * Force a call to the hosted search tool (Mixedbread extension).
    */
-  export interface ToolChoiceStoreSearch {
-    type?: 'store_search';
+  export interface ToolChoiceSearchCorpus {
+    type?: 'search_corpus';
+  }
+
+  /**
+   * Force a call to the hosted grep tool (Mixedbread extension).
+   */
+  export interface ToolChoiceGrep {
+    type?: 'grep';
+  }
+
+  /**
+   * Force a call to the hosted chunk-listing tool (Mixedbread extension).
+   */
+  export interface ToolChoiceFilterChunks {
+    type?: 'filter_chunks';
+  }
+
+  /**
+   * Force a call to the hosted metadata-overview tool (Mixedbread extension).
+   */
+  export interface ToolChoiceInspectMetadata {
+    type?: 'inspect_metadata';
   }
 
   /**
@@ -1143,21 +1590,28 @@ export namespace ChatCreateCompletionParams {
   }
 
   /**
-   * Force a call to the hosted store grep tool (Mixedbread extension).
+   * @deprecated Deprecated alias of the `search_corpus` tool choice.
+   */
+  export interface ToolChoiceStoreSearch {
+    type?: 'store_search';
+  }
+
+  /**
+   * @deprecated Deprecated alias of the `grep` tool choice.
    */
   export interface ToolChoiceStoreGrep {
     type?: 'store_grep';
   }
 
   /**
-   * Force a call to the hosted list chunks tool (Mixedbread extension).
+   * @deprecated Deprecated alias of the `filter_chunks` tool choice.
    */
   export interface ToolChoiceStoreListChunks {
     type?: 'store_list_chunks';
   }
 
   /**
-   * Force a call to the hosted metadata facets tool (Mixedbread extension).
+   * @deprecated Deprecated alias of the `inspect_metadata` tool choice.
    */
   export interface ToolChoiceMetadataFacets {
     type?: 'store_metadata_facets';
@@ -1261,6 +1715,26 @@ export namespace ChatCreateCompletionParams {
       type?: 'text';
 
       text: string;
+    }
+  }
+
+  /**
+   * Opt-in context editing for one completion (Mixedbread extension).
+   */
+  export interface ContextManagement {
+    /**
+     * The context edits enabled for this completion
+     */
+    edits: Array<ContextManagement.Edit>;
+  }
+
+  export namespace ContextManagement {
+    /**
+     * One enabled context edit. `prune_context` gives the model a tool to clear old
+     * tool results when the conversation approaches the context window.
+     */
+    export interface Edit {
+      type?: 'prune_context';
     }
   }
 }
