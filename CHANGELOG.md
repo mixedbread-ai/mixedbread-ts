@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.78.0 (2026-09-05)
+
+Full Changelog: [v0.77.0...v0.78.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.77.0...v0.78.0)
+
+### Features
+
+* **api:** api update ([1c14d1b](https://github.com/mixedbread-ai/mixedbread-ts/commit/1c14d1b7a520e98b3c16295f2014e44480b53333))
+* **api:** api update ([4b9da8e](https://github.com/mixedbread-ai/mixedbread-ts/commit/4b9da8e9fa241558b2750f07bc96008f82a44add))
+* **api:** api update ([d6ed84f](https://github.com/mixedbread-ai/mixedbread-ts/commit/d6ed84fcd57e486a0e6543d7eac0f9d539828a34))
+* **api:** api update ([c2a2a82](https://github.com/mixedbread-ai/mixedbread-ts/commit/c2a2a82c14448541f81613fed534f727c2b8e36b))
+* **api:** api update ([792943b](https://github.com/mixedbread-ai/mixedbread-ts/commit/792943b58c25ee79f1afe457d3e01cc82d372873))
+* **api:** api update ([1aff08d](https://github.com/mixedbread-ai/mixedbread-ts/commit/1aff08d61dee815750bd7246dfabb2aeb5927159))
+* **api:** api update ([f0d5464](https://github.com/mixedbread-ai/mixedbread-ts/commit/f0d5464c3250f52028a8b3f11a530947b75f7141))
+* **api:** api update ([f8b9730](https://github.com/mixedbread-ai/mixedbread-ts/commit/f8b9730888e1997f1c89991b6b73b334f716628a))
+* **api:** api update ([5458451](https://github.com/mixedbread-ai/mixedbread-ts/commit/5458451b52316a5b35dc59ea38af3189973a392f))
+* **api:** api update ([0cd40d9](https://github.com/mixedbread-ai/mixedbread-ts/commit/0cd40d9edb0ac664e8ef6d44128c9e9db610e249))
+* **api:** api update ([4bac3c2](https://github.com/mixedbread-ai/mixedbread-ts/commit/4bac3c2097aa15373934c15c32cf3f7b15f66394))
+* **api:** api update ([8e181c8](https://github.com/mixedbread-ai/mixedbread-ts/commit/8e181c8c895bbcfdd085f102fa95056f9e1b7798))
+* **api:** api update ([f5e85af](https://github.com/mixedbread-ai/mixedbread-ts/commit/f5e85afb115ee71e88ae21b2ccacddbfd50e2492))
+* **api:** api update ([b9c3f9a](https://github.com/mixedbread-ai/mixedbread-ts/commit/b9c3f9ac1cb54859b657e61712f13676e0cb3c6d))
+* **api:** api update ([618310f](https://github.com/mixedbread-ai/mixedbread-ts/commit/618310fc04e5dc4a861222527fe1e82c951070e8))
+* **api:** api update ([ee93b24](https://github.com/mixedbread-ai/mixedbread-ts/commit/ee93b249a9d4c7532c6063f577995eff361625d2))
+* **api:** api update ([2b262a7](https://github.com/mixedbread-ai/mixedbread-ts/commit/2b262a7a975ee02501bc2b87c660491ea01e7221))
+* **api:** api update ([adf8490](https://github.com/mixedbread-ai/mixedbread-ts/commit/adf84907de300fc02f64108df452a17cf90ca0a7))
+* **api:** api update ([2c842db](https://github.com/mixedbread-ai/mixedbread-ts/commit/2c842db68cf8302148d5e655ae78d57800714a08))
+* **api:** api update ([e9002bc](https://github.com/mixedbread-ai/mixedbread-ts/commit/e9002bc0f00800249906e533b5744c9f4335a572))
+* **api:** api update ([986a245](https://github.com/mixedbread-ai/mixedbread-ts/commit/986a245e18691f683e1ada03c1f555b6eda9a153))
+* **api:** api update ([fb3bd31](https://github.com/mixedbread-ai/mixedbread-ts/commit/fb3bd314c4f2ba740d9588fddb39cc27f59e1fed))
+* **api:** api update ([516c6df](https://github.com/mixedbread-ai/mixedbread-ts/commit/516c6df444df91f4a68fa49cadabbb07770b7b75))
+* **api:** api update ([7b94dfb](https://github.com/mixedbread-ai/mixedbread-ts/commit/7b94dfb46fdeb344768b6f7b5a27b1f466917d2d))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([d51614b](https://github.com/mixedbread-ai/mixedbread-ts/commit/d51614b1ff14c384ada30d50aa2fb8ad9c870472))
+
+
+### Bug Fixes
+
+* **ci:** bump @arethetypeswrong/cli to ^0.18.0 and run CI workflows on Node 24 ([d16c556](https://github.com/mixedbread-ai/mixedbread-ts/commit/d16c5563f59d913295b6aa9bb377dd9edb845c1f))
+
+
+### Chores
+
+* **internal:** allow the mock server port to be set with STAINLESS_MOCK_PORT ([3d72b82](https://github.com/mixedbread-ai/mixedbread-ts/commit/3d72b8292411429ffdafad00d11fc4360722d6ad))
+* **internal:** codegen related update ([36177cc](https://github.com/mixedbread-ai/mixedbread-ts/commit/36177ccfece26a7a4c9bdbbb02b0ce9741d48c57))
+
 ## 0.77.0 (2026-06-30)
 
 Full Changelog: [v0.76.0...v0.77.0](https://github.com/mixedbread-ai/mixedbread-ts/compare/v0.76.0...v0.77.0)

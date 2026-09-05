@@ -11,7 +11,7 @@ export {
   type APIKeyListParams,
   type APIKeysLimitOffset,
 } from './api-keys';
-export { Chat, type ChatCreateCompletionResponse } from './chat';
+export { Chat, type ChatCreateCompletionResponse, type ChatCreateCompletionParams } from './chat';
 export {
   DataSources,
   type APIKeyCreateOrUpdateParams,
