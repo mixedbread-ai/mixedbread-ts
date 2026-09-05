@@ -219,8 +219,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: SearchCorpusCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace SearchCorpusCallItem {
@@ -295,8 +293,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: GrepCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace GrepCallItem {
@@ -369,8 +365,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: FilterChunksCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace FilterChunksCallItem {
@@ -435,8 +429,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: InspectMetadataCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace InspectMetadataCallItem {
@@ -468,8 +460,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: GetChunksCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace GetChunksCallItem {
@@ -508,8 +498,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: StoreSearchCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace StoreSearchCallItem {
@@ -585,8 +573,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: StoreGrepCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace StoreGrepCallItem {
@@ -660,8 +646,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: StoreListChunksCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace StoreListChunksCallItem {
@@ -727,8 +711,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: MetadataFacetsCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace MetadataFacetsCallItem {
@@ -764,8 +746,6 @@ export namespace ChatCreateCompletionResponse {
      * Machine-readable reason a hosted tool call failed (Mixedbread extension).
      */
     error?: ListStoresCallItem.Error | null;
-
-    reasoning_offset?: number | null;
   }
 
   export namespace ListStoresCallItem {
