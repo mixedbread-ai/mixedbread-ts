@@ -97,24 +97,23 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/parsing/jobs.ts">Chunk</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">ChunkElement</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ChunkingStrategy</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">DocumentParserResult</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ElementType</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">ParsingJob</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ParsingJobStatus</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ReturnFormat</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobCreateResponse</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobRetrieveResponse</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobListResponse</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobDeleteResponse</a></code>
+- <code><a href="./src/resources/parsing/jobs.ts">JobCancelResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> ParsingJob</code>
-- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobID) -> ParsingJob</code>
+- <code title="post /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">create</a>({ ...params }) -> JobCreateResponse</code>
+- <code title="get /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">retrieve</a>(jobID) -> JobRetrieveResponse</code>
 - <code title="get /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">list</a>({ ...params }) -> JobListResponsesCursor</code>
 - <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">delete</a>(jobID) -> JobDeleteResponse</code>
-- <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobID) -> ParsingJob</code>
+- <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobID) -> JobCancelResponse</code>
 
 # Files
 
@@ -264,4 +263,4 @@ Types:
 
 Methods:
 
-- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>() -> unknown</code>
+- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>({ ...params }) -> ChatCreateCompletionResponse</code>

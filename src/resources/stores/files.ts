@@ -447,6 +447,11 @@ export interface AudioURLInputChunk {
   transcription?: string | null;
 
   /**
+   * LLM-generated context that situates this audio chunk within its source file
+   */
+  context?: string | null;
+
+  /**
    * summary of the audio
    */
   summary?: string | null;
@@ -500,6 +505,11 @@ export interface ImageURLInputChunk {
    * ocr text of the image
    */
   ocr_text?: string | null;
+
+  /**
+   * LLM-generated context that situates this image within its source document
+   */
+  context?: string | null;
 
   /**
    * summary of the image
@@ -697,6 +707,11 @@ export interface VideoURLInputChunk {
    * speech recognition (sr) text of the video
    */
   transcription?: string | null;
+
+  /**
+   * LLM-generated context that situates this video chunk within its source file
+   */
+  context?: string | null;
 
   /**
    * summary of the video

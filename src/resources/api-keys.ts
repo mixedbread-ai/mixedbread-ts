@@ -192,7 +192,7 @@ export interface APIKeyCreated {
 export interface Scope {
   method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
-  resource_type?: 'store' | null;
+  resource_type?: 'store' | 'completions' | null;
 
   resource_id?: string | null;
 }

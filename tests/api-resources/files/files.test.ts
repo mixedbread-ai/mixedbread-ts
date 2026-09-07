@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Mixedbread, { toFile } from '@mixedbread/sdk';
+import Mixedbread from '@mixedbread/sdk';
 
 const client = new Mixedbread({
   apiKey: 'My API Key',
@@ -9,9 +9,7 @@ const client = new Mixedbread({
 
 describe('resource files', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.files.create({
-      file: await toFile(Buffer.from('Example data'), 'README.md'),
-    });
+    const responsePromise = client.files.create({ file: 'file' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,9 +20,7 @@ describe('resource files', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.files.create({
-      file: await toFile(Buffer.from('Example data'), 'README.md'),
-    });
+    const response = await client.files.create({ file: 'file' });
   });
 
   test('retrieve', async () => {
@@ -39,9 +35,7 @@ describe('resource files', () => {
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      file: await toFile(Buffer.from('Example data'), 'README.md'),
-    });
+    const responsePromise = client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', { file: 'file' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,9 +46,7 @@ describe('resource files', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      file: await toFile(Buffer.from('Example data'), 'README.md'),
-    });
+    const response = await client.files.update('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', { file: 'file' });
   });
 
   test('list', async () => {

@@ -92,6 +92,7 @@ describe('resource stores', () => {
 
   test('grep: required and optional params', async () => {
     const response = await client.stores.grep({
+      'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
@@ -134,6 +135,7 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
@@ -167,6 +169,7 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
@@ -204,6 +207,7 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
@@ -229,6 +233,7 @@ describe('resource stores', () => {
 
   test('search: required and optional params', async () => {
     const response = await client.stores.search({
+      'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
@@ -243,9 +248,11 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
+      stream: true,
     });
   });
 });
