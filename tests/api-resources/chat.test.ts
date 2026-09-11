@@ -29,7 +29,6 @@ describe('resource chat', () => {
         {
           store_identifiers: ['string'],
           type: 'search_corpus',
-          max_num_results: 1,
           filters: {
             all: [{}, {}],
             any: [{}, {}],

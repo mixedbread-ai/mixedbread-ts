@@ -271,7 +271,7 @@ export interface StoreFile {
   /**
    * Processing status of the file
    */
-  status?: StoreFileStatus;
+  status?: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * Last error message if processing failed
@@ -333,8 +333,6 @@ export interface StoreFileConfig {
    */
   parsing_strategy?: 'fast' | 'high_quality';
 }
-
-export type StoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
 export interface TextInputChunk {
   /**
@@ -598,7 +596,7 @@ export interface FileListParams {
   /**
    * Status to filter by
    */
-  statuses?: Array<StoreFileStatus> | null;
+  statuses?: Array<'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed'> | null;
 
   /**
    * Metadata filter to apply to the query
@@ -628,7 +626,6 @@ export declare namespace Files {
     type ImageURLInputChunk as ImageURLInputChunk,
     type StoreFile as StoreFile,
     type StoreFileConfig as StoreFileConfig,
-    type StoreFileStatus as StoreFileStatus,
     type TextInputChunk as TextInputChunk,
     type VideoURLInputChunk as VideoURLInputChunk,
     type FileListResponse as FileListResponse,

@@ -131,6 +131,8 @@ export namespace ChatCreateCompletionResponse {
       tool_calls?: Array<Message.ToolCall> | null;
 
       reasoning_content?: string | null;
+
+      annotations?: Array<Message.Annotation> | null;
     }
 
     export namespace Message {
@@ -151,6 +153,27 @@ export namespace ChatCreateCompletionResponse {
 
           arguments: string;
         }
+      }
+
+      /**
+       * The OpenAI `file_citation` annotation, plus the chunk it points at.
+       *
+       * `chunk_id` is the same `file_id:chunk_index` reference every hosted result
+       * carries, and `store_id` the store whose index holds the chunk; the cited text
+       * and score are on the included tool results.
+       */
+      export interface Annotation {
+        type?: 'file_citation';
+
+        file_id: string;
+
+        filename: string;
+
+        index: number;
+
+        chunk_id: string;
+
+        store_id: string;
       }
     }
   }
@@ -894,6 +917,8 @@ export namespace ChatCreateCompletionResponse {
     tool_calls?: Array<AssistantMessageOutput.ToolCall>;
 
     reasoning_content?: string | null;
+
+    annotations?: Array<AssistantMessageOutput.Annotation>;
   }
 
   export namespace AssistantMessageOutput {
@@ -920,6 +945,27 @@ export namespace ChatCreateCompletionResponse {
 
         arguments: string;
       }
+    }
+
+    /**
+     * The OpenAI `file_citation` annotation, plus the chunk it points at.
+     *
+     * `chunk_id` is the same `file_id:chunk_index` reference every hosted result
+     * carries, and `store_id` the store whose index holds the chunk; the cited text
+     * and score are on the included tool results.
+     */
+    export interface Annotation {
+      type?: 'file_citation';
+
+      file_id: string;
+
+      filename: string;
+
+      index: number;
+
+      chunk_id: string;
+
+      store_id: string;
     }
   }
 
@@ -1125,6 +1171,8 @@ export namespace ChatCreateCompletionParams {
     tool_calls?: Array<AssistantMessageInput.ToolCall>;
 
     reasoning_content?: string | null;
+
+    annotations?: Array<AssistantMessageInput.Annotation>;
   }
 
   export namespace AssistantMessageInput {
@@ -1151,6 +1199,27 @@ export namespace ChatCreateCompletionParams {
 
         arguments: string;
       }
+    }
+
+    /**
+     * The OpenAI `file_citation` annotation, plus the chunk it points at.
+     *
+     * `chunk_id` is the same `file_id:chunk_index` reference every hosted result
+     * carries, and `store_id` the store whose index holds the chunk; the cited text
+     * and score are on the included tool results.
+     */
+    export interface Annotation {
+      type?: 'file_citation';
+
+      file_id: string;
+
+      filename: string;
+
+      index: number;
+
+      chunk_id: string;
+
+      store_id: string;
     }
   }
 
@@ -1186,11 +1255,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'search_corpus';
 
     /**
-     * Number of chunks returned per search call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every search
      */
     filters?:
@@ -1205,19 +1269,19 @@ export namespace ChatCreateCompletionParams {
     score_threshold?: number;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
 
   /**
-   * Hosted tool: regular-expression match over a store's chunks, executed
-   * server-side.
+   * Hosted tool: regular-expression match over stores' chunks, executed server-side.
    *
    * grep runs the pattern against the literal chunk text — no embeddings, no
-   * reranker. It covers exactly one store per call, so with several pinned stores
-   * the model picks which of them to grep.
+   * reranker. Each call searches all pinned stores, or the store selected by the
+   * model when no stores are pinned, with one global result limit.
    */
   export interface GrepTool {
     /**
@@ -1229,11 +1293,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'grep';
 
     /**
-     * Number of chunks returned per grep call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every grep
      */
     filters?:
@@ -1243,18 +1302,19 @@ export namespace ChatCreateCompletionParams {
       | null;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
 
   /**
-   * Hosted tool: metadata-driven listing of a store's chunks, executed server-side.
+   * Hosted tool: metadata-driven listing of stores' chunks, executed server-side.
    *
    * No embeddings and no reranker: chunks are selected by metadata filters and
-   * optionally ordered by a numeric metadata field. It covers a single store per
-   * call, so with several pinned stores the model picks which one to list.
+   * optionally ordered globally by a numeric metadata field. Each call covers all
+   * pinned stores, or the store selected by the model when no stores are pinned.
    */
   export interface FilterChunksTool {
     /**
@@ -1266,11 +1326,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'filter_chunks';
 
     /**
-     * Number of chunks returned per listing call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every listing
      */
     filters?:
@@ -1280,8 +1335,9 @@ export namespace ChatCreateCompletionParams {
       | null;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
@@ -1311,11 +1367,6 @@ export namespace ChatCreateCompletionParams {
       | Shared.SearchFilterCondition
       | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
       | null;
-
-    /**
-     * Number of representative values reported per metadata field (harness default)
-     */
-    max_values_per_field?: number;
   }
 
   /**
@@ -1349,11 +1400,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'store_search';
 
     /**
-     * Number of chunks returned per search call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every search
      */
     filters?:
@@ -1368,8 +1414,9 @@ export namespace ChatCreateCompletionParams {
     score_threshold?: number;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
@@ -1387,11 +1434,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'store_grep';
 
     /**
-     * Number of chunks returned per grep call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every grep
      */
     filters?:
@@ -1401,8 +1443,9 @@ export namespace ChatCreateCompletionParams {
       | null;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
@@ -1421,11 +1464,6 @@ export namespace ChatCreateCompletionParams {
     type?: 'store_list_chunks';
 
     /**
-     * Number of chunks returned per listing call (harness default)
-     */
-    max_num_results?: number;
-
-    /**
      * Optional filter conditions applied to every listing
      */
     filters?:
@@ -1435,8 +1473,9 @@ export namespace ChatCreateCompletionParams {
       | null;
 
     /**
-     * Cite sources in the answer as <cite i="..."/> tags referencing result index
-     * fields
+     * Have the model cite its evidence inline; the answer ships with the markers
+     * removed and an annotations list of file_citation entries pointing at the cited
+     * chunks
      */
     citations?: boolean;
   }
@@ -1462,11 +1501,6 @@ export namespace ChatCreateCompletionParams {
       | Shared.SearchFilterCondition
       | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
       | null;
-
-    /**
-     * Number of representative values reported per metadata field (harness default)
-     */
-    max_values_per_field?: number;
   }
 
   /**
@@ -1650,6 +1684,8 @@ export namespace ChatCreateCompletionParams {
     tool_calls?: Array<AssistantMessageInput.ToolCall>;
 
     reasoning_content?: string | null;
+
+    annotations?: Array<AssistantMessageInput.Annotation>;
   }
 
   export namespace AssistantMessageInput {
@@ -1676,6 +1712,27 @@ export namespace ChatCreateCompletionParams {
 
         arguments: string;
       }
+    }
+
+    /**
+     * The OpenAI `file_citation` annotation, plus the chunk it points at.
+     *
+     * `chunk_id` is the same `file_id:chunk_index` reference every hosted result
+     * carries, and `store_id` the store whose index holds the chunk; the cited text
+     * and score are on the included tool results.
+     */
+    export interface Annotation {
+      type?: 'file_citation';
+
+      file_id: string;
+
+      filename: string;
+
+      index: number;
+
+      chunk_id: string;
+
+      store_id: string;
     }
   }
 
