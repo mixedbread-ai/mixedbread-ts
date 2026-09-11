@@ -184,8 +184,6 @@ export type ElementType =
   | 'text'
   | 'footnote';
 
-export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
-
 /**
  * Format options for the returned document content.
  */
@@ -213,7 +211,7 @@ export interface JobCreateResponse {
   /**
    * The status of the job
    */
-  status: ParsingJobStatus;
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * The error of the job
@@ -369,7 +367,7 @@ export interface JobRetrieveResponse {
   /**
    * The status of the job
    */
-  status: ParsingJobStatus;
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * The error of the job
@@ -525,7 +523,7 @@ export interface JobListResponse {
   /**
    * The status of the job
    */
-  status: ParsingJobStatus;
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * The error of the job
@@ -600,7 +598,7 @@ export interface JobCancelResponse {
   /**
    * The status of the job
    */
-  status: ParsingJobStatus;
+  status: 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
   /**
    * The error of the job
@@ -765,7 +763,7 @@ export interface JobListParams extends CursorParams {
   /**
    * Status to filter by
    */
-  statuses?: Array<ParsingJobStatus> | null;
+  statuses?: Array<'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed'> | null;
 
   /**
    * Search query to filter by
@@ -777,7 +775,6 @@ export declare namespace Jobs {
   export {
     type ChunkingStrategy as ChunkingStrategy,
     type ElementType as ElementType,
-    type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
     type JobCreateResponse as JobCreateResponse,
     type JobRetrieveResponse as JobRetrieveResponse,

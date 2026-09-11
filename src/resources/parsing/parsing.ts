@@ -14,7 +14,6 @@ import {
   JobListResponsesCursor,
   JobRetrieveResponse,
   Jobs,
-  ParsingJobStatus,
   ReturnFormat,
 } from './jobs';
 
@@ -29,7 +28,6 @@ export declare namespace Parsing {
     Jobs as Jobs,
     type ChunkingStrategy as ChunkingStrategy,
     type ElementType as ElementType,
-    type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
     type JobCreateResponse as JobCreateResponse,
     type JobRetrieveResponse as JobRetrieveResponse,

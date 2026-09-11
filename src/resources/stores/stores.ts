@@ -17,7 +17,6 @@ import {
   ImageURLInputChunk,
   StoreFile,
   StoreFileConfig,
-  StoreFileStatus,
   TextInputChunk,
   VideoURLInputChunk,
 } from './files';
@@ -132,15 +131,17 @@ export class Stores extends APIResource {
    * chunk. Use it to find chunks containing a specific token, identifier, error
    * code, or literal phrase.
    *
-   * grep targets a single store and does not support pagination; raise `top_k` to
-   * retrieve more matches.
+   * grep matches across all requested stores and returns at most `top_k` chunks in
+   * total. Matches are unranked and interleaved across stores in the order
+   * requested, preserving each store's result order. Pagination is not supported;
+   * raise `top_k` to retrieve more matches.
    *
    * Args: grep_params: Grep configuration including: - pattern: RE2 regular
    * expression matched against chunk text - targets: chunk content groups to match
    * (`text`, `generated`) - case_sensitive: whether the pattern is case-sensitive -
-   * store_identifiers: the single store to grep - file_ids: optional list of file
-   * IDs to filter chunks by - filters: optional metadata filter conditions - top_k:
-   * number of matches to return
+   * store_identifiers: IDs or names of the stores to grep - file_ids: optional list
+   * of file IDs to filter chunks by - filters: optional metadata filter conditions -
+   * top_k: number of matches to return
    *
    * Returns: StoreGrepResponse containing the list of matching chunks.
    *
@@ -177,19 +178,22 @@ export class Stores extends APIResource {
    * for ranked retrieval over numeric attributes (e.g. price, BPM) and for
    * reproducing the agentic `filter_chunks` tool externally.
    *
-   * list-chunks targets a single store and does not support pagination; raise
-   * `top_k` to retrieve more chunks.
+   * list-chunks filters across all requested stores and returns at most `top_k`
+   * chunks in total. With `sort_by`, results are ordered globally by that field.
+   * Otherwise results are interleaved across stores in the order requested,
+   * preserving each store's result order. Pagination is not supported; raise `top_k`
+   * to retrieve more chunks.
    *
-   * Args: filter_params: Filter configuration including: - store_identifiers: the
-   * single store to filter against - filters: optional metadata filter conditions -
-   * file_ids: optional list of file IDs to filter chunks by - sort_by: optional
-   * metadata field path, or `(field, ascending)` tuple, for numeric ordering -
-   * top_k: number of chunks to return
+   * Args: filter_params: Filter configuration including: - store_identifiers: IDs or
+   * names of the stores to filter against - filters: optional metadata filter
+   * conditions - file_ids: optional list of file IDs to filter chunks by - sort_by:
+   * optional metadata field path, or `(field, ascending)` tuple, for numeric
+   * ordering - top_k: number of chunks to return
    *
    * Returns: StoreListChunksResponse containing the list of matching chunks.
    *
-   * Raises: HTTPException (400): If filter parameters are invalid or multiple stores
-   * are passed HTTPException (404): If the store is not found
+   * Raises: HTTPException (400): If filter parameters are invalid HTTPException
+   * (404): If the store is not found
    *
    * @example
    * ```ts
@@ -298,7 +302,9 @@ export interface AgenticSearchConfig {
   queries_per_round?: number;
 
   /**
-   * Whether the final retrieved chunk list must provide exactly top_k ranked chunks
+   * Whether the agent fills the final ranking to top_k chunks from what it
+   * retrieved, capped at top_k, instead of returning only the chunks it judged
+   * relevant
    */
   strict_top_k?: boolean;
 
@@ -1128,6 +1134,11 @@ export interface StoreConfig {
    * privacy. Note: Reranking is not supported when content is not saved.
    */
   save_content?: boolean;
+
+  /**
+   * Learned-scoring-function settings a store opts into; an empty object enables it.
+   */
+  lsf?: unknown | null;
 }
 
 export interface TextChunkGeneratedMetadata {
@@ -1684,7 +1695,6 @@ export declare namespace Stores {
     type ImageURLInputChunk as ImageURLInputChunk,
     type StoreFile as StoreFile,
     type StoreFileConfig as StoreFileConfig,
-    type StoreFileStatus as StoreFileStatus,
     type TextInputChunk as TextInputChunk,
     type VideoURLInputChunk as VideoURLInputChunk,
     type FileListResponse as FileListResponse,

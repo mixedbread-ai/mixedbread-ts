@@ -4,7 +4,6 @@ export {
   Jobs,
   type ChunkingStrategy,
   type ElementType,
-  type ParsingJobStatus,
   type ReturnFormat,
   type JobCreateResponse,
   type JobRetrieveResponse,

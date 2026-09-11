@@ -6,7 +6,6 @@ export {
   type ImageURLInputChunk,
   type StoreFile,
   type StoreFileConfig,
-  type StoreFileStatus,
   type TextInputChunk,
   type VideoURLInputChunk,
   type FileListResponse,

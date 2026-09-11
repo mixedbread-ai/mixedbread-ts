@@ -77,7 +77,6 @@ Types:
 - <code><a href="./src/resources/stores/files.ts">ImageURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFile</a></code>
 - <code><a href="./src/resources/stores/files.ts">StoreFileConfig</a></code>
-- <code><a href="./src/resources/stores/files.ts">StoreFileStatus</a></code>
 - <code><a href="./src/resources/stores/files.ts">TextInputChunk</a></code>
 - <code><a href="./src/resources/stores/files.ts">VideoURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/files.ts">FileListResponse</a></code>
@@ -99,7 +98,6 @@ Types:
 
 - <code><a href="./src/resources/parsing/jobs.ts">ChunkingStrategy</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ElementType</a></code>
-- <code><a href="./src/resources/parsing/jobs.ts">ParsingJobStatus</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">ReturnFormat</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobCreateResponse</a></code>
 - <code><a href="./src/resources/parsing/jobs.ts">JobRetrieveResponse</a></code>
