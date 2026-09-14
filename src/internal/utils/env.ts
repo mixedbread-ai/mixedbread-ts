@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 /**
  * Read an environment variable.
@@ -9,10 +9,10 @@
  */
 export const readEnv = (env: string): string | undefined => {
   if (typeof (globalThis as any).process !== 'undefined') {
-    return (globalThis as any).process.env?.[env]?.trim() || undefined;
+    return (globalThis as any).process.env?.[env]?.trim() ?? undefined;
   }
   if (typeof (globalThis as any).Deno !== 'undefined') {
-    return (globalThis as any).Deno.env?.get?.(env)?.trim() || undefined;
+    return (globalThis as any).Deno.env?.get?.(env)?.trim();
   }
   return undefined;
 };

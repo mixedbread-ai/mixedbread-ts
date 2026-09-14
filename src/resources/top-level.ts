@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import * as EmbeddingsAPI from './embeddings';
 import * as Shared from './shared';
@@ -137,6 +137,9 @@ export interface RerankResponse {
 }
 
 export namespace RerankResponse {
+  /**
+   * The ranked documents.
+   */
   export interface Data {
     /**
      * The index of the document.
@@ -207,7 +210,7 @@ export interface RerankParams {
   /**
    * The input documents to rerank.
    */
-  input: Array<string | unknown | Array<unknown>>;
+  input: Array<string | Array<unknown> | unknown>;
 
   /**
    * The fields of the documents to rank.
@@ -228,16 +231,4 @@ export interface RerankParams {
    * Wether or not to rewrite the query before passing it to the reranking model
    */
   rewrite_query?: boolean;
-}
-
-export declare namespace TopLevel {
-  export {
-    type Embedding as Embedding,
-    type EmbeddingCreateResponse as EmbeddingCreateResponse,
-    type MultiEncodingEmbedding as MultiEncodingEmbedding,
-    type InfoResponse as InfoResponse,
-    type RerankResponse as RerankResponse,
-    type EmbedParams as EmbedParams,
-    type RerankParams as RerankParams,
-  };
 }

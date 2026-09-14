@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -20,13 +20,6 @@ describe('resource jobs', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('create: required and optional params', async () => {
-    const response = await client.extractions.jobs.create({
-      file_id: 'file_id',
-      json_schema: { foo: 'bar' },
-    });
   });
 
   test('retrieve', async () => {

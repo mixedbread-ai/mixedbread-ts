@@ -4,8 +4,13 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Only generated and hand-written source is formatted (the same set `sdkgen generate --format`
+# formats, plus src/lib and tests/lib); the vendored runtime under src/internal and src/core is
+# emitted verbatim by sdkgen and its single-line `@ts-ignore` type probes must not be re-wrapped.
+FILES="src/client.ts src/index.ts src/resources src/core/pagination.ts src/lib tests/api-resources tests/lib"
+
 echo "==> Running eslint --fix"
-./node_modules/.bin/eslint --fix .
+./node_modules/.bin/eslint --fix $FILES
 
 echo "==> Running prettier --write"
-./node_modules/.bin/prettier --write --cache --cache-strategy metadata .
+./node_modules/.bin/prettier --write --log-level warn $FILES

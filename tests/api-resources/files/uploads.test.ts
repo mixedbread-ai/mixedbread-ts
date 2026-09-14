@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -76,11 +76,5 @@ describe('resource uploads', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('complete: required and optional params', async () => {
-    const response = await client.files.uploads.complete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      parts: [{ part_number: 1, etag: 'etag' }],
-    });
   });
 });

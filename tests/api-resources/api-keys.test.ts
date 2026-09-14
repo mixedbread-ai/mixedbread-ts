@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -17,6 +17,20 @@ describe('resource apiKeys', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.apiKeys.create(
+        {
+          name: 'name',
+          scope: [{ method: 'read', resource_type: 'store', resource_id: 'resource_id' }],
+          expires_at: '2019-12-27T18:11:19.117Z',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('retrieve', async () => {

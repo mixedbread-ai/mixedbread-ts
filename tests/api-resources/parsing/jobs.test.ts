@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -60,7 +60,7 @@ describe('resource jobs', () => {
           after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
           before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
           include_total: false,
-          statuses: ['pending', 'in_progress'],
+          statuses: ['pending'],
           q: 'x',
         },
         { path: '/_stainless_unknown_path' },

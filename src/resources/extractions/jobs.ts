@@ -1,8 +1,8 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
+import * as FilesAPI from '../stores/files';
 import * as ContentAPI from './content';
-import * as ParsingJobsAPI from '../parsing/jobs';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
@@ -73,7 +73,7 @@ export interface ExtractionJob {
   /**
    * Current status of the job
    */
-  status: ParsingJobsAPI.ParsingJobStatus;
+  status: FilesAPI.StoreFileStatus;
 
   /**
    * The result of an extraction job.

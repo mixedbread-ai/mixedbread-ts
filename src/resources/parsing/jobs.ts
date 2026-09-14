@@ -1,14 +1,14 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
+import { Cursor, PagePromise, type CursorParams } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
-import * as polling from '../../lib/polling';
-import { Uploadable } from '../../core/uploads';
+import { type ParsingJobHelpers, withParsingJobHelpers } from '../../lib/parsing-jobs';
+export type { ParsingJobHelpers };
 
-export class Jobs extends APIResource {
+export class JobsBase extends APIResource {
   /**
    * Start a parse job for the provided file.
    *
@@ -66,104 +66,141 @@ export class Jobs extends APIResource {
   cancel(jobID: string, options?: RequestOptions): APIPromise<ParsingJob> {
     return this._client.patch(path`/v1/parsing/jobs/${jobID}`, options);
   }
-
-  /**
-   * Poll for a job's status until it reaches a terminal state.
-   *
-   * @param jobId - The ID of the job to poll
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
-   * @returns The job object once it reaches a terminal state
-   */
-  async poll(
-    jobId: string,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<ParsingJob> {
-    const pollingIntervalMs = pollIntervalMs || 500;
-    const pollingTimeoutMs = pollTimeoutMs;
-
-    return polling.poll({
-      fn: () => this.retrieve(jobId, options),
-      condition: (result) =>
-        result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
-      intervalSeconds: pollingIntervalMs / 1000,
-      ...(pollingTimeoutMs && { timeoutSeconds: pollingTimeoutMs / 1000 }),
-    });
-  }
-
-  /**
-   * Create a parsing job and wait for it to complete.
-   *
-   * @param body - Parameters for creating a parse job
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
-   * @returns The job object once it reaches a terminal state
-   */
-  async createAndPoll(
-    body: JobCreateParams,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<ParsingJob> {
-    const job = await this.create(body, options);
-    return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
-  }
-
-  /**
-   * Upload a file to the files API and then create a parsing job for it.
-   * Note the job will be asynchronously processed.
-   *
-   * @param file - The file to upload
-   * @param body - Additional parameters for creating a parse job
-   * @param options - Additional request options
-   * @returns The created parsing job
-   */
-  async upload(
-    file: Uploadable,
-    body?: Omit<JobCreateParams, 'file_id'>,
-    options?: RequestOptions,
-  ): Promise<ParsingJob> {
-    const fileUploadResponse = await this._client.files.create({ file }, options);
-
-    return this.create(
-      {
-        file_id: fileUploadResponse.id,
-        ...body,
-      },
-      options,
-    );
-  }
-
-  /**
-   * Upload a file and create a parsing job, then poll until processing is complete.
-   *
-   * @param file - The file to upload
-   * @param body - Additional parameters for creating a parse job
-   * @param pollIntervalMs - The interval between polls in milliseconds (default: 500)
-   * @param pollTimeoutMs - The maximum time to poll for in milliseconds (default: no timeout)
-   * @param options - Additional request options
-   * @returns The job object once it reaches a terminal state
-   */
-  async uploadAndPoll(
-    file: Uploadable,
-    body?: Omit<JobCreateParams, 'file_id'>,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<ParsingJob> {
-    const job = await this.upload(file, body, options);
-    return this.poll(job.id, pollIntervalMs, pollTimeoutMs, options);
-  }
 }
+
+export class Jobs extends withParsingJobHelpers(JobsBase) {}
 
 export type JobListResponsesCursor = Cursor<JobListResponse>;
 
 /**
- * A chunk of text extracted from a document page.
+ * Strategy used for chunking document content.
+ */
+export type ChunkingStrategy = 'page';
+
+/**
+ * Types of elements that can be extracted from a document.
+ */
+export type ElementType =
+  | 'header'
+  | 'footer'
+  | 'title'
+  | 'section-header'
+  | 'page-number'
+  | 'list-item'
+  | 'figure'
+  | 'table'
+  | 'form'
+  | 'text'
+  | 'footnote';
+
+/**
+ * The lifecycle of a unit of background work.
+ *
+ * One vocabulary for every job family. The database keeps a separate enum type per
+ * table (``parsing_job_status``, ``store_file_status``, ...) but they all carry
+ * these values, so the aliases below are this enum rather than copies of
+ * it. :class:`SyncStatus` is this set plus ``IDLE`` for connectors, which have a
+ * resting state between runs.
+ */
+export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
+
+/**
+ * Format options for the returned document content.
+ */
+export type ReturnFormat = 'html' | 'markdown' | 'plain';
+
+/**
+ * A parsing job with its result narrowed to the public fields.
+ */
+export interface ParsingJob {
+  /**
+   * The ID of the job
+   */
+  id: string;
+
+  /**
+   * The ID of the file to parse
+   */
+  file_id: string;
+
+  /**
+   * The name of the file
+   */
+  filename?: string | null;
+
+  /**
+   * The status of the job
+   */
+  status: ParsingJobStatus;
+
+  /**
+   * The error of the job
+   */
+  error?: { [key: string]: unknown } | null;
+
+  /**
+   * The public result of a parsing job.
+   */
+  result?: DocumentParserResult | null;
+
+  /**
+   * The started time of the job
+   */
+  started_at?: string | null;
+
+  /**
+   * The finished time of the job
+   */
+  finished_at?: string | null;
+
+  /**
+   * The creation time of the job
+   */
+  created_at?: string;
+
+  /**
+   * The updated time of the job
+   */
+  updated_at?: string | null;
+
+  /**
+   * The type of the object
+   */
+  object?: 'parsing_job';
+}
+
+/**
+ * The public result of a parsing job.
+ */
+export interface DocumentParserResult {
+  /**
+   * The strategy used for chunking the document
+   */
+  chunking_strategy: ChunkingStrategy;
+
+  /**
+   * The format of the returned content
+   */
+  return_format: ReturnFormat;
+
+  /**
+   * The types of elements extracted
+   */
+  element_types: Array<ElementType>;
+
+  /**
+   * List of extracted chunks from the document
+   */
+  chunks: Array<Chunk>;
+
+  /**
+   * List of (width, height) tuples for each page
+   */
+  page_sizes?: Array<Array<unknown>>;
+}
+
+/**
+ * A chunk of a parsed document in a job response.
  */
 export interface Chunk {
   /**
@@ -183,7 +220,7 @@ export interface Chunk {
 }
 
 /**
- * Represents an extracted element from a document with its content and metadata.
+ * An element extracted from a document with its content and metadata.
  */
 export interface ChunkElement {
   /**
@@ -221,124 +258,6 @@ export interface ChunkElement {
    */
   image?: string | null;
 }
-
-/**
- * Strategy used for chunking document content.
- */
-export type ChunkingStrategy = 'page';
-
-/**
- * Result of document parsing operation.
- */
-export interface DocumentParserResult {
-  /**
-   * The strategy used for chunking the document
-   */
-  chunking_strategy: ChunkingStrategy;
-
-  /**
-   * The format of the returned content
-   */
-  return_format: ReturnFormat;
-
-  /**
-   * The types of elements extracted
-   */
-  element_types: Array<ElementType>;
-
-  /**
-   * List of extracted chunks from the document
-   */
-  chunks: Array<Chunk>;
-
-  /**
-   * List of (width, height) tuples for each page
-   */
-  page_sizes?: Array<Array<unknown>>;
-}
-
-/**
- * Types of elements that can be extracted from a document.
- */
-export type ElementType =
-  | 'header'
-  | 'footer'
-  | 'title'
-  | 'section-header'
-  | 'page-number'
-  | 'list-item'
-  | 'figure'
-  | 'table'
-  | 'form'
-  | 'text'
-  | 'footnote';
-
-/**
- * A job for parsing documents with its current state and result.
- */
-export interface ParsingJob {
-  /**
-   * The ID of the job
-   */
-  id: string;
-
-  /**
-   * The ID of the file to parse
-   */
-  file_id: string;
-
-  /**
-   * The name of the file
-   */
-  filename?: string | null;
-
-  /**
-   * The status of the job
-   */
-  status: ParsingJobStatus;
-
-  /**
-   * The error of the job
-   */
-  error?: { [key: string]: unknown } | null;
-
-  /**
-   * Result of document parsing operation.
-   */
-  result?: DocumentParserResult | null;
-
-  /**
-   * The started time of the job
-   */
-  started_at?: string | null;
-
-  /**
-   * The finished time of the job
-   */
-  finished_at?: string | null;
-
-  /**
-   * The creation time of the job
-   */
-  created_at?: string;
-
-  /**
-   * The updated time of the job
-   */
-  updated_at?: string | null;
-
-  /**
-   * The type of the object
-   */
-  object?: 'parsing_job';
-}
-
-export type ParsingJobStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
-
-/**
- * Format options for the returned document content.
- */
-export type ReturnFormat = 'html' | 'markdown' | 'plain';
 
 /**
  * A parsing job item for list responses.
@@ -456,18 +375,19 @@ export interface JobListParams extends CursorParams {
 
 export declare namespace Jobs {
   export {
-    type Chunk as Chunk,
-    type ChunkElement as ChunkElement,
     type ChunkingStrategy as ChunkingStrategy,
-    type DocumentParserResult as DocumentParserResult,
     type ElementType as ElementType,
-    type ParsingJob as ParsingJob,
     type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
+    type ParsingJob as ParsingJob,
+    type DocumentParserResult as DocumentParserResult,
+    type Chunk as Chunk,
+    type ChunkElement as ChunkElement,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
     type JobListResponsesCursor as JobListResponsesCursor,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
+    type ParsingJobHelpers as ParsingJobHelpers,
   };
 }

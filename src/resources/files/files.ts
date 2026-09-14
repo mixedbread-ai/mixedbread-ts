@@ -1,7 +1,15 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as UploadsAPI from './uploads';
+import { APIPromise } from '../../core/api-promise';
+import { Cursor, PagePromise, type CursorParams } from '../../core/pagination';
+import { type Uploadable } from '../../core/uploads';
+import { buildHeaders } from '../../internal/headers';
+import { RequestOptions } from '../../internal/request-options';
+import { multipartFormRequestOptions } from '../../internal/uploads';
+import { path } from '../../internal/utils/path';
+import { type FileCreateParamsWithMultipart, type FileHelpers, withFileHelpers } from '../../lib/files';
 import {
   MultipartUploadPart,
   MultipartUploadPartURL,
@@ -13,16 +21,9 @@ import {
   UploadRetrieveResponse,
   Uploads,
 } from './uploads';
-import { APIPromise } from '../../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
-import { type Uploadable } from '../../core/uploads';
-import { buildHeaders } from '../../internal/headers';
-import { RequestOptions } from '../../internal/request-options';
-import { multipartFormRequestOptions } from '../../internal/uploads';
-import { path } from '../../internal/utils/path';
-import { handleFileCreate, type MultipartUploadConfig } from '../../lib/upload-file';
+export type { FileCreateParamsWithMultipart, FileHelpers };
 
-export class Files extends APIResource {
+export class FilesBase extends APIResource {
   uploads: UploadsAPI.Uploads = new UploadsAPI.Uploads(this._client);
 
   /**
@@ -31,16 +32,9 @@ export class Files extends APIResource {
    * Args: file: The file to upload.
    *
    * Returns: FileResponse: The response containing the details of the uploaded file.
-   *
-   * @example
-   * ```ts
-   * const fileObject = await client.files.create({
-   *   file: fs.createReadStream('path/to/file'),
-   * });
-   * ```
    */
   create(body: FileCreateParams, options?: RequestOptions): APIPromise<FileObject> {
-    return handleFileCreate(this._client, body, options);
+    return this._client.post('/v1/files', multipartFormRequestOptions({ body, ...options }, this._client));
   }
 
   /**
@@ -49,13 +43,6 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to retrieve.
    *
    * Returns: FileResponse: The response containing the file details.
-   *
-   * @example
-   * ```ts
-   * const fileObject = await client.files.retrieve(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   * ```
    */
   retrieve(fileID: string, options?: RequestOptions): APIPromise<FileObject> {
     return this._client.get(path`/v1/files/${fileID}`, options);
@@ -67,19 +54,17 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to update. file: The new details for the file.
    *
    * Returns: FileObject: The updated file details.
-   *
-   * @example
-   * ```ts
-   * const fileObject = await client.files.update(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *   { file: fs.createReadStream('path/to/file') },
-   * );
-   * ```
    */
   update(fileID: string, body: FileUpdateParams, options?: RequestOptions): APIPromise<FileObject> {
     return this._client.post(
       path`/v1/files/${fileID}`,
-      multipartFormRequestOptions({ body, ...options }, this._client),
+      multipartFormRequestOptions(
+        {
+          body,
+          ...options,
+        },
+        this._client,
+      ),
     );
   }
 
@@ -89,14 +74,6 @@ export class Files extends APIResource {
    * Args: pagination: The pagination options
    *
    * Returns: A list of files belonging to the user.
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const fileObject of client.files.list()) {
-   *   // ...
-   * }
-   * ```
    */
   list(
     query: FileListParams | null | undefined = {},
@@ -108,16 +85,12 @@ export class Files extends APIResource {
   /**
    * Delete a specific file by its ID.
    *
+   * Removes the file from every store that references it (cleaning up chunks and
+   * store stats) before deleting the file object itself.
+   *
    * Args: file_id: The ID of the file to delete.
    *
    * Returns: FileDeleted: The response containing the details of the deleted file.
-   *
-   * @example
-   * ```ts
-   * const file = await client.files.delete(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   * ```
    */
   delete(fileID: string, options?: RequestOptions): APIPromise<FileDeleteResponse> {
     return this._client.delete(path`/v1/files/${fileID}`, options);
@@ -129,16 +102,6 @@ export class Files extends APIResource {
    * Args: file_id: The ID of the file to download.
    *
    * Returns: FileStreamResponse: The response containing the file to be downloaded.
-   *
-   * @example
-   * ```ts
-   * const response = await client.files.content(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * );
-   *
-   * const content = await response.blob();
-   * console.log(content);
-   * ```
    */
   content(fileID: string, options?: RequestOptions): APIPromise<Response> {
     return this._client.get(path`/v1/files/${fileID}/content`, {
@@ -148,6 +111,8 @@ export class Files extends APIResource {
     });
   }
 }
+
+export class Files extends withFileHelpers(FilesBase) {}
 
 export type FileObjectsCursor = Cursor<FileObject>;
 
@@ -236,13 +201,6 @@ export interface FileCreateParams {
    * The file to upload
    */
   file: Uploadable;
-
-  /**
-   * Optional configuration for automatic multipart uploads.
-   * When the file size exceeds the threshold (default 100MB), the SDK
-   * will automatically use multipart upload with presigned URLs.
-   */
-  multipartUpload?: MultipartUploadConfig;
 }
 
 export interface FileUpdateParams {
@@ -270,6 +228,8 @@ export declare namespace Files {
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
+    type FileCreateParamsWithMultipart as FileCreateParamsWithMultipart,
+    type FileHelpers as FileHelpers,
   };
 
   export {

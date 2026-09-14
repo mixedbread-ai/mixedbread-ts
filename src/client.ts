@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import type { RequestInit, RequestInfo, BodyInit } from './internal/builtin-types';
 import type { HTTPMethod, PromiseOrValue, MergedRequestInit, FinalizedRequestInit } from './internal/types';
@@ -17,36 +17,35 @@ import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
 import {
   AbstractPage,
-  type CursorParams,
-  CursorResponse,
   type LimitOffsetParams,
   LimitOffsetResponse,
+  type CursorParams,
+  CursorResponse,
 } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
 import {
-  EmbedParams,
   Embedding,
   EmbeddingCreateResponse,
-  InfoResponse,
   MultiEncodingEmbedding,
-  RerankParams,
+  InfoResponse,
   RerankResponse,
+  EmbedParams,
+  RerankParams,
 } from './resources/top-level';
 import { APIPromise } from './core/api-promise';
 import {
   APIKey,
-  APIKeyCreateParams,
   APIKeyCreated,
+  APIKeyCreateParams,
   APIKeyDeleteResponse,
   APIKeyListParams,
   APIKeys,
   APIKeysLimitOffset,
   Scope,
 } from './resources/api-keys';
-import { Chat, ChatCreateCompletionResponse } from './resources/chat';
-import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
+import { Chat, ChatCreateCompletionParams, ChatCreateCompletionResponse } from './resources/chat';
 import {
   APIKeyCreateOrUpdateParams,
   DataSource,
@@ -55,23 +54,26 @@ import {
   DataSourceDeleteResponse,
   DataSourceListParams,
   DataSourceOauth2Params,
-  DataSourceType,
-  DataSourceUpdateParams,
   DataSources,
   DataSourcesCursor,
+  DataSourceType,
+  DataSourceUpdateParams,
   LinearDataSource,
   NotionDataSource,
   Oauth2Params,
 } from './resources/data-sources/data-sources';
+import { EmbeddingCreateParams, Embeddings, EncodingFormat } from './resources/embeddings';
 import { Extractions } from './resources/extractions/extractions';
 import {
   FileCreateParams,
+  FileCreateParamsWithMultipart,
   FileDeleteResponse,
+  FileHelpers,
   FileListParams,
   FileObject,
   FileObjectsCursor,
-  FileUpdateParams,
   Files,
+  FileUpdateParams,
   PaginationWithTotal,
 } from './resources/files/files';
 import { Parsing } from './resources/parsing/parsing';
@@ -96,22 +98,26 @@ import {
   Store,
   StoreChunkSearchOptions,
   StoreConfig,
+  StoreCopyAndPollHelperParams,
+  StoreCopyParams,
   StoreCreateParams,
   StoreDeleteResponse,
   StoreGrepParams,
   StoreGrepResponse,
+  StoreHelpers,
   StoreListChunksParams,
   StoreListChunksResponse,
   StoreListParams,
   StoreMetadataFacetsParams,
   StoreMetadataFacetsResponse,
+  StorePollHelperParams,
   StoreQuestionAnsweringParams,
   StoreQuestionAnsweringResponse,
+  Stores,
+  StoresCursor,
   StoreSearchParams,
   StoreSearchResponse,
   StoreUpdateParams,
-  Stores,
-  StoresCursor,
   TextChunkGeneratedMetadata,
   VideoChunkGeneratedMetadata,
   VideoURL,
@@ -291,18 +297,6 @@ export class Mixedbread {
     this.fetch = options.fetch ?? Shims.getDefaultFetch();
     this.#encoder = Opts.FallbackEncoder;
 
-    const customHeadersEnv = readEnv('MIXEDBREAD_CUSTOM_HEADERS');
-    if (customHeadersEnv) {
-      const parsed: Record<string, string> = {};
-      for (const line of customHeadersEnv.split('\n')) {
-        const colon = line.indexOf(':');
-        if (colon >= 0) {
-          parsed[line.substring(0, colon).trim()] = line.substring(colon + 1).trim();
-        }
-      }
-      options.defaultHeaders = { ...parsed, ...options.defaultHeaders };
-    }
-
     this._options = options;
 
     this.apiKey = apiKey;
@@ -342,19 +336,8 @@ export class Mixedbread {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
-   *
-   * @example
-   * ```ts
-   * const embeddingCreateResponse = await client.embed({
-   *   model: 'mixedbread-ai/mxbai-embed-large-v1',
-   *   input: 'x',
-   * });
-   * ```
    */
-  embed(
-    body: TopLevelAPI.EmbedParams,
-    options?: RequestOptions,
-  ): APIPromise<TopLevelAPI.EmbeddingCreateResponse> {
+  embed(body: TopLevelAPI.EmbedParams, options?: RequestOptions): APIPromise<EmbeddingCreateResponse> {
     return this.post('/v1/embeddings', { body, ...options });
   }
 
@@ -362,13 +345,8 @@ export class Mixedbread {
    * Returns service information, including name and version.
    *
    * Returns: InfoResponse: A response containing the service name and version.
-   *
-   * @example
-   * ```ts
-   * const response = await client.info();
-   * ```
    */
-  info(options?: RequestOptions): APIPromise<TopLevelAPI.InfoResponse> {
+  info(options?: RequestOptions): APIPromise<InfoResponse> {
     return this.get('/', options);
   }
 
@@ -378,17 +356,8 @@ export class Mixedbread {
    * Args: params: RerankParams: The parameters for reranking.
    *
    * Returns: RerankResponse: The reranked documents for the input query.
-   *
-   * @example
-   * ```ts
-   * const response = await client.rerank({
-   *   query:
-   *     'What are the key features of the Mixedbread embedding model?',
-   *   input: ['Document 1', 'Document 2'],
-   * });
-   * ```
    */
-  rerank(body: TopLevelAPI.RerankParams, options?: RequestOptions): APIPromise<TopLevelAPI.RerankResponse> {
+  rerank(body: TopLevelAPI.RerankParams, options?: RequestOptions): APIPromise<RerankResponse> {
     return this.post('/v1/reranking', { body, ...options });
   }
 
@@ -868,19 +837,11 @@ export class Mixedbread {
     return () => controller.abort();
   }
 
-  private buildBody({ options }: { options: FinalRequestOptions }): {
+  private buildBody({ options: { body, headers: rawHeaders } }: { options: FinalRequestOptions }): {
     bodyHeaders: HeadersLike;
     body: BodyInit | undefined;
   } {
-    const { body, headers: rawHeaders } = options;
     if (!body) {
-      // A resource method always passes a `body` key when its operation defines a
-      // request body, even if the caller omitted an optional body param. Keep the
-      // content-type for those, and only elide it for operations with no body at
-      // all (e.g. GET/DELETE).
-      if (body == null && 'body' in options) {
-        return this.#encoder({ body, headers: buildHeaders([rawHeaders]) });
-      }
       return { bodyHeaders: undefined, body: undefined };
     }
     const headers = buildHeaders([rawHeaders]);
@@ -980,29 +941,29 @@ export declare namespace Mixedbread {
 
   export {
     Stores as Stores,
-    type AgenticSearchConfig as AgenticSearchConfig,
-    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
-    type AudioURL as AudioURL,
-    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
-    type ContextualizationConfig as ContextualizationConfig,
+    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type ExpiresAfter as ExpiresAfter,
-    type FileCounts as FileCounts,
-    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
-    type ImageURLOutput as ImageURLOutput,
-    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
-    type MarkdownHeading as MarkdownHeading,
-    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
-    type RerankConfig as RerankConfig,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
-    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
-    type StoreConfig as StoreConfig,
+    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
+    type MarkdownHeading as MarkdownHeading,
     type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
+    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
+    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
     type VideoChunkGeneratedMetadata as VideoChunkGeneratedMetadata,
+    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
+    type AudioURL as AudioURL,
+    type ImageURLOutput as ImageURLOutput,
     type VideoURL as VideoURL,
+    type StoreConfig as StoreConfig,
+    type ContextualizationConfig as ContextualizationConfig,
+    type FileCounts as FileCounts,
+    type RerankConfig as RerankConfig,
+    type AgenticSearchConfig as AgenticSearchConfig,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreGrepResponse as StoreGrepResponse,
     type StoreListChunksResponse as StoreListChunksResponse,
@@ -1013,11 +974,15 @@ export declare namespace Mixedbread {
     type StoreCreateParams as StoreCreateParams,
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
+    type StoreCopyParams as StoreCopyParams,
     type StoreGrepParams as StoreGrepParams,
     type StoreListChunksParams as StoreListChunksParams,
     type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
+    type StorePollHelperParams as StorePollHelperParams,
+    type StoreCopyAndPollHelperParams as StoreCopyAndPollHelperParams,
+    type StoreHelpers as StoreHelpers,
   };
 
   export { Parsing as Parsing };
@@ -1031,6 +996,8 @@ export declare namespace Mixedbread {
     type FileCreateParams as FileCreateParams,
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
+    type FileCreateParamsWithMultipart as FileCreateParamsWithMultipart,
+    type FileHelpers as FileHelpers,
   };
 
   export { Extractions as Extractions };
@@ -1043,14 +1010,14 @@ export declare namespace Mixedbread {
 
   export {
     DataSources as DataSources,
-    type APIKeyCreateOrUpdateParams as APIKeyCreateOrUpdateParams,
     type DataSource as DataSource,
-    type DataSourceAPIKeyParams as DataSourceAPIKeyParams,
     type DataSourceOauth2Params as DataSourceOauth2Params,
     type DataSourceType as DataSourceType,
     type LinearDataSource as LinearDataSource,
     type NotionDataSource as NotionDataSource,
     type Oauth2Params as Oauth2Params,
+    type DataSourceAPIKeyParams as DataSourceAPIKeyParams,
+    type APIKeyCreateOrUpdateParams as APIKeyCreateOrUpdateParams,
     type DataSourceDeleteResponse as DataSourceDeleteResponse,
     type DataSourcesCursor as DataSourcesCursor,
     type DataSourceCreateParams as DataSourceCreateParams,
@@ -1069,9 +1036,13 @@ export declare namespace Mixedbread {
     type APIKeyListParams as APIKeyListParams,
   };
 
-  export { Chat as Chat, type ChatCreateCompletionResponse as ChatCreateCompletionResponse };
+  export {
+    Chat as Chat,
+    type ChatCreateCompletionResponse as ChatCreateCompletionResponse,
+    type ChatCreateCompletionParams as ChatCreateCompletionParams,
+  };
 
+  export type Usage = API.Usage;
   export type SearchFilter = API.SearchFilter;
   export type SearchFilterCondition = API.SearchFilterCondition;
-  export type Usage = API.Usage;
 }

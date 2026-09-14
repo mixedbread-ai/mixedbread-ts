@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -19,10 +19,6 @@ describe('resource schema', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('create: required and optional params', async () => {
-    const response = await client.extractions.schema.create({ description: 'description' });
-  });
-
   test('enhance: only required params', async () => {
     const responsePromise = client.extractions.schema.enhance({ json_schema: { foo: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
@@ -34,10 +30,6 @@ describe('resource schema', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('enhance: required and optional params', async () => {
-    const response = await client.extractions.schema.enhance({ json_schema: { foo: 'bar' } });
-  });
-
   test('validate: only required params', async () => {
     const responsePromise = client.extractions.schema.validate({ json_schema: { foo: 'bar' } });
     const rawResponse = await responsePromise.asResponse();
@@ -47,9 +39,5 @@ describe('resource schema', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('validate: required and optional params', async () => {
-    const response = await client.extractions.schema.validate({ json_schema: { foo: 'bar' } });
   });
 });

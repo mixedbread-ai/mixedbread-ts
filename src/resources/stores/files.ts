@@ -1,16 +1,28 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as Shared from '../shared';
 import * as StoresAPI from './stores';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
-import * as polling from '../../lib/polling';
-import { type MultipartUploadConfig } from '../../lib/upload-file';
-import { Uploadable } from '../../uploads';
 import { path } from '../../internal/utils/path';
+import {
+  type FileCreateAndPollHelperParams,
+  type FilePollHelperParams,
+  type FileUploadAndPollHelperParams,
+  type FileUploadHelperParams,
+  type StoreFileHelpers,
+  withStoreFileHelpers,
+} from '../../lib/store-files';
+export type {
+  FilePollHelperParams,
+  FileCreateAndPollHelperParams,
+  FileUploadHelperParams,
+  FileUploadAndPollHelperParams,
+  StoreFileHelpers,
+};
 
-export class Files extends APIResource {
+export class FilesBase extends APIResource {
   /**
    * Upload a file to a store.
    *
@@ -18,14 +30,6 @@ export class Files extends APIResource {
    * to add to the store.
    *
    * Returns: VectorStoreFile: The uploaded file details.
-   *
-   * @example
-   * ```ts
-   * const storeFile = await client.stores.files.create(
-   *   'store_identifier',
-   *   { file_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' },
-   * );
-   * ```
    */
   create(storeIdentifier: string, body: FileCreateParams, options?: RequestOptions): APIPromise<StoreFile> {
     return this._client.post(path`/v1/stores/${storeIdentifier}/files`, { body, ...options });
@@ -38,14 +42,6 @@ export class Files extends APIResource {
    * the file. options: Get file options.
    *
    * Returns: VectorStoreFile: The file details.
-   *
-   * @example
-   * ```ts
-   * const storeFile = await client.stores.files.retrieve(
-   *   'file_identifier',
-   *   { store_identifier: 'store_identifier' },
-   * );
-   * ```
    */
   retrieve(
     fileIdentifier: string,
@@ -66,14 +62,6 @@ export class Files extends APIResource {
    * name of the file to update. update_params: Metadata update payload.
    *
    * Returns: StoreFile: The updated file details.
-   *
-   * @example
-   * ```ts
-   * const storeFile = await client.stores.files.update(
-   *   'file_identifier',
-   *   { store_identifier: 'store_identifier' },
-   * );
-   * ```
    */
   update(fileIdentifier: string, params: FileUpdateParams, options?: RequestOptions): APIPromise<StoreFile> {
     const { store_identifier, ...body } = params;
@@ -90,13 +78,6 @@ export class Files extends APIResource {
    * Pagination parameters and metadata filter
    *
    * Returns: VectorStoreFileListResponse: Paginated list of vector store files
-   *
-   * @example
-   * ```ts
-   * const files = await client.stores.files.list(
-   *   'store_identifier',
-   * );
-   * ```
    */
   list(
     storeIdentifier: string,
@@ -113,14 +94,6 @@ export class Files extends APIResource {
    * the file to delete.
    *
    * Returns: VectorStoreFileDeleted: The deleted file details.
-   *
-   * @example
-   * ```ts
-   * const file = await client.stores.files.delete(
-   *   'file_identifier',
-   *   { store_identifier: 'store_identifier' },
-   * );
-   * ```
    */
   delete(
     fileIdentifier: string,
@@ -130,387 +103,20 @@ export class Files extends APIResource {
     const { store_identifier } = params;
     return this._client.delete(path`/v1/stores/${store_identifier}/files/${fileIdentifier}`, options);
   }
-
-  /**
-   * Poll for a file's processing status until it reaches a terminal state.
-   *
-   * Supports both positional arguments (`poll(storeIdentifier, fileIdentifier, pollIntervalMs, pollTimeoutMs, options)`) and
-   * a named-parameter object (`poll({ storeIdentifier, fileIdentifier, pollIntervalMs, pollTimeoutMs, options })`).
-   *
-   * @param storeIdentifier - The identifier of the store when using positional arguments
-   * @param fileIdentifier - The ID or external identifier of the file to poll when using positional arguments
-   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
-   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
-   * @param options - Additional request options when using positional arguments
-   * @param params - Poll configuration when using named parameters
-   * @returns The file object once it reaches a terminal state
-   */
-  async poll(
-    storeIdentifier: string,
-    fileIdentifier: string,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<StoreFile>;
-  async poll(params: FilePollHelperParams): Promise<StoreFile>;
-  async poll(
-    storeIdentifierOrParams: string | FilePollHelperParams,
-    fileIdentifier?: string,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<StoreFile> {
-    const params: FilePollHelperParams =
-      typeof storeIdentifierOrParams === 'string' ?
-        {
-          storeIdentifier: storeIdentifierOrParams,
-          fileIdentifier: fileIdentifier as string,
-          pollIntervalMs,
-          pollTimeoutMs,
-          options,
-        }
-      : storeIdentifierOrParams;
-
-    const pollingIntervalMs = params.pollIntervalMs ?? 500;
-    const retrieveParams: FileRetrieveParams = {
-      store_identifier: params.storeIdentifier,
-      ...(params.returnChunks !== undefined && { return_chunks: params.returnChunks }),
-    };
-
-    return polling.poll({
-      fn: () => this.retrieve(params.fileIdentifier, retrieveParams, params.options),
-      condition: (result) =>
-        result.status === 'completed' || result.status === 'failed' || result.status === 'cancelled',
-      intervalSeconds: pollingIntervalMs / 1000,
-      ...(params.pollTimeoutMs && { timeoutSeconds: params.pollTimeoutMs / 1000 }),
-    });
-  }
-
-  /**
-   * Create a file in a vector store and wait for it to be processed.
-   *
-   * Supports both positional arguments (`createAndPoll(storeIdentifier, body, pollIntervalMs, pollTimeoutMs, options)`) and
-   * a named-parameter object (`createAndPoll({ storeIdentifier, body, pollIntervalMs, pollTimeoutMs, options })`).
-   *
-   * @param storeIdentifier - The identifier of the store to upload to when using positional arguments
-   * @param body - The file creation parameters when using positional arguments
-   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
-   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
-   * @param options - Additional request options when using positional arguments
-   * @param params - Create configuration when using named parameters
-   * @returns The file object once it reaches a terminal state
-   */
-  async createAndPoll(
-    storeIdentifier: string,
-    body: FileCreateParams,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<StoreFile>;
-  async createAndPoll(params: FileCreateAndPollHelperParams): Promise<StoreFile>;
-  async createAndPoll(
-    storeIdentifierOrParams: string | FileCreateAndPollHelperParams,
-    body?: FileCreateParams,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-  ): Promise<StoreFile> {
-    const params: FileCreateAndPollHelperParams =
-      typeof storeIdentifierOrParams === 'string' ?
-        {
-          storeIdentifier: storeIdentifierOrParams,
-          body: body as FileCreateParams,
-          pollIntervalMs,
-          pollTimeoutMs,
-          options,
-        }
-      : storeIdentifierOrParams;
-
-    const file = await this.create(params.storeIdentifier, params.body, params.options);
-    return this.poll({
-      storeIdentifier: params.storeIdentifier,
-      fileIdentifier: file.id,
-      pollIntervalMs: params.pollIntervalMs,
-      pollTimeoutMs: params.pollTimeoutMs,
-      options: params.options,
-      returnChunks: params.returnChunks,
-    });
-  }
-
-  /**
-   * Upload a file to the files API and then create a file in a vector store.
-   * Note the file will be asynchronously processed.
-   *
-   * Supports both positional arguments (`upload(storeIdentifier, file, body, options)`) and a named-parameter object
-   * (`upload({ storeIdentifier, file, body, options })`).
-   *
-   * @param storeIdentifier - The identifier of the store to add the file to when using positional arguments
-   * @param file - The file to upload when using positional arguments
-   * @param body - Additional parameters for the vector store file when using positional arguments
-   * @param options - Additional request options when using positional arguments
-   * @param params - Upload configuration when using named parameters
-   * @returns The created vector store file
-   */
-  async upload(
-    storeIdentifier: string,
-    file: Uploadable,
-    body?: Omit<FileCreateParams, 'file_id'>,
-    options?: RequestOptions,
-    multipartUpload?: MultipartUploadConfig,
-  ): Promise<StoreFile>;
-  async upload(params: FileUploadHelperParams): Promise<StoreFile>;
-  async upload(
-    storeIdentifierOrParams: string | FileUploadHelperParams,
-    file?: Uploadable,
-    body?: Omit<FileCreateParams, 'file_id'>,
-    options?: RequestOptions,
-    multipartUpload?: MultipartUploadConfig,
-  ): Promise<StoreFile> {
-    const params: FileUploadHelperParams =
-      typeof storeIdentifierOrParams === 'string' ?
-        {
-          storeIdentifier: storeIdentifierOrParams,
-          file: file as Uploadable,
-          body,
-          options,
-          multipartUpload,
-        }
-      : storeIdentifierOrParams;
-
-    const fileUploadResponse = await this._client.files.create(
-      {
-        file: params.file,
-        ...(params.multipartUpload && { multipartUpload: params.multipartUpload }),
-      },
-      params.options,
-    );
-
-    return this.create(
-      params.storeIdentifier,
-      { file_id: fileUploadResponse.id, ...params.body },
-      params.options,
-    );
-  }
-
-  /**
-   * Upload a file to files API, create a file in a vector store, and poll until processing is complete.
-   *
-   * Supports both positional arguments (`uploadAndPoll(storeIdentifier, file, body, pollIntervalMs, pollTimeoutMs, options)`) and
-   * a named-parameter object (`uploadAndPoll({ storeIdentifier, file, body, pollIntervalMs, pollTimeoutMs, options })`).
-   *
-   * @param storeIdentifier - The identifier of the store to add the file to when using positional arguments
-   * @param file - The file to upload when using positional arguments
-   * @param body - Additional parameters for the vector store file when using positional arguments
-   * @param pollIntervalMs - Interval between polls in milliseconds (default: 500) when using positional arguments
-   * @param pollTimeoutMs - Maximum time to poll in milliseconds (default: no timeout) when using positional arguments
-   * @param options - Additional request options when using positional arguments
-   * @param params - Upload and poll configuration when using named parameters
-   * @returns The vector store file object once it reaches a terminal state
-   */
-  async uploadAndPoll(
-    storeIdentifier: string,
-    file: Uploadable,
-    body?: Omit<FileCreateParams, 'file_id'>,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-    multipartUpload?: MultipartUploadConfig,
-  ): Promise<StoreFile>;
-  async uploadAndPoll(params: FileUploadAndPollHelperParams): Promise<StoreFile>;
-  async uploadAndPoll(
-    storeIdentifierOrParams: string | FileUploadAndPollHelperParams,
-    file?: Uploadable,
-    body?: Omit<FileCreateParams, 'file_id'>,
-    pollIntervalMs?: number,
-    pollTimeoutMs?: number,
-    options?: RequestOptions,
-    multipartUpload?: MultipartUploadConfig,
-  ): Promise<StoreFile> {
-    const params: FileUploadAndPollHelperParams =
-      typeof storeIdentifierOrParams === 'string' ?
-        {
-          storeIdentifier: storeIdentifierOrParams,
-          file: file as Uploadable,
-          body,
-          pollIntervalMs,
-          pollTimeoutMs,
-          options,
-          multipartUpload,
-        }
-      : storeIdentifierOrParams;
-
-    const vectorStoreFile = await this.upload({
-      storeIdentifier: params.storeIdentifier,
-      file: params.file,
-      body: params.body,
-      options: params.options,
-      multipartUpload: params.multipartUpload,
-    });
-
-    return this.poll({
-      storeIdentifier: params.storeIdentifier,
-      fileIdentifier: vectorStoreFile.id,
-      pollIntervalMs: params.pollIntervalMs,
-      pollTimeoutMs: params.pollTimeoutMs,
-      options: params.options,
-      returnChunks: params.returnChunks,
-    });
-  }
 }
+
+export class Files extends withStoreFileHelpers(FilesBase) {}
 
 /**
- * Parameters for polling store file status.
+ * The lifecycle of a unit of background work.
+ *
+ * One vocabulary for every job family. The database keeps a separate enum type per
+ * table (``parsing_job_status``, ``store_file_status``, ...) but they all carry
+ * these values, so the aliases below are this enum rather than copies of
+ * it. :class:`SyncStatus` is this set plus ``IDLE`` for connectors, which have a
+ * resting state between runs.
  */
-export interface FilePollHelperParams {
-  storeIdentifier: string;
-  fileIdentifier: string;
-  pollIntervalMs?: number | undefined;
-  pollTimeoutMs?: number | undefined;
-  options?: RequestOptions | undefined;
-  returnChunks?: boolean | undefined;
-}
-
-/**
- * Parameters for creating and polling a store file.
- */
-export interface FileCreateAndPollHelperParams {
-  storeIdentifier: string;
-  body: FileCreateParams;
-  pollIntervalMs?: number | undefined;
-  pollTimeoutMs?: number | undefined;
-  options?: RequestOptions | undefined;
-  returnChunks?: boolean | undefined;
-}
-
-/**
- * Parameters for uploading a file to a store.
- */
-export interface FileUploadHelperParams {
-  storeIdentifier: string;
-  file: Uploadable;
-  body?: Omit<FileCreateParams, 'file_id'> | undefined;
-  options?: RequestOptions | undefined;
-  multipartUpload?: MultipartUploadConfig | undefined;
-}
-
-/**
- * Parameters for uploading and polling a store file.
- */
-export interface FileUploadAndPollHelperParams {
-  storeIdentifier: string;
-  file: Uploadable;
-  body?: Omit<FileCreateParams, 'file_id'> | undefined;
-  pollIntervalMs?: number | undefined;
-  pollTimeoutMs?: number | undefined;
-  options?: RequestOptions | undefined;
-  returnChunks?: boolean | undefined;
-  multipartUpload?: MultipartUploadConfig | undefined;
-}
-
-export interface AudioURLInputChunk {
-  /**
-   * position of the chunk in a file
-   */
-  chunk_index: number;
-
-  /**
-   * mime type of the chunk
-   */
-  mime_type?: string;
-
-  /**
-   * metadata of the chunk
-   */
-  generated_metadata?:
-    | StoresAPI.MarkdownChunkGeneratedMetadata
-    | StoresAPI.TextChunkGeneratedMetadata
-    | StoresAPI.PdfChunkGeneratedMetadata
-    | StoresAPI.CodeChunkGeneratedMetadata
-    | StoresAPI.AudioChunkGeneratedMetadata
-    | StoresAPI.VideoChunkGeneratedMetadata
-    | StoresAPI.ImageChunkGeneratedMetadata
-    | null;
-
-  /**
-   * model used for this chunk
-   */
-  model?: string | null;
-
-  /**
-   * Input type identifier
-   */
-  type?: 'audio_url';
-
-  /**
-   * speech recognition (sr) text of the audio
-   */
-  transcription?: string | null;
-
-  /**
-   * summary of the audio
-   */
-  summary?: string | null;
-
-  /**
-   * Model for audio URL validation.
-   */
-  audio_url?: StoresAPI.AudioURL | null;
-
-  /**
-   * The sampling rate of the audio.
-   */
-  sampling_rate: number;
-}
-
-export interface ImageURLInputChunk {
-  /**
-   * position of the chunk in a file
-   */
-  chunk_index: number;
-
-  /**
-   * mime type of the chunk
-   */
-  mime_type?: string;
-
-  /**
-   * metadata of the chunk
-   */
-  generated_metadata?:
-    | StoresAPI.MarkdownChunkGeneratedMetadata
-    | StoresAPI.TextChunkGeneratedMetadata
-    | StoresAPI.PdfChunkGeneratedMetadata
-    | StoresAPI.CodeChunkGeneratedMetadata
-    | StoresAPI.AudioChunkGeneratedMetadata
-    | StoresAPI.VideoChunkGeneratedMetadata
-    | StoresAPI.ImageChunkGeneratedMetadata
-    | null;
-
-  /**
-   * model used for this chunk
-   */
-  model?: string | null;
-
-  /**
-   * Input type identifier
-   */
-  type?: 'image_url';
-
-  /**
-   * ocr text of the image
-   */
-  ocr_text?: string | null;
-
-  /**
-   * summary of the image
-   */
-  summary?: string | null;
-
-  /**
-   * Model for image URL validation.
-   */
-  image_url?: StoresAPI.ImageURLOutput | null;
-}
+export type StoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
 /**
  * Represents a file stored in a store.
@@ -584,12 +190,16 @@ export interface StoreFile {
   /**
    * chunks
    */
-  chunks?: Array<TextInputChunk | ImageURLInputChunk | AudioURLInputChunk | VideoURLInputChunk> | null;
+  chunks?: Array<StoreFile.Chunk> | null;
 
   /**
    * Presigned URL for file content
    */
   content_url: string;
+}
+
+export namespace StoreFile {
+  export type Chunk = TextInputChunk | ImageURLInputChunk | AudioURLInputChunk | VideoURLInputChunk;
 }
 
 /**
@@ -601,8 +211,6 @@ export interface StoreFileConfig {
    */
   parsing_strategy?: 'fast' | 'high_quality';
 }
-
-export type StoreFileStatus = 'pending' | 'in_progress' | 'cancelled' | 'completed' | 'failed';
 
 export interface TextInputChunk {
   /**
@@ -618,15 +226,7 @@ export interface TextInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | StoresAPI.MarkdownChunkGeneratedMetadata
-    | StoresAPI.TextChunkGeneratedMetadata
-    | StoresAPI.PdfChunkGeneratedMetadata
-    | StoresAPI.CodeChunkGeneratedMetadata
-    | StoresAPI.AudioChunkGeneratedMetadata
-    | StoresAPI.VideoChunkGeneratedMetadata
-    | StoresAPI.ImageChunkGeneratedMetadata
-    | null;
+  generated_metadata?: TextInputChunk.GeneratedMetadata | null;
 
   /**
    * model used for this chunk
@@ -659,6 +259,141 @@ export interface TextInputChunk {
   summary?: string | null;
 }
 
+export namespace TextInputChunk {
+  export type GeneratedMetadata =
+    | StoresAPI.MarkdownChunkGeneratedMetadata
+    | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.PdfChunkGeneratedMetadata
+    | StoresAPI.CodeChunkGeneratedMetadata
+    | StoresAPI.AudioChunkGeneratedMetadata
+    | StoresAPI.VideoChunkGeneratedMetadata
+    | StoresAPI.ImageChunkGeneratedMetadata
+    | null;
+}
+
+export interface ImageURLInputChunk {
+  /**
+   * position of the chunk in a file
+   */
+  chunk_index: number;
+
+  /**
+   * mime type of the chunk
+   */
+  mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: ImageURLInputChunk.GeneratedMetadata | null;
+
+  /**
+   * model used for this chunk
+   */
+  model?: string | null;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'image_url';
+
+  /**
+   * ocr text of the image
+   */
+  ocr_text?: string | null;
+
+  /**
+   * LLM-generated context that situates this image within its source document
+   */
+  context?: string | null;
+
+  /**
+   * summary of the image
+   */
+  summary?: string | null;
+
+  /**
+   * Model for image URL validation.
+   */
+  image_url?: StoresAPI.ImageURLOutput | null;
+}
+
+export namespace ImageURLInputChunk {
+  export type GeneratedMetadata =
+    | StoresAPI.MarkdownChunkGeneratedMetadata
+    | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.PdfChunkGeneratedMetadata
+    | StoresAPI.CodeChunkGeneratedMetadata
+    | StoresAPI.AudioChunkGeneratedMetadata
+    | StoresAPI.VideoChunkGeneratedMetadata
+    | StoresAPI.ImageChunkGeneratedMetadata
+    | null;
+}
+
+export interface AudioURLInputChunk {
+  /**
+   * position of the chunk in a file
+   */
+  chunk_index: number;
+
+  /**
+   * mime type of the chunk
+   */
+  mime_type?: string;
+
+  /**
+   * metadata of the chunk
+   */
+  generated_metadata?: AudioURLInputChunk.GeneratedMetadata | null;
+
+  /**
+   * model used for this chunk
+   */
+  model?: string | null;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'audio_url';
+
+  /**
+   * speech recognition (sr) text of the audio
+   */
+  transcription?: string | null;
+
+  /**
+   * LLM-generated context that situates this audio chunk within its source file
+   */
+  context?: string | null;
+
+  /**
+   * summary of the audio
+   */
+  summary?: string | null;
+
+  /**
+   * Model for audio URL validation.
+   */
+  audio_url?: StoresAPI.AudioURL | null;
+
+  /**
+   * The sampling rate of the audio.
+   */
+  sampling_rate: number;
+}
+
+export namespace AudioURLInputChunk {
+  export type GeneratedMetadata =
+    | StoresAPI.MarkdownChunkGeneratedMetadata
+    | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.PdfChunkGeneratedMetadata
+    | StoresAPI.CodeChunkGeneratedMetadata
+    | StoresAPI.AudioChunkGeneratedMetadata
+    | StoresAPI.VideoChunkGeneratedMetadata
+    | StoresAPI.ImageChunkGeneratedMetadata
+    | null;
+}
+
 export interface VideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -673,15 +408,7 @@ export interface VideoURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | StoresAPI.MarkdownChunkGeneratedMetadata
-    | StoresAPI.TextChunkGeneratedMetadata
-    | StoresAPI.PdfChunkGeneratedMetadata
-    | StoresAPI.CodeChunkGeneratedMetadata
-    | StoresAPI.AudioChunkGeneratedMetadata
-    | StoresAPI.VideoChunkGeneratedMetadata
-    | StoresAPI.ImageChunkGeneratedMetadata
-    | null;
+  generated_metadata?: VideoURLInputChunk.GeneratedMetadata | null;
 
   /**
    * model used for this chunk
@@ -699,6 +426,11 @@ export interface VideoURLInputChunk {
   transcription?: string | null;
 
   /**
+   * LLM-generated context that situates this video chunk within its source file
+   */
+  context?: string | null;
+
+  /**
    * summary of the video
    */
   summary?: string | null;
@@ -707,6 +439,18 @@ export interface VideoURLInputChunk {
    * Model for video URL validation.
    */
   video_url?: StoresAPI.VideoURL | null;
+}
+
+export namespace VideoURLInputChunk {
+  export type GeneratedMetadata =
+    | StoresAPI.MarkdownChunkGeneratedMetadata
+    | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.PdfChunkGeneratedMetadata
+    | StoresAPI.CodeChunkGeneratedMetadata
+    | StoresAPI.AudioChunkGeneratedMetadata
+    | StoresAPI.VideoChunkGeneratedMetadata
+    | StoresAPI.ImageChunkGeneratedMetadata
+    | null;
 }
 
 export interface FileListResponse {
@@ -866,16 +610,22 @@ export interface FileListParams {
   /**
    * Metadata filter to apply to the query
    */
-  metadata_filter?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  metadata_filter?: FileListParams.MetadataFilter | null;
 
   /**
    * Search query for fuzzy matching over name and external_id fields
    */
   q?: string | null;
+}
+
+export namespace FileListParams {
+  export type MetadataFilterUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type MetadataFilter =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<FileListParams.MetadataFilterUnionMember2>
+    | null;
 }
 
 export interface FileDeleteParams {
@@ -887,12 +637,12 @@ export interface FileDeleteParams {
 
 export declare namespace Files {
   export {
-    type AudioURLInputChunk as AudioURLInputChunk,
-    type ImageURLInputChunk as ImageURLInputChunk,
+    type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type StoreFileConfig as StoreFileConfig,
-    type StoreFileStatus as StoreFileStatus,
     type TextInputChunk as TextInputChunk,
+    type ImageURLInputChunk as ImageURLInputChunk,
+    type AudioURLInputChunk as AudioURLInputChunk,
     type VideoURLInputChunk as VideoURLInputChunk,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
@@ -901,5 +651,10 @@ export declare namespace Files {
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
+    type FilePollHelperParams as FilePollHelperParams,
+    type FileCreateAndPollHelperParams as FileCreateAndPollHelperParams,
+    type FileUploadHelperParams as FileUploadHelperParams,
+    type FileUploadAndPollHelperParams as FileUploadAndPollHelperParams,
+    type StoreFileHelpers as StoreFileHelpers,
   };
 }

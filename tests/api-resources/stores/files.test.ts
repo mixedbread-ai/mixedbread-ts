@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -83,6 +83,38 @@ describe('resource files', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.stores.files.list(
+        'store_identifier',
+        {
+          limit: 10,
+          after: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
+          include_total: false,
+          statuses: ['pending'],
+          metadata_filter: {
+            all: [
+              { key: 'price', operator: 'gt', value: '100' },
+              { key: 'color', operator: 'eq', value: 'red' },
+            ],
+            any: [
+              { key: 'price', operator: 'gt', value: '100' },
+              { key: 'color', operator: 'eq', value: 'red' },
+            ],
+            none: [
+              { key: 'price', operator: 'gt', value: '100' },
+              { key: 'color', operator: 'eq', value: 'red' },
+            ],
+          },
+          q: 'x',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
+  });
+
   test('delete: only required params', async () => {
     const responsePromise = client.stores.files.delete('file_identifier', {
       store_identifier: 'store_identifier',
@@ -94,11 +126,5 @@ describe('resource files', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('delete: required and optional params', async () => {
-    const response = await client.stores.files.delete('file_identifier', {
-      store_identifier: 'store_identifier',
-    });
   });
 });

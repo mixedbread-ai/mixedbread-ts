@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -57,7 +57,7 @@ describe('top level methods', () => {
 
   test('rerank: required and optional params', async () => {
     const response = await client.rerank({
-      model: 'mixedbread-ai/mxbai-rerank-large-v2',
+      model: 'mixedbread-ai/mxbai-rerank-v3.1-listwise',
       query: 'What are the key features of the Mixedbread embedding model?',
       input: ['Document 1', 'Document 2'],
       rank_fields: ['content', 'title'],

@@ -1,52 +1,51 @@
 #!/usr/bin/env bash
-
+# Start the sdkgen mock server the test-suite runs against (port 4010).
+#
+# The spec and generator config default to the monorepo layout; override with SDKGEN_SPEC,
+# SDKGEN_CONFIG and SDKGEN_BIN.
 set -e
 
 cd "$(dirname "$0")/.."
 
-if [[ -n "$1" && "$1" != '--'* ]]; then
-  URL="$1"
-  shift
-else
-  URL="$(grep 'openapi_spec_url' .stats.yml | cut -d' ' -f2)"
+SPEC="${SDKGEN_SPEC:-../../../automated/openapi.json}"
+CONFIG="${SDKGEN_CONFIG:-../../../tools/sdkgen/config.yaml}"
+SDKGEN="${SDKGEN_BIN:-}"
+if [ -z "$SDKGEN" ]; then
+  if command -v sdkgen >/dev/null 2>&1; then
+    SDKGEN=sdkgen
+  elif [ -f ../../../tools/sdkgen/Cargo.toml ]; then
+    (cd ../../../tools/sdkgen && cargo build -q)
+    SDKGEN=../../../tools/sdkgen/target/debug/sdkgen
+  else
+    echo "sdkgen not found; set SDKGEN_BIN" >&2
+    exit 1
+  fi
 fi
 
-# Check if the URL is empty
-if [ -z "$URL" ]; then
-  echo "Error: No OpenAPI spec path/url provided or found in .stats.yml"
-  exit 1
-fi
+echo "==> Starting mock server with spec ${SPEC}"
 
-echo "==> Starting mock server with URL ${URL}"
-
-# Run steady mock on the given spec
 if [ "$1" == "--daemon" ]; then
-  # Pre-install the package so the download doesn't eat into the startup timeout
-  npm exec --package=@stdy/cli@0.22.1 -- steady --version
+  "$SDKGEN" mock --spec "$SPEC" --config "$CONFIG" --host 127.0.0.1 --port 4010 &> .mock.log &
 
-  npm exec --package=@stdy/cli@0.22.1 -- steady --host 127.0.0.1 -p 4010 --validator-query-array-format=repeat --validator-form-array-format=repeat --validator-query-object-format=brackets --validator-form-object-format=brackets "$URL" &> .stdy.log &
-
-  # Wait for server to come online via health endpoint (max 30s)
   echo -n "Waiting for server"
   attempts=0
-  while ! curl --silent --fail "http://127.0.0.1:4010/_x-steady/health" >/dev/null 2>&1; do
+  while ! curl --silent --fail "http://127.0.0.1:4010/_sdkgen/health" >/dev/null 2>&1; do
     if ! kill -0 $! 2>/dev/null; then
       echo
-      cat .stdy.log
+      cat .mock.log
       exit 1
     fi
     attempts=$((attempts + 1))
-    if [ "$attempts" -ge 300 ]; then
+    if [ "$attempts" -ge 100 ]; then
       echo
-      echo "Timed out waiting for Steady server to start"
-      cat .stdy.log
+      echo "Timeout waiting for server"
+      cat .mock.log
       exit 1
     fi
     echo -n "."
     sleep 0.1
   done
-
   echo
 else
-  npm exec --package=@stdy/cli@0.22.1 -- steady --host 127.0.0.1 -p 4010 --validator-query-array-format=repeat --validator-form-array-format=repeat --validator-query-object-format=brackets --validator-form-object-format=brackets "$URL"
+  exec "$SDKGEN" mock --spec "$SPEC" --config "$CONFIG" --host 127.0.0.1 --port 4010
 fi

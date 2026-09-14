@@ -1,5 +1,4 @@
-.prism.log
-.stdy.log
+.mock.log
 node_modules
 yarn-error.log
 codegen.log
@@ -9,4 +8,4 @@ dist-deno
 /*.tgz
 .idea/
 .eslintcache
-oidc
+

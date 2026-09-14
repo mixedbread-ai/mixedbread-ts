@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -42,12 +42,6 @@ describe('resource connectors', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('retrieve: required and optional params', async () => {
-    const response = await client.dataSources.connectors.retrieve('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
   });
 
   test('update: only required params', async () => {
@@ -111,11 +105,5 @@ describe('resource connectors', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('delete: required and optional params', async () => {
-    const response = await client.dataSources.connectors.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      data_source_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
   });
 });

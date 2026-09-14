@@ -1,8 +1,8 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
+import { Cursor, PagePromise, type CursorParams } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
@@ -14,15 +14,6 @@ export class Connectors extends APIResource {
    * params: The connector to create.
    *
    * Returns: The created connector.
-   *
-   * @example
-   * ```ts
-   * const dataSourceConnector =
-   *   await client.dataSources.connectors.create(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     { store_id: 'store_id' },
-   *   );
-   * ```
    */
   create(
     dataSourceID: string,
@@ -39,18 +30,6 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to get.
    *
    * Returns: The connector.
-   *
-   * @example
-   * ```ts
-   * const dataSourceConnector =
-   *   await client.dataSources.connectors.retrieve(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   retrieve(
     connectorID: string,
@@ -69,18 +48,6 @@ export class Connectors extends APIResource {
    * update.
    *
    * Returns: The updated connector.
-   *
-   * @example
-   * ```ts
-   * const dataSourceConnector =
-   *   await client.dataSources.connectors.update(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   update(
     connectorID: string,
@@ -101,16 +68,6 @@ export class Connectors extends APIResource {
    * pagination: The pagination options.
    *
    * Returns: The list of connectors.
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const dataSourceConnector of client.dataSources.connectors.list(
-   *   '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   * )) {
-   *   // ...
-   * }
-   * ```
    */
   list(
     dataSourceID: string,
@@ -120,7 +77,10 @@ export class Connectors extends APIResource {
     return this._client.getAPIList(
       path`/v1/data_sources/${dataSourceID}/connectors`,
       Cursor<DataSourceConnector>,
-      { query, ...options },
+      {
+        query,
+        ...options,
+      },
     );
   }
 
@@ -131,18 +91,6 @@ export class Connectors extends APIResource {
    * connector_id: The ID of the connector to delete.
    *
    * Returns: The deleted connector.
-   *
-   * @example
-   * ```ts
-   * const connector =
-   *   await client.dataSources.connectors.delete(
-   *     '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     {
-   *       data_source_id:
-   *         '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-   *     },
-   *   );
-   * ```
    */
   delete(
     connectorID: string,
@@ -276,9 +224,9 @@ export interface ConnectorCreateParams {
    * Polling interval for the connector. Defaults to 30 minutes if not specified. Can
    * be provided as:
    *
-   * - int: Number of seconds (e.g., 1800 for 30 minutes)
-   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
-   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
+   * - int: Number of seconds (e.g., 1800 for 30 minutes) - str: Duration string
+   * (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g., 'PT30M', 'P1D') Valid range:
+   * 15 seconds to 30 days
    */
   polling_interval?: number | string | null;
 }
@@ -315,9 +263,9 @@ export interface ConnectorUpdateParams {
    * Body param: Polling interval for the connector. Defaults to 30 minutes if not
    * specified. Can be provided as:
    *
-   * - int: Number of seconds (e.g., 1800 for 30 minutes)
-   * - str: Duration string (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g.,
-   *   'PT30M', 'P1D') Valid range: 15 seconds to 30 days
+   * - int: Number of seconds (e.g., 1800 for 30 minutes) - str: Duration string
+   * (e.g., '30m', '1h', '2d') or ISO 8601 format (e.g., 'PT30M', 'P1D') Valid range:
+   * 15 seconds to 30 days
    */
   polling_interval?: number | string | null;
 }

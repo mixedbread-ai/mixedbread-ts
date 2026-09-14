@@ -1,32 +1,45 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
-import * as Shared from '../shared';
 import * as ContentAPI from '../extractions/content';
+import * as Shared from '../shared';
 import * as FilesAPI from './files';
+import { APIPromise } from '../../core/api-promise';
+import { Cursor, PagePromise, type CursorParams } from '../../core/pagination';
+import { buildHeaders } from '../../internal/headers';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
+import {
+  type StoreCopyAndPollHelperParams,
+  type StoreHelpers,
+  type StorePollHelperParams,
+  withStoreHelpers,
+} from '../../lib/stores';
 import {
   AudioURLInputChunk,
+  FileCreateAndPollHelperParams,
   FileCreateParams,
   FileDeleteParams,
   FileDeleteResponse,
   FileListParams,
   FileListResponse,
+  FilePollHelperParams,
   FileRetrieveParams,
   FileUpdateParams,
+  FileUploadAndPollHelperParams,
+  FileUploadHelperParams,
   Files,
   ImageURLInputChunk,
   StoreFile,
   StoreFileConfig,
+  StoreFileHelpers,
   StoreFileStatus,
   TextInputChunk,
   VideoURLInputChunk,
 } from './files';
-import { APIPromise } from '../../core/api-promise';
-import { Cursor, type CursorParams, PagePromise } from '../../core/pagination';
-import { RequestOptions } from '../../internal/request-options';
-import { path } from '../../internal/utils/path';
+export type { StorePollHelperParams, StoreCopyAndPollHelperParams, StoreHelpers };
 
-export class Stores extends APIResource {
+export class StoresBase extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
 
   /**
@@ -36,11 +49,6 @@ export class Stores extends APIResource {
    * description, and metadata.
    *
    * Returns: VectorStore: The response containing the created vector store details.
-   *
-   * @example
-   * ```ts
-   * const store = await client.stores.create();
-   * ```
    */
   create(body: StoreCreateParams, options?: RequestOptions): APIPromise<Store> {
     return this._client.post('/v1/stores', { body, ...options });
@@ -52,13 +60,6 @@ export class Stores extends APIResource {
    * Args: store_identifier: The ID or name of the store to retrieve.
    *
    * Returns: Store: The response containing the store details.
-   *
-   * @example
-   * ```ts
-   * const store = await client.stores.retrieve(
-   *   'store_identifier',
-   * );
-   * ```
    */
   retrieve(storeIdentifier: string, options?: RequestOptions): APIPromise<Store> {
     return this._client.get(path`/v1/stores/${storeIdentifier}`, options);
@@ -71,13 +72,6 @@ export class Stores extends APIResource {
    * StoreCreate object containing the name, description, and metadata.
    *
    * Returns: Store: The response containing the updated store details.
-   *
-   * @example
-   * ```ts
-   * const store = await client.stores.update(
-   *   'store_identifier',
-   * );
-   * ```
    */
   update(storeIdentifier: string, body: StoreUpdateParams, options?: RequestOptions): APIPromise<Store> {
     return this._client.put(path`/v1/stores/${storeIdentifier}`, { body, ...options });
@@ -90,14 +84,6 @@ export class Stores extends APIResource {
    * vector stores.
    *
    * Returns: StoreListResponse: The list of stores.
-   *
-   * @example
-   * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const store of client.stores.list()) {
-   *   // ...
-   * }
-   * ```
    */
   list(
     query: StoreListParams | null | undefined = {},
@@ -112,16 +98,27 @@ export class Stores extends APIResource {
    * Args: store_identifier: The ID or name of the store to delete.
    *
    * Returns: Store: The response containing the deleted store details.
-   *
-   * @example
-   * ```ts
-   * const store = await client.stores.delete(
-   *   'store_identifier',
-   * );
-   * ```
    */
   delete(storeIdentifier: string, options?: RequestOptions): APIPromise<StoreDeleteResponse> {
     return this._client.delete(path`/v1/stores/${storeIdentifier}`, options);
+  }
+
+  /**
+   * Copy a store into a new store with the given name.
+   *
+   * The copy keeps every file, its metadata and its indexed chunks, without
+   * re-parsing or re-embedding anything. It runs in the background: both stores
+   * report the progress in `copy_state`, and the new store's `status` is
+   * `in_progress` until the copy completes. Neither store accepts file changes while
+   * the copy runs, and the source must have no files still being processed.
+   *
+   * Args: store_identifier: The ID or name of the store to copy. params: The name of
+   * the copy and optional description and metadata overrides.
+   *
+   * Returns: Store: The new store.
+   */
+  copy(storeIdentifier: string, body: StoreCopyParams, options?: RequestOptions): APIPromise<Store> {
+    return this._client.post(path`/v1/stores/${storeIdentifier}/copy`, { body, ...options });
   }
 
   /**
@@ -131,31 +128,31 @@ export class Stores extends APIResource {
    * chunk. Use it to find chunks containing a specific token, identifier, error
    * code, or literal phrase.
    *
-   * grep targets a single store and does not support pagination; raise `top_k` to
-   * retrieve more matches.
+   * grep matches across all requested stores and returns at most `top_k` chunks in
+   * total. Matches are unranked and interleaved across stores in the order
+   * requested, preserving each store's result order. Pagination is not supported;
+   * raise `top_k` to retrieve more matches.
    *
-   * Args: grep_params: Grep configuration including: - pattern: RE2 regular
-   * expression matched against chunk text - targets: chunk content groups to match
-   * (`text`, `generated`) - case_sensitive: whether the pattern is case-sensitive -
-   * store_identifiers: the single store to grep - file_ids: optional list of file
-   * IDs to filter chunks by - filters: optional metadata filter conditions - top_k:
-   * number of matches to return
+   * Args: grep_params: Grep configuration including:
+   *
+   * - pattern: RE2 regular expression matched against chunk text - targets: chunk
+   * content groups to match (`text`, `generated`) - case_sensitive: whether the
+   * pattern is case-sensitive - store_identifiers: IDs or names of the stores to
+   * grep - file_ids: optional list of file IDs to filter chunks by - filters:
+   * optional metadata filter conditions - top_k: number of matches to return
    *
    * Returns: StoreGrepResponse containing the list of matching chunks.
    *
    * Raises: HTTPException (400): If grep parameters are invalid HTTPException (404):
    * If the store is not found
-   *
-   * @example
-   * ```ts
-   * const response = await client.stores.grep({
-   *   store_identifiers: ['string'],
-   *   pattern: 'ERR-\\d{4}',
-   * });
-   * ```
    */
-  grep(body: StoreGrepParams, options?: RequestOptions): APIPromise<StoreGrepResponse> {
-    return this._client.post('/v1/stores/grep', { body, ...options });
+  grep(params: StoreGrepParams, options?: RequestOptions): APIPromise<StoreGrepResponse> {
+    const { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket, ...body } = params;
+    return this._client.post('/v1/stores/grep', {
+      body,
+      ...options,
+      headers: buildHeaders([{ 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket }, options?.headers]),
+    });
   }
 
   /**
@@ -168,26 +165,23 @@ export class Stores extends APIResource {
    * for ranked retrieval over numeric attributes (e.g. price, BPM) and for
    * reproducing the agentic `filter_chunks` tool externally.
    *
-   * list-chunks targets a single store and does not support pagination; raise
-   * `top_k` to retrieve more chunks.
+   * list-chunks filters across all requested stores and returns at most `top_k`
+   * chunks in total. With `sort_by`, results are ordered globally by that field.
+   * Otherwise results are interleaved across stores in the order requested,
+   * preserving each store's result order. Pagination is not supported; raise `top_k`
+   * to retrieve more chunks.
    *
-   * Args: filter_params: Filter configuration including: - store_identifiers: the
-   * single store to filter against - filters: optional metadata filter conditions -
-   * file_ids: optional list of file IDs to filter chunks by - sort_by: optional
-   * metadata field path, or `(field, ascending)` tuple, for numeric ordering -
-   * top_k: number of chunks to return
+   * Args: filter_params: Filter configuration including:
+   *
+   * - store_identifiers: IDs or names of the stores to filter against - filters:
+   * optional metadata filter conditions - file_ids: optional list of file IDs to
+   * filter chunks by - sort_by: optional metadata field path, or `(field,
+   * ascending)` tuple, for numeric ordering - top_k: number of chunks to return
    *
    * Returns: StoreListChunksResponse containing the list of matching chunks.
    *
-   * Raises: HTTPException (400): If filter parameters are invalid or multiple stores
-   * are passed HTTPException (404): If the store is not found
-   *
-   * @example
-   * ```ts
-   * const response = await client.stores.listChunks({
-   *   store_identifiers: ['string'],
-   * });
-   * ```
+   * Raises: HTTPException (400): If filter parameters are invalid HTTPException
+   * (404): If the store is not found
    */
   listChunks(body: StoreListChunksParams, options?: RequestOptions): APIPromise<StoreListChunksResponse> {
     return this._client.post('/v1/stores/list-chunks', { body, ...options });
@@ -195,13 +189,6 @@ export class Stores extends APIResource {
 
   /**
    * Get metadata facets
-   *
-   * @example
-   * ```ts
-   * const response = await client.stores.metadataFacets({
-   *   store_identifiers: ['string'],
-   * });
-   * ```
    */
   metadataFacets(
     body: StoreMetadataFacetsParams,
@@ -212,13 +199,6 @@ export class Stores extends APIResource {
 
   /**
    * Question answering
-   *
-   * @example
-   * ```ts
-   * const response = await client.stores.questionAnswering({
-   *   store_identifiers: ['string'],
-   * });
-   * ```
    */
   questionAnswering(
     body: StoreQuestionAnsweringParams,
@@ -232,145 +212,130 @@ export class Stores extends APIResource {
    *
    * This endpoint searches through store chunks using semantic similarity matching.
    * It supports complex search queries with filters and returns relevance-scored
-   * results.
+   * results. Agentic searches can set `stream=true` to receive live trace events as
+   * server-sent events while the search runs, followed by the final search response.
    *
    * For the special 'mixedbread/web' store, this endpoint performs web search using
    * a mixture of different providers instead of semantic search. Web search results
    * are always reranked for consistent scoring.
    *
-   * Args: search_params: Search configuration including: - query text or
-   * embeddings - store_identifiers: List of store identifiers to search - file_ids:
-   * Optional list of file IDs to filter chunks by (or tuple of list and condition
-   * operator) - metadata filters - pagination parameters - sorting preferences
-   * \_state: API state dependency \_ctx: Service context dependency
+   * Args: search_params: Search configuration including:
    *
-   * Returns: StoreSearchResponse containing: - List of matched chunks with relevance
-   * scores - Pagination details including total result count
+   * - query text or embeddings - store_identifiers: List of store identifiers to
+   * search - file_ids: Optional list of file IDs to filter chunks by (or tuple of
+   * list and condition operator) - metadata filters - pagination parameters -
+   * sorting preferences _state: API state dependency _ctx: Service context
+   * dependency
+   *
+   * Returns: StoreSearchResponse containing:
+   *
+   * - List of matched chunks with relevance scores - Pagination details including
+   * total result count
    *
    * Raises: HTTPException (400): If search parameters are invalid HTTPException
    * (404): If no vector stores are found to search
-   *
-   * @example
-   * ```ts
-   * const response = await client.stores.search({
-   *   store_identifiers: ['string'],
-   *   query: 'how to configure SSL',
-   * });
-   * ```
    */
-  search(body: StoreSearchParams, options?: RequestOptions): APIPromise<StoreSearchResponse> {
-    return this._client.post('/v1/stores/search', { body, ...options });
+  search(params: StoreSearchParams, options?: RequestOptions): APIPromise<StoreSearchResponse> {
+    const { 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket, ...body } = params;
+    return this._client.post('/v1/stores/search', {
+      body,
+      ...options,
+      headers: buildHeaders([{ 'X-Mxbai-Tool-Ticket': xMxbaiToolTicket }, options?.headers]),
+    });
   }
 }
 
+export class Stores extends withStoreHelpers(StoresBase) {}
+
 export type StoresCursor = Cursor<Store>;
 
-/**
- * Configuration for agentic multi-query search.
- */
-export interface AgenticSearchConfig {
+export interface ScoredVideoURLInputChunk {
   /**
-   * Maximum number of search rounds
+   * position of the chunk in a file
    */
-  max_rounds?: number;
+  chunk_index: number;
 
   /**
-   * Maximum queries per round
+   * mime type of the chunk
    */
-  queries_per_round?: number;
+  mime_type?: string;
 
   /**
-   * Whether the final retrieved chunk list must provide exactly top_k ranked chunks
+   * metadata of the chunk
    */
-  strict_top_k?: boolean;
+  generated_metadata?: ScoredVideoURLInputChunk.GeneratedMetadata | null;
 
   /**
-   * Controls when retrieved image content is provided to the agent. `auto` sends
-   * images only when no OCR text or summary is available, `never` disables image
-   * content, and `always` sends image content when available.
+   * model used for this chunk
    */
-  media_content?: 'auto' | 'never' | 'always';
+  model?: string | null;
 
   /**
-   * Additional custom instructions (followed only when not in conflict with existing
-   * rules)
+   * score of the chunk
    */
-  instructions?: string | null;
+  score: number;
 
   /**
-   * Internal: when set, the response includes a `trace` field with the full
-   * tool-call timeline. Used by the Mixedbread playground; not part of the
-   * documented public API.
+   * file id
    */
-  verbose?: boolean;
+  file_id: string;
+
+  /**
+   * filename
+   */
+  filename: string;
+
+  /**
+   * store id
+   */
+  store_id: string;
+
+  /**
+   * external identifier for this file
+   */
+  external_id?: string | null;
+
+  /**
+   * file metadata
+   */
+  metadata?: unknown;
+
+  /**
+   * Input type identifier
+   */
+  type?: 'video_url';
+
+  /**
+   * speech recognition (sr) text of the video
+   */
+  transcription?: string | null;
+
+  /**
+   * LLM-generated context that situates this video chunk within its source file
+   */
+  context?: string | null;
+
+  /**
+   * summary of the video
+   */
+  summary?: string | null;
+
+  /**
+   * Model for video URL validation.
+   */
+  video_url?: VideoURL | null;
 }
 
-export interface AudioChunkGeneratedMetadata {
-  type?: 'audio';
-
-  file_type?: string;
-
-  file_size?: number | null;
-
-  total_duration_seconds?: number | null;
-
-  sample_rate?: number | null;
-
-  channels?: number | null;
-
-  audio_format?: number | null;
-
-  bpm?: number | null;
-
-  file_extension?: string | null;
-
-  [k: string]: unknown;
-}
-
-/**
- * Model for audio URL validation.
- */
-export interface AudioURL {
-  /**
-   * The audio URL. Can be either a URL or a Data URI.
-   */
-  url: string;
-}
-
-export interface CodeChunkGeneratedMetadata {
-  type?: 'code';
-
-  file_type: string;
-
-  language?: string | null;
-
-  word_count?: number | null;
-
-  file_size?: number | null;
-
-  start_line?: number;
-
-  num_lines?: number;
-
-  file_extension?: string | null;
-
-  [k: string]: unknown;
-}
-
-export interface ContextualizationConfig {
-  /**
-   * Include all metadata or specific fields in the contextualization. Supports dot
-   * notation for nested fields (e.g., 'author.name'). When True, all metadata is
-   * included (flattened). When a list, only specified fields are included.
-   */
-  with_metadata?: boolean | Array<string>;
-
-  /**
-   * Use an LLM to generate a short context for each text chunk that situates it
-   * within the full document, improving retrieval accuracy. Only applies to text
-   * content during non-sliced ingestion.
-   */
-  with_file_context?: boolean;
+export namespace ScoredVideoURLInputChunk {
+  export type GeneratedMetadata =
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
+    | null;
 }
 
 /**
@@ -388,229 +353,6 @@ export interface ExpiresAfter {
   days?: number;
 }
 
-/**
- * Tracks counts of files in different states within a store.
- */
-export interface FileCounts {
-  /**
-   * Number of files waiting to be processed
-   */
-  pending?: number;
-
-  /**
-   * Number of files currently being processed
-   */
-  in_progress?: number;
-
-  /**
-   * Number of files whose processing was cancelled
-   */
-  cancelled?: number;
-
-  /**
-   * Number of successfully processed files
-   */
-  completed?: number;
-
-  /**
-   * Number of files that failed processing
-   */
-  failed?: number;
-
-  /**
-   * Total number of files
-   */
-  total?: number;
-}
-
-export interface ImageChunkGeneratedMetadata {
-  type?: 'image';
-
-  file_type?: string;
-
-  file_size?: number | null;
-
-  width?: number | null;
-
-  height?: number | null;
-
-  file_extension?: string | null;
-
-  /**
-   * Per-page layout for chunks parsed in high-quality (visual) mode.
-   *
-   * `elements` are ordered by reading order (list position == reading order).
-   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
-   * to, so consumers can normalize/render without a second fetch.
-   *
-   * Layout is part of the generated metadata payload and is returned with the chunk
-   * whenever present.
-   */
-  layout?: ImageChunkGeneratedMetadata.Layout | null;
-
-  [k: string]: unknown;
-}
-
-export namespace ImageChunkGeneratedMetadata {
-  /**
-   * Per-page layout for chunks parsed in high-quality (visual) mode.
-   *
-   * `elements` are ordered by reading order (list position == reading order).
-   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
-   * to, so consumers can normalize/render without a second fetch.
-   *
-   * Layout is part of the generated metadata payload and is returned with the chunk
-   * whenever present.
-   */
-  export interface Layout {
-    width?: number | null;
-
-    height?: number | null;
-
-    elements?: Array<Layout.Element>;
-  }
-
-  export namespace Layout {
-    /**
-     * A single detected layout element and its location on the page image.
-     */
-    export interface Element {
-      bbox: Array<unknown>;
-
-      type: string;
-
-      text?: string | null;
-    }
-  }
-}
-
-/**
- * Model for image URL validation.
- */
-export interface ImageURLOutput {
-  /**
-   * The image URL. Can be either a URL or a Data URI.
-   */
-  url: string;
-
-  /**
-   * The image format/mimetype
-   */
-  format?: string;
-}
-
-export interface MarkdownChunkGeneratedMetadata {
-  type?: 'markdown';
-
-  file_type?: 'text/markdown';
-
-  language?: string | null;
-
-  word_count?: number | null;
-
-  file_size?: number | null;
-
-  chunk_headings?: Array<MarkdownHeading>;
-
-  heading_context?: Array<MarkdownHeading>;
-
-  start_line?: number;
-
-  num_lines?: number;
-
-  file_extension?: string | null;
-
-  frontmatter?: { [key: string]: unknown };
-
-  [k: string]: unknown;
-}
-
-export interface MarkdownHeading {
-  level: number;
-
-  text: string;
-}
-
-export interface PdfChunkGeneratedMetadata {
-  type?: 'pdf';
-
-  file_type?: 'application/pdf';
-
-  total_pages?: number | null;
-
-  total_size?: number | null;
-
-  file_extension?: string | null;
-
-  /**
-   * Per-page layout for chunks parsed in high-quality (visual) mode.
-   *
-   * `elements` are ordered by reading order (list position == reading order).
-   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
-   * to, so consumers can normalize/render without a second fetch.
-   *
-   * Layout is part of the generated metadata payload and is returned with the chunk
-   * whenever present.
-   */
-  layout?: PdfChunkGeneratedMetadata.Layout | null;
-
-  [k: string]: unknown;
-}
-
-export namespace PdfChunkGeneratedMetadata {
-  /**
-   * Per-page layout for chunks parsed in high-quality (visual) mode.
-   *
-   * `elements` are ordered by reading order (list position == reading order).
-   * `width`/`height` are the page-image dimensions the `bbox` coords are relative
-   * to, so consumers can normalize/render without a second fetch.
-   *
-   * Layout is part of the generated metadata payload and is returned with the chunk
-   * whenever present.
-   */
-  export interface Layout {
-    width?: number | null;
-
-    height?: number | null;
-
-    elements?: Array<Layout.Element>;
-  }
-
-  export namespace Layout {
-    /**
-     * A single detected layout element and its location on the page image.
-     */
-    export interface Element {
-      bbox: Array<unknown>;
-
-      type: string;
-
-      text?: string | null;
-    }
-  }
-}
-
-/**
- * Represents a reranking configuration.
- */
-export interface RerankConfig {
-  /**
-   * The name of the reranking model
-   */
-  model?: string;
-
-  /**
-   * Whether to include metadata in the reranked results
-   */
-  with_metadata?: boolean | Array<string>;
-
-  /**
-   * Maximum number of results to return after reranking. If None, returns all
-   * reranked results.
-   */
-  top_k?: number | null;
-}
-
 export interface ScoredAudioURLInputChunk {
   /**
    * position of the chunk in a file
@@ -625,15 +367,7 @@ export interface ScoredAudioURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | MarkdownChunkGeneratedMetadata
-    | TextChunkGeneratedMetadata
-    | PdfChunkGeneratedMetadata
-    | CodeChunkGeneratedMetadata
-    | AudioChunkGeneratedMetadata
-    | VideoChunkGeneratedMetadata
-    | ImageChunkGeneratedMetadata
-    | null;
+  generated_metadata?: ScoredAudioURLInputChunk.GeneratedMetadata | null;
 
   /**
    * model used for this chunk
@@ -681,6 +415,11 @@ export interface ScoredAudioURLInputChunk {
   transcription?: string | null;
 
   /**
+   * LLM-generated context that situates this audio chunk within its source file
+   */
+  context?: string | null;
+
+  /**
    * summary of the audio
    */
   summary?: string | null;
@@ -694,6 +433,18 @@ export interface ScoredAudioURLInputChunk {
    * The sampling rate of the audio.
    */
   sampling_rate: number;
+}
+
+export namespace ScoredAudioURLInputChunk {
+  export type GeneratedMetadata =
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
+    | null;
 }
 
 export interface ScoredImageURLInputChunk {
@@ -710,15 +461,7 @@ export interface ScoredImageURLInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | MarkdownChunkGeneratedMetadata
-    | TextChunkGeneratedMetadata
-    | PdfChunkGeneratedMetadata
-    | CodeChunkGeneratedMetadata
-    | AudioChunkGeneratedMetadata
-    | VideoChunkGeneratedMetadata
-    | ImageChunkGeneratedMetadata
-    | null;
+  generated_metadata?: ScoredImageURLInputChunk.GeneratedMetadata | null;
 
   /**
    * model used for this chunk
@@ -766,6 +509,11 @@ export interface ScoredImageURLInputChunk {
   ocr_text?: string | null;
 
   /**
+   * LLM-generated context that situates this image within its source document
+   */
+  context?: string | null;
+
+  /**
    * summary of the image
    */
   summary?: string | null;
@@ -774,6 +522,18 @@ export interface ScoredImageURLInputChunk {
    * Model for image URL validation.
    */
   image_url?: ImageURLOutput | null;
+}
+
+export namespace ScoredImageURLInputChunk {
+  export type GeneratedMetadata =
+    | MarkdownChunkGeneratedMetadata
+    | TextChunkGeneratedMetadata
+    | PdfChunkGeneratedMetadata
+    | CodeChunkGeneratedMetadata
+    | AudioChunkGeneratedMetadata
+    | VideoChunkGeneratedMetadata
+    | ImageChunkGeneratedMetadata
+    | null;
 }
 
 export interface ScoredTextInputChunk {
@@ -790,15 +550,7 @@ export interface ScoredTextInputChunk {
   /**
    * metadata of the chunk
    */
-  generated_metadata?:
-    | MarkdownChunkGeneratedMetadata
-    | TextChunkGeneratedMetadata
-    | PdfChunkGeneratedMetadata
-    | CodeChunkGeneratedMetadata
-    | AudioChunkGeneratedMetadata
-    | VideoChunkGeneratedMetadata
-    | ImageChunkGeneratedMetadata
-    | null;
+  generated_metadata?: ScoredTextInputChunk.GeneratedMetadata | null;
 
   /**
    * model used for this chunk
@@ -861,21 +613,8 @@ export interface ScoredTextInputChunk {
   summary?: string | null;
 }
 
-export interface ScoredVideoURLInputChunk {
-  /**
-   * position of the chunk in a file
-   */
-  chunk_index: number;
-
-  /**
-   * mime type of the chunk
-   */
-  mime_type?: string;
-
-  /**
-   * metadata of the chunk
-   */
-  generated_metadata?:
+export namespace ScoredTextInputChunk {
+  export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
@@ -884,61 +623,6 @@ export interface ScoredVideoURLInputChunk {
     | VideoChunkGeneratedMetadata
     | ImageChunkGeneratedMetadata
     | null;
-
-  /**
-   * model used for this chunk
-   */
-  model?: string | null;
-
-  /**
-   * score of the chunk
-   */
-  score: number;
-
-  /**
-   * file id
-   */
-  file_id: string;
-
-  /**
-   * filename
-   */
-  filename: string;
-
-  /**
-   * store id
-   */
-  store_id: string;
-
-  /**
-   * external identifier for this file
-   */
-  external_id?: string | null;
-
-  /**
-   * file metadata
-   */
-  metadata?: unknown;
-
-  /**
-   * Input type identifier
-   */
-  type?: 'video_url';
-
-  /**
-   * speech recognition (sr) text of the video
-   */
-  transcription?: string | null;
-
-  /**
-   * summary of the video
-   */
-  summary?: string | null;
-
-  /**
-   * Model for video URL validation.
-   */
-  video_url?: VideoURL | null;
 }
 
 /**
@@ -998,7 +682,7 @@ export interface Store {
   /**
    * Processing status of the store
    */
-  status?: 'expired' | 'in_progress' | 'completed';
+  status?: 'expired' | 'in_progress' | 'completed' | 'failed';
 
   /**
    * Timestamp when the store was created
@@ -1031,9 +715,48 @@ export interface Store {
   expires_at?: string | null;
 
   /**
+   * Progress of a store copy, present on both the source and the target while it
+   * runs.
+   */
+  copy_state?: Store.CopyState | null;
+
+  /**
    * Type of the object
    */
   object?: 'store';
+}
+
+export namespace Store {
+  /**
+   * Progress of a store copy, present on both the source and the target while it
+   * runs.
+   */
+  export interface CopyState {
+    /**
+     * Whether this store is copied from or into
+     */
+    role: 'source' | 'target';
+
+    /**
+     * Progress of the copy
+     */
+    status: 'in_progress' | 'failed';
+
+    /**
+     * The other store of the copy
+     */
+    peer_store_id: string;
+
+    /**
+     * When the copy was requested
+     */
+    started_at: string;
+
+    /**
+     * Why the copy failed, when it did
+     */
+    error?: string | null;
+  }
 }
 
 /**
@@ -1055,13 +778,19 @@ export interface StoreChunkSearchOptions {
    * Whether to rerank results and optional reranking configuration. Ignored when
    * agentic is enabled (the agent handles ranking).
    */
-  rerank?: boolean | RerankConfig | null;
+  rerank?: StoreChunkSearchOptions.Rerank | null;
 
   /**
    * Whether to use agentic multi-query search with automatic query decomposition and
    * ranking. When enabled, rewrite_query and rerank options are ignored.
    */
-  agentic?: boolean | AgenticSearchConfig | null;
+  agentic?: StoreChunkSearchOptions.Agentic | null;
+
+  /**
+   * Whether to apply the learned scoring function to second-stage scoring. Requires
+   * weights configured for the searched stores; silently skipped otherwise.
+   */
+  lsf?: boolean | null;
 
   /**
    * Whether to return file metadata
@@ -1074,27 +803,46 @@ export interface StoreChunkSearchOptions {
   apply_search_rules?: boolean;
 }
 
-/**
- * Configuration for a store.
- */
-export interface StoreConfig {
-  /**
-   * Contextualize files with metadata
-   */
-  contextualization?: boolean | ContextualizationConfig;
+export namespace StoreChunkSearchOptions {
+  export type Rerank = boolean | RerankConfig | null;
 
-  /**
-   * Whether to save original content in the store. When False, only vectors are
-   * indexed without the original content (index-only mode). This is useful for data
-   * privacy. Note: Reranking is not supported when content is not saved.
-   */
-  save_content?: boolean;
+  export type Agentic = boolean | AgenticSearchConfig | null;
+}
+
+export interface MarkdownChunkGeneratedMetadata {
+  type?: 'markdown';
+
+  file_type?: 'text/markdown';
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  chunk_headings?: Array<MarkdownHeading>;
+
+  heading_context?: Array<MarkdownHeading>;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+
+  frontmatter?: { [key: string]: unknown };
+}
+
+export interface MarkdownHeading {
+  level: number;
+
+  text: string;
 }
 
 export interface TextChunkGeneratedMetadata {
   type?: 'text';
 
-  file_type?: 'text/plain';
+  file_type?: 'text/plain' | 'message/rfc822';
 
   language?: string | null;
 
@@ -1107,8 +855,99 @@ export interface TextChunkGeneratedMetadata {
   num_lines?: number;
 
   file_extension?: string | null;
+}
 
-  [k: string]: unknown;
+export interface PdfChunkGeneratedMetadata {
+  type?: 'pdf';
+
+  file_type?: 'application/pdf';
+
+  total_pages?: number | null;
+
+  total_size?: number | null;
+
+  file_extension?: string | null;
+
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * ``elements`` are ordered by reading order (list position == reading order).
+   * ``width``/``height`` are the page-image dimensions the ``bbox`` coords are
+   * relative to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  layout?: PdfChunkGeneratedMetadata.Layout | null;
+}
+
+export namespace PdfChunkGeneratedMetadata {
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * ``elements`` are ordered by reading order (list position == reading order).
+   * ``width``/``height`` are the page-image dimensions the ``bbox`` coords are
+   * relative to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  export interface Layout {
+    width?: number | null;
+
+    height?: number | null;
+
+    elements?: Array<PdfChunkGeneratedMetadata.LayoutElement>;
+  }
+
+  /**
+   * A single detected layout element and its location on the page image.
+   */
+  export interface LayoutElement {
+    bbox: Array<unknown>;
+
+    type: string;
+
+    text?: string | null;
+  }
+}
+
+export interface CodeChunkGeneratedMetadata {
+  type?: 'code';
+
+  file_type: string;
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+}
+
+export interface AudioChunkGeneratedMetadata {
+  type?: 'audio';
+
+  file_type?: string;
+
+  file_size?: number | null;
+
+  total_duration_seconds?: number | null;
+
+  sample_rate?: number | null;
+
+  channels?: number | null;
+
+  audio_format?: number | null;
+
+  bpm?: number | null;
+
+  file_extension?: string | null;
 }
 
 export interface VideoChunkGeneratedMetadata {
@@ -1133,8 +972,88 @@ export interface VideoChunkGeneratedMetadata {
   bpm?: number | null;
 
   file_extension?: string | null;
+}
 
-  [k: string]: unknown;
+export interface ImageChunkGeneratedMetadata {
+  type?: 'image';
+
+  file_type?: string;
+
+  file_size?: number | null;
+
+  width?: number | null;
+
+  height?: number | null;
+
+  file_extension?: string | null;
+
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * ``elements`` are ordered by reading order (list position == reading order).
+   * ``width``/``height`` are the page-image dimensions the ``bbox`` coords are
+   * relative to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  layout?: ImageChunkGeneratedMetadata.Layout | null;
+}
+
+export namespace ImageChunkGeneratedMetadata {
+  /**
+   * Per-page layout for chunks parsed in high-quality (visual) mode.
+   *
+   * ``elements`` are ordered by reading order (list position == reading order).
+   * ``width``/``height`` are the page-image dimensions the ``bbox`` coords are
+   * relative to, so consumers can normalize/render without a second fetch.
+   *
+   * Layout is part of the generated metadata payload and is returned with the chunk
+   * whenever present.
+   */
+  export interface Layout {
+    width?: number | null;
+
+    height?: number | null;
+
+    elements?: Array<ImageChunkGeneratedMetadata.LayoutElement>;
+  }
+
+  /**
+   * A single detected layout element and its location on the page image.
+   */
+  export interface LayoutElement {
+    bbox: Array<unknown>;
+
+    type: string;
+
+    text?: string | null;
+  }
+}
+
+/**
+ * Model for audio URL validation.
+ */
+export interface AudioURL {
+  /**
+   * The audio URL. Can be either a URL or a Data URI.
+   */
+  url: string;
+}
+
+/**
+ * Model for image URL validation.
+ */
+export interface ImageURLOutput {
+  /**
+   * The image URL. Can be either a URL or a Data URI.
+   */
+  url: string;
+
+  /**
+   * The image format/mimetype
+   */
+  format?: string;
 }
 
 /**
@@ -1145,6 +1064,146 @@ export interface VideoURL {
    * The video URL. Can be either a URL or a Data URI.
    */
   url: string;
+}
+
+/**
+ * Configuration for a store.
+ */
+export interface StoreConfig {
+  /**
+   * Include additional context when embedding chunks.
+   */
+  contextualization?: StoreConfig.Contextualization;
+
+  /**
+   * Whether to save original content in the store. When False, only vectors are
+   * indexed without the original content (index-only mode). This is useful for data
+   * privacy. Note: Reranking is not supported when content is not saved.
+   */
+  save_content?: boolean;
+
+  /**
+   * Learned-scoring-function settings a store opts into; an empty object enables it.
+   */
+  lsf?: { [key: string]: unknown } | null;
+}
+
+export namespace StoreConfig {
+  export type Contextualization = boolean | ContextualizationConfig;
+}
+
+export interface ContextualizationConfig {
+  /**
+   * Include all metadata or specific fields in the contextualization. Supports dot
+   * notation for nested fields (e.g., 'author.name'). When True, all metadata is
+   * included (flattened). When a list, only specified fields are included.
+   */
+  with_metadata?: boolean | Array<string>;
+
+  /**
+   * Use an LLM to generate a short context for each chunk that situates it within
+   * the full document, improving retrieval accuracy.
+   */
+  with_file_context?: boolean;
+}
+
+/**
+ * Tracks counts of files in different states within a store.
+ */
+export interface FileCounts {
+  /**
+   * Number of files waiting to be processed
+   */
+  pending?: number;
+
+  /**
+   * Number of files currently being processed
+   */
+  in_progress?: number;
+
+  /**
+   * Number of files whose processing was cancelled
+   */
+  cancelled?: number;
+
+  /**
+   * Number of successfully processed files
+   */
+  completed?: number;
+
+  /**
+   * Number of files that failed processing
+   */
+  failed?: number;
+
+  /**
+   * Total number of files
+   */
+  total?: number;
+}
+
+/**
+ * Represents a reranking configuration.
+ */
+export interface RerankConfig {
+  /**
+   * The name of the reranking model
+   */
+  model?: string;
+
+  /**
+   * Whether to include metadata in the reranked results
+   */
+  with_metadata?: boolean | Array<string>;
+
+  /**
+   * Maximum number of results to return after reranking. If None, returns all
+   * reranked results.
+   */
+  top_k?: number | null;
+}
+
+/**
+ * Configuration for agentic multi-query search.
+ */
+export interface AgenticSearchConfig {
+  /**
+   * Maximum number of search rounds
+   */
+  max_rounds?: number;
+
+  /**
+   * Maximum queries per round
+   */
+  queries_per_round?: number;
+
+  /**
+   * Whether the agent fills the final ranking to top_k chunks from what it
+   * retrieved, capped at top_k, instead of returning only the chunks it judged
+   * relevant
+   */
+  strict_top_k?: boolean;
+
+  /**
+   * Controls when retrieved image content is provided to the agent. `auto` sends
+   * images only when no OCR text or summary is available, `never` disables image
+   * content, and `always` sends image content when available. Currently not
+   * forwarded: the search agent runs without image content.
+   */
+  media_content?: 'auto' | 'never' | 'always';
+
+  /**
+   * Additional custom instructions (followed only when not in conflict with existing
+   * rules)
+   */
+  instructions?: string | null;
+
+  /**
+   * Internal: when set, the response includes a `trace` field with the full
+   * tool-call timeline. Used by the Mixedbread playground; not part of the
+   * documented public API.
+   */
+  verbose?: boolean;
 }
 
 /**
@@ -1176,9 +1235,15 @@ export interface StoreGrepResponse {
   /**
    * The list of chunks matching the pattern
    */
-  data: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
-  >;
+  data: Array<StoreGrepResponse.Data>;
+}
+
+export namespace StoreGrepResponse {
+  export type Data =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
 }
 
 export interface StoreListChunksResponse {
@@ -1190,9 +1255,15 @@ export interface StoreListChunksResponse {
   /**
    * The list of chunks matching the metadata filters
    */
-  data: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
-  >;
+  data: Array<StoreListChunksResponse.Data>;
+}
+
+export namespace StoreListChunksResponse {
+  export type Data =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
 }
 
 /**
@@ -1217,9 +1288,15 @@ export interface StoreQuestionAnsweringResponse {
   /**
    * Source documents used to generate the answer
    */
-  sources?: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
-  >;
+  sources?: Array<StoreQuestionAnsweringResponse.Source>;
+}
+
+export namespace StoreQuestionAnsweringResponse {
+  export type Source =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
 }
 
 export interface StoreSearchResponse {
@@ -1231,11 +1308,15 @@ export interface StoreSearchResponse {
   /**
    * The list of scored store file chunks
    */
-  data: Array<
-    ScoredTextInputChunk | ScoredImageURLInputChunk | ScoredAudioURLInputChunk | ScoredVideoURLInputChunk
-  >;
+  data: Array<StoreSearchResponse.Data>;
+}
 
-  [k: string]: unknown;
+export namespace StoreSearchResponse {
+  export type Data =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
 }
 
 export interface StoreCreateParams {
@@ -1321,52 +1402,83 @@ export interface StoreListParams extends CursorParams {
   q?: string | null;
 }
 
+export interface StoreCopyParams {
+  /**
+   * Name for the copy. Can only contain lowercase letters, numbers, periods (.), and
+   * hyphens (-).
+   */
+  name: string;
+
+  /**
+   * Description of the copy; defaults to the source store's description
+   */
+  description?: string | null;
+
+  /**
+   * Metadata for the copy; defaults to the source store's metadata
+   */
+  metadata?: unknown;
+}
+
 export interface StoreGrepParams {
   /**
-   * IDs or names of stores
+   * Header param: Ticket from a chat completion's `tool_tickets`, proving this call
+   * runs a tool call that completion asked for. Redeems once, and bills the
+   * operation at the discounted agent rate.
+   */
+  'X-Mxbai-Tool-Ticket'?: string;
+
+  /**
+   * Body param: IDs or names of stores
    */
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
+   * Body param: Number of results to return
    */
   top_k?: number;
 
   /**
-   * Optional filter conditions
+   * Body param: Optional filter conditions
    */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  filters?: StoreGrepParams.Filters | null;
 
   /**
-   * Optional list of file IDs to filter chunks by (inclusion filter)
+   * Body param: Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
 
   /**
-   * Regular expression (RE2 syntax) matched against chunk text
+   * Body param: Regular expression (RE2 syntax) matched against chunk text
    */
   pattern: string;
 
   /**
-   * Chunk content groups to match against. `text` matches the original text of text
-   * chunks; `generated` matches ingestion-derived fields (transcription, OCR text,
-   * summaries).
+   * Body param: Chunk content groups to match against. `text` matches the original
+   * text of text chunks; `generated` matches ingestion-derived fields
+   * (transcription, OCR text, summaries).
    */
   targets?: Array<'text' | 'generated'>;
 
   /**
-   * Whether the regular expression is case-sensitive
+   * Body param: Whether the regular expression is case-sensitive
    */
   case_sensitive?: boolean;
 
   /**
-   * Whether to return file metadata
+   * Body param: Whether to return file metadata
    */
   return_metadata?: boolean;
+}
+
+export namespace StoreGrepParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreGrepParams.FiltersUnionMember2>
+    | null;
 }
 
 export interface StoreListChunksParams {
@@ -1383,11 +1495,7 @@ export interface StoreListChunksParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  filters?: StoreListChunksParams.Filters | null;
 
   /**
    * Optional list of file IDs to filter chunks by (inclusion filter)
@@ -1397,7 +1505,7 @@ export interface StoreListChunksParams {
   /**
    * Optional sort applied to the returned chunks. Pass a metadata field path or a
    * tuple of (field path, ascending). Unprefixed dot paths target file metadata;
-   * generated_metadata.\* targets chunk metadata.
+   * generated_metadata.* targets chunk metadata.
    */
   sort_by?: string | Array<unknown> | null;
 
@@ -1405,6 +1513,16 @@ export interface StoreListChunksParams {
    * Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
+}
+
+export namespace StoreListChunksParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreListChunksParams.FiltersUnionMember2>
+    | null;
 }
 
 export interface StoreMetadataFacetsParams {
@@ -1421,11 +1539,7 @@ export interface StoreMetadataFacetsParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  filters?: StoreMetadataFacetsParams.Filters | null;
 
   /**
    * Optional list of file IDs to filter chunks by (inclusion filter)
@@ -1463,6 +1577,16 @@ export interface StoreMetadataFacetsParams {
   max_files?: number;
 }
 
+export namespace StoreMetadataFacetsParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreMetadataFacetsParams.FiltersUnionMember2>
+    | null;
+}
+
 export interface StoreQuestionAnsweringParams {
   /**
    * IDs or names of stores
@@ -1477,11 +1601,7 @@ export interface StoreQuestionAnsweringParams {
   /**
    * Optional filter conditions
    */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  filters?: StoreQuestionAnsweringParams.Filters | null;
 
   /**
    * Optional list of file IDs to filter chunks by (inclusion filter)
@@ -1500,7 +1620,9 @@ export interface StoreQuestionAnsweringParams {
   search_options?: StoreChunkSearchOptions;
 
   /**
-   * Whether to stream the answer
+   * Internal: when set, the response is a server-sent event stream of the retrieved
+   * chunks, live trace events, and finally the answer. Used by the Mixedbread
+   * playground; not part of the documented public API.
    */
   stream?: boolean;
 
@@ -1517,6 +1639,14 @@ export interface StoreQuestionAnsweringParams {
 }
 
 export namespace StoreQuestionAnsweringParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreQuestionAnsweringParams.FiltersUnionMember2>
+    | null;
+
   /**
    * Question answering configuration options
    */
@@ -1535,67 +1665,90 @@ export namespace StoreQuestionAnsweringParams {
 
 export interface StoreSearchParams {
   /**
-   * IDs or names of stores
+   * Header param: Ticket from a chat completion's `tool_tickets`, proving this call
+   * runs a tool call that completion asked for. Redeems once, and bills the
+   * operation at the discounted agent rate.
+   */
+  'X-Mxbai-Tool-Ticket'?: string;
+
+  /**
+   * Body param: IDs or names of stores
    */
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
+   * Body param: Number of results to return
    */
   top_k?: number;
 
   /**
-   * Optional filter conditions
+   * Body param: Optional filter conditions
    */
-  filters?:
-    | Shared.SearchFilter
-    | Shared.SearchFilterCondition
-    | Array<Shared.SearchFilter | Shared.SearchFilterCondition>
-    | null;
+  filters?: StoreSearchParams.Filters | null;
 
   /**
-   * Optional list of file IDs to filter chunks by (inclusion filter)
+   * Body param: Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
 
   /**
-   * Search query text
+   * Body param: Search query text
    */
-  query: string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
+  query: StoreSearchParams.Query;
 
   /**
-   * Search configuration options
+   * Body param: Search configuration options
    */
   search_options?: StoreChunkSearchOptions;
+
+  /**
+   * Body param: When true, return the search as a server-sent event stream: live
+   * agentic-search trace events when the search is agentic, and nothing before the
+   * results otherwise. A successful stream ends with a search.completed event
+   * containing the final search response, followed by [DONE].
+   */
+  stream?: boolean;
+}
+
+export namespace StoreSearchParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreSearchParams.FiltersUnionMember2>
+    | null;
+
+  export type Query = string | ContentAPI.ImageURLInput | ContentAPI.TextInput;
 }
 
 Stores.Files = Files;
 
 export declare namespace Stores {
   export {
-    type AgenticSearchConfig as AgenticSearchConfig,
-    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
-    type AudioURL as AudioURL,
-    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
-    type ContextualizationConfig as ContextualizationConfig,
+    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type ExpiresAfter as ExpiresAfter,
-    type FileCounts as FileCounts,
-    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
-    type ImageURLOutput as ImageURLOutput,
-    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
-    type MarkdownHeading as MarkdownHeading,
-    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
-    type RerankConfig as RerankConfig,
     type ScoredAudioURLInputChunk as ScoredAudioURLInputChunk,
     type ScoredImageURLInputChunk as ScoredImageURLInputChunk,
     type ScoredTextInputChunk as ScoredTextInputChunk,
-    type ScoredVideoURLInputChunk as ScoredVideoURLInputChunk,
     type Store as Store,
     type StoreChunkSearchOptions as StoreChunkSearchOptions,
-    type StoreConfig as StoreConfig,
+    type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
+    type MarkdownHeading as MarkdownHeading,
     type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
+    type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
+    type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
     type VideoChunkGeneratedMetadata as VideoChunkGeneratedMetadata,
+    type ImageChunkGeneratedMetadata as ImageChunkGeneratedMetadata,
+    type AudioURL as AudioURL,
+    type ImageURLOutput as ImageURLOutput,
     type VideoURL as VideoURL,
+    type StoreConfig as StoreConfig,
+    type ContextualizationConfig as ContextualizationConfig,
+    type FileCounts as FileCounts,
+    type RerankConfig as RerankConfig,
+    type AgenticSearchConfig as AgenticSearchConfig,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreGrepResponse as StoreGrepResponse,
     type StoreListChunksResponse as StoreListChunksResponse,
@@ -1606,21 +1759,25 @@ export declare namespace Stores {
     type StoreCreateParams as StoreCreateParams,
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
+    type StoreCopyParams as StoreCopyParams,
     type StoreGrepParams as StoreGrepParams,
     type StoreListChunksParams as StoreListChunksParams,
     type StoreMetadataFacetsParams as StoreMetadataFacetsParams,
     type StoreQuestionAnsweringParams as StoreQuestionAnsweringParams,
     type StoreSearchParams as StoreSearchParams,
+    type StorePollHelperParams as StorePollHelperParams,
+    type StoreCopyAndPollHelperParams as StoreCopyAndPollHelperParams,
+    type StoreHelpers as StoreHelpers,
   };
 
   export {
     Files as Files,
-    type AudioURLInputChunk as AudioURLInputChunk,
-    type ImageURLInputChunk as ImageURLInputChunk,
+    type StoreFileStatus as StoreFileStatus,
     type StoreFile as StoreFile,
     type StoreFileConfig as StoreFileConfig,
-    type StoreFileStatus as StoreFileStatus,
     type TextInputChunk as TextInputChunk,
+    type ImageURLInputChunk as ImageURLInputChunk,
+    type AudioURLInputChunk as AudioURLInputChunk,
     type VideoURLInputChunk as VideoURLInputChunk,
     type FileListResponse as FileListResponse,
     type FileDeleteResponse as FileDeleteResponse,
@@ -1629,5 +1786,10 @@ export declare namespace Stores {
     type FileUpdateParams as FileUpdateParams,
     type FileListParams as FileListParams,
     type FileDeleteParams as FileDeleteParams,
+    type FilePollHelperParams as FilePollHelperParams,
+    type FileCreateAndPollHelperParams as FileCreateAndPollHelperParams,
+    type FileUploadHelperParams as FileUploadHelperParams,
+    type FileUploadAndPollHelperParams as FileUploadAndPollHelperParams,
+    type StoreFileHelpers as StoreFileHelpers,
   };
 }

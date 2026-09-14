@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import { APIPromise } from '../../core/api-promise';
@@ -15,15 +15,6 @@ export class Content extends APIResource {
   create(body: ContentCreateParams, options?: RequestOptions): APIPromise<ExtractionResult> {
     return this._client.post('/v1/extractions/content', { body, ...options });
   }
-}
-
-/**
- * The result of an extraction job.
- */
-export interface ExtractionResult {
-  data: { [key: string]: unknown };
-
-  warnings: Array<string>;
 }
 
 /**
@@ -76,11 +67,20 @@ export interface TextInput {
   text: string;
 }
 
+/**
+ * The result of an extraction job.
+ */
+export interface ExtractionResult {
+  data: { [key: string]: unknown };
+
+  warnings: Array<string>;
+}
+
 export interface ContentCreateParams {
   /**
    * The content to extract from
    */
-  content: string | Array<string> | Array<TextInput | ImageURLInput>;
+  content: string | Array<string> | Array<ContentCreateParams.ContentUnionMember2>;
 
   /**
    * The JSON schema to use for extraction
@@ -93,11 +93,15 @@ export interface ContentCreateParams {
   instructions?: string | null;
 }
 
+export namespace ContentCreateParams {
+  export type ContentUnionMember2 = TextInput | ImageURLInput;
+}
+
 export declare namespace Content {
   export {
-    type ExtractionResult as ExtractionResult,
     type ImageURLInput as ImageURLInput,
     type TextInput as TextInput,
+    type ExtractionResult as ExtractionResult,
     type ContentCreateParams as ContentCreateParams,
   };
 }

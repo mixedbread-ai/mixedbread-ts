@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import Mixedbread from '@mixedbread/sdk';
 
@@ -17,6 +17,25 @@ describe('resource stores', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('create: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.stores.create(
+        {
+          name: 'technical-documentation',
+          description: 'Contains technical specifications and guides',
+          is_public: false,
+          license: 'license',
+          expires_after: { anchor: 'last_active_at', days: 0 },
+          metadata: {},
+          config: { contextualization: true, save_content: true, lsf: { foo: 'bar' } },
+          file_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('retrieve', async () => {
@@ -39,6 +58,24 @@ describe('resource stores', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.stores.update(
+        'store_identifier',
+        {
+          name: 'x',
+          description: 'description',
+          is_public: true,
+          license: 'license',
+          expires_after: { anchor: 'last_active_at', days: 0 },
+          metadata: {},
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Mixedbread.NotFoundError);
   });
 
   test('list', async () => {
@@ -79,6 +116,25 @@ describe('resource stores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('copy: only required params', async () => {
+    const responsePromise = client.stores.copy('store_identifier', { name: 'technical-documentation-copy' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('copy: required and optional params', async () => {
+    const response = await client.stores.copy('store_identifier', {
+      name: 'technical-documentation-copy',
+      description: 'description',
+      metadata: {},
+    });
+  });
+
   test('grep: only required params', async () => {
     const responsePromise = client.stores.grep({ store_identifiers: ['string'], pattern: 'ERR-\\d{4}' });
     const rawResponse = await responsePromise.asResponse();
@@ -92,12 +148,22 @@ describe('resource stores', () => {
 
   test('grep: required and optional params', async () => {
     const response = await client.stores.grep({
+      'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       pattern: 'ERR-\\d{4}',
@@ -123,9 +189,18 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       sort_by: 'price',
@@ -134,6 +209,7 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
@@ -156,9 +232,18 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
@@ -167,10 +252,11 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
-      facets: ['string'],
+      facets: ['author', 'year', 'author.name'],
       max_fields: 1,
       max_values_per_field: 1,
       max_files: 1,
@@ -193,9 +279,18 @@ describe('resource stores', () => {
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'x',
@@ -204,6 +299,7 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
@@ -229,12 +325,22 @@ describe('resource stores', () => {
 
   test('search: required and optional params', async () => {
     const response = await client.stores.search({
+      'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
       top_k: 1,
       filters: {
-        all: [{}, {}],
-        any: [{}, {}],
-        none: [{}, {}],
+        all: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        any: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
+        none: [
+          { key: 'price', operator: 'gt', value: '100' },
+          { key: 'color', operator: 'eq', value: 'red' },
+        ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
@@ -243,9 +349,11 @@ describe('resource stores', () => {
         rewrite_query: true,
         rerank: true,
         agentic: true,
+        lsf: true,
         return_metadata: true,
         apply_search_rules: true,
       },
+      stream: true,
     });
   });
 });

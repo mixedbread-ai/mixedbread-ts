@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as JobsAPI from './jobs';
@@ -15,6 +15,7 @@ import {
   JobListResponsesCursor,
   Jobs,
   ParsingJob,
+  ParsingJobHelpers,
   ParsingJobStatus,
   ReturnFormat,
 } from './jobs';
@@ -28,18 +29,19 @@ Parsing.Jobs = Jobs;
 export declare namespace Parsing {
   export {
     Jobs as Jobs,
-    type Chunk as Chunk,
-    type ChunkElement as ChunkElement,
     type ChunkingStrategy as ChunkingStrategy,
-    type DocumentParserResult as DocumentParserResult,
     type ElementType as ElementType,
-    type ParsingJob as ParsingJob,
     type ParsingJobStatus as ParsingJobStatus,
     type ReturnFormat as ReturnFormat,
+    type ParsingJob as ParsingJob,
+    type DocumentParserResult as DocumentParserResult,
+    type Chunk as Chunk,
+    type ChunkElement as ChunkElement,
     type JobListResponse as JobListResponse,
     type JobDeleteResponse as JobDeleteResponse,
     type JobListResponsesCursor as JobListResponsesCursor,
     type JobCreateParams as JobCreateParams,
     type JobListParams as JobListParams,
+    type ParsingJobHelpers as ParsingJobHelpers,
   };
 }

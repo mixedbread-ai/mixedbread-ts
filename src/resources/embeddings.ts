@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
 import * as TopLevelAPI from './top-level';
@@ -13,15 +13,6 @@ export class Embeddings extends APIResource {
    * Args: params: The parameters for creating embeddings.
    *
    * Returns: EmbeddingCreateResponse: The response containing the embeddings.
-   *
-   * @example
-   * ```ts
-   * const embeddingCreateResponse =
-   *   await client.embeddings.create({
-   *     model: 'mixedbread-ai/mxbai-embed-large-v1',
-   *     input: 'x',
-   *   });
-   * ```
    */
   create(
     body: EmbeddingCreateParams,

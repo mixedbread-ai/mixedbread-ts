@@ -18,9 +18,9 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/shared.ts">Usage</a></code>
 - <code><a href="./src/resources/shared.ts">SearchFilter</a></code>
 - <code><a href="./src/resources/shared.ts">SearchFilterCondition</a></code>
-- <code><a href="./src/resources/shared.ts">Usage</a></code>
 
 # Stores
 
@@ -63,11 +63,14 @@ Methods:
 - <code title="put /v1/stores/{store_identifier}">client.stores.<a href="./src/resources/stores/stores.ts">update</a>(storeIdentifier, { ...params }) -> Store</code>
 - <code title="get /v1/stores">client.stores.<a href="./src/resources/stores/stores.ts">list</a>({ ...params }) -> StoresCursor</code>
 - <code title="delete /v1/stores/{store_identifier}">client.stores.<a href="./src/resources/stores/stores.ts">delete</a>(storeIdentifier) -> StoreDeleteResponse</code>
+- <code title="post /v1/stores/{store_identifier}/copy">client.stores.<a href="./src/resources/stores/stores.ts">copy</a>(storeIdentifier, { ...params }) -> Store</code>
 - <code title="post /v1/stores/grep">client.stores.<a href="./src/resources/stores/stores.ts">grep</a>({ ...params }) -> StoreGrepResponse</code>
 - <code title="post /v1/stores/list-chunks">client.stores.<a href="./src/resources/stores/stores.ts">listChunks</a>({ ...params }) -> StoreListChunksResponse</code>
 - <code title="post /v1/stores/metadata-facets">client.stores.<a href="./src/resources/stores/stores.ts">metadataFacets</a>({ ...params }) -> StoreMetadataFacetsResponse</code>
 - <code title="post /v1/stores/question-answering">client.stores.<a href="./src/resources/stores/stores.ts">questionAnswering</a>({ ...params }) -> StoreQuestionAnsweringResponse</code>
 - <code title="post /v1/stores/search">client.stores.<a href="./src/resources/stores/stores.ts">search</a>({ ...params }) -> StoreSearchResponse</code>
+- <code>client.stores.<a href="./src/lib/stores.ts">poll</a>(…)</code>
+- <code>client.stores.<a href="./src/lib/stores.ts">copyAndPoll</a>(…)</code>
 
 ## Files
 
@@ -90,8 +93,10 @@ Methods:
 - <code title="patch /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">update</a>(fileIdentifier, { ...params }) -> StoreFile</code>
 - <code title="post /v1/stores/{store_identifier}/files/list">client.stores.files.<a href="./src/resources/stores/files.ts">list</a>(storeIdentifier, { ...params }) -> FileListResponse</code>
 - <code title="delete /v1/stores/{store_identifier}/files/{file_identifier}">client.stores.files.<a href="./src/resources/stores/files.ts">delete</a>(fileIdentifier, { ...params }) -> FileDeleteResponse</code>
-
-# Parsing
+- <code>client.stores.files.<a href="./src/lib/store-files.ts">poll</a>(…)</code>
+- <code>client.stores.files.<a href="./src/lib/store-files.ts">createAndPoll</a>(…)</code>
+- <code>client.stores.files.<a href="./src/lib/store-files.ts">upload</a>(…)</code>
+- <code>client.stores.files.<a href="./src/lib/store-files.ts">uploadAndPoll</a>(…)</code>
 
 ## Jobs
 
@@ -115,6 +120,10 @@ Methods:
 - <code title="get /v1/parsing/jobs">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">list</a>({ ...params }) -> JobListResponsesCursor</code>
 - <code title="delete /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">delete</a>(jobID) -> JobDeleteResponse</code>
 - <code title="patch /v1/parsing/jobs/{job_id}">client.parsing.jobs.<a href="./src/resources/parsing/jobs.ts">cancel</a>(jobID) -> ParsingJob</code>
+- <code>client.parsing.jobs.<a href="./src/lib/parsing-jobs.ts">poll</a>(…)</code>
+- <code>client.parsing.jobs.<a href="./src/lib/parsing-jobs.ts">createAndPoll</a>(…)</code>
+- <code>client.parsing.jobs.<a href="./src/lib/parsing-jobs.ts">upload</a>(…)</code>
+- <code>client.parsing.jobs.<a href="./src/lib/parsing-jobs.ts">uploadAndPoll</a>(…)</code>
 
 # Files
 
@@ -151,8 +160,6 @@ Methods:
 - <code title="get /v1/files/uploads">client.files.uploads.<a href="./src/resources/files/uploads.ts">list</a>() -> UploadListResponse</code>
 - <code title="post /v1/files/uploads/{upload_id}/abort">client.files.uploads.<a href="./src/resources/files/uploads.ts">abort</a>(uploadID) -> UploadAbortResponse</code>
 - <code title="post /v1/files/uploads/{upload_id}/complete">client.files.uploads.<a href="./src/resources/files/uploads.ts">complete</a>(uploadID, { ...params }) -> FileObject</code>
-
-# Extractions
 
 ## Jobs
 
@@ -264,4 +271,5 @@ Types:
 
 Methods:
 
-- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>() -> unknown</code>
+- <code title="post /v1/chat/completions">client.chat.<a href="./src/resources/chat.ts">createCompletion</a>({ ...params }) -> ChatCreateCompletionResponse</code>
+

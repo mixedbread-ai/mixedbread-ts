@@ -1,4 +1,21 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
+
+export interface Usage {
+  /**
+   * The number of tokens used for the prompt
+   */
+  prompt_tokens: number;
+
+  /**
+   * The total number of tokens used
+   */
+  total_tokens: number;
+
+  /**
+   * The number of tokens used for the completion
+   */
+  completion_tokens?: number | null;
+}
 
 /**
  * Represents a filter with AND, OR, and NOT conditions.
@@ -7,17 +24,25 @@ export interface SearchFilter {
   /**
    * List of conditions or filters to be ANDed together
    */
-  all?: Array<SearchFilter | SearchFilterCondition> | null;
+  all?: Array<SearchFilter.All> | null;
 
   /**
    * List of conditions or filters to be ORed together
    */
-  any?: Array<SearchFilter | SearchFilterCondition> | null;
+  any?: Array<SearchFilter.Any> | null;
 
   /**
    * List of conditions or filters to be NOTed
    */
-  none?: Array<SearchFilter | SearchFilterCondition> | null;
+  none?: Array<SearchFilter.None> | null;
+}
+
+export namespace SearchFilter {
+  export type All = SearchFilter | SearchFilterCondition;
+
+  export type Any = SearchFilter | SearchFilterCondition;
+
+  export type None = SearchFilter | SearchFilterCondition;
 }
 
 /**
@@ -51,21 +76,4 @@ export interface SearchFilterCondition {
     | 'starts_with'
     | 'not_like'
     | 'regex';
-}
-
-export interface Usage {
-  /**
-   * The number of tokens used for the prompt
-   */
-  prompt_tokens: number;
-
-  /**
-   * The total number of tokens used
-   */
-  total_tokens: number;
-
-  /**
-   * The number of tokens used for the completion
-   */
-  completion_tokens?: number | null;
 }

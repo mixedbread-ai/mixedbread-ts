@@ -1,8 +1,8 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
-import { LimitOffset, type LimitOffsetParams, PagePromise } from '../core/pagination';
+import { LimitOffset, PagePromise, type LimitOffsetParams } from '../core/pagination';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
@@ -192,7 +192,7 @@ export interface APIKeyCreated {
 export interface Scope {
   method: 'read' | 'write' | 'delete' | 'list' | 'create' | 'search';
 
-  resource_type?: 'store' | null;
+  resource_type?: 'store' | 'completions' | null;
 
   resource_id?: string | null;
 }
