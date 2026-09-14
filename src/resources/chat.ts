@@ -128,6 +128,8 @@ export namespace ChatCreateCompletionResponse {
 
       content?: string | null;
 
+      refusal?: string | null;
+
       tool_calls?: Array<Message.ToolCall> | null;
 
       reasoning_content?: string | null;
@@ -1043,6 +1045,17 @@ export interface ChatCreateCompletionParams {
     | ChatCreateCompletionParams.ToolChoiceMetadataFacets;
 
   /**
+   * The shape of the answer: plain text, any JSON object, or JSON matching a schema.
+   * A JSON answer is grammar-constrained on the final generation; tool calls are
+   * unaffected
+   */
+  response_format?:
+    | ChatCreateCompletionParams.ResponseFormatText
+    | ChatCreateCompletionParams.ResponseFormatJsonObject
+    | ChatCreateCompletionParams.ResponseFormatJsonSchema
+    | null;
+
+  /**
    * Whether to persist this completion for later retrieval
    */
   store?: boolean;
@@ -1629,6 +1642,58 @@ export namespace ChatCreateCompletionParams {
    */
   export interface ToolChoiceMetadataFacets {
     type?: 'store_metadata_facets';
+  }
+
+  /**
+   * Plain text, the default.
+   */
+  export interface ResponseFormatText {
+    type?: 'text';
+  }
+
+  /**
+   * Any JSON object; the prompt says which.
+   */
+  export interface ResponseFormatJsonObject {
+    type?: 'json_object';
+  }
+
+  /**
+   * The answer is a JSON value matching the given schema.
+   */
+  export interface ResponseFormatJsonSchema {
+    type?: 'json_schema';
+
+    /**
+     * The schema of a `json_schema` response format, as in the OpenAI API.
+     */
+    json_schema: ResponseFormatJsonSchema.JsonSchema;
+  }
+
+  export namespace ResponseFormatJsonSchema {
+    /**
+     * The schema of a `json_schema` response format, as in the OpenAI API.
+     */
+    export interface JsonSchema {
+      name: string;
+
+      /**
+       * The JSON schema the answer must match; decoding is constrained to it. The
+       * dialect is JSON Schema 2020-12 (`$schema`, if given, names it at the root only).
+       * References must point into the schema itself, `pattern` and `patternProperties`
+       * regexes use RE2 syntax (no backreferences or lookaround), and
+       * `unevaluatedProperties` cannot be combined with `patternProperties`
+       */
+      schema: { [key: string]: unknown };
+
+      description?: string | null;
+
+      /**
+       * Accepted for compatibility. The answer is grammar-constrained to the schema
+       * either way, and the schema is not narrowed to OpenAI's strict subset
+       */
+      strict?: boolean | null;
+    }
   }
 
   export interface SystemMessage {
