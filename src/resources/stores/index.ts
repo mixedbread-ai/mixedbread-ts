@@ -34,6 +34,7 @@ export {
   type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
   type MarkdownHeading as MarkdownHeading,
   type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+  type CsvChunkGeneratedMetadata as CsvChunkGeneratedMetadata,
   type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
   type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
   type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,

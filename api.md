@@ -31,6 +31,7 @@ Types:
 - <code><a href="./src/resources/stores/stores.ts">AudioURL</a></code>
 - <code><a href="./src/resources/stores/stores.ts">CodeChunkGeneratedMetadata</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ContextualizationConfig</a></code>
+- <code><a href="./src/resources/stores/stores.ts">CsvChunkGeneratedMetadata</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ExpiresAfter</a></code>
 - <code><a href="./src/resources/stores/stores.ts">FileCounts</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ImageChunkGeneratedMetadata</a></code>

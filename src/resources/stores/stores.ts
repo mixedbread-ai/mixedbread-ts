@@ -330,6 +330,7 @@ export namespace ScoredVideoURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -439,6 +440,7 @@ export namespace ScoredAudioURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -528,6 +530,7 @@ export namespace ScoredImageURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -617,6 +620,7 @@ export namespace ScoredTextInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -853,6 +857,28 @@ export interface TextChunkGeneratedMetadata {
   start_line?: number;
 
   num_lines?: number;
+
+  file_extension?: string | null;
+}
+
+export interface CsvChunkGeneratedMetadata {
+  type?: 'csv';
+
+  file_type?: 'text/csv';
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  start_row?: number;
+
+  num_rows?: number;
 
   file_extension?: string | null;
 }
@@ -1736,6 +1762,7 @@ export declare namespace Stores {
     type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
     type MarkdownHeading as MarkdownHeading,
     type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type CsvChunkGeneratedMetadata as CsvChunkGeneratedMetadata,
     type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
     type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
     type AudioChunkGeneratedMetadata as AudioChunkGeneratedMetadata,
