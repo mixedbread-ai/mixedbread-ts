@@ -96,3 +96,12 @@ export {
   type StoreCopyAndPollHelperParams as StoreCopyAndPollHelperParams,
   type StoreHelpers as StoreHelpers,
 } from './stores/stores';
+export {
+  type Embedding as Embedding,
+  type EmbeddingCreateResponse as EmbeddingCreateResponse,
+  type MultiEncodingEmbedding as MultiEncodingEmbedding,
+  type InfoResponse as InfoResponse,
+  type RerankResponse as RerankResponse,
+  type EmbedParams as EmbedParams,
+  type RerankParams as RerankParams,
+} from './top-level';
