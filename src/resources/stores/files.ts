@@ -146,6 +146,7 @@ export interface AudioURLInputChunk {
   generated_metadata?:
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | AudioURLInputChunk.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
     | StoresAPI.AudioChunkGeneratedMetadata
@@ -189,6 +190,32 @@ export interface AudioURLInputChunk {
   sampling_rate: number;
 }
 
+export namespace AudioURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface ImageURLInputChunk {
   /**
    * position of the chunk in a file
@@ -206,6 +233,7 @@ export interface ImageURLInputChunk {
   generated_metadata?:
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | ImageURLInputChunk.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
     | StoresAPI.AudioChunkGeneratedMetadata
@@ -242,6 +270,32 @@ export interface ImageURLInputChunk {
    * Model for image URL validation.
    */
   image_url?: StoresAPI.ImageURLOutput | null;
+}
+
+export namespace ImageURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
 }
 
 /**
@@ -351,6 +405,7 @@ export interface TextInputChunk {
   generated_metadata?:
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | TextInputChunk.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
     | StoresAPI.AudioChunkGeneratedMetadata
@@ -389,6 +444,32 @@ export interface TextInputChunk {
   summary?: string | null;
 }
 
+export namespace TextInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface VideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -406,6 +487,7 @@ export interface VideoURLInputChunk {
   generated_metadata?:
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | VideoURLInputChunk.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
     | StoresAPI.AudioChunkGeneratedMetadata
@@ -442,6 +524,32 @@ export interface VideoURLInputChunk {
    * Model for video URL validation.
    */
   video_url?: StoresAPI.VideoURL | null;
+}
+
+export namespace VideoURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
 }
 
 export interface FileListResponse {

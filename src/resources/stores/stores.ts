@@ -652,6 +652,7 @@ export interface ScoredAudioURLInputChunk {
   generated_metadata?:
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | ScoredAudioURLInputChunk.CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -725,6 +726,32 @@ export interface ScoredAudioURLInputChunk {
   sampling_rate: number;
 }
 
+export namespace ScoredAudioURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface ScoredImageURLInputChunk {
   /**
    * position of the chunk in a file
@@ -742,6 +769,7 @@ export interface ScoredImageURLInputChunk {
   generated_metadata?:
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | ScoredImageURLInputChunk.CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -810,6 +838,32 @@ export interface ScoredImageURLInputChunk {
   image_url?: ImageURLOutput | null;
 }
 
+export namespace ScoredImageURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface ScoredTextInputChunk {
   /**
    * position of the chunk in a file
@@ -827,6 +881,7 @@ export interface ScoredTextInputChunk {
   generated_metadata?:
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | ScoredTextInputChunk.CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -895,6 +950,32 @@ export interface ScoredTextInputChunk {
   summary?: string | null;
 }
 
+export namespace ScoredTextInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 export interface ScoredVideoURLInputChunk {
   /**
    * position of the chunk in a file
@@ -912,6 +993,7 @@ export interface ScoredVideoURLInputChunk {
   generated_metadata?:
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | ScoredVideoURLInputChunk.CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
     | AudioChunkGeneratedMetadata
@@ -980,6 +1062,32 @@ export interface ScoredVideoURLInputChunk {
   video_url?: VideoURL | null;
 }
 
+export namespace ScoredVideoURLInputChunk {
+  export interface CsvChunkGeneratedMetadata {
+    type?: 'csv';
+
+    file_type?: 'text/csv';
+
+    language?: string | null;
+
+    word_count?: number | null;
+
+    file_size?: number | null;
+
+    start_line?: number;
+
+    num_lines?: number;
+
+    start_row?: number;
+
+    num_rows?: number;
+
+    file_extension?: string | null;
+
+    [k: string]: unknown;
+  }
+}
+
 /**
  * Model representing a store with its metadata and timestamps.
  */
@@ -1037,7 +1145,7 @@ export interface Store {
   /**
    * Processing status of the store
    */
-  status?: 'expired' | 'in_progress' | 'completed';
+  status?: 'expired' | 'in_progress' | 'completed' | 'failed';
 
   /**
    * Timestamp when the store was created
@@ -1070,9 +1178,48 @@ export interface Store {
   expires_at?: string | null;
 
   /**
+   * Progress of a store copy, present on both the source and the target while it
+   * runs.
+   */
+  copy_state?: Store.CopyState | null;
+
+  /**
    * Type of the object
    */
   object?: 'store';
+}
+
+export namespace Store {
+  /**
+   * Progress of a store copy, present on both the source and the target while it
+   * runs.
+   */
+  export interface CopyState {
+    /**
+     * Whether this store is copied from or into
+     */
+    role: 'source' | 'target';
+
+    /**
+     * Progress of the copy
+     */
+    status: 'in_progress' | 'failed';
+
+    /**
+     * The other store of the copy
+     */
+    peer_store_id: string;
+
+    /**
+     * When the copy was requested
+     */
+    started_at: string;
+
+    /**
+     * Why the copy failed, when it did
+     */
+    error?: string | null;
+  }
 }
 
 /**
