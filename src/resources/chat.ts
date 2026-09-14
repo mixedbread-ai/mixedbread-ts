@@ -110,6 +110,8 @@ export namespace ChatCreateCompletionResponse {
 
     content?: string | null;
 
+    refusal?: string | null;
+
     tool_calls?: Array<ChatCreateCompletionResponse.ChoiceMessageToolCall> | null;
 
     reasoning_content?: string | null;
@@ -1002,6 +1004,13 @@ export interface ChatCreateCompletionParams {
   tool_choice?: ChatCreateCompletionParams.ToolChoice;
 
   /**
+   * The shape of the answer: plain text, any JSON object, or JSON matching a schema.
+   * A JSON answer is grammar-constrained on the final generation; tool calls are
+   * unaffected
+   */
+  response_format?: ChatCreateCompletionParams.ResponseFormat | null;
+
+  /**
    * Whether to persist this completion for later retrieval
    */
   store?: boolean;
@@ -1633,6 +1642,68 @@ export namespace ChatCreateCompletionParams {
     | ChatCreateCompletionParams.ToolChoiceToolChoiceStoreGrep
     | ChatCreateCompletionParams.ToolChoiceToolChoiceStoreListChunks
     | ChatCreateCompletionParams.ToolChoiceToolChoiceMetadataFacets;
+
+  /**
+   * The shape of the answer: plain text, any JSON object, or JSON matching a schema.
+   * A JSON answer is grammar-constrained on the final generation; tool calls are
+   * unaffected
+   */
+  export interface ResponseFormatResponseFormatText {
+    type?: 'text';
+  }
+
+  /**
+   * The shape of the answer: plain text, any JSON object, or JSON matching a schema.
+   * A JSON answer is grammar-constrained on the final generation; tool calls are
+   * unaffected
+   */
+  export interface ResponseFormatResponseFormatJsonObject {
+    type?: 'json_object';
+  }
+
+  /**
+   * The shape of the answer: plain text, any JSON object, or JSON matching a schema.
+   * A JSON answer is grammar-constrained on the final generation; tool calls are
+   * unaffected
+   */
+  export interface ResponseFormatResponseFormatJsonSchema {
+    type?: 'json_schema';
+
+    /**
+     * The schema of a `json_schema` response format, as in the OpenAI API.
+     */
+    json_schema: ChatCreateCompletionParams.ResponseFormatResponseFormatJsonSchemaJsonSchema;
+  }
+
+  /**
+   * The schema of a `json_schema` response format, as in the OpenAI API.
+   */
+  export interface ResponseFormatResponseFormatJsonSchemaJsonSchema {
+    name: string;
+
+    /**
+     * The JSON schema the answer must match; decoding is constrained to it. The
+     * dialect is JSON Schema 2020-12 (`$schema`, if given, names it at the root only).
+     * References must point into the schema itself, `pattern` and `patternProperties`
+     * regexes use RE2 syntax (no backreferences or lookaround), and
+     * `unevaluatedProperties` cannot be combined with `patternProperties`
+     */
+    schema: { [key: string]: unknown };
+
+    description?: string | null;
+
+    /**
+     * Accepted for compatibility. The answer is grammar-constrained to the schema
+     * either way, and the schema is not narrowed to OpenAI's strict subset
+     */
+    strict?: boolean | null;
+  }
+
+  export type ResponseFormat =
+    | ChatCreateCompletionParams.ResponseFormatResponseFormatText
+    | ChatCreateCompletionParams.ResponseFormatResponseFormatJsonObject
+    | ChatCreateCompletionParams.ResponseFormatResponseFormatJsonSchema
+    | null;
 
   /**
    * Deprecated. Replacement for the previous completion's stored model context after

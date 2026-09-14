@@ -48,6 +48,7 @@ describe('resource chat', () => {
         },
       ],
       tool_choice: 'auto',
+      response_format: { type: 'text' },
       store: true,
       previous_completion_id: 'previous_completion_id',
       previous_messages: [{ role: 'system', content: 'string' }],
