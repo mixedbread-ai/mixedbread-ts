@@ -78,10 +78,9 @@ export class StoresBase extends APIResource {
   }
 
   /**
-   * List all stores with optional search.
+   * List all stores with optional search and tag filter.
    *
-   * Args: pagination: The pagination options. q: Optional search query to filter
-   * vector stores.
+   * Args: options: The pagination options, search query and tag filter.
    *
    * Returns: StoreListResponse: The list of stores.
    */
@@ -662,6 +661,11 @@ export interface Store {
    * Additional metadata associated with the store
    */
   metadata?: unknown;
+
+  /**
+   * Tags for organizing stores
+   */
+  tags?: Array<string>;
 
   /**
    * Configuration for a store.
@@ -1378,6 +1382,11 @@ export interface StoreCreateParams {
   metadata?: unknown;
 
   /**
+   * Tags for organizing stores. Trimmed, lowercased and deduplicated.
+   */
+  tags?: Array<string>;
+
+  /**
    * Configuration for a store.
    */
   config?: StoreConfig | null;
@@ -1419,6 +1428,11 @@ export interface StoreUpdateParams {
    * Optional metadata key-value pairs
    */
   metadata?: unknown;
+
+  /**
+   * New tags for the store, replacing the current ones. Send an empty list to clear.
+   */
+  tags?: Array<string> | null;
 }
 
 export interface StoreListParams extends CursorParams {
@@ -1426,6 +1440,11 @@ export interface StoreListParams extends CursorParams {
    * Search query for fuzzy matching over name and description fields
    */
   q?: string | null;
+
+  /**
+   * Only return stores that carry every one of these tags
+   */
+  tags?: Array<string> | null;
 }
 
 export interface StoreCopyParams {
@@ -1444,6 +1463,11 @@ export interface StoreCopyParams {
    * Metadata for the copy; defaults to the source store's metadata
    */
   metadata?: unknown;
+
+  /**
+   * Tags for the copy; defaults to the source store's tags
+   */
+  tags?: Array<string> | null;
 }
 
 export interface StoreGrepParams {

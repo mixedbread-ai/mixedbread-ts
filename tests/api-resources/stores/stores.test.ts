@@ -30,6 +30,7 @@ describe('resource stores', () => {
           license: 'license',
           expires_after: { anchor: 'last_active_at', days: 0 },
           metadata: {},
+          tags: ['production', 'docs'],
           config: { contextualization: true, save_content: true, lsf: { foo: 'bar' } },
           file_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
         },
@@ -72,6 +73,7 @@ describe('resource stores', () => {
           license: 'license',
           expires_after: { anchor: 'last_active_at', days: 0 },
           metadata: {},
+          tags: ['string'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -99,6 +101,7 @@ describe('resource stores', () => {
           before: 'eyJjcmVhdGVkX2F0IjoiMjAyNC0xMi0zMVQyMzo1OTo1OS4wMDBaIiwiaWQiOiJhYmMxMjMifQ==',
           include_total: false,
           q: 'x',
+          tags: ['string'],
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -132,6 +135,7 @@ describe('resource stores', () => {
       name: 'technical-documentation-copy',
       description: 'description',
       metadata: {},
+      tags: ['string'],
     });
   });
 
