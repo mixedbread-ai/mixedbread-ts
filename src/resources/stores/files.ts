@@ -607,6 +607,16 @@ export interface FileListParams {
   include_total?: boolean;
 
   /**
+   * Field to order the files by
+   */
+  sort_by?: 'created_at' | 'filename' | 'usage_bytes' | 'usage_tokens';
+
+  /**
+   * Direction of the sort
+   */
+  sort_order?: 'asc' | 'desc';
+
+  /**
    * Status to filter by
    */
   statuses?: Array<StoreFileStatus> | null;
