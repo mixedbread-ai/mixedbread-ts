@@ -147,7 +147,7 @@ export namespace RerankResponse {
     index: number;
 
     /**
-     * The score of the document.
+     * Relevance on a 0-1 scale.
      */
     score: number;
 
