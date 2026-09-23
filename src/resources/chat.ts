@@ -143,7 +143,7 @@ export namespace ChatCreateCompletionResponse {
    * carries, and ``store_id`` the store whose index holds the chunk; the cited text
    * and score are on the included tool results.
    */
-  export interface ChoiceMessageAnnotation {
+  export interface ChoiceMessageAnnotationFileCitation {
     type?: 'file_citation';
 
     file_id: string;
@@ -156,6 +156,28 @@ export namespace ChatCreateCompletionResponse {
 
     store_id: string;
   }
+
+  /**
+   * The OpenAI ``url_citation`` annotation, for a hit of the web store; ``chunk_id``
+   * as on the hosted result.
+   */
+  export interface ChoiceMessageAnnotationURLCitation {
+    type?: 'url_citation';
+
+    url: string;
+
+    title: string;
+
+    start_index: number;
+
+    end_index: number;
+
+    chunk_id: string;
+  }
+
+  export type ChoiceMessageAnnotation =
+    | ChatCreateCompletionResponse.ChoiceMessageAnnotationFileCitation
+    | ChatCreateCompletionResponse.ChoiceMessageAnnotationURLCitation;
 
   export interface Usage {
     prompt_tokens?: number;
@@ -945,7 +967,7 @@ export namespace ChatCreateCompletionResponse {
    * carries, and ``store_id`` the store whose index holds the chunk; the cited text
    * and score are on the included tool results.
    */
-  export interface TranscriptAssistantMessageOutputAnnotation {
+  export interface TranscriptAssistantMessageOutputAnnotationFileCitation {
     type?: 'file_citation';
 
     file_id: string;
@@ -958,6 +980,28 @@ export namespace ChatCreateCompletionResponse {
 
     store_id: string;
   }
+
+  /**
+   * The OpenAI ``url_citation`` annotation, for a hit of the web store; ``chunk_id``
+   * as on the hosted result.
+   */
+  export interface TranscriptAssistantMessageOutputAnnotationURLCitation {
+    type?: 'url_citation';
+
+    url: string;
+
+    title: string;
+
+    start_index: number;
+
+    end_index: number;
+
+    chunk_id: string;
+  }
+
+  export type TranscriptAssistantMessageOutputAnnotation =
+    | ChatCreateCompletionResponse.TranscriptAssistantMessageOutputAnnotationFileCitation
+    | ChatCreateCompletionResponse.TranscriptAssistantMessageOutputAnnotationURLCitation;
 
   /**
    * Complete stored conversation transcript when requested through include
@@ -1172,7 +1216,7 @@ export namespace ChatCreateCompletionParams {
    * carries, and ``store_id`` the store whose index holds the chunk; the cited text
    * and score are on the included tool results.
    */
-  export interface MessageAssistantMessageInputAnnotation {
+  export interface MessageAssistantMessageInputAnnotationFileCitation {
     type?: 'file_citation';
 
     file_id: string;
@@ -1185,6 +1229,28 @@ export namespace ChatCreateCompletionParams {
 
     store_id: string;
   }
+
+  /**
+   * The OpenAI ``url_citation`` annotation, for a hit of the web store; ``chunk_id``
+   * as on the hosted result.
+   */
+  export interface MessageAssistantMessageInputAnnotationURLCitation {
+    type?: 'url_citation';
+
+    url: string;
+
+    title: string;
+
+    start_index: number;
+
+    end_index: number;
+
+    chunk_id: string;
+  }
+
+  export type MessageAssistantMessageInputAnnotation =
+    | ChatCreateCompletionParams.MessageAssistantMessageInputAnnotationFileCitation
+    | ChatCreateCompletionParams.MessageAssistantMessageInputAnnotationURLCitation;
 
   /**
    * The conversation, or its new suffix when continuing a stored completion
@@ -1806,7 +1872,7 @@ export namespace ChatCreateCompletionParams {
    * carries, and ``store_id`` the store whose index holds the chunk; the cited text
    * and score are on the included tool results.
    */
-  export interface PreviousMessageAssistantMessageInputAnnotation {
+  export interface PreviousMessageAssistantMessageInputAnnotationFileCitation {
     type?: 'file_citation';
 
     file_id: string;
@@ -1819,6 +1885,28 @@ export namespace ChatCreateCompletionParams {
 
     store_id: string;
   }
+
+  /**
+   * The OpenAI ``url_citation`` annotation, for a hit of the web store; ``chunk_id``
+   * as on the hosted result.
+   */
+  export interface PreviousMessageAssistantMessageInputAnnotationURLCitation {
+    type?: 'url_citation';
+
+    url: string;
+
+    title: string;
+
+    start_index: number;
+
+    end_index: number;
+
+    chunk_id: string;
+  }
+
+  export type PreviousMessageAssistantMessageInputAnnotation =
+    | ChatCreateCompletionParams.PreviousMessageAssistantMessageInputAnnotationFileCitation
+    | ChatCreateCompletionParams.PreviousMessageAssistantMessageInputAnnotationURLCitation;
 
   /**
    * Deprecated. Replacement for the previous completion's stored model context after
