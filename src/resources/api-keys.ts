@@ -195,6 +195,8 @@ export interface Scope {
   resource_type?: 'store' | 'completions' | null;
 
   resource_id?: string | null;
+
+  tag?: string | null;
 }
 
 /**
