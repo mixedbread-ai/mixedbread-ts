@@ -31,7 +31,7 @@ describe('resource stores', () => {
           expires_after: { anchor: 'last_active_at', days: 0 },
           metadata: {},
           tags: ['production', 'docs'],
-          config: { contextualization: true, save_content: true, lsf: { foo: 'bar' } },
+          config: { contextualization: true, lsf: { foo: 'bar' } },
           file_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
         },
         { path: '/_stainless_unknown_path' },

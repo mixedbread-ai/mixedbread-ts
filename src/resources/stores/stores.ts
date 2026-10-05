@@ -1106,13 +1106,6 @@ export interface StoreConfig {
   contextualization?: StoreConfig.Contextualization;
 
   /**
-   * Whether to save original content in the store. When False, only vectors are
-   * indexed without the original content (index-only mode). This is useful for data
-   * privacy. Note: Reranking is not supported when content is not saved.
-   */
-  save_content?: boolean;
-
-  /**
    * Learned-scoring-function settings a store opts into; an empty object enables it.
    */
   lsf?: { [key: string]: unknown } | null;
