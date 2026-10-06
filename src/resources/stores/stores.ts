@@ -300,6 +300,12 @@ export interface ScoredVideoURLInputChunk {
   metadata?: unknown;
 
   /**
+   * Presigned URL to download the file this chunk belongs to; null when there is no
+   * stored file
+   */
+  file_url?: string | null;
+
+  /**
    * Input type identifier
    */
   type?: 'video_url';
@@ -405,6 +411,12 @@ export interface ScoredAudioURLInputChunk {
   metadata?: unknown;
 
   /**
+   * Presigned URL to download the file this chunk belongs to; null when there is no
+   * stored file
+   */
+  file_url?: string | null;
+
+  /**
    * Input type identifier
    */
   type?: 'audio_url';
@@ -500,6 +512,12 @@ export interface ScoredImageURLInputChunk {
   metadata?: unknown;
 
   /**
+   * Presigned URL to download the file this chunk belongs to; null when there is no
+   * stored file
+   */
+  file_url?: string | null;
+
+  /**
    * Input type identifier
    */
   type?: 'image_url';
@@ -588,6 +606,12 @@ export interface ScoredTextInputChunk {
    * file metadata
    */
   metadata?: unknown;
+
+  /**
+   * Presigned URL to download the file this chunk belongs to; null when there is no
+   * stored file
+   */
+  file_url?: string | null;
 
   /**
    * Input type identifier
