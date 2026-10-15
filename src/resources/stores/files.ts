@@ -263,6 +263,7 @@ export namespace TextInputChunk {
   export type GeneratedMetadata =
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.EmailChunkGeneratedMetadata
     | StoresAPI.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
@@ -323,6 +324,7 @@ export namespace ImageURLInputChunk {
   export type GeneratedMetadata =
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.EmailChunkGeneratedMetadata
     | StoresAPI.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
@@ -388,6 +390,7 @@ export namespace AudioURLInputChunk {
   export type GeneratedMetadata =
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.EmailChunkGeneratedMetadata
     | StoresAPI.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata
@@ -448,6 +451,7 @@ export namespace VideoURLInputChunk {
   export type GeneratedMetadata =
     | StoresAPI.MarkdownChunkGeneratedMetadata
     | StoresAPI.TextChunkGeneratedMetadata
+    | StoresAPI.EmailChunkGeneratedMetadata
     | StoresAPI.CsvChunkGeneratedMetadata
     | StoresAPI.PdfChunkGeneratedMetadata
     | StoresAPI.CodeChunkGeneratedMetadata

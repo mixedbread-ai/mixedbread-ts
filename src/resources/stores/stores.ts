@@ -335,6 +335,7 @@ export namespace ScoredVideoURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | EmailChunkGeneratedMetadata
     | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
@@ -451,6 +452,7 @@ export namespace ScoredAudioURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | EmailChunkGeneratedMetadata
     | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
@@ -547,6 +549,7 @@ export namespace ScoredImageURLInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | EmailChunkGeneratedMetadata
     | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
@@ -643,6 +646,7 @@ export namespace ScoredTextInputChunk {
   export type GeneratedMetadata =
     | MarkdownChunkGeneratedMetadata
     | TextChunkGeneratedMetadata
+    | EmailChunkGeneratedMetadata
     | CsvChunkGeneratedMetadata
     | PdfChunkGeneratedMetadata
     | CodeChunkGeneratedMetadata
@@ -887,6 +891,38 @@ export interface TextChunkGeneratedMetadata {
   num_lines?: number;
 
   file_extension?: string | null;
+}
+
+export interface EmailChunkGeneratedMetadata {
+  type?: 'email';
+
+  file_type?: string;
+
+  language?: string | null;
+
+  word_count?: number | null;
+
+  file_size?: number | null;
+
+  start_line?: number;
+
+  num_lines?: number;
+
+  file_extension?: string | null;
+
+  subject?: string | null;
+
+  from_email?: string | null;
+
+  to_emails?: Array<string>;
+
+  cc_emails?: Array<string>;
+
+  bcc_emails?: Array<string>;
+
+  date?: string | null;
+
+  attachment_names?: Array<string>;
 }
 
 export interface CsvChunkGeneratedMetadata {
@@ -1803,6 +1839,7 @@ export declare namespace Stores {
     type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
     type MarkdownHeading as MarkdownHeading,
     type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+    type EmailChunkGeneratedMetadata as EmailChunkGeneratedMetadata,
     type CsvChunkGeneratedMetadata as CsvChunkGeneratedMetadata,
     type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
     type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,

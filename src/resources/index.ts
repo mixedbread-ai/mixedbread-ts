@@ -63,6 +63,7 @@ export {
   type MarkdownChunkGeneratedMetadata as MarkdownChunkGeneratedMetadata,
   type MarkdownHeading as MarkdownHeading,
   type TextChunkGeneratedMetadata as TextChunkGeneratedMetadata,
+  type EmailChunkGeneratedMetadata as EmailChunkGeneratedMetadata,
   type CsvChunkGeneratedMetadata as CsvChunkGeneratedMetadata,
   type PdfChunkGeneratedMetadata as PdfChunkGeneratedMetadata,
   type CodeChunkGeneratedMetadata as CodeChunkGeneratedMetadata,
