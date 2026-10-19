@@ -1037,7 +1037,21 @@ export interface AudioChunkGeneratedMetadata {
 
   bpm?: number | null;
 
+  speakers?: Array<string> | null;
+
+  speaker_count?: number | null;
+
+  speaker_turns?: Array<AudioChunkGeneratedMetadata.SpeakerTurn> | null;
+
   file_extension?: string | null;
+}
+
+export namespace AudioChunkGeneratedMetadata {
+  export interface SpeakerTurn {
+    speaker?: string | null;
+
+    text: string;
+  }
 }
 
 export interface VideoChunkGeneratedMetadata {
@@ -1061,7 +1075,21 @@ export interface VideoChunkGeneratedMetadata {
 
   bpm?: number | null;
 
+  speakers?: Array<string> | null;
+
+  speaker_count?: number | null;
+
+  speaker_turns?: Array<VideoChunkGeneratedMetadata.SpeakerTurn> | null;
+
   file_extension?: string | null;
+}
+
+export namespace VideoChunkGeneratedMetadata {
+  export interface SpeakerTurn {
+    speaker?: string | null;
+
+    text: string;
+  }
 }
 
 export interface ImageChunkGeneratedMetadata {
