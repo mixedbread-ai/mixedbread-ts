@@ -1051,6 +1051,10 @@ export namespace AudioChunkGeneratedMetadata {
     speaker?: string | null;
 
     text: string;
+
+    start_time_seconds?: number | null;
+
+    end_time_seconds?: number | null;
   }
 }
 
@@ -1089,6 +1093,10 @@ export namespace VideoChunkGeneratedMetadata {
     speaker?: string | null;
 
     text: string;
+
+    start_time_seconds?: number | null;
+
+    end_time_seconds?: number | null;
   }
 }
 
