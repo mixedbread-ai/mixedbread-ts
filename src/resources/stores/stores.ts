@@ -834,7 +834,7 @@ export interface StoreChunkSearchOptions {
   return_metadata?: boolean;
 
   /**
-   * Whether to apply search rules
+   * Ignored; search rules were removed
    */
   apply_search_rules?: boolean;
 }
