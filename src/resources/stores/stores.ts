@@ -121,6 +121,13 @@ export class StoresBase extends APIResource {
   }
 
   /**
+   * Answer typed questions about a state, grounded in the stores' contents.
+   */
+  decide(body: StoreDecideParams, options?: RequestOptions): APIPromise<StoreDecideResponse> {
+    return this._client.post('/v1/stores/decide', { body, ...options });
+  }
+
+  /**
    * Match store chunks against a regular expression.
    *
    * Unlike `/stores/search`, this runs your regex against the literal text of each
@@ -1345,6 +1352,166 @@ export interface StoreDeleteResponse {
   object?: 'store';
 }
 
+export interface StoreDecideResponse {
+  /**
+   * The answers, keyed by question name
+   */
+  answers: { [key: string]: StoreDecideResponse.AnswersValue };
+
+  /**
+   * Tokens the decision model read and wrote
+   */
+  usage: Shared.Usage;
+}
+
+export namespace StoreDecideResponse {
+  /**
+   * The answers, keyed by question name
+   */
+  export interface AnswersValueDecisionNoulAnswer {
+    /**
+     * Whether the store settles the question: act on the answer only when 'grounded';
+     * 'not_found' means the store doesn't contain the answer, 'conflicting' that its
+     * documents disagree
+     */
+    grounding?: 'grounded' | 'not_found' | 'conflicting' | null;
+
+    /**
+     * The chunks retrieved for this question, most relevant first
+     */
+    sources?: Array<StoreDecideResponse.AnswersValueDecisionNoulAnswerSource>;
+
+    type: 'noul';
+
+    /**
+     * Probability that the statement is true
+     */
+    noul: number;
+  }
+
+  export type AnswersValueDecisionNoulAnswerSource =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
+
+  /**
+   * The answers, keyed by question name
+   */
+  export interface AnswersValueDecisionChoiceAnswer {
+    /**
+     * Whether the store settles the question: act on the answer only when 'grounded';
+     * 'not_found' means the store doesn't contain the answer, 'conflicting' that its
+     * documents disagree
+     */
+    grounding?: 'grounded' | 'not_found' | 'conflicting' | null;
+
+    /**
+     * The chunks retrieved for this question, most relevant first
+     */
+    sources?: Array<StoreDecideResponse.AnswersValueDecisionChoiceAnswerSource>;
+
+    type: 'choice';
+
+    /**
+     * The most likely option
+     */
+    choice: string;
+
+    /**
+     * Probability of each option
+     */
+    probabilities: { [key: string]: number };
+
+    /**
+     * Confidence in the chosen option
+     */
+    confidence?: number | null;
+  }
+
+  export type AnswersValueDecisionChoiceAnswerSource =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
+
+  /**
+   * The answers, keyed by question name
+   */
+  export interface AnswersValueDecisionScoreAnswer {
+    /**
+     * Whether the store settles the question: act on the answer only when 'grounded';
+     * 'not_found' means the store doesn't contain the answer, 'conflicting' that its
+     * documents disagree
+     */
+    grounding?: 'grounded' | 'not_found' | 'conflicting' | null;
+
+    /**
+     * The chunks retrieved for this question, most relevant first
+     */
+    sources?: Array<StoreDecideResponse.AnswersValueDecisionScoreAnswerSource>;
+
+    type: 'score';
+
+    /**
+     * Probability-weighted mean of the zero-based level indices
+     */
+    score: number;
+
+    /**
+     * Each level, keyed by its index
+     */
+    legend: { [key: string]: string };
+
+    /**
+     * Probability of each level, keyed by its index
+     */
+    probabilities: { [key: string]: number };
+
+    /**
+     * Confidence in the score
+     */
+    confidence?: number | null;
+  }
+
+  export type AnswersValueDecisionScoreAnswerSource =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
+
+  /**
+   * The answers, keyed by question name
+   */
+  export interface AnswersValueDecisionRefusalAnswer {
+    /**
+     * Whether the store settles the question: act on the answer only when 'grounded';
+     * 'not_found' means the store doesn't contain the answer, 'conflicting' that its
+     * documents disagree
+     */
+    grounding?: 'grounded' | 'not_found' | 'conflicting' | null;
+
+    /**
+     * The chunks retrieved for this question, most relevant first
+     */
+    sources?: Array<StoreDecideResponse.AnswersValueDecisionRefusalAnswerSource>;
+
+    type: 'refusal';
+  }
+
+  export type AnswersValueDecisionRefusalAnswerSource =
+    | ScoredTextInputChunk
+    | ScoredImageURLInputChunk
+    | ScoredAudioURLInputChunk
+    | ScoredVideoURLInputChunk;
+
+  export type AnswersValue =
+    | StoreDecideResponse.AnswersValueDecisionNoulAnswer
+    | StoreDecideResponse.AnswersValueDecisionChoiceAnswer
+    | StoreDecideResponse.AnswersValueDecisionScoreAnswer
+    | StoreDecideResponse.AnswersValueDecisionRefusalAnswer;
+}
+
 export interface StoreGrepResponse {
   /**
    * The object type of the response
@@ -1557,6 +1724,107 @@ export interface StoreCopyParams {
    * Tags for the copy; defaults to the source store's tags
    */
   tags?: Array<string> | null;
+}
+
+export interface StoreDecideParams {
+  /**
+   * IDs or names of stores
+   */
+  store_identifiers: Array<string>;
+
+  /**
+   * Number of chunks retrieved for each question
+   */
+  top_k?: number;
+
+  /**
+   * Optional filter conditions
+   */
+  filters?: StoreDecideParams.Filters | null;
+
+  /**
+   * Optional list of file IDs to filter chunks by (inclusion filter)
+   */
+  file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Options for each question's search; rerank defaults to true and agentic is not
+   * supported. Probabilities are comparable only between calls that use the same
+   * options
+   */
+  search_options?: StoreChunkSearchOptions;
+
+  /**
+   * Optional context shared by all questions, such as the subject they are about; it
+   * also steers the search
+   */
+  state?: string | { [key: string]: unknown } | Array<string> | null;
+
+  /**
+   * The questions, keyed by name
+   */
+  questions: { [key: string]: StoreDecideParams.QuestionsValue };
+}
+
+export namespace StoreDecideParams {
+  export type FiltersUnionMember2 = Shared.SearchFilter | Shared.SearchFilterCondition;
+
+  export type Filters =
+    | Shared.SearchFilter
+    | Shared.SearchFilterCondition
+    | Array<StoreDecideParams.FiltersUnionMember2>
+    | null;
+
+  /**
+   * The questions, keyed by name
+   */
+  export interface QuestionsValueDecisionNoulQuestion {
+    type: 'noul';
+
+    /**
+     * The statement or question to decide, about the state and the stores' contents
+     */
+    instructions: string;
+  }
+
+  /**
+   * The questions, keyed by name
+   */
+  export interface QuestionsValueDecisionChoiceQuestion {
+    type: 'choice';
+
+    /**
+     * The statement or question to decide, about the state and the stores' contents
+     */
+    instructions: string;
+
+    /**
+     * Each option, mapped to a description of when it applies
+     */
+    criteria: { [key: string]: string };
+  }
+
+  /**
+   * The questions, keyed by name
+   */
+  export interface QuestionsValueDecisionScoreQuestion {
+    type: 'score';
+
+    /**
+     * The statement or question to decide, about the state and the stores' contents
+     */
+    instructions: string;
+
+    /**
+     * Ordered levels, lowest first, each with a concrete description
+     */
+    criteria: Array<string>;
+  }
+
+  export type QuestionsValue =
+    | StoreDecideParams.QuestionsValueDecisionNoulQuestion
+    | StoreDecideParams.QuestionsValueDecisionChoiceQuestion
+    | StoreDecideParams.QuestionsValueDecisionScoreQuestion;
 }
 
 export interface StoreGrepParams {
@@ -1891,6 +2159,7 @@ export declare namespace Stores {
     type RerankConfig as RerankConfig,
     type AgenticSearchConfig as AgenticSearchConfig,
     type StoreDeleteResponse as StoreDeleteResponse,
+    type StoreDecideResponse as StoreDecideResponse,
     type StoreGrepResponse as StoreGrepResponse,
     type StoreListChunksResponse as StoreListChunksResponse,
     type StoreMetadataFacetsResponse as StoreMetadataFacetsResponse,
@@ -1901,6 +2170,7 @@ export declare namespace Stores {
     type StoreUpdateParams as StoreUpdateParams,
     type StoreListParams as StoreListParams,
     type StoreCopyParams as StoreCopyParams,
+    type StoreDecideParams as StoreDecideParams,
     type StoreGrepParams as StoreGrepParams,
     type StoreListChunksParams as StoreListChunksParams,
     type StoreMetadataFacetsParams as StoreMetadataFacetsParams,

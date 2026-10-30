@@ -52,6 +52,7 @@ Types:
 - <code><a href="./src/resources/stores/stores.ts">VideoChunkGeneratedMetadata</a></code>
 - <code><a href="./src/resources/stores/stores.ts">VideoURL</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreDeleteResponse</a></code>
+- <code><a href="./src/resources/stores/stores.ts">StoreDecideResponse</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreGrepResponse</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreListChunksResponse</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreMetadataFacetsResponse</a></code>
@@ -66,6 +67,7 @@ Methods:
 - <code title="get /v1/stores">client.stores.<a href="./src/resources/stores/stores.ts">list</a>({ ...params }) -> StoresCursor</code>
 - <code title="delete /v1/stores/{store_identifier}">client.stores.<a href="./src/resources/stores/stores.ts">delete</a>(storeIdentifier) -> StoreDeleteResponse</code>
 - <code title="post /v1/stores/{store_identifier}/copy">client.stores.<a href="./src/resources/stores/stores.ts">copy</a>(storeIdentifier, { ...params }) -> Store</code>
+- <code title="post /v1/stores/decide">client.stores.<a href="./src/resources/stores/stores.ts">decide</a>({ ...params }) -> StoreDecideResponse</code>
 - <code title="post /v1/stores/grep">client.stores.<a href="./src/resources/stores/stores.ts">grep</a>({ ...params }) -> StoreGrepResponse</code>
 - <code title="post /v1/stores/list-chunks">client.stores.<a href="./src/resources/stores/stores.ts">listChunks</a>({ ...params }) -> StoreListChunksResponse</code>
 - <code title="post /v1/stores/metadata-facets">client.stores.<a href="./src/resources/stores/stores.ts">metadataFacets</a>({ ...params }) -> StoreMetadataFacetsResponse</code>

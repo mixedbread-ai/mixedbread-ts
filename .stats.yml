@@ -1,4 +1,4 @@
-configured_endpoints: 58
+configured_endpoints: 59
 openapi_spec_title: mxbai-omni
 openapi_spec_version: 0.1.0
 generator: sdkgen
