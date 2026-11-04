@@ -3,6 +3,7 @@
 import { APIResource } from '../../core/resource';
 import * as ContentAPI from '../extractions/content';
 import * as Shared from '../shared';
+import * as FileBatchesAPI from './file-batches';
 import * as FilesAPI from './files';
 import { APIPromise } from '../../core/api-promise';
 import { Cursor, PagePromise, type CursorParams } from '../../core/pagination';
@@ -15,6 +16,7 @@ import {
   type StorePollHelperParams,
   withStoreHelpers,
 } from '../../lib/stores';
+import { FileBatchCreateParams, FileBatches, StoreFileBatch } from './file-batches';
 import {
   AudioURLInputChunk,
   FileCreateAndPollHelperParams,
@@ -41,6 +43,7 @@ export type { StorePollHelperParams, StoreCopyAndPollHelperParams, StoreHelpers 
 
 export class StoresBase extends APIResource {
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
+  fileBatches: FileBatchesAPI.FileBatches = new FileBatchesAPI.FileBatches(this._client);
 
   /**
    * Create a new vector store.
@@ -839,11 +842,6 @@ export interface StoreChunkSearchOptions {
    * Whether to return file metadata
    */
   return_metadata?: boolean;
-
-  /**
-   * Ignored; search rules were removed
-   */
-  apply_search_rules?: boolean;
 }
 
 export namespace StoreChunkSearchOptions {
@@ -2130,6 +2128,7 @@ export namespace StoreSearchParams {
 }
 
 Stores.Files = Files;
+Stores.FileBatches = FileBatches;
 
 export declare namespace Stores {
   export {
@@ -2202,5 +2201,11 @@ export declare namespace Stores {
     type FileUploadHelperParams as FileUploadHelperParams,
     type FileUploadAndPollHelperParams as FileUploadAndPollHelperParams,
     type StoreFileHelpers as StoreFileHelpers,
+  };
+
+  export {
+    FileBatches as FileBatches,
+    type StoreFileBatch as StoreFileBatch,
+    type FileBatchCreateParams as FileBatchCreateParams,
   };
 }

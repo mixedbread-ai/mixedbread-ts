@@ -1,6 +1,11 @@
 // File generated from our OpenAPI spec by sdkgen. See CONTRIBUTING.md for details.
 
 export {
+  FileBatches as FileBatches,
+  type StoreFileBatch as StoreFileBatch,
+  type FileBatchCreateParams as FileBatchCreateParams,
+} from './file-batches';
+export {
   Files as Files,
   type StoreFileStatus as StoreFileStatus,
   type StoreFile as StoreFile,

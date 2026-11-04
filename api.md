@@ -102,6 +102,16 @@ Methods:
 - <code>client.stores.files.<a href="./src/lib/store-files.ts">upload</a>(…)</code>
 - <code>client.stores.files.<a href="./src/lib/store-files.ts">uploadAndPoll</a>(…)</code>
 
+## FileBatches
+
+Types:
+
+- <code><a href="./src/resources/stores/file-batches.ts">StoreFileBatch</a></code>
+
+Methods:
+
+- <code title="post /v1/stores/{store_identifier}/file_batches">client.stores.fileBatches.<a href="./src/resources/stores/file-batches.ts">create</a>(storeIdentifier, { ...params }) -> StoreFileBatch</code>
+
 ## Jobs
 
 Types:

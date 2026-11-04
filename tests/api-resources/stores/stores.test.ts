@@ -179,7 +179,6 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
-        apply_search_rules: true,
       },
       state: { vendor: 'Acme Inc' },
       questions: { foo: { type: 'noul', instructions: 'x' } },
@@ -262,7 +261,6 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
-        apply_search_rules: true,
       },
     });
   });
@@ -305,7 +303,6 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
-        apply_search_rules: true,
       },
       facets: ['author', 'year', 'author.name'],
       max_fields: 1,
@@ -352,7 +349,6 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
-        apply_search_rules: true,
       },
       stream: true,
       instructions: 'x',
@@ -402,7 +398,6 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
-        apply_search_rules: true,
       },
       stream: true,
     });
