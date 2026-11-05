@@ -111,6 +111,7 @@ Types:
 Methods:
 
 - <code title="post /v1/stores/{store_identifier}/file_batches">client.stores.fileBatches.<a href="./src/resources/stores/file-batches.ts">create</a>(storeIdentifier, { ...params }) -> StoreFileBatch</code>
+- <code>client.stores.fileBatches.<a href="./src/lib/file-batches.ts">upload</a>(…)</code>
 
 ## Jobs
 

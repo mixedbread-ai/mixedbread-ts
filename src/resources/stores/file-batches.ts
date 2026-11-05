@@ -5,8 +5,15 @@ import * as FilesAPI from './files';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
+import {
+  type FileBatchHelpers,
+  type FileBatchUploadHelperParams,
+  type FileBatchUploadItem,
+  withFileBatchHelpers,
+} from '../../lib/file-batches';
+export type { FileBatchUploadItem, FileBatchUploadHelperParams, FileBatchHelpers };
 
-export class FileBatches extends APIResource {
+export class FileBatchesBase extends APIResource {
   /**
    * Add already uploaded files to a store in one call, for backfills.
    *
@@ -26,6 +33,8 @@ export class FileBatches extends APIResource {
     return this._client.post(path`/v1/stores/${storeIdentifier}/file_batches`, { body, ...options });
   }
 }
+
+export class FileBatches extends withFileBatchHelpers(FileBatchesBase) {}
 
 /**
  * Outcome of adding a batch of files to a store.
@@ -120,5 +129,11 @@ export namespace FileBatchCreateParams {
 }
 
 export declare namespace FileBatches {
-  export { type StoreFileBatch as StoreFileBatch, type FileBatchCreateParams as FileBatchCreateParams };
+  export {
+    type StoreFileBatch as StoreFileBatch,
+    type FileBatchCreateParams as FileBatchCreateParams,
+    type FileBatchUploadItem as FileBatchUploadItem,
+    type FileBatchUploadHelperParams as FileBatchUploadHelperParams,
+    type FileBatchHelpers as FileBatchHelpers,
+  };
 }

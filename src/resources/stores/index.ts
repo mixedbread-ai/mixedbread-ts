@@ -4,6 +4,9 @@ export {
   FileBatches as FileBatches,
   type StoreFileBatch as StoreFileBatch,
   type FileBatchCreateParams as FileBatchCreateParams,
+  type FileBatchUploadItem as FileBatchUploadItem,
+  type FileBatchUploadHelperParams as FileBatchUploadHelperParams,
+  type FileBatchHelpers as FileBatchHelpers,
 } from './file-batches';
 export {
   Files as Files,

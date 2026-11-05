@@ -16,7 +16,14 @@ import {
   type StorePollHelperParams,
   withStoreHelpers,
 } from '../../lib/stores';
-import { FileBatchCreateParams, FileBatches, StoreFileBatch } from './file-batches';
+import {
+  FileBatchCreateParams,
+  FileBatchHelpers,
+  FileBatchUploadHelperParams,
+  FileBatchUploadItem,
+  FileBatches,
+  StoreFileBatch,
+} from './file-batches';
 import {
   AudioURLInputChunk,
   FileCreateAndPollHelperParams,
@@ -2215,5 +2222,8 @@ export declare namespace Stores {
     FileBatches as FileBatches,
     type StoreFileBatch as StoreFileBatch,
     type FileBatchCreateParams as FileBatchCreateParams,
+    type FileBatchUploadItem as FileBatchUploadItem,
+    type FileBatchUploadHelperParams as FileBatchUploadHelperParams,
+    type FileBatchHelpers as FileBatchHelpers,
   };
 }
