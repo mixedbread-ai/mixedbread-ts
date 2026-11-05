@@ -14,9 +14,9 @@ import type {
 } from '../resources/stores/file-batches';
 import { MultipartUploadError, type MultipartUploadConfig } from './upload-file';
 
-// Backfills are mostly documents of a few MB; multipart sends them straight to storage.
-const MULTIPART_THRESHOLD = 5 * 1024 * 1024;
 const MAX_FILES = 100;
+// Enough in flight that one slow upload does not hold up the batch.
+const MAX_CONCURRENCY = 16;
 
 /**
  * A file with the store fields to add it with.
@@ -45,8 +45,8 @@ export interface FileBatchHelpers {
   /**
    * Upload up to 100 files to the files API and add them to a store in one batch.
    * Each entry is a file or a `FileBatchUploadItem` with its own `external_id`, `metadata` or `config`.
-   * Files are uploaded `maxConcurrency` (default 5) at a time and processed asynchronously;
-   * multipart is used above 5MB unless `multipartUpload.threshold` says otherwise.
+   * Files are uploaded `maxConcurrency` (default 16) at a time and processed asynchronously;
+   * multipart is used above 100MB unless `multipartUpload.threshold` says otherwise.
    * `data[i]` is the outcome of `files[i]`; a failed upload has an empty `file_id` and its error.
    */
   upload(params: FileBatchUploadHelperParams): Promise<StoreFileBatch>;
@@ -83,10 +83,6 @@ export function withFileBatchHelpers<TBase extends Constructor<FileBatchesBase>>
         throw new Error(`A batch takes 1 to ${MAX_FILES} files, got ${params.files.length}`);
       }
       const items = params.files.map((file) => (isItem(file) ? file : { file }));
-      const multipartUpload = {
-        threshold: MULTIPART_THRESHOLD,
-        ...params.multipartUpload,
-      };
       const uploaded: Array<string | StoreFileBatch.Data> = new Array(items.length);
       let next = 0;
       const worker = async () => {
@@ -94,7 +90,10 @@ export function withFileBatchHelpers<TBase extends Constructor<FileBatchesBase>>
           const i = next++;
           try {
             const file = await this._client.files.create(
-              { file: items[i]!.file, multipartUpload },
+              {
+                file: items[i]!.file,
+                ...(params.multipartUpload && { multipartUpload: params.multipartUpload }),
+              },
               params.options,
             );
             uploaded[i] = file.id;
@@ -106,7 +105,9 @@ export function withFileBatchHelpers<TBase extends Constructor<FileBatchesBase>>
           }
         }
       };
-      await Promise.all(Array.from({ length: Math.max(1, params.maxConcurrency ?? 5) }, worker));
+      await Promise.all(
+        Array.from({ length: Math.max(1, params.maxConcurrency ?? MAX_CONCURRENCY) }, worker),
+      );
 
       const files = items.flatMap(({ file: _file, ...fields }, i) => {
         const fileId = uploaded[i];

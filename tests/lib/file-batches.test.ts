@@ -49,7 +49,7 @@ describe('withFileBatchHelpers', () => {
     );
   });
 
-  test('custom multipart settings keep the 5MB threshold', async () => {
+  test('multipart settings are passed through, so the 100MB default applies', async () => {
     const { fileBatches, filesCreate } = createFileBatches();
 
     await fileBatches.upload({
@@ -58,10 +58,7 @@ describe('withFileBatchHelpers', () => {
       multipartUpload: { concurrency: 2 },
     });
 
-    expect(filesCreate.mock.calls[0]![0].multipartUpload).toEqual({
-      threshold: 5 * 1024 * 1024,
-      concurrency: 2,
-    });
+    expect(filesCreate.mock.calls[0]![0].multipartUpload).toEqual({ concurrency: 2 });
   });
 
   test('more than 100 files are rejected before anything is uploaded', async () => {
