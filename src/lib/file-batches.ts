@@ -60,11 +60,17 @@ function uploadFailed(
   item: FileBatchUploadItem,
   error: APIError | MultipartUploadError,
 ): StoreFileBatch.Data {
-  const code = error instanceof APIError ? (error.error as { code?: unknown } | undefined)?.code : undefined;
+  const body =
+    error instanceof APIError ?
+      (error.error as { code?: unknown; message?: unknown } | undefined)
+    : undefined;
   return {
     file_id: '',
     external_id: item.external_id ?? null,
-    error: { code: typeof code === 'string' ? code : 'upload_error', message: error.message },
+    error: {
+      code: typeof body?.code === 'string' ? body.code : 'upload_error',
+      message: typeof body?.message === 'string' ? body.message : error.message,
+    },
   };
 }
 

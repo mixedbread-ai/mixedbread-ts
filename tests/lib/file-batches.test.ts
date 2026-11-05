@@ -86,7 +86,7 @@ describe('withFileBatchHelpers', () => {
     expect(result.data[1]).toEqual({
       file_id: '',
       external_id: 'doc-bad',
-      error: { code: 'file_invalid_error', message: invalid.message },
+      error: { code: 'file_invalid_error', message: 'Invalid file' },
     });
   });
 
