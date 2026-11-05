@@ -62,6 +62,11 @@ export namespace StoreFileBatch {
     file_id: string;
 
     /**
+     * External identifier the item named
+     */
+    external_id?: string | null;
+
+    /**
      * The lifecycle of a unit of background work.
      *
      * One vocabulary for every job family. The database keeps a separate enum type per
