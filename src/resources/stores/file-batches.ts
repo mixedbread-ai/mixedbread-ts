@@ -53,11 +53,6 @@ export namespace StoreFileBatch {
     file_id: string;
 
     /**
-     * ID of the created store file
-     */
-    store_file_id?: string | null;
-
-    /**
      * The lifecycle of a unit of background work.
      *
      * One vocabulary for every job family. The database keeps a separate enum type per
