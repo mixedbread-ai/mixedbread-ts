@@ -17,11 +17,10 @@ export class FileBatchesBase extends APIResource {
   /**
    * Add already uploaded files to a store in one call, for backfills.
    *
-   * Files are ingested with no latency guarantee. Each item takes one token from a
-   * rate limit of its own, at the same limits as file uploads. A file already in the
-   * store (same file ID or external ID) that is pending, in progress or completed is
-   * never replaced and comes back with `store_file_already_exists_error`; a failed
-   * or cancelled one is replaced, so resending a batch retries its failures. To
+   * Each item takes one token from a rate limit of its own, at the same limits as
+   * file uploads. A batch never replaces a file: one already in the store (same file
+   * ID or external ID), in any status, comes back with
+   * `store_file_already_exists_error`. To retry a failed file, delete it first; to
    * update a file, use the single-file endpoint. Each item is checked on its own:
    * one rejected item is reported in `data` without failing the others.
    */
