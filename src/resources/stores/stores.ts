@@ -1004,6 +1004,10 @@ export namespace PdfChunkGeneratedMetadata {
     type: string;
 
     text?: string | null;
+
+    category?: string | null;
+
+    heading_level?: number | null;
   }
 }
 
@@ -1159,6 +1163,10 @@ export namespace ImageChunkGeneratedMetadata {
     type: string;
 
     text?: string | null;
+
+    category?: string | null;
+
+    heading_level?: number | null;
   }
 }
 

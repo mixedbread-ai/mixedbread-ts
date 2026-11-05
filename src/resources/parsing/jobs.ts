@@ -257,6 +257,34 @@ export interface ChunkElement {
    * The base64-encoded image data for figure elements
    */
   image?: string | null;
+
+  /**
+   * Layout categories of extracted elements, finer than their type.
+   */
+  category?:
+    | 'header'
+    | 'footer'
+    | 'title'
+    | 'section-header'
+    | 'page-number'
+    | 'figure'
+    | 'table'
+    | 'form'
+    | 'text'
+    | 'footnote'
+    | 'caption'
+    | 'chart'
+    | 'formula'
+    | 'code'
+    | 'table-of-contents'
+    | 'bibliography'
+    | 'signature'
+    | null;
+
+  /**
+   * Section heading level, 1 = top level; set on section-header elements
+   */
+  heading_level?: number | null;
 }
 
 /**
