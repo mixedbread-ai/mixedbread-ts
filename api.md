@@ -45,6 +45,7 @@ Types:
 - <code><a href="./src/resources/stores/stores.ts">ScoredImageURLInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredTextInputChunk</a></code>
 - <code><a href="./src/resources/stores/stores.ts">ScoredVideoURLInputChunk</a></code>
+- <code><a href="./src/resources/stores/stores.ts">SearchDistinct</a></code>
 - <code><a href="./src/resources/stores/stores.ts">Store</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreChunkSearchOptions</a></code>
 - <code><a href="./src/resources/stores/stores.ts">StoreConfig</a></code>

@@ -57,6 +57,7 @@ export {
   type FileCounts as FileCounts,
   type RerankConfig as RerankConfig,
   type AgenticSearchConfig as AgenticSearchConfig,
+  type SearchDistinct as SearchDistinct,
   type StoreDeleteResponse as StoreDeleteResponse,
   type StoreDecideResponse as StoreDecideResponse,
   type StoreGrepResponse as StoreGrepResponse,

@@ -22,3 +22,9 @@ export {
   UnprocessableEntityError,
 } from './core/error';
 export { type MultipartUploadConfig, type PartUploadEvent, MultipartUploadError } from './lib/upload-file';
+export {
+  mxjsonFileItem,
+  type MxjsonFile,
+  type MxjsonFileItem,
+  type MxjsonFileItemOptions,
+} from './lib/mxjson';

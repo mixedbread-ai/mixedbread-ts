@@ -849,6 +849,11 @@ export interface StoreChunkSearchOptions {
    * Whether to return file metadata
    */
   return_metadata?: boolean;
+
+  /**
+   * Keep at most `per_value` results per value of a field.
+   */
+  distinct?: SearchDistinct | null;
 }
 
 export namespace StoreChunkSearchOptions {
@@ -1317,11 +1322,11 @@ export interface AgenticSearchConfig {
   queries_per_round?: number;
 
   /**
-   * Whether the agent fills the final ranking to top_k chunks from what it
-   * retrieved, capped at top_k, instead of returning only the chunks it judged
-   * relevant
+   * Whether the agent returns the top_k most relevant chunks it found instead of
+   * only the chunks it judged relevant. When omitted or null, it is true whenever
+   * top_k is set. Requires an explicit top_k when true.
    */
-  strict_top_k?: boolean;
+  strict_top_k?: boolean | null;
 
   /**
    * Controls when retrieved image content is provided to the agent. `auto` sends
@@ -1343,6 +1348,24 @@ export interface AgenticSearchConfig {
    * documented public API.
    */
   verbose?: boolean;
+}
+
+/**
+ * Keep at most `per_value` results per value of a field.
+ */
+export interface SearchDistinct {
+  /**
+   * Field whose values must differ between results, named like a filter key:
+   * `file_id` for one result per file, `user_id` for a metadata field,
+   * `generated_metadata.<key>`. Results without the field are always kept. Only
+   * Wholembed V4 stores support it.
+   */
+  field: string;
+
+  /**
+   * Results kept per field value
+   */
+  per_value?: number;
 }
 
 /**
@@ -1623,7 +1646,7 @@ export interface StoreCreateParams {
    * Name for the new store. Can only contain lowercase letters, numbers, periods
    * (.), and hyphens (-).
    */
-  name?: string | null;
+  name: string;
 
   /**
    * Description of the store
@@ -1746,11 +1769,6 @@ export interface StoreDecideParams {
   store_identifiers: Array<string>;
 
   /**
-   * Number of chunks retrieved for each question
-   */
-  top_k?: number;
-
-  /**
    * Optional filter conditions
    */
   filters?: StoreDecideParams.Filters | null;
@@ -1759,6 +1777,11 @@ export interface StoreDecideParams {
    * Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Number of chunks retrieved for each question
+   */
+  top_k?: number;
 
   /**
    * Options for each question's search; rerank defaults to true and agentic is not
@@ -1854,11 +1877,6 @@ export interface StoreGrepParams {
   store_identifiers: Array<string>;
 
   /**
-   * Body param: Number of results to return
-   */
-  top_k?: number;
-
-  /**
    * Body param: Optional filter conditions
    */
   filters?: StoreGrepParams.Filters | null;
@@ -1867,6 +1885,11 @@ export interface StoreGrepParams {
    * Body param: Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Body param: Number of results to return
+   */
+  top_k?: number;
 
   /**
    * Body param: Regular expression (RE2 syntax) matched against chunk text
@@ -1908,11 +1931,6 @@ export interface StoreListChunksParams {
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
-   */
-  top_k?: number;
-
-  /**
    * Optional filter conditions
    */
   filters?: StoreListChunksParams.Filters | null;
@@ -1921,6 +1939,11 @@ export interface StoreListChunksParams {
    * Optional list of file IDs to filter chunks by (inclusion filter)
    */
   file_ids?: Array<unknown> | Array<string> | null;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
 
   /**
    * Optional sort applied to the returned chunks. Pass a metadata field path or a
@@ -1952,11 +1975,6 @@ export interface StoreMetadataFacetsParams {
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
-   */
-  top_k?: number;
-
-  /**
    * Optional filter conditions
    */
   filters?: StoreMetadataFacetsParams.Filters | null;
@@ -1970,6 +1988,11 @@ export interface StoreMetadataFacetsParams {
    * Search query text
    */
   query?: string | null;
+
+  /**
+   * Number of results to return
+   */
+  top_k?: number;
 
   /**
    * Search configuration options
@@ -2014,11 +2037,6 @@ export interface StoreQuestionAnsweringParams {
   store_identifiers: Array<string>;
 
   /**
-   * Number of results to return
-   */
-  top_k?: number;
-
-  /**
    * Optional filter conditions
    */
   filters?: StoreQuestionAnsweringParams.Filters | null;
@@ -2033,6 +2051,13 @@ export interface StoreQuestionAnsweringParams {
    * passed messages.
    */
   query?: string;
+
+  /**
+   * Maximum number of results to return. When omitted or null, agentic search
+   * returns all chunks selected by the agent without a final-result cap; non-agentic
+   * search returns up to 10. Required when strict_top_k is true.
+   */
+  top_k?: number | null;
 
   /**
    * Search configuration options
@@ -2097,11 +2122,6 @@ export interface StoreSearchParams {
   store_identifiers: Array<string>;
 
   /**
-   * Body param: Number of results to return
-   */
-  top_k?: number;
-
-  /**
    * Body param: Optional filter conditions
    */
   filters?: StoreSearchParams.Filters | null;
@@ -2115,6 +2135,13 @@ export interface StoreSearchParams {
    * Body param: Search query text
    */
   query: StoreSearchParams.Query;
+
+  /**
+   * Body param: Maximum number of results to return. When omitted or null, agentic
+   * search returns all chunks selected by the agent without a final-result cap;
+   * non-agentic search returns up to 10. Required when strict_top_k is true.
+   */
+  top_k?: number | null;
 
   /**
    * Body param: Search configuration options
@@ -2172,6 +2199,7 @@ export declare namespace Stores {
     type FileCounts as FileCounts,
     type RerankConfig as RerankConfig,
     type AgenticSearchConfig as AgenticSearchConfig,
+    type SearchDistinct as SearchDistinct,
     type StoreDeleteResponse as StoreDeleteResponse,
     type StoreDecideResponse as StoreDecideResponse,
     type StoreGrepResponse as StoreGrepResponse,

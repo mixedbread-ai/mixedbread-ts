@@ -8,8 +8,8 @@ const client = new Mixedbread({
 });
 
 describe('resource stores', () => {
-  test('create', async () => {
-    const responsePromise = client.stores.create({});
+  test('create: only required params', async () => {
+    const responsePromise = client.stores.create({ name: 'technical-documentation' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -19,24 +19,18 @@ describe('resource stores', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('create: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.stores.create(
-        {
-          name: 'technical-documentation',
-          description: 'Contains technical specifications and guides',
-          is_public: false,
-          license: 'license',
-          expires_after: { anchor: 'last_active_at', days: 0 },
-          metadata: {},
-          tags: ['production', 'docs'],
-          config: { contextualization: true, lsf: { foo: 'bar' } },
-          file_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(Mixedbread.NotFoundError);
+  test('create: required and optional params', async () => {
+    const response = await client.stores.create({
+      name: 'technical-documentation',
+      description: 'Contains technical specifications and guides',
+      is_public: false,
+      license: 'license',
+      expires_after: { anchor: 'last_active_at', days: 0 },
+      metadata: {},
+      tags: ['production', 'docs'],
+      config: { contextualization: true, lsf: { foo: 'bar' } },
+      file_ids: ['182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e'],
+    });
   });
 
   test('retrieve', async () => {
@@ -156,7 +150,6 @@ describe('resource stores', () => {
   test('decide: required and optional params', async () => {
     const response = await client.stores.decide({
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -172,6 +165,7 @@ describe('resource stores', () => {
         ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      top_k: 1,
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -179,6 +173,7 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
+        distinct: { field: 'file_id', per_value: 1 },
       },
       state: { vendor: 'Acme Inc' },
       questions: { foo: { type: 'noul', instructions: 'x' } },
@@ -200,7 +195,6 @@ describe('resource stores', () => {
     const response = await client.stores.grep({
       'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -216,6 +210,7 @@ describe('resource stores', () => {
         ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      top_k: 1,
       pattern: 'ERR-\\d{4}',
       targets: ['text'],
       case_sensitive: true,
@@ -237,7 +232,6 @@ describe('resource stores', () => {
   test('listChunks: required and optional params', async () => {
     const response = await client.stores.listChunks({
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -253,6 +247,7 @@ describe('resource stores', () => {
         ],
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+      top_k: 1,
       sort_by: 'price',
       search_options: {
         score_threshold: 0,
@@ -261,6 +256,7 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
+        distinct: { field: 'file_id', per_value: 1 },
       },
     });
   });
@@ -279,7 +275,6 @@ describe('resource stores', () => {
   test('metadataFacets: required and optional params', async () => {
     const response = await client.stores.metadataFacets({
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -296,6 +291,7 @@ describe('resource stores', () => {
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
+      top_k: 1,
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -303,6 +299,7 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
+        distinct: { field: 'file_id', per_value: 1 },
       },
       facets: ['author', 'year', 'author.name'],
       max_fields: 1,
@@ -325,7 +322,6 @@ describe('resource stores', () => {
   test('questionAnswering: required and optional params', async () => {
     const response = await client.stores.questionAnswering({
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -342,6 +338,7 @@ describe('resource stores', () => {
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'x',
+      top_k: 1,
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -349,6 +346,7 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
+        distinct: { field: 'file_id', per_value: 1 },
       },
       stream: true,
       instructions: 'x',
@@ -374,7 +372,6 @@ describe('resource stores', () => {
     const response = await client.stores.search({
       'X-Mxbai-Tool-Ticket': 'X-Mxbai-Tool-Ticket',
       store_identifiers: ['string'],
-      top_k: 1,
       filters: {
         all: [
           { key: 'price', operator: 'gt', value: '100' },
@@ -391,6 +388,7 @@ describe('resource stores', () => {
       },
       file_ids: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
       query: 'how to configure SSL',
+      top_k: 1,
       search_options: {
         score_threshold: 0,
         rewrite_query: true,
@@ -398,6 +396,7 @@ describe('resource stores', () => {
         agentic: true,
         lsf: true,
         return_metadata: true,
+        distinct: { field: 'file_id', per_value: 1 },
       },
       stream: true,
     });
