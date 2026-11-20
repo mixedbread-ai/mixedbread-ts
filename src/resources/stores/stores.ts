@@ -840,12 +840,6 @@ export interface StoreChunkSearchOptions {
   agentic?: StoreChunkSearchOptions.Agentic | null;
 
   /**
-   * Whether to apply the learned scoring function to second-stage scoring. Requires
-   * weights configured for the searched stores; silently skipped otherwise.
-   */
-  lsf?: boolean | null;
-
-  /**
    * Whether to return file metadata
    */
   return_metadata?: boolean;
@@ -1225,11 +1219,6 @@ export interface StoreConfig {
    * Include additional context when embedding chunks.
    */
   contextualization?: StoreConfig.Contextualization;
-
-  /**
-   * Learned-scoring-function settings a store opts into; an empty object enables it.
-   */
-  lsf?: { [key: string]: unknown } | null;
 }
 
 export namespace StoreConfig {
